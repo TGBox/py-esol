@@ -204,7 +204,7 @@ class EsolValidatorGUI(tk.Tk):
         threading.Thread(target=self._run_generate_auf_process, args=(raw_path,), daemon=True).start()
 
     def _start_correction_dialog(self):
-        self._open_correction_dialog(default_vk="03")
+        self._open_correction_dialog(default_vk="02")
 
     def _open_correction_dialog(self, default_vk: str):
         raw_path = self.path_entry.get().strip()

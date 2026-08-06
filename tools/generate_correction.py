@@ -158,14 +158,26 @@ def generate_correction_esol(
 
     selected_set = set(selected_belegnr_list) if selected_belegnr_list else None
 
-    # First pass: extract original header metadata and calculate total Zuzahlung for selected Belege
+    # Discover all non-00 GES status codes present in raw file
+    ges_status_codes = []
+    for raw_seg in raw_segments:
+        t, f = parse_segment_fields(raw_seg)
+        if t == "GES" and len(f) > 0:
+            st = str(f[0])
+            if st != "00" and st not in ges_status_codes:
+                ges_status_codes.append(st)
+
+    # First pass: extract original header metadata and calculate per-status totals for selected Belege
     orig_rec_nr = ""
     orig_rec_date = ""
     orig_ik_le = ""
-    total_zuzahlung_file = 0.0
+
+    brutto_by_status: Dict[str, float] = {}
+    zuzahlung_by_status: Dict[str, float] = {}
 
     in_inv_block_p1 = False
     keep_block_p1 = False
+    current_ges_code_p1 = "00"
     current_inv_zuz_proz_p1 = 0.0
     current_inv_zuz_pausch_p1 = 0.0
 
@@ -188,6 +200,22 @@ def generate_correction_esol(
         elif tag == "INV":
             in_inv_block_p1 = True
             belegnr = str(fields[0]) if len(fields) > 0 else ""
+            vers_status = str(fields[1]) if len(fields) > 1 and fields[1] else "00"
+            st_prefix2 = vers_status[:2] if len(vers_status) >= 2 else "00"
+            st_prefix1 = vers_status[:1] if len(vers_status) >= 1 else "0"
+
+            # Match Versichertenstatus to available GES status codes in the file
+            if st_prefix2 in ges_status_codes:
+                current_ges_code_p1 = st_prefix2
+            else:
+                matching = [c for c in ges_status_codes if c.startswith(st_prefix1)]
+                if matching:
+                    current_ges_code_p1 = matching[0]
+                elif ges_status_codes:
+                    current_ges_code_p1 = ges_status_codes[0]
+                else:
+                    current_ges_code_p1 = "00"
+
             keep_block_p1 = (selected_set is None) or (belegnr in selected_set)
             current_inv_zuz_proz_p1 = 0.0
             current_inv_zuz_pausch_p1 = 0.0
@@ -205,15 +233,35 @@ def generate_correction_esol(
                 current_inv_zuz_proz_p1 += round(anzahl * betrag_zuz, 2)
             elif tag == "BES":
                 if keep_block_p1:
-                    if len(fields) > 3 and fields[3]:
-                        current_inv_zuz_pausch_p1 = float(str(fields[3]).replace(",", "."))
+                    brutto_val = float(str(fields[0]).replace(",", ".")) if len(fields) > 0 and fields[0] else 0.0
+                    brutto_by_status[current_ges_code_p1] = round(
+                        brutto_by_status.get(current_ges_code_p1, 0.0) + brutto_val, 2
+                    )
+
+                    if target_vk == "03":
+                        if len(fields) > 3 and fields[3]:
+                            current_inv_zuz_pausch_p1 = float(str(fields[3]).replace(",", "."))
+                        else:
+                            current_inv_zuz_pausch_p1 = 10.0
+                        inv_zuz = round(current_inv_zuz_proz_p1 + current_inv_zuz_pausch_p1, 2)
                     else:
-                        current_inv_zuz_pausch_p1 = 10.0
-                    total_zuzahlung_file += round(current_inv_zuz_proz_p1 + current_inv_zuz_pausch_p1, 2)
+                        if len(fields) > 1 and fields[1]:
+                            inv_zuz = float(str(fields[1]).replace(",", "."))
+                        else:
+                            inv_zuz = round(current_inv_zuz_proz_p1 + current_inv_zuz_pausch_p1, 2)
+
+                    zuzahlung_by_status[current_ges_code_p1] = round(
+                        zuzahlung_by_status.get(current_ges_code_p1, 0.0) + inv_zuz, 2
+                    )
+
                 in_inv_block_p1 = False
 
+    total_brutto_file = round(sum(brutto_by_status.values()), 2)
+    total_zuzahlung_file = round(sum(zuzahlung_by_status.values()), 2)
+    total_rechnungsbetrag_file = round(total_brutto_file - total_zuzahlung_file, 2)
+
     if not new_rec_nr:
-        suffix = "Z" if target_vk == "03" else ("K" if target_vk == "04" else "N")
+        suffix = "Z" if target_vk == "03" else ("K" if target_vk == "04" else ("W" if target_vk == "10" else "N"))
         orig_clean_nr = orig_rec_nr.replace(":", "")
         new_rec_nr = f"{orig_clean_nr}{suffix}" if orig_clean_nr else f"RE{today_str}{suffix}"
 
@@ -244,15 +292,32 @@ def generate_correction_esol(
             new_raw_segments.append(build_segment_string(tag, fields))
 
         elif tag == "GES":
-            # In SLGA for VK 03, GES field 1 is Rechnungsbetrag (total_zuzahlung), field 2 is Brutto (0.00), field 3 is Zuzahlung (total_zuzahlung)
+            # Recalculate GES segment sums for specific status line or total (00)
+            status_code = fields[0] if len(fields) > 0 else "00"
+            if status_code == "00":
+                st_brutto = total_brutto_file
+                st_zuz = total_zuzahlung_file
+            else:
+                st_brutto = round(brutto_by_status.get(status_code, 0.0), 2)
+                st_zuz = round(zuzahlung_by_status.get(status_code, 0.0), 2)
+
+            st_rechnung = round(st_brutto - st_zuz, 2)
+
             if target_vk == "03":
-                zuz_str = ContentHelper.format_decimal(total_zuzahlung_file)
                 if len(fields) > 1:
-                    fields[1] = zuz_str
+                    fields[1] = ContentHelper.format_decimal(st_zuz)
                 if len(fields) > 2:
                     fields[2] = "0,00"
                 if len(fields) > 3:
-                    fields[3] = zuz_str
+                    fields[3] = ContentHelper.format_decimal(st_zuz)
+            else:
+                if len(fields) > 1:
+                    fields[1] = ContentHelper.format_decimal(st_rechnung)
+                if len(fields) > 2:
+                    fields[2] = ContentHelper.format_decimal(st_brutto)
+                if len(fields) > 3:
+                    fields[3] = ContentHelper.format_decimal(st_zuz)
+
             new_raw_segments.append(build_segment_string(tag, fields))
 
         elif tag == "INV":
@@ -412,8 +477,8 @@ def main() -> None:
         "--type",
         "-t",
         default="03",
-        choices=["02", "03", "04"],
-        help="Verarbeitungskennzeichen: 03 (Zuzahlungsforderung), 04 (Korrekturrechnung), 02 (Nachforderung)",
+        choices=["02", "03", "04", "10"],
+        help="Verarbeitungskennzeichen: 02 (Nachforderung), 03 (Zuzahlungsforderung), 04 (Korrekturrechnung), 10 (Wiederaufnahme Blankoverordnung)",
     )
     parser.add_argument(
         "--new-rec-nr",

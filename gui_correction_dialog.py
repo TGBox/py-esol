@@ -20,7 +20,7 @@ class CorrectionSelectionDialog(tk.Toplevel):
     when generating a correction invoice or co-payment demand.
     """
 
-    def __init__(self, parent: tk.Tk, file_path: str, default_vk: str = "03", on_complete_callback: Optional[Callable[[str], None]] = None):
+    def __init__(self, parent: tk.Tk, file_path: str, default_vk: str = "02", on_complete_callback: Optional[Callable[[str], None]] = None):
         super().__init__(parent)
 
         self.file_path = Path(file_path)
@@ -110,22 +110,24 @@ class CorrectionSelectionDialog(tk.Toplevel):
         ttk.Label(opt_frame, text="Verarbeitungskennzeichen (VKZ):").grid(row=0, column=0, sticky="w", pady=5)
 
         self.vk_var = tk.StringVar(value=self.default_vk)
-        r1 = ttk.Radiobutton(opt_frame, text="VK 03 — Zuzahlungsforderung (§ 43c SGB V)", value="03", variable=self.vk_var)
-        r2 = ttk.Radiobutton(opt_frame, text="VK 04 — Korrekturrechnung (Neuberechnung)", value="04", variable=self.vk_var)
-        r3 = ttk.Radiobutton(opt_frame, text="VK 02 — Nachforderung (Teilnachforderung)", value="02", variable=self.vk_var)
+        r1 = ttk.Radiobutton(opt_frame, text="VK 02 — Nachforderung (Teilnachforderung)", value="02", variable=self.vk_var)
+        r2 = ttk.Radiobutton(opt_frame, text="VK 03 — Zuzahlungsforderung (§ 43c SGB V)", value="03", variable=self.vk_var)
+        r3 = ttk.Radiobutton(opt_frame, text="VK 04 — Korrekturrechnung (Neuberechnung)", value="04", variable=self.vk_var)
+        r4 = ttk.Radiobutton(opt_frame, text="VK 10 — Wiederaufnahme Blankoverordnung (§ 125a SGB V)", value="10", variable=self.vk_var)
 
         r1.grid(row=0, column=1, columnspan=2, sticky="w", padx=5)
         r2.grid(row=1, column=1, columnspan=2, sticky="w", padx=5)
         r3.grid(row=2, column=1, columnspan=2, sticky="w", padx=5)
+        r4.grid(row=3, column=1, columnspan=2, sticky="w", padx=5)
 
-        ttk.Label(opt_frame, text="Neue Rechnungsnummer:").grid(row=3, column=0, sticky="w", pady=5)
+        ttk.Label(opt_frame, text="Neue Rechnungsnummer:").grid(row=4, column=0, sticky="w", pady=5)
         self.rec_nr_entry = ttk.Entry(opt_frame, width=25)
-        self.rec_nr_entry.grid(row=3, column=1, sticky="w", padx=5, pady=5)
+        self.rec_nr_entry.grid(row=4, column=1, sticky="w", padx=5, pady=5)
         self.rec_nr_entry.insert(0, f"RE{datetime.datetime.now().strftime('%d%m')}Z")
 
-        ttk.Label(opt_frame, text="Neues Rechnungsdatum:").grid(row=3, column=2, sticky="w", pady=5)
+        ttk.Label(opt_frame, text="Neues Rechnungsdatum:").grid(row=4, column=2, sticky="w", pady=5)
         self.rec_date_entry = ttk.Entry(opt_frame, width=15)
-        self.rec_date_entry.grid(row=3, column=3, sticky="w", padx=5, pady=5)
+        self.rec_date_entry.grid(row=4, column=3, sticky="w", padx=5, pady=5)
         self.rec_date_entry.insert(0, datetime.datetime.now().strftime("%Y%m%d"))
 
         # Footer Buttons
