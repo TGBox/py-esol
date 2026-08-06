@@ -179,6 +179,13 @@ class ContentHelper:
         return None
 
     @staticmethod
+    def get_file_leistungsbereich(parsed_segments: List[Dict[str, Any]]) -> Optional[str]:
+        for seg in parsed_segments:
+            if seg.get("tag") == "UNB":
+                return ContentHelper.get_field(seg, 5)
+        return None
+
+    @staticmethod
     def extract_inv_blocks(
         message: Dict[str, Any],
     ) -> List[List[Dict[str, Any]]]:

@@ -23,10 +23,10 @@ class SingleRechnungsartRule(RuleInterface):
         
         rechnungsarten = set()
         for seg in parsed_segments:
-            if seg.get("tag") == "UNH":
+            if seg.get("tag") == "REC":
                 fields = seg.get("fields", [])
-                if len(fields) > 1 and isinstance(fields[1], list):
-                    art = fields[1][0]  # Z.B. 'SLGA' oder 'SLLA'
+                if len(fields) > 2 and fields[2] is not None:
+                    art = str(fields[2])
                     rechnungsarten.add(art)
 
         if len(rechnungsarten) > 1:
@@ -34,7 +34,8 @@ class SingleRechnungsartRule(RuleInterface):
                 context.create_validation_error(
                     1,
                     "1.1.11",
-                    f"Gemischte Rechnungsarten in einer Datei nicht erlaubt: {rechnungsarten}"
+                    f"Gemischte Rechnungsarten in einer Datei nicht erlaubt: {rechnungsarten}",
+                    "REC",
                 )
             )
 

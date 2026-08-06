@@ -85,10 +85,10 @@ class TestStructureRules:
 
     def test_single_rechnungsart_rule_mixed(self, tokenizer):
         rule = single_invoice_kind_rule.SingleRechnungsartRule()
-        # Mischen von SLGA und SLLA in einer Datei
-        ctx = make_context("UNB+UNOC:3'UNH+00001+SLGA:21:0:0'UNT+2+00001'UNH+00002+SLLA:21:0:0'UNT+2+00002'UNZ+2+00001'", tokenizer)
+        # Mischen von Rechnungsart 1 und 2 in einer Datei
+        ctx = make_context("UNB+UNOC:3'UNH+00001+SLGA:21:0:0'REC+51:0+20260122+1'UNT+3+00001'UNH+00002+SLLA:21:0:0'REC+51:0+20260122+2'UNT+3+00002'UNZ+2+00001'", tokenizer)
         errors = rule.validate(ctx)
-        assert_error_code(errors, '1.1.7', 'Mixed message types should fail')
+        assert_error_code(errors, '1.1.11', 'Mixed Rechnungsart values should fail')
 
     def test_version_rule_invalid_version(self, tokenizer):
         rule = version_rule.VersionRule()

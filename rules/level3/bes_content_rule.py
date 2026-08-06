@@ -26,16 +26,19 @@ class BesContentRule(RuleInterface):
             for block_idx, block in enumerate(inv_blocks):
                 bes_seg = None
                 bes_seg_index = None
-                ehe_segments = []
+                detail_segments = []
                 mws_segments = []
 
+                detail_tags = {"EHE", "EHI", "EHK", "EHH", "EKT", "EHB", "ENF", "ESP", "EGV", "EHP", "AHK", "EMP"}
+
                 for seg in block:
-                    if seg.get("tag") == "BES":
+                    tag = seg.get("tag")
+                    if tag == "BES":
                         bes_seg = seg
                         bes_seg_index = self._find_global_index(msg, seg)
-                    if seg.get("tag") == "EHE":
-                        ehe_segments.append(seg)
-                    if seg.get("tag") == "MWS":
+                    elif tag in detail_tags:
+                        detail_segments.append(seg)
+                    elif tag == "MWS":
                         mws_segments.append(seg)
 
                 if vk == "03":
@@ -69,20 +72,39 @@ class BesContentRule(RuleInterface):
 
                 # 1.3.11.2 Brutto Calculation
                 calculated_brutto = 0.0
-                for ehe in ehe_segments:
+                calculated_proz_zuz = 0.0
+
+                for seg in detail_segments:
+                    tag = seg.get("tag")
+                    if tag == "EHI":
+                        anz_idx, betrag_idx, zuz_idx = 2, 4, None
+                    elif tag == "ENF":
+                        anz_idx, betrag_idx, zuz_idx = 3, 4, 6
+                    elif tag == "EHE":
+                        anz_idx, betrag_idx, zuz_idx = 2, 3, 5
+                    else:
+                        anz_idx, betrag_idx, zuz_idx = 2, 3, None
+
                     anzahl = (
                         ContentHelper.parse_decimal(
-                            ContentHelper.get_field(ehe, 2)
+                            ContentHelper.get_field(seg, anz_idx)
                         )
                         or 0.0
                     )
                     einzelbetrag = (
                         ContentHelper.parse_decimal(
-                            ContentHelper.get_field(ehe, 3)
+                            ContentHelper.get_field(seg, betrag_idx)
                         )
                         or 0.0
                     )
                     calculated_brutto += einzelbetrag * anzahl
+
+                    if zuz_idx is not None:
+                        betrag_zuz = ContentHelper.parse_decimal(
+                            ContentHelper.get_field(seg, zuz_idx)
+                        )
+                        if betrag_zuz is not None:
+                            calculated_proz_zuz += betrag_zuz * anzahl
 
                 total_mws = 0.0
                 for mws in mws_segments:
@@ -121,20 +143,6 @@ class BesContentRule(RuleInterface):
                     )
 
                 # 1.3.11.4 Proz Zuzahlung
-                calculated_proz_zuz = 0.0
-                for ehe in ehe_segments:
-                    anzahl = (
-                        ContentHelper.parse_decimal(
-                            ContentHelper.get_field(ehe, 2)
-                        )
-                        or 0.0
-                    )
-                    betrag_zuz = ContentHelper.parse_decimal(
-                        ContentHelper.get_field(ehe, 5)
-                    )
-                    if betrag_zuz is not None:
-                        calculated_proz_zuz += betrag_zuz * anzahl
-
                 calculated_proz_zuz = ContentHelper.round_commercial(
                     calculated_proz_zuz
                 )

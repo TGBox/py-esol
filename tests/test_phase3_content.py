@@ -1,7 +1,7 @@
 import pytest
 from parser.segment_tokenizer import SegmentTokenizer
 from rules.level3 import (
-    content_helper, unb_content_rule, fkt_content_rule, rec_content_rule, inv_content_rule, uri_content_rule, nad_content_rule
+    content_helper, unb_content_rule, fkt_content_rule, rec_content_rule, inv_content_rule, uri_content_rule, nad_content_rule, gzf_content_rule
 )
 from tests.helpers import assert_no_error_code, make_context, assert_error_code
 
@@ -55,7 +55,7 @@ class TestContentRules:
         bad_file = valid_vk03_file.replace('FKT+03++123456789', 'FKT+03++ABC')
         ctx = make_context(bad_file, tokenizer)
         errors = rule.validate(ctx)
-        assert_error_code(errors, '1.3.2.3', 'Invalid IK format should fail with 1.3.2.1')
+        assert_error_code(errors, '1.3.2.3', 'Invalid IK format should fail with 1.3.2.3')
 
     def test_rec_content_rule_future_date(self, tokenizer, valid_vk03_file):
         rule = rec_content_rule.RecContentRule()
@@ -65,13 +65,13 @@ class TestContentRules:
         errors = rule.validate(ctx)
         assert_error_code(errors, '1.3.4.4', 'Future invoice date should fail')
 
-    def test_inv_content_rule_sum_mismatch(self, tokenizer, valid_vk03_file):
-        rule = inv_content_rule.InvContentRule()
+    def test_gzf_content_rule_sum_mismatch(self, tokenizer, valid_vk03_file):
+        rule = gzf_content_rule.GzfContentRule()
         # Verfälsche den Bruttobetrag im GZF-Segment (82,89 -> 99,99)
         bad_file = valid_vk03_file.replace('82,89+72,89', '99,99+72,89')
         ctx = make_context(bad_file, tokenizer)
         errors = rule.validate(ctx)
-        assert_error_code(errors, '1.3.4.2', 'Invoice amount mismatch should fail')
+        assert_error_code(errors, '1.3.12.2', 'GZF amount mismatch should fail')
 
     def test_nad_content_rule_invalid_dob(self, tokenizer, valid_vk03_file):
         rule = nad_content_rule.NadContentRule()
@@ -88,16 +88,15 @@ class TestContentRules:
         errors = rule.validate(ctx)
         
         # Es sollte kein Fehler für das URI-Segment geworfen werden
-        assert_no_error_code(errors, '1.3.5.1', 'Gültige URI-Daten sollten keinen Fehler erzeugen')
+        assert_no_error_code(errors, '1.3.6.1', 'Gültige URI-Daten sollten keinen Fehler erzeugen')
 
-    def test_uri_content_rule_invalid_time_format(self, tokenizer, valid_vk03_file):
-        """Prüft ungültige Uhrzeiten im URI-Segment (z.B. 25:99 Uhr)."""
+    def test_uri_content_rule_invalid_ik(self, tokenizer, valid_vk03_file):
+        """Prüft ungültiges IK im URI-Segment (z.B. ABC)."""
         rule = uri_content_rule.UriContentRule()
-        # Ersetze die Zeit-Komponente gezielt durch ein ungültiges Format
-        bad_file = valid_vk03_file.replace('13:19', '25:99').replace('1319', '2599')
+        bad_file = valid_vk03_file.replace('URI+123456789', 'URI+ABC')
         ctx = make_context(bad_file, tokenizer)
         errors = rule.validate(ctx)
-        assert_error_code(errors, '1.3.5.1', 'Ungültiges Zeitformat im URI-Segment muss erkannt werden')
+        assert_error_code(errors, '1.3.6.2', 'Ungültiges IK im URI-Segment muss erkannt werden')
 
     def test_uri_content_rule_invalid_date(self, tokenizer, valid_vk03_file):
         """Prüft ungültige Datumsangaben im URI-Segment (z.B. 31. April)."""
@@ -110,13 +109,11 @@ class TestContentRules:
         
         assert_error_code(errors, '1.3.6.4', 'Ungültiges Datum im URI-Segment muss erkannt werden')
 
-    def test_uri_content_rule_missing_required_urgs_code(self, tokenizer, valid_vk03_file):
-        """Prüft fehlende oder unzulässige Urgebühren-Kennzeichen im URI-Segment."""
+    def test_uri_content_rule_belegnummer_too_long(self, tokenizer, valid_vk03_file):
+        """Prüft zu lange Belegnummer im URI-Segment (> 10 Zeichen)."""
         rule = uri_content_rule.UriContentRule()
-        # Ersetze ein Urgebühren-Flag am Segmentende durch einen ungültigen Code (z.B. +999')
-        # Falls z. B. +04' oder +1' am Ende des URI-Segments steht:
-        bad_file = valid_vk03_file.replace("+04'", "+999'").replace("+0'", "+999'")
+        bad_file = valid_vk03_file.replace("URI+123456789+13:19+20251017+19'", "URI+123456789+13:19+20251017+123456789012345'")
         
         ctx = make_context(bad_file, tokenizer)
         errors = rule.validate(ctx)
-        assert_error_code(errors, '1.3.5.3', 'Unzulässiger Urgebühren-Code muss erkannt werden')
+        assert_error_code(errors, '1.3.6.5', 'Zu lange Belegnummer im URI-Segment muss erkannt werden')

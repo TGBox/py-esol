@@ -169,6 +169,62 @@ class SchemaFactory:
         cls._register_BES(registry)
         cls._register_GZF(registry)
 
+        # --- SLLA: A (Hilfsmittel) segments ---
+        cls._register_HIL(registry)
+        cls._register_EHI(registry)
+        cls._register_ZUH(registry)
+        cls._register_MEH(registry)
+        cls._register_ZHI(registry)
+
+        # --- SLLA: C (HKP) segments ---
+        cls._register_ESK(registry)
+        cls._register_EHK(registry)
+        cls._register_ELP(registry)
+        cls._register_ZHK(registry)
+
+        # --- SLLA: D (Haushaltshilfe) segments ---
+        cls._register_ESH(registry)
+        cls._register_EHH(registry)
+        cls._register_ZHH(registry)
+
+        # --- SLLA: E (Krankentransport) segments ---
+        cls._register_KTL(registry)
+        cls._register_EKT(registry)
+        cls._register_ZUK(registry)
+        cls._register_ZKT(registry)
+
+        # --- SLLA: F (Hebammen) segments ---
+        cls._register_HEB(registry)
+        cls._register_HEL(registry)
+        cls._register_EHB(registry)
+        cls._register_ZHB(registry)
+
+        # --- SLLA: G-N (Sonstige) segments ---
+        cls._register_ENF(registry)
+        cls._register_SUT(registry)
+        cls._register_ZUZ(registry)
+        cls._register_ZUV(registry)
+
+        # --- SLLA: O (SAPV) segments ---
+        cls._register_ERS(registry)
+        cls._register_ESP(registry)
+        cls._register_ZZL(registry)
+        cls._register_ZSP(registry)
+
+        # --- SLLA: P (Versorgungsplanung §132g) segments ---
+        cls._register_EGV(registry)
+        cls._register_IBP(registry)
+
+        # --- SLLA: Q (Kurzzeitpflege) segments ---
+        cls._register_EHP(registry)
+
+        # --- SLLA: R (AKI) segments ---
+        cls._register_AHK(registry)
+        cls._register_ASK(registry)
+
+        # --- SLLA: S (Modellvorhaben §64d) segments ---
+        cls._register_EMP(registry)
+
         # --- Segment orders ---
         cls._register_segment_orders(registry)
 
@@ -445,6 +501,446 @@ class SchemaFactory:
             {'name': 'Forderung pauschaler Zuzahlungsbetrag', 'type': 'N', 'art': 'K', 'maxLen': 10, 'decimals': 2, 'composite': None},
         ]))
 
+    # --- SLLA: A (Hilfsmittel) segments ---
+    @classmethod
+    def _register_HIL(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('HIL', [
+            {'name': 'Identifikationsnummer', 'type': 'N', 'art': 'M', 'maxLen': 3, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_EHI(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('EHI', [
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'Art der abgegebenen Leistung', 'type': 'AN', 'art': 'M', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Mengeneinheit', 'type': 'AN', 'art': 'K', 'maxLen': 2, 'decimals': None, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Datum der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen für Hilfsmittel', 'type': 'AN', 'art': 'M', 'maxLen': 2, 'decimals': None, 'composite': None},
+            {'name': 'Inventarnummer', 'type': 'AN', 'art': 'K', 'maxLen': 20, 'decimals': None, 'composite': None},
+            {'name': 'Positionsnummer für Produktbesonderheiten', 'type': 'AN', 'art': 'K', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Spezifikation Anwendungsort', 'type': 'AN', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Gefahrene Kilometer', 'type': 'N', 'art': 'K', 'maxLen': 6, 'decimals': 0, 'composite': None},
+            {'name': 'Uhrzeit', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit bis', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Dauer', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Versorgungszeitraum von', 'type': 'N', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Versorgungszeitraum bis', 'type': 'N', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZUH(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ZUH', [
+            {'name': 'Identifikationsnummer', 'type': 'N', 'art': 'M', 'maxLen': 3, 'decimals': None, 'composite': None},
+            {'name': 'Bruttobetrag', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Zuzahlungsart', 'type': 'N', 'art': 'K', 'maxLen': 2, 'decimals': None, 'composite': None},
+            {'name': 'Betrag gesetzlicher Zuzahlung', 'type': 'N', 'art': 'K', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Betrag Eigenanteil', 'type': 'N', 'art': 'K', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Versorgungszeitraum', 'type': 'N', 'art': 'K', 'maxLen': 2, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_MEH(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('MEH', [
+            {'name': 'Betrag Mehrkosten', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZHI(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ZHI', [
+            {'name': 'Betriebsstättennummer', 'type': 'AN', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Lebenslange Arztnummer', 'type': 'AN', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Verordnungs-, Ausstell- oder Einsatzdatum', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Zuzahlungskennzeichen', 'type': 'N', 'art': 'M', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Unfallkennzeichen', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen BVG/Sonstiges/SER', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen Verordnungsbesonderheiten', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Beschäftigtennummer', 'type': 'N', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Institutionskennzeichen', 'type': 'N', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+        ]))
+
+    # --- SLLA: C (HKP) segments ---
+    @classmethod
+    def _register_ESK(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ESK', [
+            {'name': 'Datum der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit Beginn', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit Ende', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Dauer', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_EHK(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('EHK', [
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'zu vergütende Abrechnungspositionsnummer', 'type': 'AN', 'art': 'M', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Gefahrene Kilometer', 'type': 'N', 'art': 'K', 'maxLen': 6, 'decimals': 0, 'composite': None},
+            {'name': 'Beschäftigtennummer', 'type': 'N', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Beschäftigtennummer 2', 'type': 'N', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ELP(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ELP', [
+            {'name': 'Abrechnungspositionsnummer der erbrachten Einzelleistung', 'type': 'AN', 'art': 'M', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZHK(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ZHK', [
+            {'name': 'Betriebsstättennummer', 'type': 'AN', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Lebenslange Arztnummer', 'type': 'AN', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Verordnungsdatum', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Unfallkennzeichen', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen BVG/Sonstiges/SER', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen Verordnungsbesonderheiten', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+        ]))
+
+    # --- SLLA: D (Haushaltshilfe) segments ---
+    @classmethod
+    def _register_ESH(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ESH', [
+            {'name': 'Datum der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit Beginn', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit Ende', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Dauer', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_EHH(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('EHH', [
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'Art der abgegebenen Leistung', 'type': 'AN', 'art': 'M', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZHH(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ZHH', [
+            {'name': 'Betriebsstättennummer', 'type': 'AN', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Lebenslange Arztnummer', 'type': 'AN', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Bescheinigungsdatum', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Unfallkennzeichen', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen BVG/Sonstiges/SER', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen Verordnungsbesonderheiten', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+        ]))
+
+    # --- SLLA: E (Krankentransport) segments ---
+    @classmethod
+    def _register_KTL(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('KTL', [
+            {'name': 'Identifikationsnummer', 'type': 'N', 'art': 'M', 'maxLen': 3, 'decimals': None, 'composite': None},
+            {'name': 'Strasse Abholort', 'type': 'AN', 'art': 'M', 'maxLen': 30, 'decimals': None, 'composite': None},
+            {'name': 'PLZ Abholort', 'type': 'AN', 'art': 'K', 'maxLen': 7, 'decimals': None, 'composite': None},
+            {'name': 'Länderkennzeichen Abholort', 'type': 'AN', 'art': 'K', 'maxLen': 3, 'decimals': None, 'composite': None},
+            {'name': 'Name Abholort', 'type': 'AN', 'art': 'K', 'maxLen': 25, 'decimals': None, 'composite': None},
+            {'name': 'Strasse Zielort', 'type': 'AN', 'art': 'M', 'maxLen': 30, 'decimals': None, 'composite': None},
+            {'name': 'PLZ Zielort', 'type': 'AN', 'art': 'M', 'maxLen': 7, 'decimals': None, 'composite': None},
+            {'name': 'Länderkennzeichen Zielort', 'type': 'AN', 'art': 'K', 'maxLen': 3, 'decimals': None, 'composite': None},
+            {'name': 'Name Zielort', 'type': 'AN', 'art': 'M', 'maxLen': 25, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_EKT(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('EKT', [
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'Art der abgegebenen Leistung', 'type': 'AN', 'art': 'M', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Datum der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Gefahrene Kilometer', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Uhrzeit', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit bis', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Dauer', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZUK(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ZUK', [
+            {'name': 'Identifikationsnummer', 'type': 'N', 'art': 'M', 'maxLen': 3, 'decimals': None, 'composite': None},
+            {'name': 'Bruttobetrag', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Zuzahlungsart', 'type': 'N', 'art': 'K', 'maxLen': 2, 'decimals': None, 'composite': None},
+            {'name': 'Betrag Gesetzliche Zuzahlung', 'type': 'N', 'art': 'K', 'maxLen': 10, 'decimals': 2, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZKT(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ZKT', [
+            {'name': 'Betriebsstättennummer', 'type': 'AN', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Lebenslange Arztnummer', 'type': 'AN', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Zuzahlungskennzeichen', 'type': 'N', 'art': 'M', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Verordnungs-, Ausstell- oder Einsatzdatum', 'type': 'N', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Unfallkennzeichen', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen BVG/Sonstiges/SER', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+        ]))
+
+    # --- SLLA: F (Hebammen) segments ---
+    @classmethod
+    def _register_HEB(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('HEB', [
+            {'name': 'IK der behandelnden Hebamme', 'type': 'N', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'IK des Krankenhauses', 'type': 'N', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_HEL(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('HEL', [
+            {'name': 'Datum der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_EHB(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('EHB', [
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'Art der abgegebenen Leistung', 'type': 'AN', 'art': 'M', 'maxLen': 5, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Pharmazentralnummer', 'type': 'AN', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit bis', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Dauer', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Gefahrene Kilometer', 'type': 'N', 'art': 'K', 'maxLen': 6, 'decimals': 0, 'composite': None},
+            {'name': 'Straße der Abfahrt', 'type': 'AN', 'art': 'K', 'maxLen': 30, 'decimals': None, 'composite': None},
+            {'name': 'Länderkennzeichen Abfahrtsort', 'type': 'AN', 'art': 'K', 'maxLen': 3, 'decimals': None, 'composite': None},
+            {'name': 'PLZ Abfahrtsort', 'type': 'AN', 'art': 'K', 'maxLen': 7, 'decimals': None, 'composite': None},
+            {'name': 'Name Abfahrtsort', 'type': 'AN', 'art': 'K', 'maxLen': 25, 'decimals': None, 'composite': None},
+            {'name': 'Straße Zielort', 'type': 'AN', 'art': 'K', 'maxLen': 30, 'decimals': None, 'composite': None},
+            {'name': 'Länderkennzeichen Zielort', 'type': 'AN', 'art': 'K', 'maxLen': 3, 'decimals': None, 'composite': None},
+            {'name': 'PLZ Zielort', 'type': 'AN', 'art': 'K', 'maxLen': 7, 'decimals': None, 'composite': None},
+            {'name': 'Name Zielort', 'type': 'AN', 'art': 'K', 'maxLen': 25, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZHB(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ZHB', [
+            {'name': 'Betriebsstättennummer', 'type': 'AN', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Lebenslange Arztnummer', 'type': 'AN', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Geburtsdatum des Kindes', 'type': 'N', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Schlüssel Geburtsdatum', 'type': 'N', 'maxLen': 1},
+                 {'name': 'Datum', 'type': 'N', 'maxLen': 8},
+             ]},
+            {'name': 'Uhrzeit Geburt des Kindes', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Anordnungsdatum', 'type': 'N', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl der geborenen Kinder', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+        ]))
+
+    # --- SLLA: G-N (Sonstige) segments ---
+    @classmethod
+    def _register_ENF(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ENF', [
+            {'name': 'Identifikationsnummer', 'type': 'N', 'art': 'K', 'maxLen': 3, 'decimals': None, 'composite': None},
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'Art der abgegebenen Leistung', 'type': 'AN', 'art': 'M', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Datum der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Betrag der Zuzahlung', 'type': 'N', 'art': 'K', 'maxLen': 10, 'decimals': 2, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_SUT(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('SUT', [
+            {'name': 'Gefahrene Kilometer', 'type': 'N', 'art': 'K', 'maxLen': 6, 'decimals': 0, 'composite': None},
+            {'name': 'Uhrzeit', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit bis', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Dauer', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Versorgungszeitraum von', 'type': 'N', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Versorgungszeitraum bis', 'type': 'N', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZUZ(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ZUZ', [
+            {'name': 'Identifikationsnummer', 'type': 'N', 'art': 'M', 'maxLen': 3, 'decimals': None, 'composite': None},
+            {'name': 'Bruttobetrag', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Zuzahlungsart', 'type': 'N', 'art': 'K', 'maxLen': 2, 'decimals': None, 'composite': None},
+            {'name': 'Betrag Gesetzliche Zuzahlung', 'type': 'N', 'art': 'K', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Betrag Eigenanteil', 'type': 'N', 'art': 'K', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Versorgungszeitraum', 'type': 'N', 'art': 'K', 'maxLen': 2, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZUV(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ZUV', [
+            {'name': 'Betriebsstättennummer', 'type': 'AN', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Lebenslange Arztnummer', 'type': 'AN', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Verordnungs-, Ausstell- oder Einsatzdatum', 'type': 'N', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Zuzahlungskennzeichen', 'type': 'N', 'art': 'M', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Unfallkennzeichen', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen BVG/Sonstiges/SER', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen Verordnungsbesonderheiten', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+        ]))
+
+    # --- SLLA: O (SAPV) segments ---
+    @classmethod
+    def _register_ERS(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ERS', [
+            {'name': 'Datum Beginn der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ESP(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ESP', [
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'zu vergütende Abrechnungspositionsnummer', 'type': 'AN', 'art': 'M', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Gefahrene Kilometer', 'type': 'N', 'art': 'K', 'maxLen': 6, 'decimals': 0, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZZL(cls, r: SchemaRegistry) -> None:
+        # V21 Update: Support up to 3x Beschäftigtennummer and 3x LANR
+        r.register(SegmentDefinition('ZZL', [
+            {'name': 'Datum Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit Beginn', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Datum Ende', 'type': 'N', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit Ende', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Dauer des Einsatzes', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Einsatz-ID', 'type': 'AN', 'art': 'K', 'maxLen': 20, 'decimals': None, 'composite': None},
+            {'name': 'Beschäftigtennummer', 'type': 'N', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Beschäftigtennummer 2', 'type': 'N', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Beschäftigtennummer 3', 'type': 'N', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'LANR 1', 'type': 'N', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'LANR 2', 'type': 'N', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'LANR 3', 'type': 'N', 'art': 'K', 'maxLen': 9, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ZSP(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ZSP', [
+            {'name': 'Betriebsstättennummer', 'type': 'AN', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Lebenslange Arztnummer', 'type': 'AN', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Verordnungsdatum', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Unfallkennzeichen', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Datum Beginn lt. Verordnung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Datum Ende lt. Verordnung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Kennzeichen Verordnungsbesonderheiten', 'type': 'N', 'art': 'K', 'maxLen': 1, 'decimals': None, 'composite': None},
+        ]))
+
+    # --- SLLA: P (Versorgungsplanung §132g) segments ---
+    @classmethod
+    def _register_EGV(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('EGV', [
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'Art der abgegebenen Leistung', 'type': 'AN', 'art': 'M', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Datum der Leistungserbringung / Abrechnungszeitraum von', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Abrechnungszeitraum bis', 'type': 'N', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_IBP(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('IBP', [
+            {'name': 'Art des Beratungsprozesses', 'type': 'N', 'art': 'M', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Beginn Beratungsprozess', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Ende Beratungsprozess', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl Gespräche', 'type': 'N', 'art': 'M', 'maxLen': 6, 'decimals': None, 'composite': None},
+            {'name': 'Name des Beraters', 'type': 'AN', 'art': 'M', 'maxLen': 70, 'decimals': None, 'composite': None},
+        ]))
+
+    # --- SLLA: Q (Kurzzeitpflege) segments ---
+    @classmethod
+    def _register_EHP(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('EHP', [
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'zu vergütende Abrechnungspositionsnummer', 'type': 'AN', 'art': 'M', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Datum Beginn der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Datum Ende der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+        ]))
+
+    # --- SLLA: R (Außerklinische Intensivpflege - AKI) segments ---
+    @classmethod
+    def _register_AHK(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('AHK', [
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'zu vergütende Abrechnungspositionsnummer', 'type': 'AN', 'art': 'M', 'maxLen': 6, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Datum der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Art der angegebenen Menge', 'type': 'N', 'art': 'M', 'maxLen': 1, 'decimals': None, 'composite': None},
+            {'name': 'Versorgungszeitraum bis', 'type': 'N', 'art': 'K', 'maxLen': 8, 'decimals': None, 'composite': None},
+        ]))
+
+    @classmethod
+    def _register_ASK(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('ASK', [
+            {'name': 'Beschäftigtennummer', 'type': 'N', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit Beginn', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit Ende', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Dauer', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Tag der Leistung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+        ]))
+
+    # --- SLLA: S (Modellvorhaben §64d) segments ---
+    @classmethod
+    def _register_EMP(cls, r: SchemaRegistry) -> None:
+        r.register(SegmentDefinition('EMP', [
+            {'name': 'Leistungserbringergruppe', 'type': 'AN', 'art': 'M', 'maxLen': None, 'decimals': None,
+             'composite': [
+                 {'name': 'Abrechnungscode', 'type': 'AN', 'maxLen': 2},
+                 {'name': 'Tarifkennzeichen', 'type': 'AN', 'maxLen': 5},
+             ]},
+            {'name': 'Zu vergütende Abrechnungspositionsnummer', 'type': 'AN', 'art': 'M', 'maxLen': 10, 'decimals': None, 'composite': None},
+            {'name': 'Anzahl/Menge', 'type': 'N', 'art': 'M', 'maxLen': 4, 'decimals': 2, 'composite': None},
+            {'name': 'Einzelbetrag der Abrechnungsposition', 'type': 'N', 'art': 'M', 'maxLen': 10, 'decimals': 2, 'composite': None},
+            {'name': 'Beschäftigtennummer', 'type': 'N', 'art': 'M', 'maxLen': 9, 'decimals': None, 'composite': None},
+            {'name': 'Datum Beginn der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit Beginn', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Datum Ende der Leistungserbringung', 'type': 'N', 'art': 'M', 'maxLen': 8, 'decimals': None, 'composite': None},
+            {'name': 'Uhrzeit Ende', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+            {'name': 'Dauer der Leistungserbringung', 'type': 'N', 'art': 'K', 'maxLen': 4, 'decimals': None, 'composite': None},
+        ]))
+
     # ========================================================================
     # Segment order definitions
     # ========================================================================
@@ -452,9 +948,7 @@ class SchemaFactory:
     @classmethod
     def _register_segment_orders(cls, r: SchemaRegistry) -> None:
         """
-        Registriert die Segment-Reihenfolge-Regeln für SLGA und SLLA:B.
-        Format: Dictionary mit 'tag': str, 'min': int, 'max': Optional[int]. 
-        None bei max bedeutet unbegrenzte Wiederholungen.
+        Registriert die Segment-Reihenfolge-Regeln für SLGA und SLLA.
         """
         # SLGA: UNH, FKT, REC, [UST], [SKO]*, GES+, NAM, UNT
         r.register_segment_order('SLGA', [
@@ -468,27 +962,11 @@ class SchemaFactory:
             {'tag': 'UNT', 'min': 1, 'max': 1},
         ])
 
-        # SLLA:B (Heilmittel): UNH, FKT, REC, then repeating INV blocks, UNT
+        # SLLA: UNH, FKT, REC, then repeating INV blocks, UNT
         r.register_segment_order('SLLA', [
             {'tag': 'UNH', 'min': 1, 'max': 1},
             {'tag': 'FKT', 'min': 1, 'max': 1},
             {'tag': 'REC', 'min': 1, 'max': 1},
-            # INV blocks repeat — validated separately
             {'tag': 'INV_BLOCK', 'min': 1, 'max': None},
             {'tag': 'UNT', 'min': 1, 'max': 1},
-        ])
-
-        # SLLA:B INV block internal order
-        r.register_segment_order('SLLA_B_INV', [
-            {'tag': 'INV', 'min': 1, 'max': 1},
-            {'tag': 'URI', 'min': 0, 'max': 1},
-            {'tag': 'NAD', 'min': 1, 'max': 1},
-            {'tag': 'IMG', 'min': 0, 'max': 1},
-            {'tag': 'EVO', 'min': 0, 'max': 1},
-            # EHE group repeats (EHE [TXT] [MWS])* — at least 1 EHE
-            {'tag': 'EHE_GROUP', 'min': 1, 'max': None},
-            {'tag': 'ZHE', 'min': 1, 'max': 1},
-            {'tag': 'DIA', 'min': 1, 'max': None},
-            {'tag': 'SKZ', 'min': 0, 'max': 1},
-            {'tag': 'BES_OR_GZF', 'min': 1, 'max': 1}, # BES or GZF depending on VK
         ])

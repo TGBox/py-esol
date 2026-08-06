@@ -2,6 +2,7 @@ from typing import List, Optional, Dict, Any
 
 from schema.schema import SchemaFactory
 from rules.rule_interface import RuleInterface
+from rules.level3.content_helper import ContentHelper
 from validation_context import ValidationContext
 from validation_error import ValidationError
 
@@ -12,7 +13,7 @@ class SegmentOrderRule(RuleInterface):
 
     1.2.1.1: SLGA segment order: FKT, REC, [UST], [SKO]*, GES+, NAM
     1.2.1.2: SLLA base segment order: FKT, REC, (INV block)*
-    1.2.1.3: SLLA:B INV block order: INV, [URI], NAD, [IMG], [EVO], EHE+, ZHE, DIA+, [SKZ], BES|GZF
+    1.2.1.3: SLLA INV block order across all Sammelgruppenschlüssel A-S
     1.2.1.4: SLGA before SLLA for each group
     1.2.1.5: No mixed VK in file
     """
@@ -217,149 +218,130 @@ class SegmentOrderRule(RuleInterface):
     ) -> List:
         errors = []
 
-        valid_sequence = {
-            "INV": {"next": ("URI", "NAD"), "required": True},
-            "URI": {"next": ("NAD",), "required": False},
-            "NAD": {"next": ("IMG", "EVO", "EHE"), "required": True},
-            "IMG": {"next": ("EVO", "EHE"), "required": False},
-            "EVO": {"next": ("EHE",), "required": False},
-            "EHE": {"next": ("TXT", "MWS", "EHE", "ZHE"), "required": True},
-            "TXT": {"next": ("MWS", "EHE", "ZHE"), "required": False},
-            "MWS": {"next": ("EHE", "ZHE"), "required": False},
-            "ZHE": {"next": ("DIA",), "required": True},
-            "DIA": {"next": ("DIA", "SKZ", "BES", "GZF"), "required": True},
-            "SKZ": {"next": ("BES", "GZF"), "required": False},
-            "BES": {"next": (), "required": False},
-            "GZF": {"next": (), "required": False},
-        }
-
         if not tags:
             return errors
 
-        current_state = None
-        saw_ehe = False
-        saw_dia = False
-        saw_terminator = False
+        lb = ContentHelper.get_file_leistungsbereich(context.get_parsed_segments()) or "B"
+        lb = lb.upper()
+        if lb in ("G", "H", "I", "J", "K", "L", "M", "N"):
+            lb_group = "G-N"
+        else:
+            lb_group = lb
 
+        # Configuration of allowed tags and primary service tags per Sammelgruppenschlüssel
+        sammelgruppen_config = {
+            "A": {
+                "primary": ("EHI", "HIL"),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "HIL", "EHI", "TXT", "MWS", "ZUH", "MEH", "ZHI", "DIA", "SKZ", "BES"},
+            },
+            "B": {
+                "primary": ("EHE",),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "EHE", "TXT", "MWS", "ZHE", "DIA", "SKZ", "BES", "GZF"},
+            },
+            "C": {
+                "primary": ("EHK", "ESK"),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "ESK", "EHK", "TXT", "ELP", "ZHK", "DIA", "SKZ", "BES"},
+            },
+            "D": {
+                "primary": ("EHH", "ESH"),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "ESH", "EHH", "TXT", "ELP", "ZHH", "DIA", "SKZ", "BES"},
+            },
+            "E": {
+                "primary": ("EKT", "KTL"),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "KTL", "EKT", "TXT", "MWS", "ZUK", "ZKT", "SKZ", "BES"},
+            },
+            "F": {
+                "primary": ("EHB", "HEB", "HEL"),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "HEB", "HEL", "EHB", "TXT", "MWS", "ZHB", "DIA", "SKZ", "BES"},
+            },
+            "G-N": {
+                "primary": ("ENF",),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "ENF", "SUT", "TXT", "MWS", "ZUZ", "ZUV", "DIA", "SKZ", "BES"},
+            },
+            "O": {
+                "primary": ("ESP", "ERS"),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "ERS", "ESP", "TXT", "ZZL", "ZSP", "DIA", "SKZ", "BES"},
+            },
+            "P": {
+                "primary": ("EGV",),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "EGV", "IBP", "TXT", "BES"},
+            },
+            "Q": {
+                "primary": ("EHP",),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "EHP", "TXT", "DIA", "SKZ", "BES"},
+            },
+            "R": {
+                "primary": ("AHK",),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "AHK", "ASK", "TXT", "ZHK", "DIA", "SKZ", "BES"},
+            },
+            "S": {
+                "primary": ("EMP",),
+                "allowed": {"INV", "URI", "NAD", "IMG", "EVO", "EMP", "TXT", "BES"},
+            },
+        }
+
+        config = sammelgruppen_config.get(lb_group, sammelgruppen_config["B"])
+        primary_tags = config["primary"]
+        allowed_tags = config["allowed"]
+
+        if tags[0] != "INV":
+            errors.append(
+                context.create_validation_error(
+                    2,
+                    "1.2.1.3",
+                    f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: Erster Segment muss INV sein, gefunden: {tags[0]}.",
+                    tags[0],
+                    global_start,
+                )
+            )
+            return errors
+
+        # Check allowed tags in block
         for i, tag in enumerate(tags):
             global_idx = global_start + i
-
-            if current_state is None:
-                if tag != "INV":
-                    errors.append(
-                        context.create_validation_error(
-                            2,
-                            "1.2.1.3",
-                            f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: "
-                            f"Erster Segment muss INV sein, gefunden: {tag}.",
-                            tag,
-                            global_idx,
-                        )
-                    )
-                    return errors
-                current_state = "INV"
-                continue
-
-            state_info = valid_sequence.get(current_state)
-            if state_info is None:
+            if tag not in allowed_tags:
                 errors.append(
                     context.create_validation_error(
                         2,
                         "1.2.1.3",
-                        f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: "
-                        f"Unerwartetes Segment {tag} nach {current_state} (Position {global_idx}).",
+                        f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: Segment {tag} ist im Leistungsbereich '{lb}' nicht zulässig (Position {global_idx}).",
                         tag,
                         global_idx,
                     )
                 )
-                continue
 
-            allowed_next = state_info["next"]
-
-            if tag in allowed_next:
-                current_state = tag
-                if tag == "EHE":
-                    saw_ehe = True
-                if tag == "DIA":
-                    saw_dia = True
-                if tag in ("BES", "GZF"):
-                    saw_terminator = True
-            else:
-                found = False
-                search_state = current_state
-                visited = {search_state}
-
-                while not found:
-                    info = valid_sequence.get(search_state)
-                    if info is None:
-                        break
-
-                    advanced = False
-                    for next_state in info["next"]:
-                        if next_state == tag:
-                            current_state = tag
-                            found = True
-                            if tag == "EHE":
-                                saw_ehe = True
-                            if tag == "DIA":
-                                saw_dia = True
-                            if tag in ("BES", "GZF"):
-                                saw_terminator = True
-                            break
-
-                        next_info = valid_sequence.get(next_state)
-                        if next_info and not next_info["required"] and next_state not in visited:
-                            visited.add(next_state)
-                            search_state = next_state
-                            advanced = True
-                            break
-
-                    if found or not advanced or len(visited) > len(valid_sequence):
-                        break
-
-                if not found:
-                    errors.append(
-                        context.create_validation_error(
-                            2,
-                            "1.2.1.3",
-                            f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: "
-                            f"Segment {tag} nicht erlaubt nach {current_state} (Position {global_idx}).",
-                            tag,
-                            global_idx,
-                        )
-                    )
-
-        if not saw_ehe:
+        # Check primary service segment presence
+        if not any(pt in tags for pt in primary_tags):
+            p_name = " oder ".join(primary_tags)
             errors.append(
                 context.create_validation_error(
                     2,
                     "1.2.1.3",
-                    f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: "
-                    "Mindestens ein EHE-Segment ist erforderlich.",
-                    "EHE",
+                    f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: Mindestens ein {p_name}-Segment ist im Leistungsbereich '{lb}' erforderlich.",
+                    primary_tags[0],
                     global_start,
                 )
             )
 
-        if not saw_dia:
+        # Check DIA requirement for B
+        if lb_group == "B" and "DIA" not in tags:
             errors.append(
                 context.create_validation_error(
                     2,
                     "1.2.1.3",
-                    f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: "
-                    "Mindestens ein DIA-Segment ist erforderlich.",
+                    f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: Mindestens ein DIA-Segment ist erforderlich.",
                     "DIA",
                     global_start,
                 )
             )
 
-        if not saw_terminator:
+        # Check terminator segment presence
+        if tags[-1] not in ("BES", "GZF"):
             errors.append(
                 context.create_validation_error(
                     2,
                     "1.2.1.3",
-                    f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: "
-                    "Abschließendes BES- oder GZF-Segment fehlt.",
+                    f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: Abschließendes BES- oder GZF-Segment fehlt (gefunden: {tags[-1]}).",
                     "BES",
                     global_start,
                 )
