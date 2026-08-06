@@ -22,8 +22,9 @@ class EsolValidatorGUI(tk.Tk):
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.validate_script = os.path.join(self.base_dir, "validate.py")
         self.batch_script = os.path.join(self.base_dir, "batch_validate.py")
-        self.convert_script = os.path.join(self.base_dir, "tools\\convert_utf8_to_iso.py")
-        self.generate_auf_script = os.path.join(self.base_dir, "tools\\generate_auf.py")
+        self.convert_script = os.path.join(self.base_dir, "tools", "convert_utf8_to_iso.py")
+        self.generate_auf_script = os.path.join(self.base_dir, "tools", "generate_auf.py")
+        self.correction_script = os.path.join(self.base_dir, "tools", "generate_correction.py")
 
         self._setup_ui()
 
@@ -77,19 +78,29 @@ class EsolValidatorGUI(tk.Tk):
         btn_frame.grid(row=2, column=0, columnspan=5, sticky="ew", pady=10)
 
         self.btn_run = ttk.Button(
-            btn_frame, text="▶ Validierung starten", command=self._start_validation
+            btn_frame, text="▶ Validieren", command=self._start_validation
         )
         self.btn_run.pack(side="left", fill="x", expand=True, padx=2)
 
         self.btn_convert = ttk.Button(
-            btn_frame, text="🔄 UTF-8 ➔ ISO-8859-15", command=self._start_conversion
+            btn_frame, text="🔄 UTF-8 ➔ ISO", command=self._start_conversion
         )
         self.btn_convert.pack(side="left", fill="x", expand=True, padx=2)
 
         self.btn_auf = ttk.Button(
-            btn_frame, text="📄 Auftragsdatei (.auf) erstellen", command=self._start_generate_auf
+            btn_frame, text="📄 .auf erstellen", command=self._start_generate_auf
         )
         self.btn_auf.pack(side="left", fill="x", expand=True, padx=2)
+
+        self.btn_vk03 = ttk.Button(
+            btn_frame, text="💰 VK 03 (Zuzahlung)", command=self._start_generate_vk03
+        )
+        self.btn_vk03.pack(side="left", fill="x", expand=True, padx=2)
+
+        self.btn_vk04 = ttk.Button(
+            btn_frame, text="✏️ VK 04 (Korrektur)", command=self._start_generate_vk04
+        )
+        self.btn_vk04.pack(side="left", fill="x", expand=True, padx=2)
 
         # Progressbar (optional/visuell)
         self.progress = ttk.Progressbar(top_frame, mode="indeterminate")
@@ -152,6 +163,8 @@ class EsolValidatorGUI(tk.Tk):
         self.btn_run.config(state=state)
         self.btn_convert.config(state=state)
         self.btn_auf.config(state=state)
+        self.btn_vk03.config(state=state)
+        self.btn_vk04.config(state=state)
 
     def _start_validation(self):
         raw_path = self.path_entry.get().strip()
@@ -195,6 +208,58 @@ class EsolValidatorGUI(tk.Tk):
         self._clear_log()
 
         threading.Thread(target=self._run_generate_auf_process, args=(raw_path,), daemon=True).start()
+
+    def _start_generate_vk03(self):
+        self._open_correction_dialog("03")
+
+    def _start_generate_vk04(self):
+        self._open_correction_dialog("04")
+
+    def _open_correction_dialog(self, default_vk: str):
+        raw_path = self.path_entry.get().strip()
+        if not raw_path:
+            messagebox.showwarning("Fehler", "Bitte wählen Sie eine Datei aus!")
+            return
+
+        # Take first file if multiple selected
+        paths = [p.strip() for p in raw_path.split(";") if p.strip()]
+        first_file = None
+        for p in paths:
+            if os.path.isfile(p):
+                first_file = p
+                break
+            elif os.path.isdir(p):
+                for root, _, files in os.walk(p):
+                    for file in files:
+                        if not file.endswith(".txt") and not file.endswith(".auf") and not file.startswith("."):
+                            first_file = os.path.join(root, file)
+                            break
+                    if first_file:
+                        break
+
+        if not first_file:
+            messagebox.showwarning("Fehler", "Keine gültige ESOL-Datei gefunden.")
+            return
+
+        from gui_correction_dialog import CorrectionSelectionDialog
+
+        def on_generated(generated_path: str):
+            self._clear_log()
+            self._append_log(f"=== Korrekturdatei generiert: {os.path.basename(generated_path)} ===\n", tag="HEADER")
+            self._append_log(f"Pfad: {generated_path}\n\n", tag="OK")
+            # Automatically validate generated file
+            cmd = [
+                sys.executable,
+                self.validate_script,
+                generated_path,
+                f"--stufe={self.stufe_var.get()}"
+            ]
+            if self.warnings_var.get():
+                cmd.append("--warnings")
+            self._append_log("=== Validierung der generierten Datei ===\n", tag="HEADER")
+            self._execute_cmd(cmd)
+
+        CorrectionSelectionDialog(self, file_path=first_file, default_vk=default_vk, on_complete_callback=on_generated)
 
     def _run_process(self, path_input: str):
         try:
@@ -298,6 +363,42 @@ class EsolValidatorGUI(tk.Tk):
                     file_path
                 ]
                 self._append_log(f"=== Generiere .auf: {os.path.basename(file_path)} ===\n", tag="HEADER")
+                self._execute_cmd(cmd)
+                self._append_log("\n" + "-" * 60 + "\n\n")
+
+        finally:
+            self.after(0, self._finish_process)
+
+    def _run_correction_process(self, target_vk: str, path_input: str):
+        try:
+            paths = [p.strip() for p in path_input.split(";") if p.strip()]
+            files_to_process: list[str] = []
+
+            for path in paths:
+                if os.path.isdir(path):
+                    for root, _, files in os.walk(path):
+                        for file in files:
+                            if not file.endswith(".txt") and not file.endswith(".auf") and not file.startswith("."):
+                                files_to_process.append(os.path.join(root, file))
+                elif os.path.isfile(path):
+                    if not path.endswith(".txt") and not path.endswith(".auf"):
+                        files_to_process.append(path)
+
+            if not files_to_process:
+                self._append_log("Keine ESOL-Dateien zur Korrektur-Generierung gefunden.\n", tag="ERROR")
+                return
+
+            label = "Zuzahlungsforderung (VKZ 03)" if target_vk == "03" else "Korrekturrechnung (VKZ 04)"
+            self._append_log(f"Erstelle {label} für {len(files_to_process)} Datei(en)...\n\n", tag="HEADER")
+
+            for file_path in files_to_process:
+                cmd = [
+                    sys.executable,
+                    self.correction_script,
+                    file_path,
+                    f"--type={target_vk}"
+                ]
+                self._append_log(f"=== Generiere VKZ {target_vk}: {os.path.basename(file_path)} ===\n", tag="HEADER")
                 self._execute_cmd(cmd)
                 self._append_log("\n" + "-" * 60 + "\n\n")
 
