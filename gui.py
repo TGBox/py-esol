@@ -22,6 +22,8 @@ class EsolValidatorGUI(tk.Tk):
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.validate_script = os.path.join(self.base_dir, "validate.py")
         self.batch_script = os.path.join(self.base_dir, "batch_validate.py")
+        self.convert_script = os.path.join(self.base_dir, "tools\\convert_utf8_to_iso.py")
+        self.generate_auf_script = os.path.join(self.base_dir, "tools\\generate_auf.py")
 
         self._setup_ui()
 
@@ -70,11 +72,24 @@ class EsolValidatorGUI(tk.Tk):
         # Grid-Weight für Anpassung bei Fenstergrößenänderung
         top_frame.columnconfigure(1, weight=1)
 
-        # Start-Button
+        # 3. Zeile: Aktions-Buttons
+        btn_frame = ttk.Frame(top_frame)
+        btn_frame.grid(row=2, column=0, columnspan=5, sticky="ew", pady=10)
+
         self.btn_run = ttk.Button(
-            top_frame, text="▶ Validierung starten", command=self._start_validation
+            btn_frame, text="▶ Validierung starten", command=self._start_validation
         )
-        self.btn_run.grid(row=2, column=0, columnspan=5, sticky="ew", pady=10)
+        self.btn_run.pack(side="left", fill="x", expand=True, padx=2)
+
+        self.btn_convert = ttk.Button(
+            btn_frame, text="🔄 UTF-8 ➔ ISO-8859-15", command=self._start_conversion
+        )
+        self.btn_convert.pack(side="left", fill="x", expand=True, padx=2)
+
+        self.btn_auf = ttk.Button(
+            btn_frame, text="📄 Auftragsdatei (.auf) erstellen", command=self._start_generate_auf
+        )
+        self.btn_auf.pack(side="left", fill="x", expand=True, padx=2)
 
         # Progressbar (optional/visuell)
         self.progress = ttk.Progressbar(top_frame, mode="indeterminate")
@@ -133,6 +148,11 @@ class EsolValidatorGUI(tk.Tk):
         self.clipboard_append(content)
         messagebox.showinfo("Erfolg", "Ergebnisse wurden in die Zwischenablage kopiert!")
 
+    def _set_buttons_state(self, state: str):
+        self.btn_run.config(state=state)
+        self.btn_convert.config(state=state)
+        self.btn_auf.config(state=state)
+
     def _start_validation(self):
         raw_path = self.path_entry.get().strip()
 
@@ -140,13 +160,41 @@ class EsolValidatorGUI(tk.Tk):
             messagebox.showwarning("Fehler", "Bitte wählen Sie eine Datei oder einen Ordner aus!")
             return
 
-        self.btn_run.config(state="disabled")
+        self._set_buttons_state("disabled")
         self.progress.grid(row=3, column=0, columnspan=5, sticky="ew", pady=2)
         self.progress.start(10)
         self._clear_log()
 
         # In separatem Thread ausführen, damit GUI reagiert
         threading.Thread(target=self._run_process, args=(raw_path,), daemon=True).start()
+
+    def _start_conversion(self):
+        raw_path = self.path_entry.get().strip()
+
+        if not raw_path:
+            messagebox.showwarning("Fehler", "Bitte wählen Sie eine Datei oder einen Ordner aus!")
+            return
+
+        self._set_buttons_state("disabled")
+        self.progress.grid(row=3, column=0, columnspan=5, sticky="ew", pady=2)
+        self.progress.start(10)
+        self._clear_log()
+
+        threading.Thread(target=self._run_conversion_process, args=(raw_path,), daemon=True).start()
+
+    def _start_generate_auf(self):
+        raw_path = self.path_entry.get().strip()
+
+        if not raw_path:
+            messagebox.showwarning("Fehler", "Bitte wählen Sie eine Datei oder einen Ordner aus!")
+            return
+
+        self._set_buttons_state("disabled")
+        self.progress.grid(row=3, column=0, columnspan=5, sticky="ew", pady=2)
+        self.progress.start(10)
+        self._clear_log()
+
+        threading.Thread(target=self._run_generate_auf_process, args=(raw_path,), daemon=True).start()
 
     def _run_process(self, path_input: str):
         try:
@@ -158,11 +206,10 @@ class EsolValidatorGUI(tk.Tk):
                 if os.path.isdir(path):
                     for root, _, files in os.walk(path):
                         for file in files:
-                            # Neu: .txt-Reports und versteckte Dateien ignorieren
-                            if not file.endswith(".txt") and not file.startswith("."):
+                            if not file.endswith(".txt") and not file.endswith(".auf") and not file.startswith("."):
                                 files_to_validate.append(os.path.join(root, file))
                 elif os.path.isfile(path):
-                    if not path.endswith(".txt"):
+                    if not path.endswith(".txt") and not path.endswith(".auf"):
                         files_to_validate.append(path)
 
             if not files_to_validate:
@@ -186,7 +233,76 @@ class EsolValidatorGUI(tk.Tk):
                 self._append_log("\n" + "-" * 60 + "\n\n")
 
         finally:
-            self.after(0, self._finish_validation)
+            self.after(0, self._finish_process)
+
+    def _run_conversion_process(self, path_input: str):
+        try:
+            paths = [p.strip() for p in path_input.split(";") if p.strip()]
+            files_to_convert: list[str] = []
+
+            for path in paths:
+                if os.path.isdir(path):
+                    for root, _, files in os.walk(path):
+                        for file in files:
+                            if not file.endswith(".txt") and not file.endswith(".auf") and not file.startswith("."):
+                                files_to_convert.append(os.path.join(root, file))
+                elif os.path.isfile(path):
+                    if not path.endswith(".txt") and not path.endswith(".auf"):
+                        files_to_convert.append(path)
+
+            if not files_to_convert:
+                self._append_log("Keine Dateien zur Konvertierung gefunden.\n", tag="ERROR")
+                return
+
+            self._append_log(f"Starte Konvertierung von {len(files_to_convert)} Datei(en) nach ISO-8859-15...\n\n", tag="HEADER")
+
+            for file_path in files_to_convert:
+                cmd = [
+                    sys.executable,
+                    self.convert_script,
+                    file_path,
+                    "--inplace"
+                ]
+                self._append_log(f"=== Konvertiere: {os.path.basename(file_path)} ===\n", tag="HEADER")
+                self._execute_cmd(cmd)
+                self._append_log("\n" + "-" * 60 + "\n\n")
+
+        finally:
+            self.after(0, self._finish_process)
+
+    def _run_generate_auf_process(self, path_input: str):
+        try:
+            paths = [p.strip() for p in path_input.split(";") if p.strip()]
+            files_to_process: list[str] = []
+
+            for path in paths:
+                if os.path.isdir(path):
+                    for root, _, files in os.walk(path):
+                        for file in files:
+                            if not file.endswith(".txt") and not file.endswith(".auf") and not file.startswith("."):
+                                files_to_process.append(os.path.join(root, file))
+                elif os.path.isfile(path):
+                    if not path.endswith(".txt") and not path.endswith(".auf"):
+                        files_to_process.append(path)
+
+            if not files_to_process:
+                self._append_log("Keine ESOL-Dateien zur Erstellung von Auftragsdateien gefunden.\n", tag="ERROR")
+                return
+
+            self._append_log(f"Erstelle Auftragsdateien (.auf) für {len(files_to_process)} Datei(en)...\n\n", tag="HEADER")
+
+            for file_path in files_to_process:
+                cmd = [
+                    sys.executable,
+                    self.generate_auf_script,
+                    file_path
+                ]
+                self._append_log(f"=== Generiere .auf: {os.path.basename(file_path)} ===\n", tag="HEADER")
+                self._execute_cmd(cmd)
+                self._append_log("\n" + "-" * 60 + "\n\n")
+
+        finally:
+            self.after(0, self._finish_process)
 
     def _execute_cmd(self, cmd: list[str]):
         # Neu: Erzwinge UTF-8 sowohl für Ausgaben als auch für Python-Interna
@@ -226,10 +342,10 @@ class EsolValidatorGUI(tk.Tk):
 
         self.after(0, write)
 
-    def _finish_validation(self):
+    def _finish_process(self):
         self.progress.stop()
         self.progress.grid_forget()
-        self.btn_run.config(state="normal")
+        self._set_buttons_state("normal")
 
 
 if __name__ == "__main__":
