@@ -92,15 +92,10 @@ class EsolValidatorGUI(tk.Tk):
         )
         self.btn_auf.pack(side="left", fill="x", expand=True, padx=2)
 
-        self.btn_vk03 = ttk.Button(
-            btn_frame, text="💰 VK 03 (Zuzahlung)", command=self._start_generate_vk03
+        self.btn_correction = ttk.Button(
+            btn_frame, text="🛠️ Korrektur / Zuzahlung", command=self._start_correction_dialog
         )
-        self.btn_vk03.pack(side="left", fill="x", expand=True, padx=2)
-
-        self.btn_vk04 = ttk.Button(
-            btn_frame, text="✏️ VK 04 (Korrektur)", command=self._start_generate_vk04
-        )
-        self.btn_vk04.pack(side="left", fill="x", expand=True, padx=2)
+        self.btn_correction.pack(side="left", fill="x", expand=True, padx=2)
 
         # Progressbar (optional/visuell)
         self.progress = ttk.Progressbar(top_frame, mode="indeterminate")
@@ -163,8 +158,7 @@ class EsolValidatorGUI(tk.Tk):
         self.btn_run.config(state=state)
         self.btn_convert.config(state=state)
         self.btn_auf.config(state=state)
-        self.btn_vk03.config(state=state)
-        self.btn_vk04.config(state=state)
+        self.btn_correction.config(state=state)
 
     def _start_validation(self):
         raw_path = self.path_entry.get().strip()
@@ -209,11 +203,8 @@ class EsolValidatorGUI(tk.Tk):
 
         threading.Thread(target=self._run_generate_auf_process, args=(raw_path,), daemon=True).start()
 
-    def _start_generate_vk03(self):
-        self._open_correction_dialog("03")
-
-    def _start_generate_vk04(self):
-        self._open_correction_dialog("04")
+    def _start_correction_dialog(self):
+        self._open_correction_dialog(default_vk="03")
 
     def _open_correction_dialog(self, default_vk: str):
         raw_path = self.path_entry.get().strip()
