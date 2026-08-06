@@ -16,7 +16,7 @@ class EsolValidatorGUI(tk.Tk):
 
         self.title("ESOL Datei-Validator")
         self.geometry("850x650")
-        self.minsize(700, 500)
+        self.minsize(700, 550)
 
         # Pfade zu den Skripten bestimmen
         self.base_dir = os.path.dirname(os.path.abspath(__file__))

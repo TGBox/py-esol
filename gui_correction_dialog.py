@@ -28,8 +28,8 @@ class CorrectionSelectionDialog(tk.Toplevel):
         self.on_complete_callback = on_complete_callback
 
         self.title("Korrektur- & Zuzahlungs-Konfigurator")
-        self.geometry("800x600")
-        self.minsize(700, 480)
+        self.geometry("800x650")
+        self.minsize(800, 650)
 
         # Make dialog modal
         self.transient(parent)
@@ -132,7 +132,7 @@ class CorrectionSelectionDialog(tk.Toplevel):
 
         # Footer Buttons
         footer_frame = ttk.Frame(self)
-        footer_frame.pack(fill="x", padx=10, pady=10)
+        footer_frame.pack(side="bottom",fill="both", padx=10, pady=10, expand=True)
 
         btn_cancel = ttk.Button(footer_frame, text="Abbrechen", command=self.destroy)
         btn_cancel.pack(side="right", padx=5)
