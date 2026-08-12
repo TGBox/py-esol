@@ -199,7 +199,7 @@ def generate_correction_esol(
 
         elif tag == "INV":
             in_inv_block_p1 = True
-            belegnr = str(fields[0]) if len(fields) > 0 else ""
+            belegnr = str(fields[3]) if len(fields) > 0 else ""
             vers_status = str(fields[1]) if len(fields) > 1 and fields[1] else "00"
             st_prefix2 = vers_status[:2] if len(vers_status) >= 2 else "00"
             st_prefix1 = vers_status[:1] if len(vers_status) >= 1 else "0"
