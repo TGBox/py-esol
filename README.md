@@ -58,7 +58,7 @@ pip install -r requirements.txt
 Starten der Desktop-Anwendung:
 
 ```bash
-python gui.py
+python main.py
 ```
 
 Oder Verwenden der vorkompilierten Binärdatei `dist/pyesol.exe`.
@@ -142,7 +142,7 @@ py-esol/
 ├── esol_validator.py             # Hauptklasse EsolValidator
 ├── validate.py                   # CLI-Validator für Einzeldateien
 ├── batch_validate.py             # CLI-Batch-Validator für Ordner
-├── gui.py                        # Hauptfenster der Tkinter GUI
+├── main.py                        # Hauptfenster der Tkinter GUI
 ├── gui_correction_dialog.py      # Interaktiver Korrektur- & Belegauswahl-Dialog
 ├── pyesol.spec                   # PyInstaller Build-Spezifikation
 ├── parser/
