@@ -93,7 +93,7 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 if len(fields) > 2:
                     current_beleg["geburtstag"] = str(fields[2])
 
-            elif tag in ["EHE", "ENF", "EHI", "EHK"]:
+            elif tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
                 anzahl = 0.0
                 betrag_zuz = 0.0
                 code = ""
@@ -109,6 +109,16 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                     anzahl = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
                     einzelbetrag = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
                     betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
+                elif tag == "EHI":
+                    code = str(fields[0]) if len(fields) > 0 else ""
+                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    einzelbetrag = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
+                    betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
+                elif tag in ["EHK", "EKT", "EHB", "ESP"]:
+                    code = str(fields[0]) if len(fields) > 0 else ""
+                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    einzelbetrag = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
+                    betrag_zuz = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
 
                 current_beleg["zuzahlung_proz"] += round(anzahl * betrag_zuz, 2)
                 current_beleg["positions"].append({
@@ -223,7 +233,7 @@ def generate_correction_esol(
             current_inv_zuz_pausch_p1 = 0.0
 
         elif in_inv_block_p1:
-            if keep_block_p1 and tag in ["EHE", "ENF", "EHI", "EHK"]:
+            if keep_block_p1 and tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
                 anzahl = 0.0
                 betrag_zuz = 0.0
                 if tag == "EHE":
@@ -232,6 +242,12 @@ def generate_correction_esol(
                 elif tag == "ENF":
                     anzahl = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
                     betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
+                elif tag == "EHI":
+                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
+                elif tag in ["EHK", "EKT", "EHB", "ESP"]:
+                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    betrag_zuz = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
                 current_inv_zuz_proz_p1 += round(anzahl * betrag_zuz, 2)
             elif tag == "BES":
                 if keep_block_p1:
@@ -331,20 +347,17 @@ def generate_correction_esol(
 
             st_rechnung = round(st_brutto - st_zuz, 2)
 
+            while len(fields) < 4:
+                fields.append("")
+
             if target_vk == "03":
-                if len(fields) > 1:
-                    fields[1] = ContentHelper.format_decimal(st_zuz)
-                if len(fields) > 2:
-                    fields[2] = "0,00"
-                if len(fields) > 3:
-                    fields[3] = ContentHelper.format_decimal(st_zuz)
+                fields[1] = ContentHelper.format_decimal(st_zuz)
+                fields[2] = "0,00"
+                fields[3] = ContentHelper.format_decimal(st_zuz)
             else:
-                if len(fields) > 1:
-                    fields[1] = ContentHelper.format_decimal(st_rechnung)
-                if len(fields) > 2:
-                    fields[2] = ContentHelper.format_decimal(st_brutto)
-                if len(fields) > 3:
-                    fields[3] = ContentHelper.format_decimal(st_zuz)
+                fields[1] = ContentHelper.format_decimal(st_rechnung)
+                fields[2] = ContentHelper.format_decimal(st_brutto)
+                fields[3] = ContentHelper.format_decimal(st_zuz)
 
             new_raw_segments.append(build_segment_string(tag, fields))
 
@@ -363,7 +376,7 @@ def generate_correction_esol(
                     inv_block_segments = []
                 continue
 
-            if tag in ["EHE", "ENF", "EHI", "EHK"]:
+            if tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
                 anzahl = 0.0
                 betrag_zuz = 0.0
                 if tag == "EHE":
@@ -372,12 +385,18 @@ def generate_correction_esol(
                 elif tag == "ENF":
                     anzahl = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
                     betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
+                elif tag == "EHI":
+                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
+                elif tag in ["EHK", "EKT", "EHB", "ESP"]:
+                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    betrag_zuz = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
 
                 current_inv_zuz_proz += round(anzahl * betrag_zuz, 2)
                 inv_block_segments.append((tag, fields))
 
-            elif tag == "ZHE":
-                # In VK 03, Zuzahlungskennzeichen in ZHE (field 3) is set to '2' (Zuzahlung verweigert)
+            elif tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
+                # In VK 03, Zuzahlungskennzeichen in Zxx (field 3) is set to '2' (Zuzahlung verweigert)
                 if target_vk == "03" and len(fields) > 3:
                     fields[3] = "2"
                 inv_block_segments.append((tag, fields))
