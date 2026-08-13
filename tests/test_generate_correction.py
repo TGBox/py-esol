@@ -29,15 +29,15 @@ def test_generate_vk03_zuzahlungsforderung(tmp_path: Path):
     orig_file = tmp_path / "orig_esol.txt"
     orig_file.write_text(orig_esol, encoding="iso-8859-15")
 
-    res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="5100Z", new_rec_date="20260325")
+    res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="05100", new_rec_date="20260325")
 
     assert res_file.exists()
     content = res_file.read_text(encoding="iso-8859-15")
 
     # Check FKT changed to VK 03
     assert "FKT+03+" in content
-    # Check new REC number is composite 5100Z:0 and appears twice
-    assert content.count("REC+5100Z:0+20260325+1'") == 2
+    # Check new REC number is composite 05100:0 and appears twice
+    assert content.count("REC+05100:0+20260325+1'") == 2
     # Check URI segment inserted
     assert "URI+123456789+51:0+20260122+00001'" in content
     # Check ZHE Zuzahlungskennzeichen changed to '2'
@@ -45,9 +45,9 @@ def test_generate_vk03_zuzahlungsforderung(tmp_path: Path):
     # Check GZF segment replaced BES segment
     assert "GZF+20,00+10,00+10,00'" in content
 
-    # Check UNB and UNZ Datenaustauschreferenz updated to new Rechnungsnummer (5100Z)
-    assert "+5100Z+B+" in content
-    assert "UNZ+000002+5100Z'" in content
+    # Check UNB and UNZ Datenaustauschreferenz updated to new Rechnungsnummer (05100)
+    assert "+05100+B+" in content
+    assert "UNZ+000002+05100'" in content
 
     # Validate generated file with EsolValidator
     validator = EsolValidator()
@@ -82,7 +82,7 @@ def test_generate_vk04_korrekturrechnung(tmp_path: Path):
     orig_file = tmp_path / "orig_esol_vk04.txt"
     orig_file.write_text(orig_esol, encoding="iso-8859-15")
 
-    res_file = generate_correction_file(orig_file, target_vk="04", new_rec_nr="5100K", new_rec_date="20260325")
+    res_file = generate_correction_file(orig_file, target_vk="04", new_rec_nr="05100", new_rec_date="20260325")
 
     assert res_file.exists()
     content = res_file.read_text(encoding="iso-8859-15")
@@ -127,7 +127,7 @@ def test_generate_vk10_wiederaufnahme_blankoverordnung(tmp_path: Path):
     orig_file = tmp_path / "orig_esol_vk10.txt"
     orig_file.write_text(orig_esol, encoding="iso-8859-15")
 
-    res_file = generate_correction_file(orig_file, target_vk="10", new_rec_nr="5100W", new_rec_date="20260325")
+    res_file = generate_correction_file(orig_file, target_vk="10", new_rec_nr="05100", new_rec_date="20260325")
 
     assert res_file.exists()
     content = res_file.read_text(encoding="iso-8859-15")
@@ -190,7 +190,7 @@ def test_parse_belege_summary_and_selective_filtering(tmp_path: Path):
         orig_file,
         target_vk="03",
         selected_belegnr_list=["00002"],
-        new_rec_nr="5100Z2",
+        new_rec_nr="05100",
     )
 
     content = res_file.read_text(encoding="iso-8859-15")
@@ -208,7 +208,7 @@ def test_parse_belege_summary_and_selective_filtering(tmp_path: Path):
         orig_file,
         target_vk="02",
         selected_belegnr_list=["00002"],
-        new_rec_nr="5100N2",
+        new_rec_nr="05100",
     )
     content_vk02 = res_file_vk02.read_text(encoding="iso-8859-15")
     res_vk02 = validator.validate_string(content_vk02)
@@ -230,7 +230,7 @@ def test_unb_header_month_update(tmp_path: Path):
     orig_file.write_text(orig_esol, encoding="iso-8859-15")
 
     # Pass August 2026 date: 20260813
-    res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="RE0813Z", new_rec_date="20260813")
+    res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="08130", new_rec_date="20260813")
 
     content = res_file.read_text(encoding="iso-8859-15")
     first_line = content.splitlines()[0]
@@ -239,9 +239,9 @@ def test_unb_header_month_update(tmp_path: Path):
     assert "SL051293S08" in first_line
     # Verify UNB creation date is updated to 20260813
     assert "+20260813:" in first_line
-    # Verify UNB and UNZ Datenaustauschreferenz updated to RE0813Z
-    assert "+RE0813Z+B+" in first_line
-    assert "UNZ+000001+RE0813Z'" in content
+    # Verify UNB and UNZ Datenaustauschreferenz updated to 08130
+    assert "+08130+B+" in first_line
+    assert "UNZ+000001+08130'" in content
 
 
 def test_generate_vk03_composite_rec_300_0(tmp_path: Path):
@@ -277,9 +277,9 @@ def test_generate_vk03_composite_rec_300_0(tmp_path: Path):
     # Verify REC+300:0+20260813+1' appears twice in the generated file
     assert content.count("REC+300:0+20260813+1'") == 2, f"Expected REC+300:0+20260813+1' to appear twice, got:\n{content}"
 
-    # Verify UNB and UNZ use Datenaustauschreferenz 300
-    assert "+300+B+" in content.splitlines()[0]
-    assert "UNZ+000002+300'" in content
+    # Verify UNB and UNZ use zero-padded Datenaustauschreferenz 00300
+    assert "+00300+B+" in content.splitlines()[0]
+    assert "UNZ+000002+00300'" in content
 
     # Validate generated file
     validator = EsolValidator()

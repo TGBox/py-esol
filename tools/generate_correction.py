@@ -315,7 +315,7 @@ def generate_correction_esol(
     else:
         rec_nr_fields = new_sammel_nr
 
-    new_rec_ref = new_sammel_nr
+    new_rec_ref = new_sammel_nr.zfill(5) if (new_sammel_nr and len(new_sammel_nr) < 5) else new_sammel_nr
 
     new_raw_segments = []
 
@@ -495,7 +495,6 @@ def generate_correction_esol(
             new_raw_segments.append(build_segment_string(tag, fields))
 
         elif tag == "UNZ":
-            new_rec_ref = new_rec_nr.replace(":", "")
             if len(fields) > 1:
                 fields[1] = new_rec_ref
             new_raw_segments.append(build_segment_string(tag, fields))

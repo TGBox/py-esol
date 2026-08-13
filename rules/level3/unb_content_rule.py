@@ -138,15 +138,15 @@ class UnbContentRule(RuleInterface):
                 )
             )
 
-        # 1.3.1.5: Datenaustauschreferenz — max 14 alphanumeric characters
+        # 1.3.1.5: Datenaustauschreferenz — 5 digits, 00001–99999
         ref = ContentHelper.get_field(unb, 4)
         if ref:
-            if len(ref) > 14 or not re.match(r"^[A-Za-z0-9\-_]{1,14}$", ref):
+            if not re.match(r"^\d{5}$", ref):
                 errors.append(
                     ValidationError.error(
                         3,
                         "1.3.1.5",
-                        f'UNB: Datenaustauschreferenz "{ref}" ist ungültig (max. 14 Zeichen alphanumerisch).',
+                        f'UNB: Datenaustauschreferenz "{ref}" muss 5-stellig numerisch sein (00001-99999).',
                         "UNB",
                         seg_index,
                     )
