@@ -36,14 +36,18 @@ def test_generate_vk03_zuzahlungsforderung(tmp_path: Path):
 
     # Check FKT changed to VK 03
     assert "FKT+03+" in content
-    # Check new REC number
-    assert "REC+5100Z+20260325" in content
+    # Check new REC number is composite 5100Z:0 and appears twice
+    assert content.count("REC+5100Z:0+20260325+1'") == 2
     # Check URI segment inserted
     assert "URI+123456789+51:0+20260122+00001'" in content
     # Check ZHE Zuzahlungskennzeichen changed to '2'
     assert "+2+EN1+04+" in content
     # Check GZF segment replaced BES segment
     assert "GZF+20,00+10,00+10,00'" in content
+
+    # Check UNB and UNZ Datenaustauschreferenz updated to new Rechnungsnummer (5100Z)
+    assert "+5100Z+B+" in content
+    assert "UNZ+000002+5100Z'" in content
 
     # Validate generated file with EsolValidator
     validator = EsolValidator()
@@ -235,4 +239,52 @@ def test_unb_header_month_update(tmp_path: Path):
     assert "SL051293S08" in first_line
     # Verify UNB creation date is updated to 20260813
     assert "+20260813:" in first_line
+    # Verify UNB and UNZ Datenaustauschreferenz updated to RE0813Z
+    assert "+RE0813Z+B+" in first_line
+    assert "UNZ+000001+RE0813Z'" in content
+
+
+def test_generate_vk03_composite_rec_300_0(tmp_path: Path):
+    orig_esol = "\n".join([
+        "UNB+UNOC:3+441481776+107299005+20260813:1140+00197+B+SL148177S08+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++441481776+107299005+107299005+441481776'",
+        "REC+300:0+20260813+1'",
+        "GES+00+100,00+100,00+0,00'",
+        "GES+31+100,00+100,00+0,00'",
+        "NAM+Physio Praxis+++info@physio.de'",
+        "UNT+000007+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++441481776+107299005+107299005'",
+        "REC+300:0+20260813+1'",
+        "INV+A123456789+30000+1+00001'",
+        "NAD+Muster+Max+19900101'",
+        "EHE+26:00501+59702+1,00+100,00+20260115+10,00'",
+        "ZHE+110178400+906716934+20250528+0+EN1+04+++++1++1110++0+1+2'",
+        "DIA+F98.9'",
+        "BES+100,00+10,00+0,00+10,00'",
+        "UNT+000010+00002'",
+        "UNZ+000002+00197'",
+    ])
+
+    orig_file = tmp_path / "orig_rec_300.txt"
+    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+
+    # Generate VK 03 with new_rec_nr="300"
+    res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="300", new_rec_date="20260813")
+    content = res_file.read_text(encoding="iso-8859-15")
+
+    # Verify REC+300:0+20260813+1' appears twice in the generated file
+    assert content.count("REC+300:0+20260813+1'") == 2, f"Expected REC+300:0+20260813+1' to appear twice, got:\n{content}"
+
+    # Verify UNB and UNZ use Datenaustauschreferenz 300
+    assert "+300+B+" in content.splitlines()[0]
+    assert "UNZ+000002+300'" in content
+
+    # Validate generated file
+    validator = EsolValidator()
+    validator.register_default_rules()
+    res = validator.validate_string(content)
+    assert res.is_valid(), f"Expected valid VK03 file, got errors: {res.get_errors()}"
+
 

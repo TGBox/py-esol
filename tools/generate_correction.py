@@ -193,6 +193,9 @@ def generate_correction_esol(
     current_inv_zuz_proz_p1 = 0.0
     current_inv_zuz_pausch_p1 = 0.0
 
+    orig_sammel_nr = ""
+    orig_einzel_nr = ""
+
     for raw_seg in raw_segments:
         tag, fields = parse_segment_fields(raw_seg)
         if tag == "UNB" and not orig_ik_le:
@@ -205,7 +208,20 @@ def generate_correction_esol(
                 orig_ik_le = fields[1][0] if isinstance(fields[1], list) else str(fields[1])
         elif tag == "REC" and not orig_rec_nr:
             if len(fields) > 0:
-                orig_rec_nr = ":".join(fields[0]) if isinstance(fields[0], list) else str(fields[0])
+                if isinstance(fields[0], list):
+                    orig_sammel_nr = str(fields[0][0])
+                    orig_einzel_nr = str(fields[0][1]) if len(fields[0]) > 1 else ""
+                    orig_rec_nr = ":".join([str(x) for x in fields[0]])
+                else:
+                    raw_str = str(fields[0])
+                    if ":" in raw_str:
+                        parts = raw_str.split(":")
+                        orig_sammel_nr = parts[0]
+                        orig_einzel_nr = parts[1] if len(parts) > 1 else ""
+                    else:
+                        orig_sammel_nr = raw_str
+                        orig_einzel_nr = ""
+                    orig_rec_nr = raw_str
             if len(fields) > 1:
                 orig_rec_date = str(fields[1])
 
@@ -280,8 +296,26 @@ def generate_correction_esol(
 
     if not new_rec_nr:
         suffix = "Z" if target_vk == "03" else ("K" if target_vk == "04" else ("W" if target_vk == "10" else "N"))
-        orig_clean_nr = orig_rec_nr.replace(":", "")
-        new_rec_nr = f"{orig_clean_nr}{suffix}" if orig_clean_nr else f"RE{today_str}{suffix}"
+        if orig_sammel_nr:
+            new_sammel_nr = f"{orig_sammel_nr}{suffix}"
+        else:
+            new_sammel_nr = f"RE{today_str}{suffix}"
+        new_einzel_nr = orig_einzel_nr if orig_einzel_nr != "" else ("0" if orig_sammel_nr else "")
+    else:
+        if ":" in new_rec_nr:
+            parts = new_rec_nr.split(":")
+            new_sammel_nr = parts[0]
+            new_einzel_nr = parts[1]
+        else:
+            new_sammel_nr = new_rec_nr
+            new_einzel_nr = orig_einzel_nr if orig_einzel_nr != "" else ("0" if orig_sammel_nr else "")
+
+    if new_einzel_nr != "":
+        rec_nr_fields: Any = [new_sammel_nr, new_einzel_nr]
+    else:
+        rec_nr_fields = new_sammel_nr
+
+    new_rec_ref = new_sammel_nr
 
     new_raw_segments = []
 
@@ -296,7 +330,7 @@ def generate_correction_esol(
         tag, fields = parse_segment_fields(raw_seg)
 
         if tag == "UNB":
-            # Update Erstelldatum/Erstelluhrzeit (field 3) and Anwendungsreferenz/logischer Dateiname (field 6)
+            # Update Erstelldatum/Erstelluhrzeit (field 3), Datenaustauschreferenz (field 4), and Anwendungsreferenz/logischer Dateiname (field 6)
             curr_time_str = datetime.datetime.now().strftime("%H%M")
             if len(fields) > 3 and fields[3]:
                 if isinstance(fields[3], list):
@@ -309,6 +343,9 @@ def generate_correction_esol(
                         fields[3] = f"{new_rec_date}:{curr_time_str}"
                     else:
                         fields[3] = new_rec_date
+
+            if len(fields) > 4:
+                fields[4] = new_rec_ref
 
             month_str = new_rec_date[4:6] if len(new_rec_date) >= 6 else datetime.datetime.now().strftime("%m")
             if len(fields) > 6 and fields[6]:
@@ -330,7 +367,7 @@ def generate_correction_esol(
         elif tag == "REC":
             # Change Rechnungsnummer and Rechnungsdatum
             if len(fields) > 0:
-                fields[0] = new_rec_nr.split(":") if ":" in new_rec_nr else new_rec_nr
+                fields[0] = rec_nr_fields
             if len(fields) > 1:
                 fields[1] = new_rec_date
             new_raw_segments.append(build_segment_string(tag, fields))
@@ -455,6 +492,12 @@ def generate_correction_esol(
                 inv_block_segments.append((tag, fields))
 
         elif tag == "UNT":
+            new_raw_segments.append(build_segment_string(tag, fields))
+
+        elif tag == "UNZ":
+            new_rec_ref = new_rec_nr.replace(":", "")
+            if len(fields) > 1:
+                fields[1] = new_rec_ref
             new_raw_segments.append(build_segment_string(tag, fields))
 
         else:
