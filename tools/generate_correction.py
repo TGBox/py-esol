@@ -69,9 +69,11 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
             if in_inv and current_beleg:
                 belege.append(current_beleg)
             in_inv = True
-            belegnr = str(fields[0]) if len(fields) > 0 else ""
+            belegnr = str(fields[3]) if len(fields) > 3 and fields[3] else ""
+            vers_nr = str(fields[0]) if len(fields) > 0 and fields[0] else ""
             current_beleg = {
                 "belegnr": belegnr,
+                "versichertennummer": vers_nr,
                 "nachname": "",
                 "vorname": "",
                 "geburtstag": "",
@@ -199,7 +201,7 @@ def generate_correction_esol(
 
         elif tag == "INV":
             in_inv_block_p1 = True
-            belegnr = str(fields[3]) if len(fields) > 0 else ""
+            belegnr = str(fields[3]) if len(fields) > 3 and fields[3] else ""
             vers_status = str(fields[1]) if len(fields) > 1 and fields[1] else "00"
             st_prefix2 = vers_status[:2] if len(vers_status) >= 2 else "00"
             st_prefix1 = vers_status[:1] if len(vers_status) >= 1 else "0"
@@ -322,7 +324,7 @@ def generate_correction_esol(
 
         elif tag == "INV":
             in_inv_block = True
-            current_inv_belegnr = str(fields[0]) if len(fields) > 0 else ""
+            current_inv_belegnr = str(fields[3]) if len(fields) > 3 and fields[3] else ""
             keep_block = (selected_set is None) or (current_inv_belegnr in selected_set)
             inv_block_segments = [(tag, fields)]
             current_inv_zuz_proz = 0.0
@@ -376,6 +378,8 @@ def generate_correction_esol(
                         ContentHelper.format_decimal(current_inv_zuz_pausch),
                     ]
                     for inv_tag, inv_f in inv_block_segments:
+                        if inv_tag == "URI":
+                            continue
                         new_raw_segments.append(build_segment_string(inv_tag, inv_f))
                         if inv_tag == "INV":
                             new_raw_segments.append(build_segment_string("URI", uri_fields))
@@ -385,6 +389,8 @@ def generate_correction_esol(
                     inv_block_segments = []
                 else:
                     for inv_tag, inv_f in inv_block_segments:
+                        if inv_tag == "URI":
+                            continue
                         new_raw_segments.append(build_segment_string(inv_tag, inv_f))
                         if inv_tag == "INV":
                             new_raw_segments.append(build_segment_string("URI", uri_fields))

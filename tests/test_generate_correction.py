@@ -39,7 +39,7 @@ def test_generate_vk03_zuzahlungsforderung(tmp_path: Path):
     # Check new REC number
     assert "REC+5100Z+20260325" in content
     # Check URI segment inserted
-    assert "URI+123456789+51:0+20260122+A123456789'" in content
+    assert "URI+123456789+51:0+20260122+00001'" in content
     # Check ZHE Zuzahlungskennzeichen changed to '2'
     assert "+2+EN1+04+" in content
     # Check GZF segment replaced BES segment
@@ -86,7 +86,7 @@ def test_generate_vk04_korrekturrechnung(tmp_path: Path):
     # Check FKT changed to VK 04
     assert "FKT+04+" in content
     # Check URI segment inserted
-    assert "URI+123456789+51:0+20260122+A123456789'" in content
+    assert "URI+123456789+51:0+20260122+00001'" in content
     # Check BES segment preserved
     assert "BES+100,00'" in content
 
@@ -131,7 +131,7 @@ def test_generate_vk10_wiederaufnahme_blankoverordnung(tmp_path: Path):
     # Check FKT changed to VK 10
     assert "FKT+10+" in content
     # Check URI segment inserted
-    assert "URI+123456789+51:0+20260122+A123456789'" in content
+    assert "URI+123456789+51:0+20260122+00001'" in content
 
     # Validate generated file with EsolValidator
     validator = EsolValidator()
@@ -171,26 +171,28 @@ def test_parse_belege_summary_and_selective_filtering(tmp_path: Path):
 
     belege = parse_esol_belege_summary(orig_esol)
     assert len(belege) == 2
-    assert belege[0]["belegnr"] == "A123456789"
+    assert belege[0]["belegnr"] == "00001"
+    assert belege[0]["versichertennummer"] == "A123456789"
     assert belege[0]["nachname"] == "Muster"
-    assert belege[1]["belegnr"] == "A987654321"
+    assert belege[1]["belegnr"] == "00002"
+    assert belege[1]["versichertennummer"] == "A987654321"
     assert belege[1]["nachname"] == "Schmidt"
 
-    # Test filtering: generate VK 03 only for Beleg A987654321
+    # Test filtering: generate VK 03 only for Beleg 00002
     orig_file = tmp_path / "multi_beleg.txt"
     orig_file.write_text(orig_esol, encoding="iso-8859-15")
 
     res_file = generate_correction_file(
         orig_file,
         target_vk="03",
-        selected_belegnr_list=["A987654321"],
+        selected_belegnr_list=["00002"],
         new_rec_nr="5100Z2",
     )
 
     content = res_file.read_text(encoding="iso-8859-15")
-    assert "A987654321" in content
-    assert "A123456789" not in content
-    assert "URI+123456789+51:0+20260122+A987654321'" in content
+    assert "00002" in content
+    assert "NAD+Muster" not in content
+    assert "URI+123456789+51:0+20260122+00002'" in content
 
     validator = EsolValidator()
     validator.register_default_rules()
@@ -201,7 +203,7 @@ def test_parse_belege_summary_and_selective_filtering(tmp_path: Path):
     res_file_vk02 = generate_correction_file(
         orig_file,
         target_vk="02",
-        selected_belegnr_list=["A987654321"],
+        selected_belegnr_list=["00002"],
         new_rec_nr="5100N2",
     )
     content_vk02 = res_file_vk02.read_text(encoding="iso-8859-15")
