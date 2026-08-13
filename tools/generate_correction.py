@@ -153,6 +153,7 @@ def generate_correction_esol(
     selected_belegnr_list: Optional[List[str]] = None,
     new_rec_nr: Optional[str] = None,
     new_rec_date: Optional[str] = None,
+    zuzahlungskennzeichen: Optional[str] = None,
 ) -> str:
     """
     Generates a new ESOL content string with target VKZ (02, 03, 04) from original raw ESOL content.
@@ -210,17 +211,17 @@ def generate_correction_esol(
             if len(fields) > 0:
                 if isinstance(fields[0], list):
                     orig_sammel_nr = str(fields[0][0])
-                    orig_einzel_nr = str(fields[0][1]) if len(fields[0]) > 1 else ""
+                    orig_einzel_nr = str(fields[0][1]) if len(fields[0]) > 1 and str(fields[0][1]) != "" else "0"
                     orig_rec_nr = ":".join([str(x) for x in fields[0]])
                 else:
                     raw_str = str(fields[0])
                     if ":" in raw_str:
                         parts = raw_str.split(":")
                         orig_sammel_nr = parts[0]
-                        orig_einzel_nr = parts[1] if len(parts) > 1 else ""
+                        orig_einzel_nr = parts[1] if len(parts) > 1 and parts[1] != "" else "0"
                     else:
                         orig_sammel_nr = raw_str
-                        orig_einzel_nr = ""
+                        orig_einzel_nr = "0"
                     orig_rec_nr = raw_str
             if len(fields) > 1:
                 orig_rec_date = str(fields[1])
@@ -314,20 +315,43 @@ def generate_correction_esol(
         rec_nr_fields: Any = [new_sammel_nr, new_einzel_nr]
     else:
         rec_nr_fields = new_sammel_nr
-
     new_rec_ref = new_sammel_nr.zfill(5) if (new_sammel_nr and len(new_sammel_nr) < 5) else new_sammel_nr
 
     new_raw_segments = []
-
     in_inv_block = False
     keep_block = False
     current_inv_belegnr = ""
     current_inv_zuz_proz = 0.0
     current_inv_zuz_pausch = 0.0
     inv_block_segments: List[Tuple[str, List[Any]]] = []
+    written_ges_statuses = set()
+
+    def make_ges_segment(st_code: str, st_b: float, st_z: float) -> str:
+        st_rechn = round(st_b - st_z, 2)
+        if target_vk == "03":
+            f1 = ContentHelper.format_decimal(st_z)
+            f2 = "0,00"
+            f3 = ContentHelper.format_decimal(st_z)
+        else:
+            f1 = ContentHelper.format_decimal(st_rechn)
+            f2 = ContentHelper.format_decimal(st_b)
+            f3 = ContentHelper.format_decimal(st_z)
+        return build_segment_string("GES", [st_code, f1, f2, f3])
 
     for raw_seg in raw_segments:
         tag, fields = parse_segment_fields(raw_seg)
+
+        if tag != "GES" and "00" in written_ges_statuses:
+            active_statuses = set(
+                [code for code, val in brutto_by_status.items() if val > 0]
+                + [code for code, val in zuzahlung_by_status.items() if val > 0]
+            )
+            for st_code in sorted(active_statuses):
+                if st_code not in written_ges_statuses:
+                    st_b = round(brutto_by_status.get(st_code, 0.0), 2)
+                    st_z = round(zuzahlung_by_status.get(st_code, 0.0), 2)
+                    new_raw_segments.append(make_ges_segment(st_code, st_b, st_z))
+                    written_ges_statuses.add(st_code)
 
         if tag == "UNB":
             # Update Erstelldatum/Erstelluhrzeit (field 3), Datenaustauschreferenz (field 4), and Anwendungsreferenz/logischer Dateiname (field 6)
@@ -373,30 +397,16 @@ def generate_correction_esol(
             new_raw_segments.append(build_segment_string(tag, fields))
 
         elif tag == "GES":
-            # Recalculate GES segment sums for specific status line or total (00)
             status_code = fields[0] if len(fields) > 0 else "00"
             if status_code == "00":
-                st_brutto = total_brutto_file
-                st_zuz = total_zuzahlung_file
+                new_raw_segments.append(make_ges_segment("00", total_brutto_file, total_zuzahlung_file))
+                written_ges_statuses.add("00")
             else:
                 st_brutto = round(brutto_by_status.get(status_code, 0.0), 2)
                 st_zuz = round(zuzahlung_by_status.get(status_code, 0.0), 2)
-
-            st_rechnung = round(st_brutto - st_zuz, 2)
-
-            while len(fields) < 4:
-                fields.append("")
-
-            if target_vk == "03":
-                fields[1] = ContentHelper.format_decimal(st_zuz)
-                fields[2] = "0,00"
-                fields[3] = ContentHelper.format_decimal(st_zuz)
-            else:
-                fields[1] = ContentHelper.format_decimal(st_rechnung)
-                fields[2] = ContentHelper.format_decimal(st_brutto)
-                fields[3] = ContentHelper.format_decimal(st_zuz)
-
-            new_raw_segments.append(build_segment_string(tag, fields))
+                if st_brutto > 0 or st_zuz > 0:
+                    new_raw_segments.append(make_ges_segment(status_code, st_brutto, st_zuz))
+                    written_ges_statuses.add(status_code)
 
         elif tag == "INV":
             in_inv_block = True
@@ -433,9 +443,9 @@ def generate_correction_esol(
                 inv_block_segments.append((tag, fields))
 
             elif tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
-                # In VK 03, Zuzahlungskennzeichen in Zxx (field 3) is set to '2' (Zuzahlung verweigert)
-                if target_vk == "03" and len(fields) > 3:
-                    fields[3] = "2"
+                zkz_val = zuzahlungskennzeichen if zuzahlungskennzeichen is not None else ("2" if target_vk == "03" else None)
+                if zkz_val is not None and len(fields) > 3:
+                    fields[3] = zkz_val
                 inv_block_segments.append((tag, fields))
 
             elif tag == "BES":
@@ -444,11 +454,22 @@ def generate_correction_esol(
                 else:
                     current_inv_zuz_pausch = 10.0
 
+                clean_belegnr = current_inv_belegnr.lstrip("0") or "0"
+                uri_einzel = orig_einzel_nr if (orig_einzel_nr and orig_einzel_nr != "0") else clean_belegnr
+
+                if orig_sammel_nr:
+                    orig_rec_composite: Any = [orig_sammel_nr, uri_einzel]
+                elif ":" in orig_rec_nr:
+                    parts = orig_rec_nr.split(":")
+                    orig_rec_composite = [parts[0], parts[1] if (len(parts) > 1 and parts[1] != "0") else clean_belegnr]
+                else:
+                    orig_rec_composite = [orig_rec_nr, clean_belegnr] if orig_rec_nr else orig_rec_nr
+
                 uri_fields = [
                     orig_ik_le,
-                    orig_rec_nr.split(":") if ":" in orig_rec_nr else orig_rec_nr,
+                    orig_rec_composite,
                     orig_rec_date,
-                    current_inv_belegnr,
+                    clean_belegnr,
                 ]
 
                 if target_vk == "03":
@@ -534,6 +555,7 @@ def generate_correction_file(
     selected_belegnr_list: Optional[List[str]] = None,
     new_rec_nr: Optional[str] = None,
     new_rec_date: Optional[str] = None,
+    zuzahlungskennzeichen: Optional[str] = None,
 ) -> Path:
     """Reads an ESOL file and generates the corrected/demanded ESOL output file."""
     if not input_path.is_file():
@@ -550,6 +572,7 @@ def generate_correction_file(
         selected_belegnr_list=selected_belegnr_list,
         new_rec_nr=new_rec_nr,
         new_rec_date=new_rec_date,
+        zuzahlungskennzeichen=zuzahlungskennzeichen,
     )
     output_path.write_text(new_content, encoding="iso-8859-15")
     return output_path
@@ -584,6 +607,13 @@ def main() -> None:
         help="Neues Rechnungsdatum JJJJMMTT (standardmäßig heute)",
     )
     parser.add_argument(
+        "--zuzahlungskennzeichen",
+        "-z",
+        default=None,
+        choices=["0", "1", "2", "3", "4", "5"],
+        help="Zuzahlungskennzeichen (0=keine gesetzl. Zuzahlung, 1=befreit, 2=trotz Aufforderung nicht gezahlt, 3=pflichtig, 4=pflichtig zu befreit, 5=befreit zu pflichtig)",
+    )
+    parser.add_argument(
         "--belege",
         nargs="*",
         default=None,
@@ -601,6 +631,7 @@ def main() -> None:
             selected_belegnr_list=args.belege,
             new_rec_nr=args.new_rec_nr,
             new_rec_date=args.new_rec_date,
+            zuzahlungskennzeichen=args.zuzahlungskennzeichen,
         )
         print(f"Korrekturdatei (VKZ {args.type}) erfolgreich erstellt: {res_path}")
     except Exception as e:

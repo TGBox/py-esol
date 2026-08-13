@@ -38,8 +38,8 @@ def test_generate_vk03_zuzahlungsforderung(tmp_path: Path):
     assert "FKT+03+" in content
     # Check new REC number is composite 05100:0 and appears twice
     assert content.count("REC+05100:0+20260325+1'") == 2
-    # Check URI segment inserted
-    assert "URI+123456789+51:0+20260122+00001'" in content
+    # Check URI segment inserted (with unpadded Belegnummer '1' and Einzel-Rechnungsnummer '1')
+    assert "URI+123456789+51:1+20260122+1'" in content
     # Check ZHE Zuzahlungskennzeichen changed to '2'
     assert "+2+EN1+04+" in content
     # Check GZF segment replaced BES segment
@@ -90,7 +90,7 @@ def test_generate_vk04_korrekturrechnung(tmp_path: Path):
     # Check FKT changed to VK 04
     assert "FKT+04+" in content
     # Check URI segment inserted
-    assert "URI+123456789+51:0+20260122+00001'" in content
+    assert "URI+123456789+51:1+20260122+1'" in content
     # Check BES segment preserved
     assert "BES+100,00'" in content
 
@@ -135,7 +135,7 @@ def test_generate_vk10_wiederaufnahme_blankoverordnung(tmp_path: Path):
     # Check FKT changed to VK 10
     assert "FKT+10+" in content
     # Check URI segment inserted
-    assert "URI+123456789+51:0+20260122+00001'" in content
+    assert "URI+123456789+51:1+20260122+1'" in content
 
     # Validate generated file with EsolValidator
     validator = EsolValidator()
@@ -196,7 +196,7 @@ def test_parse_belege_summary_and_selective_filtering(tmp_path: Path):
     content = res_file.read_text(encoding="iso-8859-15")
     assert "00002" in content
     assert "NAD+Muster" not in content
-    assert "URI+123456789+51:0+20260122+00002'" in content
+    assert "URI+123456789+51:2+20260122+2'" in content
 
     validator = EsolValidator()
     validator.register_default_rules()
@@ -277,6 +277,9 @@ def test_generate_vk03_composite_rec_300_0(tmp_path: Path):
     # Verify REC+300:0+20260813+1' appears twice in the generated file
     assert content.count("REC+300:0+20260813+1'") == 2, f"Expected REC+300:0+20260813+1' to appear twice, got:\n{content}"
 
+    # Verify URI segment contains composite original Rechnungsnummer 300:1 and unpadded Belegnummer 1
+    assert "URI+441481776+300:1+20260813+1'" in content
+
     # Verify UNB and UNZ use zero-padded Datenaustauschreferenz 00300
     assert "+00300+B+" in content.splitlines()[0]
     assert "UNZ+000002+00300'" in content
@@ -286,5 +289,128 @@ def test_generate_vk03_composite_rec_300_0(tmp_path: Path):
     validator.register_default_rules()
     res = validator.validate_string(content)
     assert res.is_valid(), f"Expected valid VK03 file, got errors: {res.get_errors()}"
+
+
+def test_ges_segments_omit_empty_statuses(tmp_path: Path):
+    # Input has GES+00, GES+11, GES+51
+    orig_esol = "\n".join([
+        "UNB+UNOC:3+441481776+107299005+20260813:1140+00197+B+SL148177S08+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++441481776+107299005+107299005+441481776'",
+        "REC+300:0+20260813+1'",
+        "GES+00+205,72+205,72+0,00'",
+        "GES+11+0,00+0,00+0,00'",
+        "GES+51+205,72+205,72+0,00'",
+        "NAM+Physio Praxis+++info@physio.de'",
+        "UNT+000008+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++441481776+107299005+107299005'",
+        "REC+300:0+20260813+1'",
+        "INV+A123456789+50000+1+00001'",  # Versichertenstatus 50000 -> Rentner (Status 51)
+        "NAD+Muster+Anna+19500101'",
+        "EHE+26:00501+59702+1,00+205,72+20260115+20,57'",
+        "ZHE+110178400+906716934+20250528+0+EN1+04+++++1++1110++0+1+2'",
+        "DIA+F98.9'",
+        "BES+205,72+20,57+0,00+20,57'",
+        "UNT+000010+00002'",
+        "UNZ+000002+00197'",
+    ])
+
+    orig_file = tmp_path / "orig_ges_test.txt"
+    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+
+    res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="300", new_rec_date="20260813")
+    content = res_file.read_text(encoding="iso-8859-15")
+
+    # GES+00 and GES+51 must be present
+    assert "GES+00+" in content
+    assert "GES+51+" in content
+
+    # GES+11 must NOT be present since there are no status 11 patients
+    assert "GES+11+" not in content
+
+    # Validate file structure & content
+    validator = EsolValidator()
+    validator.register_default_rules()
+    res = validator.validate_string(content)
+    assert res.is_valid(), f"Expected valid VK03 file without empty GES+11 line, got errors: {res.get_errors()}"
+
+
+def test_uri_user_example_99_128(tmp_path: Path):
+    orig_esol = "\n".join([
+        "UNB+UNOC:3+441481776+107299005+20260614:1140+00099+B+SL148177S06+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++441481776+107299005+107299005+441481776'",
+        "REC+99:0+20260614+1'",
+        "GES+00+205,72+205,72+0,00'",
+        "GES+51+205,72+205,72+0,00'",
+        "NAM+Physio Praxis+++info@physio.de'",
+        "UNT+000007+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++441481776+107299005+107299005'",
+        "REC+99:0+20260614+1'",
+        "INV+A123456789+50000+1+00128'",  # Belegnummer 00128
+        "NAD+Muster+Anna+19500101'",
+        "EHE+26:00501+59702+1,00+205,72+20260115+20,57'",
+        "ZHE+110178400+906716934+20250528+0+EN1+04+++++1++1110++0+1+2'",
+        "DIA+F98.9'",
+        "BES+205,72+20,57+0,00+20,57'",
+        "UNT+000010+00002'",
+        "UNZ+000002+00099'",
+    ])
+
+    orig_file = tmp_path / "orig_99_128.txt"
+    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+
+    res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="99", new_rec_date="20260813")
+    content = res_file.read_text(encoding="iso-8859-15")
+
+    # Verify URI line is URI+441481776+99:128+20260614+128'
+    assert "URI+441481776+99:128+20260614+128'" in content, f"URI segment mismatch, got:\n{content}"
+
+    # Validate file
+    validator = EsolValidator()
+    validator.register_default_rules()
+    res = validator.validate_string(content)
+    assert res.is_valid(), f"Expected valid VK03 file, got errors: {res.get_errors()}"
+
+
+def test_custom_zuzahlungskennzeichen(tmp_path: Path):
+    orig_esol = "\n".join([
+        "UNB+UNOC:3+441481776+107299005+20260614:1140+00099+B+SL148177S06+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++441481776+107299005+107299005+441481776'",
+        "REC+99:0+20260614+1'",
+        "GES+00+205,72+205,72+0,00'",
+        "GES+51+205,72+205,72+0,00'",
+        "NAM+Physio Praxis+++info@physio.de'",
+        "UNT+000007+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++441481776+107299005+107299005'",
+        "REC+99:0+20260614+1'",
+        "INV+A123456789+50000+1+00128'",
+        "NAD+Muster+Anna+19500101'",
+        "EHE+26:00501+59702+1,00+205,72+20260115+20,57'",
+        "ZHE+110178400+906716934+20250528+0+EN1+04+++++1++1110++0+1+3'",
+        "DIA+F98.9'",
+        "BES+205,72+20,57+0,00+20,57'",
+        "UNT+000010+00002'",
+        "UNZ+000002+00099'",
+    ])
+
+    orig_file = tmp_path / "orig_zkz.txt"
+    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+
+    # Generate with zuzahlungskennzeichen="1" (Zuzahlungsbefreit)
+    res_file = generate_correction_file(
+        orig_file, target_vk="03", new_rec_nr="99", new_rec_date="20260813", zuzahlungskennzeichen="1"
+    )
+    content = res_file.read_text(encoding="iso-8859-15")
+
+    # Verify ZHE field 3 is set to '1'
+    assert "+1+EN1+04+" in content, f"Expected ZHE Zuzahlungskennzeichen '1', got:\n{content}"
+
+
+
 
 

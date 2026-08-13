@@ -120,14 +120,27 @@ class CorrectionSelectionDialog(tk.Toplevel):
         r3.grid(row=2, column=1, columnspan=2, sticky="w", padx=5)
         r4.grid(row=3, column=1, columnspan=2, sticky="w", padx=5)
 
-        ttk.Label(opt_frame, text="Neue Rechnungsnummer:").grid(row=4, column=0, sticky="w", pady=5)
+        ttk.Label(opt_frame, text="Zuzahlungskennzeichen (ZHE):").grid(row=4, column=0, sticky="w", pady=5)
+        self.zkz_options = [
+            "0 — keine gesetzliche Zuzahlung",
+            "1 — Zuzahlungsbefreit",
+            "2 — keine Zuzahlung trotz schriftlicher Zahlungsaufforderung",
+            "3 — Zuzahlungspflichtig",
+            "4 — Übergang zuzahlungspflichtig zu zuzahlungsfrei",
+            "5 — Übergang zuzahlungsfrei zu zuzahlungspflichtig",
+        ]
+        self.zkz_combo = ttk.Combobox(opt_frame, values=self.zkz_options, state="readonly", width=55)
+        self.zkz_combo.grid(row=4, column=1, columnspan=3, sticky="w", padx=5, pady=5)
+        self.zkz_combo.current(2)  # Default option 2
+
+        ttk.Label(opt_frame, text="Neue Rechnungsnummer:").grid(row=5, column=0, sticky="w", pady=5)
         self.rec_nr_entry = ttk.Entry(opt_frame, width=25)
-        self.rec_nr_entry.grid(row=4, column=1, sticky="w", padx=5, pady=5)
+        self.rec_nr_entry.grid(row=5, column=1, sticky="w", padx=5, pady=5)
         self.rec_nr_entry.insert(0, f"RE{datetime.datetime.now().strftime('%d%m')}Z")
 
-        ttk.Label(opt_frame, text="Neues Rechnungsdatum:").grid(row=4, column=2, sticky="w", pady=5)
+        ttk.Label(opt_frame, text="Neues Rechnungsdatum:").grid(row=5, column=2, sticky="w", pady=5)
         self.rec_date_entry = ttk.Entry(opt_frame, width=15)
-        self.rec_date_entry.grid(row=4, column=3, sticky="w", padx=5, pady=5)
+        self.rec_date_entry.grid(row=5, column=3, sticky="w", padx=5, pady=5)
         self.rec_date_entry.insert(0, datetime.datetime.now().strftime("%Y%m%d"))
 
         # Footer Buttons
@@ -179,6 +192,9 @@ class CorrectionSelectionDialog(tk.Toplevel):
         new_rec_nr = self.rec_nr_entry.get().strip() or None
         new_rec_date = self.rec_date_entry.get().strip() or None
 
+        zkz_text = self.zkz_combo.get()
+        selected_zkz = zkz_text.split(" ")[0] if zkz_text else "2"
+
         suffix = f"_VK{target_vk}"
         output_path = self.file_path.with_name(f"{self.file_path.name}{suffix}")
 
@@ -190,6 +206,7 @@ class CorrectionSelectionDialog(tk.Toplevel):
                 selected_belegnr_list=selected_belege,
                 new_rec_nr=new_rec_nr,
                 new_rec_date=new_rec_date,
+                zuzahlungskennzeichen=selected_zkz,
             )
 
             msg = f"Korrekturdatei (VKZ {target_vk}) wurde erfolgreich erstellt:\n\n{res_path}"
