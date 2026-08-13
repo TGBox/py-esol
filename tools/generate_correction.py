@@ -279,7 +279,33 @@ def generate_correction_esol(
     for raw_seg in raw_segments:
         tag, fields = parse_segment_fields(raw_seg)
 
-        if tag == "FKT":
+        if tag == "UNB":
+            # Update Erstelldatum/Erstelluhrzeit (field 3) and Anwendungsreferenz/logischer Dateiname (field 6)
+            curr_time_str = datetime.datetime.now().strftime("%H%M")
+            if len(fields) > 3 and fields[3]:
+                if isinstance(fields[3], list):
+                    fields[3][0] = new_rec_date
+                    if len(fields[3]) > 1:
+                        fields[3][1] = curr_time_str
+                elif isinstance(fields[3], str):
+                    parts = fields[3].split(":")
+                    if len(parts) > 1:
+                        fields[3] = f"{new_rec_date}:{curr_time_str}"
+                    else:
+                        fields[3] = new_rec_date
+
+            month_str = new_rec_date[4:6] if len(new_rec_date) >= 6 else datetime.datetime.now().strftime("%m")
+            if len(fields) > 6 and fields[6]:
+                if isinstance(fields[6], str) and len(fields[6]) >= 2:
+                    fields[6] = fields[6][:-2] + month_str
+                elif isinstance(fields[6], list) and len(fields[6]) > 0:
+                    val = str(fields[6][0])
+                    if len(val) >= 2:
+                        fields[6][0] = val[:-2] + month_str
+
+            new_raw_segments.append(build_segment_string(tag, fields))
+
+        elif tag == "FKT":
             # Change VK in FKT (field 0)
             if len(fields) > 0:
                 fields[0] = target_vk

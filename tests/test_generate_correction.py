@@ -209,3 +209,30 @@ def test_parse_belege_summary_and_selective_filtering(tmp_path: Path):
     content_vk02 = res_file_vk02.read_text(encoding="iso-8859-15")
     res_vk02 = validator.validate_string(content_vk02)
     assert res_vk02.is_valid(), f"Expected valid VK02 filtered file, got errors: {res_vk02.get_errors()}"
+
+
+def test_unb_header_month_update(tmp_path: Path):
+    orig_esol = "\n".join([
+        "UNB+UNOC:3+480512931+661430035+20260623:1812+00256+B+SL051293S06+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++480512931+101777502+101777502+480512931'",
+        "REC+51:0+20260122+1'",
+        "GES+00+100,00+100,00+0,00'",
+        "UNT+000005+00001'",
+        "UNZ+000001+00256'",
+    ])
+
+    orig_file = tmp_path / "orig_unb_month.txt"
+    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+
+    # Pass August 2026 date: 20260813
+    res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="RE0813Z", new_rec_date="20260813")
+
+    content = res_file.read_text(encoding="iso-8859-15")
+    first_line = content.splitlines()[0]
+
+    # Verify UNB logical filename month suffix is updated from S06 to S08
+    assert "SL051293S08" in first_line
+    # Verify UNB creation date is updated to 20260813
+    assert "+20260813:" in first_line
+
