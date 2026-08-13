@@ -429,6 +429,29 @@ def test_output_filename_formatting(tmp_path: Path):
     assert res_file3.name == "ESOL0300"
 
 
+def test_read_esol_file_text_umlauts(tmp_path: Path):
+    from tools.generate_correction import read_esol_file_text
+
+    text_with_umlauts = "NAD+Böckmann+Joris+20211207'\nNAD+Faßbender+Finjas+20230218'\nNAD+Tömmers+Hailey+20190903'"
+
+    # 1. Test ISO-8859-15 encoding
+    iso_file = tmp_path / "iso.txt"
+    iso_file.write_text(text_with_umlauts, encoding="iso-8859-15")
+    iso_read = read_esol_file_text(iso_file)
+    assert "Böckmann" in iso_read
+    assert "Faßbender" in iso_read
+    assert "Tömmers" in iso_read
+
+    # 2. Test UTF-8 encoding
+    utf8_file = tmp_path / "utf8.txt"
+    utf8_file.write_text(text_with_umlauts, encoding="utf-8")
+    utf8_read = read_esol_file_text(utf8_file)
+    assert "Böckmann" in utf8_read
+    assert "Faßbender" in utf8_read
+    assert "Tömmers" in utf8_read
+
+
+
 
 
 

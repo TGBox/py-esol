@@ -24,6 +24,24 @@ from parser.segment_tokenizer import SegmentTokenizer
 from rules.level3.content_helper import ContentHelper
 
 
+def read_esol_file_text(file_path: Path) -> str:
+    """
+    Reads an ESOL text file, automatically detecting whether it is encoded in UTF-8
+    or ISO-8859-15 / ISO-8859-1 / CP1252 so German umlauts (ä, ö, ü, ß) are always
+    displayed and parsed correctly.
+    """
+    raw_bytes = file_path.read_bytes()
+    try:
+        return raw_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        pass
+    try:
+        return raw_bytes.decode("iso-8859-15")
+    except UnicodeDecodeError:
+        pass
+    return raw_bytes.decode("latin-1", errors="replace")
+
+
 def parse_segment_fields(raw_segment: str) -> Tuple[str, List[Any]]:
     """Splits a raw EDIFACT segment into tag and field elements."""
     raw = raw_segment.strip().rstrip("'")
@@ -570,7 +588,7 @@ def generate_correction_file(
             output_filename = f"{input_path.name}_VK{target_vk}"
         output_path = input_path.with_name(output_filename)
 
-    content = input_path.read_text(encoding="iso-8859-15", errors="replace")
+    content = read_esol_file_text(input_path)
     new_content = generate_correction_esol(
         raw_content=content,
         target_vk=target_vk,

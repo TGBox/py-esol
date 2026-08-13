@@ -11,7 +11,7 @@ project_root = Path(__file__).resolve().parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from tools.generate_correction import parse_esol_belege_summary, generate_correction_file
+from tools.generate_correction import parse_esol_belege_summary, generate_correction_file, read_esol_file_text
 
 
 class CorrectionSelectionDialog(tk.Toplevel):
@@ -40,7 +40,7 @@ class CorrectionSelectionDialog(tk.Toplevel):
 
     def _load_belege_data(self):
         try:
-            content = self.file_path.read_text(encoding="iso-8859-15", errors="replace")
+            content = read_esol_file_text(self.file_path)
             self.belege_list = parse_esol_belege_summary(content)
         except Exception as e:
             messagebox.showerror("Fehler beim Lesen", f"Konnte ESOL-Datei nicht lesen:\n{e}")
