@@ -137,11 +137,13 @@ class CorrectionSelectionDialog(tk.Toplevel):
         self.rec_nr_entry = ttk.Entry(opt_frame, width=25)
         self.rec_nr_entry.grid(row=5, column=1, sticky="w", padx=5, pady=5)
         self.rec_nr_entry.insert(0, f"RE{datetime.datetime.now().strftime('%d%m')}Z")
+        self.rec_nr_entry.bind("<Return>", lambda event: self._generate())
 
         ttk.Label(opt_frame, text="Neues Rechnungsdatum:").grid(row=5, column=2, sticky="w", pady=5)
         self.rec_date_entry = ttk.Entry(opt_frame, width=15)
         self.rec_date_entry.grid(row=5, column=3, sticky="w", padx=5, pady=5)
         self.rec_date_entry.insert(0, datetime.datetime.now().strftime("%Y%m%d"))
+        self.rec_date_entry.bind("<Return>", lambda event: self._generate())
 
         # Footer Buttons
         footer_frame = ttk.Frame(self)
@@ -195,13 +197,10 @@ class CorrectionSelectionDialog(tk.Toplevel):
         zkz_text = self.zkz_combo.get()
         selected_zkz = zkz_text.split(" ")[0] if zkz_text else "2"
 
-        suffix = f"_VK{target_vk}"
-        output_path = self.file_path.with_name(f"{self.file_path.name}{suffix}")
-
         try:
             res_path = generate_correction_file(
                 input_path=self.file_path,
-                output_path=output_path,
+                output_path=None,
                 target_vk=target_vk,
                 selected_belegnr_list=selected_belege,
                 new_rec_nr=new_rec_nr,

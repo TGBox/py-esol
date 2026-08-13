@@ -562,8 +562,13 @@ def generate_correction_file(
         raise FileNotFoundError(f"Datei nicht gefunden: {input_path}")
 
     if not output_path:
-        suffix = f"_VK{target_vk}"
-        output_path = input_path.with_name(f"{input_path.name}{suffix}")
+        if new_rec_nr:
+            sammel_nr = new_rec_nr.split(":")[0]
+            formatted_nr = sammel_nr.zfill(4) if (sammel_nr.isdigit() and len(sammel_nr) < 4) else sammel_nr
+            output_filename = f"ESOL{formatted_nr}"
+        else:
+            output_filename = f"{input_path.name}_VK{target_vk}"
+        output_path = input_path.with_name(output_filename)
 
     content = input_path.read_text(encoding="iso-8859-15", errors="replace")
     new_content = generate_correction_esol(

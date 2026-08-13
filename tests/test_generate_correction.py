@@ -411,6 +411,25 @@ def test_custom_zuzahlungskennzeichen(tmp_path: Path):
     assert "+1+EN1+04+" in content, f"Expected ZHE Zuzahlungskennzeichen '1', got:\n{content}"
 
 
+def test_output_filename_formatting(tmp_path: Path):
+    orig_esol = "UNB+UNOC:3+123+456+20260101:1000+00001+B+SL123456S01+2'\nUNH+1+SLGA:21:0:0'\nUNT+2+1'\nUNZ+1+00001'\n"
+    orig_file = tmp_path / "original.txt"
+    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+
+    # Pass new_rec_nr="300"
+    res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="300")
+    assert res_file.name == "ESOL0300"
+
+    # Pass new_rec_nr="191"
+    res_file2 = generate_correction_file(orig_file, target_vk="03", new_rec_nr="191")
+    assert res_file2.name == "ESOL0191"
+
+    # Pass composite new_rec_nr="300:0"
+    res_file3 = generate_correction_file(orig_file, target_vk="03", new_rec_nr="300:0")
+    assert res_file3.name == "ESOL0300"
+
+
+
 
 
 
