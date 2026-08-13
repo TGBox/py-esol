@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
 import os
 import subprocess
 import sys
+import multiprocessing
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -397,10 +397,9 @@ class EsolValidatorGUI(tk.Tk):
             self.after(0, self._finish_process)
 
     def _execute_cmd(self, cmd: list[str]):
-        # Neu: Erzwinge UTF-8 sowohl für Ausgaben als auch für Python-Interna
+        # PYTHONIOENCODING erzwingt UTF-8 für die Standard-Streams (stdout/stderr) der GUI
         env = os.environ.copy()
         env["PYTHONIOENCODING"] = "utf-8"
-        env["PYTHONUTF8"] = "1"
 
         proc = subprocess.Popen(
             cmd,
@@ -441,5 +440,32 @@ class EsolValidatorGUI(tk.Tk):
 
 
 if __name__ == "__main__":
-    app = EsolValidatorGUI()
-    app.mainloop()
+    multiprocessing.freeze_support()
+
+    if len(sys.argv) > 1:
+        if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+            sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+        target_script = sys.argv[1]
+        sys.argv.pop(1)
+
+        if "validate" in target_script:
+            import validate
+            validate.main()
+        elif "convert" in target_script:
+            from tools import convert_utf8_to_iso
+            convert_utf8_to_iso.main()
+        elif "generate_auf" in target_script:
+            from tools import generate_auf
+            generate_auf.main()
+        elif "generate_correction" in target_script:
+            from tools import generate_correction
+            generate_correction.main()
+        else:
+            print(f"Unbekanntes CLI-Skript: {target_script}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        app = EsolValidatorGUI()
+        app.mainloop()

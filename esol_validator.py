@@ -51,10 +51,11 @@ class EsolValidator:
       6. Return ValidationResult
     """
 
-    def __init__(self) -> None:
+    def __init__(self, _max_stufe: int = 4, _include_warnings: bool = True) -> None:
         self._rules: List[RuleInterface] = []
         self._tokenizer = SegmentTokenizer()
-        self._max_stufe: int = 4
+        self._max_stufe: int = _max_stufe
+        self._include_warnings: bool = _include_warnings
 
     def register_rule(self, rule: RuleInterface) -> None:
         """Register a validation rule."""
@@ -79,8 +80,8 @@ class EsolValidator:
             return result
 
         try:
-            # ISO-8859-1 (oder cp1252) liest jedes Byte 1:1 ohne Absturz ein
-            with open(file_path, "r", encoding="iso-8859-1", errors="replace") as f:
+            # ISO-8859-15 (oder cp1252/iso-8859-1) liest ESOL-Nutzdaten gemäß TA1/TP5 V21 ein
+            with open(file_path, "r", encoding="iso-8859-15", errors="replace") as f:
                 content = f.read()
         except Exception as e:
             result.add_error(

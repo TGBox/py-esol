@@ -59,6 +59,11 @@ def collect_files(path: Path, recurse: bool = True) -> List[Path]:
 
 
 def main() -> None:
+    if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
     parser = argparse.ArgumentParser(
         description="ESOL Encoding Converter — Konvertiert ESOL-Dateien von UTF-8 zu ISO-8859-15 / ISO-8859-1"
     )
