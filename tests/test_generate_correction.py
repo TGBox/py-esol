@@ -451,6 +451,27 @@ def test_read_esol_file_text_umlauts(tmp_path: Path):
     assert "Tömmers" in utf8_read
 
 
+def test_generate_correction_file_with_out_dir(tmp_path: Path):
+    orig_esol = (
+        "UNB+UNOC:3+441481776+107299005+20260813:1526+00300+B+SL148177S08+2'\n"
+        "UNH+00001+SLGA:21:0:0'\n"
+        "FKT+01++441481776+107299005+107299005+441481776'\n"
+        "REC+300:0+20260813+1'\n"
+        "GES+00+205,72+0,00+205,72'\n"
+        "UNT+000005+00001'\n"
+        "UNZ+000001+00300'\n"
+    )
+    orig_file = tmp_path / "ESOL0300"
+    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+
+    custom_out_dir = tmp_path / "custom_out"
+    res_file = generate_correction_file(orig_file, target_vk="03", out_dir=custom_out_dir)
+
+    assert res_file.exists()
+    assert res_file.parent == custom_out_dir
+    assert res_file.name == "ESOL0300_VK03"
+
+
 
 
 

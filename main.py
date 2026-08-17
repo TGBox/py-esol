@@ -53,29 +53,44 @@ class EsolValidatorGUI(tk.Tk):
         )
         btn_dir.grid(row=0, column=4, padx=2, pady=5)
 
-        # 2. Zeile: Optionen
-        ttk.Label(top_frame, text="Max. Prüfstufe:").grid(
+        # 2. Zeile: Ausgabeordner (Optional)
+        ttk.Label(top_frame, text="Ausgabeordner (opt.):").grid(
             row=1, column=0, sticky="w", pady=5
+        )
+
+        self.out_dir_entry = ttk.Entry(top_frame, width=50)
+        self.out_dir_entry.grid(
+            row=1, column=1, columnspan=2, sticky="ew", padx=5, pady=5
+        )
+
+        btn_out_dir = ttk.Button(
+            top_frame, text="Ausgabeordner wählen", command=self._select_out_directory
+        )
+        btn_out_dir.grid(row=1, column=3, columnspan=2, sticky="ew", padx=2, pady=5)
+
+        # 3. Zeile: Optionen
+        ttk.Label(top_frame, text="Max. Prüfstufe:").grid(
+            row=2, column=0, sticky="w", pady=5
         )
 
         self.stufe_var = tk.IntVar(value=4)
         stufe_spin = ttk.Spinbox(
             top_frame, from_=1, to=4, textvariable=self.stufe_var, width=5
         )
-        stufe_spin.grid(row=1, column=1, sticky="w", padx=5, pady=5)
+        stufe_spin.grid(row=2, column=1, sticky="w", padx=5, pady=5)
 
         self.warnings_var = tk.BooleanVar(value=True)
         chk_warnings = ttk.Checkbutton(
             top_frame, text="Warnungen anzeigen (-w)", variable=self.warnings_var
         )
-        chk_warnings.grid(row=1, column=2, sticky="w", padx=5, pady=5)
+        chk_warnings.grid(row=2, column=2, sticky="w", padx=5, pady=5)
 
         # Grid-Weight für Anpassung bei Fenstergrößenänderung
         top_frame.columnconfigure(1, weight=1)
 
-        # 3. Zeile: Aktions-Buttons
+        # 4. Zeile: Aktions-Buttons
         btn_frame = ttk.Frame(top_frame)
-        btn_frame.grid(row=2, column=0, columnspan=5, sticky="ew", pady=10)
+        btn_frame.grid(row=3, column=0, columnspan=5, sticky="ew", pady=10)
 
         self.btn_run = ttk.Button(
             btn_frame, text="▶ Validieren", command=self._start_validation
@@ -138,12 +153,26 @@ class EsolValidatorGUI(tk.Tk):
             # Pfade durch Semikolon getrennt eintragen
             self.path_entry.delete(0, tk.END)
             self.path_entry.insert(0, "; ".join(files))
+            # Automatisch das Verzeichnis der ersten Quelldatei als Ausgabeordner eintragen
+            source_dir = os.path.dirname(files[0])
+            if source_dir:
+                self.out_dir_entry.delete(0, tk.END)
+                self.out_dir_entry.insert(0, source_dir)
 
     def _select_directory(self):
         directory = filedialog.askdirectory(title="Batch-Ordner auswählen")
         if directory:
             self.path_entry.delete(0, tk.END)
             self.path_entry.insert(0, directory)
+            # Automatisch den Quellordner als Ausgabeordner eintragen
+            self.out_dir_entry.delete(0, tk.END)
+            self.out_dir_entry.insert(0, directory)
+
+    def _select_out_directory(self):
+        directory = filedialog.askdirectory(title="Ausgabeordner auswählen")
+        if directory:
+            self.out_dir_entry.delete(0, tk.END)
+            self.out_dir_entry.insert(0, directory)
 
     def _clear_log(self):
         self.log_text.delete("1.0", tk.END)
@@ -250,7 +279,14 @@ class EsolValidatorGUI(tk.Tk):
             self._append_log("=== Validierung der generierten Datei ===\n", tag="HEADER")
             self._execute_cmd(cmd)
 
-        CorrectionSelectionDialog(self, file_path=first_file, default_vk=default_vk, on_complete_callback=on_generated)
+        out_dir = self.out_dir_entry.get().strip() or None
+        CorrectionSelectionDialog(
+            self,
+            file_path=first_file,
+            default_vk=default_vk,
+            output_dir=out_dir,
+            on_complete_callback=on_generated,
+        )
 
     def _run_process(self, path_input: str):
         try:
@@ -312,13 +348,19 @@ class EsolValidatorGUI(tk.Tk):
 
             self._append_log(f"Starte Konvertierung von {len(files_to_convert)} Datei(en) nach ISO-8859-15...\n\n", tag="HEADER")
 
+            out_dir = self.out_dir_entry.get().strip()
+
             for file_path in files_to_convert:
                 cmd = [
                     sys.executable,
                     self.convert_script,
                     file_path,
-                    "--inplace"
                 ]
+                if out_dir:
+                    cmd.extend(["--out-dir", out_dir])
+                else:
+                    cmd.append("--inplace")
+
                 self._append_log(f"=== Konvertiere: {os.path.basename(file_path)} ===\n", tag="HEADER")
                 self._execute_cmd(cmd)
                 self._append_log("\n" + "-" * 60 + "\n\n")
@@ -347,12 +389,17 @@ class EsolValidatorGUI(tk.Tk):
 
             self._append_log(f"Erstelle Auftragsdateien (.auf) für {len(files_to_process)} Datei(en)...\n\n", tag="HEADER")
 
+            out_dir = self.out_dir_entry.get().strip()
+
             for file_path in files_to_process:
                 cmd = [
                     sys.executable,
                     self.generate_auf_script,
                     file_path
                 ]
+                if out_dir:
+                    cmd.extend(["--out-dir", out_dir])
+
                 self._append_log(f"=== Generiere .auf: {os.path.basename(file_path)} ===\n", tag="HEADER")
                 self._execute_cmd(cmd)
                 self._append_log("\n" + "-" * 60 + "\n\n")
@@ -382,6 +429,8 @@ class EsolValidatorGUI(tk.Tk):
             label = "Zuzahlungsforderung (VKZ 03)" if target_vk == "03" else "Korrekturrechnung (VKZ 04)"
             self._append_log(f"Erstelle {label} für {len(files_to_process)} Datei(en)...\n\n", tag="HEADER")
 
+            out_dir = self.out_dir_entry.get().strip()
+
             for file_path in files_to_process:
                 cmd = [
                     sys.executable,
@@ -389,6 +438,9 @@ class EsolValidatorGUI(tk.Tk):
                     file_path,
                     f"--type={target_vk}"
                 ]
+                if out_dir:
+                    cmd.extend(["--out-dir", out_dir])
+
                 self._append_log(f"=== Generiere VKZ {target_vk}: {os.path.basename(file_path)} ===\n", tag="HEADER")
                 self._execute_cmd(cmd)
                 self._append_log("\n" + "-" * 60 + "\n\n")

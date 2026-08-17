@@ -20,11 +20,12 @@ class CorrectionSelectionDialog(tk.Toplevel):
     when generating a correction invoice or co-payment demand.
     """
 
-    def __init__(self, parent: tk.Tk, file_path: str, default_vk: str = "02", on_complete_callback: Optional[Callable[[str], None]] = None):
+    def __init__(self, parent: tk.Tk, file_path: str, default_vk: str = "02", output_dir: Optional[str] = None, on_complete_callback: Optional[Callable[[str], None]] = None):
         super().__init__(parent)
 
         self.file_path = Path(file_path)
         self.default_vk = default_vk
+        self.output_dir = output_dir
         self.on_complete_callback = on_complete_callback
 
         self.title("Korrektur- & Zuzahlungs-Konfigurator")
@@ -206,6 +207,7 @@ class CorrectionSelectionDialog(tk.Toplevel):
                 new_rec_nr=new_rec_nr,
                 new_rec_date=new_rec_date,
                 zuzahlungskennzeichen=selected_zkz,
+                out_dir=Path(self.output_dir) if self.output_dir else None,
             )
 
             msg = f"Korrekturdatei (VKZ {target_vk}) wurde erfolgreich erstellt:\n\n{res_path}"

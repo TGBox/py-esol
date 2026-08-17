@@ -123,11 +123,18 @@ def parse_esol_file(file_path: Path) -> Tuple[str, str, str, str, str, int]:
     return my_ik, sender_ik, recver_ik, logischer_name, timestamp, size
 
 
-def generate_auf(input_path: Path, output_path: Optional[Path] = None) -> Path:
+def generate_auf(
+    input_path: Path,
+    output_path: Optional[Path] = None,
+    out_dir: Optional[Path] = None,
+) -> Path:
     """
     Generiert die .auf Auftragsdatei für eine gegebene ESOL-Datei.
     """
-    if not output_path:
+    if out_dir:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        output_path = out_dir / f"{input_path.name}.auf"
+    elif not output_path:
         output_path = Path(f"{input_path}.auf")
 
     my_ik, sender_ik, recver_ik, logischer_name, timestamp, size = parse_esol_file(input_path)
@@ -165,6 +172,12 @@ def main() -> None:
         default=None,
         help="Optionaler Pfad für die Ausgabedatei (Standard: <input_file>.auf)",
     )
+    parser.add_argument(
+        "--out-dir",
+        "-o",
+        default=None,
+        help="Zielverzeichnis für generierte .auf-Datei",
+    )
 
     args = parser.parse_args()
     input_path = Path(args.input_file)
@@ -174,9 +187,10 @@ def main() -> None:
         sys.exit(1)
 
     output_path = Path(args.output_file) if args.output_file else None
+    out_dir = Path(args.out_dir) if args.out_dir else None
 
     try:
-        res_path = generate_auf(input_path, output_path)
+        res_path = generate_auf(input_path, output_path, out_dir=out_dir)
         print(f"Auftragsdatei erfolgreich erstellt: {res_path}")
     except Exception as e:
         print(f"Fehler beim Erstellen der Auftragsdatei: {e}", file=sys.stderr)

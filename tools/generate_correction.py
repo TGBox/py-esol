@@ -574,12 +574,22 @@ def generate_correction_file(
     new_rec_nr: Optional[str] = None,
     new_rec_date: Optional[str] = None,
     zuzahlungskennzeichen: Optional[str] = None,
+    out_dir: Optional[Path] = None,
 ) -> Path:
     """Reads an ESOL file and generates the corrected/demanded ESOL output file."""
     if not input_path.is_file():
         raise FileNotFoundError(f"Datei nicht gefunden: {input_path}")
 
-    if not output_path:
+    if out_dir:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        if new_rec_nr:
+            sammel_nr = new_rec_nr.split(":")[0]
+            formatted_nr = sammel_nr.zfill(4) if (sammel_nr.isdigit() and len(sammel_nr) < 4) else sammel_nr
+            output_filename = f"ESOL{formatted_nr}"
+        else:
+            output_filename = f"{input_path.name}_VK{target_vk}"
+        output_path = out_dir / output_filename
+    elif not output_path:
         if new_rec_nr:
             sammel_nr = new_rec_nr.split(":")[0]
             formatted_nr = sammel_nr.zfill(4) if (sammel_nr.isdigit() and len(sammel_nr) < 4) else sammel_nr
@@ -616,6 +626,12 @@ def main() -> None:
         nargs="?",
         default=None,
         help="Optionaler Zielpfad für die generierte Datei",
+    )
+    parser.add_argument(
+        "--out-dir",
+        "-o",
+        default=None,
+        help="Zielverzeichnis für generierte Korrekturdatei",
     )
     parser.add_argument(
         "--type",
@@ -660,6 +676,7 @@ def main() -> None:
             new_rec_nr=args.new_rec_nr,
             new_rec_date=args.new_rec_date,
             zuzahlungskennzeichen=args.zuzahlungskennzeichen,
+            out_dir=Path(args.out_dir) if args.out_dir else None,
         )
         print(f"Korrekturdatei (VKZ {args.type}) erfolgreich erstellt: {res_path}")
     except Exception as e:

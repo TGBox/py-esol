@@ -49,3 +49,23 @@ def test_generate_auf_from_file(tmp_path: Path):
     assert "123456789      " in content
     assert "661430035      " in content
     assert "SL030179S03" in content
+
+
+def test_generate_auf_with_out_dir(tmp_path: Path):
+    sample_esol = tmp_path / "SL030179S04"
+    sample_esol.write_text(
+        "UNB+UNOC:3+123456789+661430035+20260323:1040+00118+B+SL030179S04+2'\n"
+        "UNH+00001+SLGA:21:0:0'\n"
+        "FKT+01++123456789+101777502+101777502+123456789'\n"
+        "REC+51:0+20260122+1'\n"
+        "GES+00+100,00+100,00+0,00'\n"
+        "UNT+000005+00001'\n"
+        "UNZ+000001+00118'\n",
+        encoding="iso-8859-1"
+    )
+    custom_out_dir = tmp_path / "custom_output"
+    auf_file = generate_auf(sample_esol, out_dir=custom_out_dir)
+
+    assert auf_file.exists()
+    assert auf_file.parent == custom_out_dir
+    assert auf_file.name == "SL030179S04.auf"
