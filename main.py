@@ -8,6 +8,8 @@ from tkinter import filedialog, messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 from typing import Optional
 
+import theme_manager
+
 
 class EsolValidatorGUI(tk.Tk):
 
@@ -15,8 +17,8 @@ class EsolValidatorGUI(tk.Tk):
         super().__init__()
 
         self.title("ESOL Datei-Validator")
-        self.geometry("850x650")
-        self.minsize(700, 550)
+        self.geometry("850x700")
+        self.minsize(700, 650)
 
         # Pfade zu den Skripten bestimmen
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -27,6 +29,7 @@ class EsolValidatorGUI(tk.Tk):
         self.correction_script = os.path.join(self.base_dir, "tools", "generate_correction.py")
 
         self._setup_ui()
+        self._apply_theme()
 
     def _setup_ui(self):
         # Frame oben: Dateiauswahl & Einstellungen
@@ -68,7 +71,7 @@ class EsolValidatorGUI(tk.Tk):
         )
         btn_out_dir.grid(row=1, column=3, columnspan=2, sticky="ew", padx=2, pady=5)
 
-        # 3. Zeile: Optionen
+        # 3. Zeile: Optionen & Theme-Toggle
         ttk.Label(top_frame, text="Max. Prüfstufe:").grid(
             row=2, column=0, sticky="w", pady=5
         )
@@ -84,6 +87,11 @@ class EsolValidatorGUI(tk.Tk):
             top_frame, text="Warnungen anzeigen (-w)", variable=self.warnings_var
         )
         chk_warnings.grid(row=2, column=2, sticky="w", padx=5, pady=5)
+
+        self.btn_theme = ttk.Button(
+            top_frame, text="🌙 Dark Mode", command=self._toggle_theme
+        )
+        self.btn_theme.grid(row=2, column=3, columnspan=2, sticky="e", padx=2, pady=5)
 
         # Grid-Weight für Anpassung bei Fenstergrößenänderung
         top_frame.columnconfigure(1, weight=1)
@@ -121,14 +129,9 @@ class EsolValidatorGUI(tk.Tk):
 
         # Text-Panel für Log
         self.log_text = ScrolledText(
-            output_frame, wrap="word", font=("Consolas", 10), bg="#1e1e1e", fg="#d4d4d4"
+            output_frame, wrap="word", font=("Consolas", 10)
         )
         self.log_text.pack(fill="both", expand=True, side="top")
-
-        # Text-Farbtags konfigurieren
-        self.log_text.tag_config("ERROR", foreground="#f44336")
-        self.log_text.tag_config("OK", foreground="#4caf50")
-        self.log_text.tag_config("HEADER", foreground="#64b5f6", font=("Consolas", 10, "bold"))
 
         # Footer mit Kopieren-Button
         footer_frame = ttk.Frame(output_frame)
@@ -143,6 +146,30 @@ class EsolValidatorGUI(tk.Tk):
             footer_frame, text="Löschen", command=self._clear_log
         )
         btn_clear.pack(side="right", padx=5)
+
+    def _toggle_theme(self):
+        current = theme_manager.get_current_theme()
+        new_mode = "light" if current == "dark" else "dark"
+        theme_manager.set_current_theme(new_mode)
+        self._apply_theme()
+
+    def _apply_theme(self):
+        mode = theme_manager.apply_theme(self)
+        colors = theme_manager.get_theme_colors(mode)
+
+        if mode == "dark":
+            self.btn_theme.config(text="☀️ Light Mode")
+        else:
+            self.btn_theme.config(text="🌙 Dark Mode")
+
+        self.log_text.config(
+            bg=colors["log_bg"],
+            fg=colors["log_fg"],
+            insertbackground=colors["log_fg"],
+        )
+        self.log_text.tag_config("ERROR", foreground=colors["log_error"])
+        self.log_text.tag_config("OK", foreground=colors["log_ok"])
+        self.log_text.tag_config("HEADER", foreground=colors["log_header"], font=("Consolas", 10, "bold"))
 
     def _select_files(self):
         files = filedialog.askopenfilenames(

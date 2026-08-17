@@ -6,6 +6,8 @@ from pathlib import Path
 from tkinter import messagebox, ttk
 from typing import Callable, List, Optional
 
+import theme_manager
+
 # Ensure project root is in sys.path
 project_root = Path(__file__).resolve().parent
 if str(project_root) not in sys.path:
@@ -29,12 +31,14 @@ class CorrectionSelectionDialog(tk.Toplevel):
         self.on_complete_callback = on_complete_callback
 
         self.title("Korrektur- & Zuzahlungs-Konfigurator")
-        self.geometry("800x650")
-        self.minsize(800, 650)
+        self.geometry("800x700")
+        self.minsize(800, 700)
 
         # Make dialog modal
         self.transient(parent)
         self.grab_set()
+
+        theme_manager.apply_theme(self)
 
         self._load_belege_data()
         self._setup_ui()
@@ -53,7 +57,7 @@ class CorrectionSelectionDialog(tk.Toplevel):
         header_frame.pack(fill="x", padx=10, pady=5)
 
         ttk.Label(header_frame, text=f"Quelldatei: {self.file_path.name}", font=("Consolas", 10, "bold")).pack(anchor="w")
-        ttk.Label(header_frame, text=f"Pfad: {self.file_path}", font=("Consolas", 9), foreground="#666666").pack(anchor="w")
+        ttk.Label(header_frame, text=f"Pfad: {self.file_path}", font=("Consolas", 9)).pack(anchor="w")
 
         # Step 1: Beleg-Auswahl
         beleg_frame = ttk.LabelFrame(self, text=" 1. Belege auswählen ", padding=10)
