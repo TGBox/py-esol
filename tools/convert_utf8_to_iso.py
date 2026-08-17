@@ -26,6 +26,8 @@ def convert_file(
 ) -> Tuple[bool, str]:
     """
     Konvertiert eine einzelne Datei von Quell-Kodierung (UTF-8) zu Ziel-Kodierung (ISO-8859-15).
+    Verwendet eine intelligente Dekodierungs-Logik, um bereits im Ziel-Encoding vorliegende
+    oder UTF-8-kodierte Dateien ohne Zeichenverlust oder Formatierungsänderungen zu verarbeiten.
 
     Gibt (Erfolg: bool, Nachricht: str) zurück.
     """
@@ -33,14 +35,44 @@ def convert_file(
         if not src_path.is_file():
             return False, f"Datei nicht gefunden: {src_path}"
 
-        # Datei in UTF-8 einlesen
-        content = src_path.read_text(encoding=source_encoding, errors="replace")
+        raw_bytes = src_path.read_bytes()
+
+        # Intelligente Dekodierung mit Fehlererkennung
+        content = None
+
+        # 1. Versuche Quell-Encoding (standardmäßig UTF-8) strikt zu dekodieren
+        try:
+            content = raw_bytes.decode(source_encoding)
+        except UnicodeDecodeError:
+            pass
+
+        # 2. Falls Fehlschlag, versuche Ziel-Encoding (z. B. ISO-8859-15) strikt zu dekodieren
+        if content is None and target_encoding.lower() != source_encoding.lower():
+            try:
+                content = raw_bytes.decode(target_encoding)
+            except UnicodeDecodeError:
+                pass
+
+        # 3. Falls weiterhin Fehlschlag, versuche kompatible Encodings (ISO-8859-1, CP1252)
+        if content is None:
+            for fallback in ("iso-8859-1", "cp1252"):
+                try:
+                    content = raw_bytes.decode(fallback)
+                    break
+                except UnicodeDecodeError:
+                    pass
+
+        # 4. Letzter Ausweg: Quell-Encoding mit Replace-Strategie
+        if content is None:
+            content = raw_bytes.decode(source_encoding, errors="replace")
 
         # Zielverzeichnis bei Bedarf erstellen
         dst_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Datei in ISO-8859-15 schreiben
-        dst_path.write_text(content, encoding=target_encoding, errors=errors_strategy)
+        # Datei in Ziel-Encoding schreiben; newline="" bewahrt die ursprünglichen Zeilenumbrüche (\r\n bzw. \n)
+        with open(dst_path, "w", encoding=target_encoding, errors=errors_strategy, newline="") as f:
+            f.write(content)
+
         return True, f"Erfolgreich konvertiert -> {dst_path}"
     except Exception as e:
         return False, f"Fehler bei Konvertierung von {src_path}: {e}"

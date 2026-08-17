@@ -33,3 +33,40 @@ def test_collect_files(tmp_path: Path):
     assert len(files) == 2
     assert f1 in files
     assert f2 in files
+
+
+def test_convert_file_already_iso8859_15(tmp_path: Path):
+    iso_file = tmp_path / "sample_already_iso.txt"
+    original_text = "UNB+UNOC:3'\r\nNAD+Müster+Märta+Groß'\r\n"
+    # Write directly as ISO-8859-15
+    iso_file.write_bytes(original_text.encode("iso-8859-15"))
+
+    out_file = tmp_path / "output_iso.txt"
+    success, msg = convert_file(iso_file, out_file, target_encoding="iso-8859-15")
+    assert success is True
+
+    # Raw bytes must match original exactly (no corruption into '?' or altered line endings)
+    assert out_file.read_bytes() == iso_file.read_bytes()
+    with open(out_file, "r", encoding="iso-8859-15", newline="") as f:
+        assert f.read() == original_text
+
+
+def test_convert_file_line_endings_preserved(tmp_path: Path):
+    # CRLF test
+    crlf_file = tmp_path / "crlf.txt"
+    crlf_bytes = b"UNB+UNOC:3'\r\nNAD+M\xc3\xbcster'\r\n"
+    crlf_file.write_bytes(crlf_bytes)
+
+    out_crlf = tmp_path / "out_crlf.txt"
+    convert_file(crlf_file, out_crlf, target_encoding="iso-8859-15")
+    assert out_crlf.read_bytes() == b"UNB+UNOC:3'\r\nNAD+M\xfcster'\r\n"
+
+    # LF test
+    lf_file = tmp_path / "lf.txt"
+    lf_bytes = b"UNB+UNOC:3'\nNAD+M\xc3\xbcster'\n"
+    lf_file.write_bytes(lf_bytes)
+
+    out_lf = tmp_path / "out_lf.txt"
+    convert_file(lf_file, out_lf, target_encoding="iso-8859-15")
+    assert out_lf.read_bytes() == b"UNB+UNOC:3'\nNAD+M\xfcster'\n"
+
