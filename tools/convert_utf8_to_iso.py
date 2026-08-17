@@ -35,6 +35,9 @@ def convert_file(
         if not src_path.is_file():
             return False, f"Datei nicht gefunden: {src_path}"
 
+        if dst_path.is_dir():
+            dst_path = dst_path / src_path.name
+
         raw_bytes = src_path.read_bytes()
 
         # Intelligente Dekodierung mit Fehlererkennung
@@ -167,14 +170,19 @@ def main() -> None:
     out_dir_path = Path(args.out_dir) if args.out_dir else None
 
     for index, src_file in enumerate(all_files, start=1):
-        if args.inplace:
-            dst_file = src_file
-        elif out_dir_path:
-            try:
-                rel = src_file.relative_to(input_paths[0])
-            except (ValueError, IndexError):
-                rel = src_file.name
+        if out_dir_path:
+            if input_paths and input_paths[0].is_file():
+                rel = Path(src_file.name)
+            else:
+                try:
+                    rel = src_file.relative_to(input_paths[0])
+                except (ValueError, IndexError):
+                    rel = Path(src_file.name)
             dst_file = out_dir_path / rel
+            if dst_file.is_dir() or str(rel) == ".":
+                dst_file = out_dir_path / src_file.name
+        elif args.inplace:
+            dst_file = src_file
         else:
             dst_file = src_file.with_name(f"{src_file.name}.iso")
 
