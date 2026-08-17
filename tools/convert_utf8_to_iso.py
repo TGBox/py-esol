@@ -181,6 +181,10 @@ def main() -> None:
             dst_file = out_dir_path / rel
             if dst_file.is_dir() or str(rel) == ".":
                 dst_file = out_dir_path / src_file.name
+
+            # Überschreiben des Quelloriginals verhindern, falls out_dir_path gleich dem Quellordner ist
+            if dst_file.resolve() == src_file.resolve() and not args.inplace:
+                dst_file = dst_file.with_name(f"{src_file.name}.iso")
         elif args.inplace:
             dst_file = src_file
         else:

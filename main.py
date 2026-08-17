@@ -28,6 +28,8 @@ class EsolValidatorGUI(tk.Tk):
         self.generate_auf_script = os.path.join(self.base_dir, "tools", "generate_auf.py")
         self.correction_script = os.path.join(self.base_dir, "tools", "generate_correction.py")
 
+        self.user_selected_out_dir: bool = False
+
         self._setup_ui()
         self._apply_theme()
 
@@ -65,6 +67,7 @@ class EsolValidatorGUI(tk.Tk):
         self.out_dir_entry.grid(
             row=1, column=1, columnspan=2, sticky="ew", padx=5, pady=5
         )
+        self.out_dir_entry.bind("<KeyRelease>", self._on_out_dir_key_release)
 
         btn_out_dir = ttk.Button(
             top_frame, text="Ausgabeordner wählen", command=self._select_out_directory
@@ -171,6 +174,10 @@ class EsolValidatorGUI(tk.Tk):
         self.log_text.tag_config("OK", foreground=colors["log_ok"])
         self.log_text.tag_config("HEADER", foreground=colors["log_header"], font=("Consolas", 10, "bold"))
 
+    def _on_out_dir_key_release(self, event=None):
+        val = self.out_dir_entry.get().strip()
+        self.user_selected_out_dir = bool(val)
+
     def _select_files(self):
         files = filedialog.askopenfilenames(
             title="ESOL-Dateien auswählen",
@@ -180,26 +187,29 @@ class EsolValidatorGUI(tk.Tk):
             # Pfade durch Semikolon getrennt eintragen
             self.path_entry.delete(0, tk.END)
             self.path_entry.insert(0, "; ".join(files))
-            # Automatisch das Verzeichnis der ersten Quelldatei als Ausgabeordner eintragen
-            source_dir = os.path.dirname(files[0])
-            if source_dir:
-                self.out_dir_entry.delete(0, tk.END)
-                self.out_dir_entry.insert(0, source_dir)
+            # Automatisch das Verzeichnis der ersten Quelldatei als Ausgabeordner eintragen (falls nicht selbst gewählt)
+            if not self.user_selected_out_dir or not self.out_dir_entry.get().strip():
+                source_dir = os.path.dirname(files[0])
+                if source_dir:
+                    self.out_dir_entry.delete(0, tk.END)
+                    self.out_dir_entry.insert(0, source_dir)
 
     def _select_directory(self):
         directory = filedialog.askdirectory(title="Batch-Ordner auswählen")
         if directory:
             self.path_entry.delete(0, tk.END)
             self.path_entry.insert(0, directory)
-            # Automatisch den Quellordner als Ausgabeordner eintragen
-            self.out_dir_entry.delete(0, tk.END)
-            self.out_dir_entry.insert(0, directory)
+            # Automatisch den Quellordner als Ausgabeordner eintragen (falls nicht selbst gewählt)
+            if not self.user_selected_out_dir or not self.out_dir_entry.get().strip():
+                self.out_dir_entry.delete(0, tk.END)
+                self.out_dir_entry.insert(0, directory)
 
     def _select_out_directory(self):
         directory = filedialog.askdirectory(title="Ausgabeordner auswählen")
         if directory:
             self.out_dir_entry.delete(0, tk.END)
             self.out_dir_entry.insert(0, directory)
+            self.user_selected_out_dir = True
 
     def _clear_log(self):
         self.log_text.delete("1.0", tk.END)
@@ -385,8 +395,6 @@ class EsolValidatorGUI(tk.Tk):
                 ]
                 if out_dir:
                     cmd.extend(["--out-dir", out_dir])
-                else:
-                    cmd.append("--inplace")
 
                 self._append_log(f"=== Konvertiere: {os.path.basename(file_path)} ===\n", tag="HEADER")
                 self._execute_cmd(cmd)
