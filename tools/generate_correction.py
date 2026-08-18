@@ -72,6 +72,7 @@ def build_segment_string(tag: str, fields: List[Any]) -> str:
 def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
     """
     Parses an ESOL file content and returns a list of dictionaries with metadata for each Beleg (INV block).
+    Includes positions, prices, dates, tariff indicators, and co-payments.
     """
     tokenizer = SegmentTokenizer()
     raw_segments = tokenizer.tokenize_segments(raw_content)
@@ -89,20 +90,27 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
             in_inv = True
             belegnr = str(fields[3]) if len(fields) > 3 and fields[3] else ""
             vers_nr = str(fields[0]) if len(fields) > 0 and fields[0] else ""
+            vers_status = str(fields[1]) if len(fields) > 1 and fields[1] else "00"
             current_beleg = {
                 "belegnr": belegnr,
                 "versichertennummer": vers_nr,
+                "versichertenstatus": vers_status,
                 "nachname": "",
                 "vorname": "",
                 "geburtstag": "",
+                "tarifkennzeichen": "",
+                "zuzahlungskennzeichen": "2",
                 "brutto": 0.0,
                 "zuzahlung_proz": 0.0,
                 "zuzahlung_pausch": 10.0,
                 "total_zuzahlung": 0.0,
                 "positions": [],
+                "raw_segments": [],
             }
+            current_beleg["raw_segments"].append((tag, fields))
 
         elif in_inv:
+            current_beleg["raw_segments"].append((tag, fields))
             if tag == "NAD":
                 if len(fields) > 0:
                     current_beleg["nachname"] = str(fields[0])
@@ -111,40 +119,74 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 if len(fields) > 2:
                     current_beleg["geburtstag"] = str(fields[2])
 
+            elif tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
+                if tag == "ZHE":
+                    if len(fields) > 3 and fields[3]:
+                        current_beleg["zuzahlungskennzeichen"] = str(fields[3])
+                    if len(fields) > 4 and fields[4]:
+                        current_beleg["tarifkennzeichen"] = str(fields[4])
+
             elif tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
                 anzahl = 0.0
                 betrag_zuz = 0.0
                 code = ""
+                tarif_kz = ""
                 einzelbetrag = 0.0
+                datum = ""
+
+                # Code / Composite check
+                c_field = fields[0] if len(fields) > 0 else ""
+                if isinstance(c_field, list):
+                    code = str(c_field[0]) if len(c_field) > 0 else ""
+                    tarif_kz = str(c_field[1]) if len(c_field) > 1 else ""
+                else:
+                    raw_c = str(c_field)
+                    if ":" in raw_c:
+                        parts = raw_c.split(":")
+                        code = parts[0]
+                        tarif_kz = parts[1]
+                    else:
+                        code = raw_c
+
+                if tarif_kz and not current_beleg.get("tarifkennzeichen"):
+                    current_beleg["tarifkennzeichen"] = tarif_kz
 
                 if tag == "EHE":
-                    code = str(fields[0]) if len(fields) > 0 else ""
+                    datum = str(fields[1]) if len(fields) > 1 and fields[1] else ""
                     anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
                     einzelbetrag = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
                     betrag_zuz = float(str(fields[5]).replace(",", ".")) if len(fields) > 5 and fields[5] else 0.0
                 elif tag == "ENF":
-                    code = str(fields[1]) if len(fields) > 1 else ""
+                    if isinstance(fields[1], list):
+                        code = str(fields[1][0]) if len(fields[1]) > 0 else ""
+                        tarif_kz = str(fields[1][1]) if len(fields[1]) > 1 else ""
+                    elif len(fields) > 1:
+                        code = str(fields[1])
                     anzahl = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
                     einzelbetrag = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
                     betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
                 elif tag == "EHI":
-                    code = str(fields[0]) if len(fields) > 0 else ""
                     anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
                     einzelbetrag = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
                     betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
                 elif tag in ["EHK", "EKT", "EHB", "ESP"]:
-                    code = str(fields[0]) if len(fields) > 0 else ""
                     anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
                     einzelbetrag = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
                     betrag_zuz = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
 
                 current_beleg["zuzahlung_proz"] += round(anzahl * betrag_zuz, 2)
                 current_beleg["positions"].append({
+                    "id": len(current_beleg["positions"]),
                     "tag": tag,
                     "code": code,
+                    "tarif_kz": tarif_kz,
+                    "datum": datum,
                     "anzahl": anzahl,
                     "einzelbetrag": einzelbetrag,
+                    "gesamtbetrag": round(anzahl * einzelbetrag, 2),
                     "zuzahlung": betrag_zuz,
+                    "zuzahlung_gesamt": round(anzahl * betrag_zuz, 2),
+                    "raw_fields": fields,
                 })
 
             elif tag == "BES":
@@ -172,10 +214,11 @@ def generate_correction_esol(
     new_rec_nr: Optional[str] = None,
     new_rec_date: Optional[str] = None,
     zuzahlungskennzeichen: Optional[str] = None,
+    beleg_modifications: Optional[Dict[str, Any]] = None,
 ) -> str:
     """
     Generates a new ESOL content string with target VKZ (02, 03, 04) from original raw ESOL content.
-    Optionally filters output to include only specified Belegnummern.
+    Optionally filters output to include only specified Belegnummern and applies beleg_modifications.
     """
     tokenizer = SegmentTokenizer()
     raw_segments = tokenizer.tokenize_segments(raw_content)
@@ -188,6 +231,7 @@ def generate_correction_esol(
         new_rec_date = today_str
 
     selected_set = set(selected_belegnr_list) if selected_belegnr_list else None
+    mods = beleg_modifications or {}
 
     # Discover all non-00 GES status codes present in raw file
     ges_status_codes = []
@@ -211,6 +255,8 @@ def generate_correction_esol(
     current_ges_code_p1 = "00"
     current_inv_zuz_proz_p1 = 0.0
     current_inv_zuz_pausch_p1 = 0.0
+    current_inv_brutto_p1 = 0.0
+    current_belegnr_p1 = ""
 
     orig_sammel_nr = ""
     orig_einzel_nr = ""
@@ -246,12 +292,11 @@ def generate_correction_esol(
 
         elif tag == "INV":
             in_inv_block_p1 = True
-            belegnr = str(fields[3]) if len(fields) > 3 and fields[3] else ""
+            current_belegnr_p1 = str(fields[3]) if len(fields) > 3 and fields[3] else ""
             vers_status = str(fields[1]) if len(fields) > 1 and fields[1] else "00"
             st_prefix2 = vers_status[:2] if len(vers_status) >= 2 else "00"
             st_prefix1 = vers_status[:1] if len(vers_status) >= 1 else "0"
 
-            # Match Versichertenstatus to available GES status codes in the file
             if st_prefix2 in ges_status_codes:
                 current_ges_code_p1 = st_prefix2
             else:
@@ -263,30 +308,60 @@ def generate_correction_esol(
                 else:
                     current_ges_code_p1 = "00"
 
-            keep_block_p1 = (selected_set is None) or (belegnr in selected_set)
+            keep_block_p1 = (selected_set is None) or (current_belegnr_p1 in selected_set)
             current_inv_zuz_proz_p1 = 0.0
             current_inv_zuz_pausch_p1 = 0.0
+            current_inv_brutto_p1 = 0.0
 
         elif in_inv_block_p1:
+            b_mod = mods.get(current_belegnr_p1)
+            if keep_block_p1 and b_mod and "positions" in b_mod:
+                # Calculate totals from modified positions
+                if tag == "BES":
+                    mod_positions = b_mod["positions"]
+                    mod_brutto = sum(round(p.get("anzahl", 0.0) * p.get("einzelbetrag", 0.0), 2) for p in mod_positions)
+                    mod_zuz_proz = sum(round(p.get("anzahl", 0.0) * p.get("zuzahlung", 0.0), 2) for p in mod_positions)
+                    if len(fields) > 3 and fields[3]:
+                        mod_zuz_pausch = float(str(fields[3]).replace(",", "."))
+                    else:
+                        mod_zuz_pausch = b_mod.get("zuzahlung_pausch", 10.0)
+
+                    brutto_by_status[current_ges_code_p1] = round(
+                        brutto_by_status.get(current_ges_code_p1, 0.0) + mod_brutto, 2
+                    )
+                    inv_zuz = round(mod_zuz_proz + mod_zuz_pausch, 2)
+                    zuzahlung_by_status[current_ges_code_p1] = round(
+                        zuzahlung_by_status.get(current_ges_code_p1, 0.0) + inv_zuz, 2
+                    )
+                    in_inv_block_p1 = False
+                continue
+
             if keep_block_p1 and tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
                 anzahl = 0.0
                 betrag_zuz = 0.0
+                einzel = 0.0
                 if tag == "EHE":
                     anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    einzel = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
                     betrag_zuz = float(str(fields[5]).replace(",", ".")) if len(fields) > 5 and fields[5] else 0.0
                 elif tag == "ENF":
                     anzahl = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
+                    einzel = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
                     betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
                 elif tag == "EHI":
                     anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    einzel = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
                     betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
                 elif tag in ["EHK", "EKT", "EHB", "ESP"]:
                     anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    einzel = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
                     betrag_zuz = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
+                current_inv_brutto_p1 += round(anzahl * einzel, 2)
                 current_inv_zuz_proz_p1 += round(anzahl * betrag_zuz, 2)
+
             elif tag == "BES":
                 if keep_block_p1:
-                    brutto_val = float(str(fields[0]).replace(",", ".")) if len(fields) > 0 and fields[0] else 0.0
+                    brutto_val = float(str(fields[0]).replace(",", ".")) if (len(fields) > 0 and fields[0]) else current_inv_brutto_p1
                     brutto_by_status[current_ges_code_p1] = round(
                         brutto_by_status.get(current_ges_code_p1, 0.0) + brutto_val, 2
                     )
@@ -298,10 +373,11 @@ def generate_correction_esol(
                             current_inv_zuz_pausch_p1 = 10.0
                         inv_zuz = round(current_inv_zuz_proz_p1 + current_inv_zuz_pausch_p1, 2)
                     else:
-                        if len(fields) > 1 and fields[1]:
-                            inv_zuz = float(str(fields[1]).replace(",", "."))
+                        if len(fields) > 3 and fields[3]:
+                            current_inv_zuz_pausch_p1 = float(str(fields[3]).replace(",", "."))
                         else:
-                            inv_zuz = round(current_inv_zuz_proz_p1 + current_inv_zuz_pausch_p1, 2)
+                            current_inv_zuz_pausch_p1 = 10.0
+                        inv_zuz = round(current_inv_zuz_proz_p1 + current_inv_zuz_pausch_p1, 2)
 
                     zuzahlung_by_status[current_ges_code_p1] = round(
                         zuzahlung_by_status.get(current_ges_code_p1, 0.0) + inv_zuz, 2
@@ -333,7 +409,8 @@ def generate_correction_esol(
         rec_nr_fields: Any = [new_sammel_nr, new_einzel_nr]
     else:
         rec_nr_fields = new_sammel_nr
-    new_rec_ref = new_sammel_nr.zfill(5) if (new_sammel_nr and len(new_sammel_nr) < 5) else new_sammel_nr
+    clean_ref = "".join([c for c in str(new_sammel_nr) if c.isdigit()])
+    new_rec_ref = clean_ref.zfill(5) if clean_ref else "00001"
 
     new_raw_segments = []
     in_inv_block = False
@@ -341,6 +418,7 @@ def generate_correction_esol(
     current_inv_belegnr = ""
     current_inv_zuz_proz = 0.0
     current_inv_zuz_pausch = 0.0
+    current_inv_brutto = 0.0
     inv_block_segments: List[Tuple[str, List[Any]]] = []
     written_ges_statuses = set()
 
@@ -355,6 +433,57 @@ def generate_correction_esol(
             f2 = ContentHelper.format_decimal(st_b)
             f3 = ContentHelper.format_decimal(st_z)
         return build_segment_string("GES", [st_code, f1, f2, f3])
+
+    def format_pos_segment(pos: Dict[str, Any]) -> Tuple[str, List[Any]]:
+        tag = pos.get("tag", "EHE")
+        abr_code = str(pos.get("abr_code") or "26")
+        code = str(pos.get("code", "59702"))
+        tarif_kz = str(pos.get("tarif_kz", "00501"))
+        datum = str(pos.get("datum", datetime.datetime.now().strftime("%Y%m%d")))
+        anzahl = float(pos.get("anzahl", 1.0))
+        einzel = float(pos.get("einzelbetrag", 0.0))
+        zuz = float(pos.get("zuzahlung", 0.0))
+
+        code_val: Any = [abr_code, tarif_kz] if tarif_kz else abr_code
+
+        if tag == "EHE":
+            fields: List[Any] = [
+                code_val,
+                code,
+                ContentHelper.format_decimal(anzahl),
+                ContentHelper.format_decimal(einzel),
+                datum,
+                ContentHelper.format_decimal(zuz),
+            ]
+        elif tag == "ENF":
+            v_kz = str(pos.get("verordnungskz") or "01")
+            fields = [
+                v_kz,
+                code_val,
+                code,
+                ContentHelper.format_decimal(anzahl),
+                ContentHelper.format_decimal(einzel),
+                datum,
+                ContentHelper.format_decimal(zuz),
+            ]
+        elif tag == "EHI":
+            fields = [
+                code_val,
+                code,
+                ContentHelper.format_decimal(anzahl),
+                datum,
+                ContentHelper.format_decimal(einzel),
+                ContentHelper.format_decimal(zuz),
+            ]
+        else:  # EHK, EKT, EHB, ESP
+            fields = [
+                code_val,
+                code,
+                ContentHelper.format_decimal(anzahl),
+                ContentHelper.format_decimal(einzel),
+                ContentHelper.format_decimal(zuz),
+            ]
+        return tag, fields
 
     for raw_seg in raw_segments:
         tag, fields = parse_segment_fields(raw_seg)
@@ -372,7 +501,6 @@ def generate_correction_esol(
                     written_ges_statuses.add(st_code)
 
         if tag == "UNB":
-            # Update Erstelldatum/Erstelluhrzeit (field 3), Datenaustauschreferenz (field 4), and Anwendungsreferenz/logischer Dateiname (field 6)
             curr_time_str = datetime.datetime.now().strftime("%H%M")
             if len(fields) > 3 and fields[3]:
                 if isinstance(fields[3], list):
@@ -401,13 +529,11 @@ def generate_correction_esol(
             new_raw_segments.append(build_segment_string(tag, fields))
 
         elif tag == "FKT":
-            # Change VK in FKT (field 0)
             if len(fields) > 0:
                 fields[0] = target_vk
             new_raw_segments.append(build_segment_string(tag, fields))
 
         elif tag == "REC":
-            # Change Rechnungsnummer and Rechnungsdatum
             if len(fields) > 0:
                 fields[0] = rec_nr_fields
             if len(fields) > 1:
@@ -433,6 +559,7 @@ def generate_correction_esol(
             inv_block_segments = [(tag, fields)]
             current_inv_zuz_proz = 0.0
             current_inv_zuz_pausch = 0.0
+            current_inv_brutto = 0.0
 
         elif in_inv_block:
             if not keep_block:
@@ -441,37 +568,58 @@ def generate_correction_esol(
                     inv_block_segments = []
                 continue
 
-            if tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
-                anzahl = 0.0
-                betrag_zuz = 0.0
-                if tag == "EHE":
-                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
-                    betrag_zuz = float(str(fields[5]).replace(",", ".")) if len(fields) > 5 and fields[5] else 0.0
-                elif tag == "ENF":
-                    anzahl = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
-                    betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
-                elif tag == "EHI":
-                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
-                    betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
-                elif tag in ["EHK", "EKT", "EHB", "ESP"]:
-                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
-                    betrag_zuz = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
+            b_mod = mods.get(current_inv_belegnr)
 
-                current_inv_zuz_proz += round(anzahl * betrag_zuz, 2)
-                inv_block_segments.append((tag, fields))
-
-            elif tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
-                zkz_val = zuzahlungskennzeichen if zuzahlungskennzeichen is not None else ("2" if target_vk == "03" else None)
+            if tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
+                zkz_val = (
+                    b_mod.get("zuzahlungskennzeichen")
+                    if (b_mod and "zuzahlungskennzeichen" in b_mod)
+                    else (zuzahlungskennzeichen if zuzahlungskennzeichen is not None else ("2" if target_vk == "03" else None))
+                )
                 if zkz_val is not None and len(fields) > 3:
                     fields[3] = zkz_val
                 inv_block_segments.append((tag, fields))
 
-            elif tag == "BES":
-                if len(fields) > 3 and fields[3]:
-                    current_inv_zuz_pausch = float(str(fields[3]).replace(",", "."))
+            elif tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
+                if b_mod and "positions" in b_mod:
+                    # Skip original position segments; modified positions will be rebuilt at BES
+                    pass
                 else:
-                    current_inv_zuz_pausch = 10.0
+                    anzahl = 0.0
+                    betrag_zuz = 0.0
+                    einzel = 0.0
+                    if tag == "EHE":
+                        anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                        einzel = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
+                        betrag_zuz = float(str(fields[5]).replace(",", ".")) if len(fields) > 5 and fields[5] else 0.0
+                    elif tag == "ENF":
+                        anzahl = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
+                        einzel = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
+                        betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
+                    elif tag == "EHI":
+                        anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                        einzel = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
+                        betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
+                    elif tag in ["EHK", "EKT", "EHB", "ESP"]:
+                        anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                        einzel = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
+                        betrag_zuz = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
 
+                    current_inv_brutto += round(anzahl * einzel, 2)
+                    current_inv_zuz_proz += round(anzahl * betrag_zuz, 2)
+
+                    if b_mod and "tarifkennzeichen" in b_mod:
+                        # Override tariff code in composite field
+                        c_f = fields[0]
+                        if isinstance(c_f, list) and len(c_f) > 1:
+                            c_f[1] = str(b_mod["tarifkennzeichen"])
+                        elif isinstance(c_f, str) and ":" in c_f:
+                            parts = c_f.split(":")
+                            fields[0] = [parts[0], str(b_mod["tarifkennzeichen"])]
+
+                    inv_block_segments.append((tag, fields))
+
+            elif tag == "BES":
                 clean_belegnr = current_inv_belegnr.lstrip("0") or "0"
                 uri_einzel = orig_einzel_nr if (orig_einzel_nr and orig_einzel_nr != "0") else clean_belegnr
 
@@ -490,9 +638,29 @@ def generate_correction_esol(
                     clean_belegnr,
                 ]
 
+                # Insert modified position segments if present
+                if b_mod and "positions" in b_mod:
+                    current_inv_brutto = 0.0
+                    current_inv_zuz_proz = 0.0
+                    for pos in b_mod["positions"]:
+                        p_tag, p_fields = format_pos_segment(pos)
+                        inv_block_segments.append((p_tag, p_fields))
+                        p_anz = float(pos.get("anzahl", 0.0))
+                        p_einzel = float(pos.get("einzelbetrag", 0.0))
+                        p_zuz = float(pos.get("zuzahlung", 0.0))
+                        current_inv_brutto += round(p_anz * p_einzel, 2)
+                        current_inv_zuz_proz += round(p_anz * p_zuz, 2)
+
+                if len(fields) > 3 and fields[3]:
+                    current_inv_zuz_pausch = float(str(fields[3]).replace(",", "."))
+                else:
+                    current_inv_zuz_pausch = 10.0
+
+                if len(fields) > 0:
+                    fields[0] = ContentHelper.format_decimal(current_inv_brutto)
+
                 if target_vk == "03":
                     tot_zuz = round(current_inv_zuz_proz + current_inv_zuz_pausch, 2)
-
                     gzf_fields = [
                         ContentHelper.format_decimal(tot_zuz),
                         ContentHelper.format_decimal(current_inv_zuz_proz),
@@ -509,6 +677,16 @@ def generate_correction_esol(
                     in_inv_block = False
                     inv_block_segments = []
                 else:
+                    tot_zuz = round(current_inv_zuz_proz + current_inv_zuz_pausch, 2)
+                    if len(fields) > 0:
+                        fields[0] = ContentHelper.format_decimal(current_inv_brutto)
+                    if len(fields) > 1:
+                        fields[1] = ContentHelper.format_decimal(tot_zuz)
+                    if len(fields) > 2:
+                        fields[2] = ContentHelper.format_decimal(current_inv_zuz_proz)
+                    if len(fields) > 3:
+                        fields[3] = ContentHelper.format_decimal(current_inv_zuz_pausch)
+
                     for inv_tag, inv_f in inv_block_segments:
                         if inv_tag == "URI":
                             continue
@@ -575,6 +753,7 @@ def generate_correction_file(
     new_rec_date: Optional[str] = None,
     zuzahlungskennzeichen: Optional[str] = None,
     out_dir: Optional[Path] = None,
+    beleg_modifications: Optional[Dict[str, Any]] = None,
 ) -> Path:
     """Reads an ESOL file and generates the corrected/demanded ESOL output file."""
     if not input_path.is_file():
@@ -606,6 +785,7 @@ def generate_correction_file(
         new_rec_nr=new_rec_nr,
         new_rec_date=new_rec_date,
         zuzahlungskennzeichen=zuzahlungskennzeichen,
+        beleg_modifications=beleg_modifications,
     )
     output_path.write_text(new_content, encoding="iso-8859-15")
     return output_path

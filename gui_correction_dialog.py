@@ -152,13 +152,26 @@ class CorrectionSelectionDialog(tk.Toplevel):
 
         # Footer Buttons
         footer_frame = ttk.Frame(self)
-        footer_frame.pack(side="bottom",fill="both", padx=10, pady=10, expand=True)
+        footer_frame.pack(side="bottom", fill="both", padx=10, pady=10, expand=True)
 
         btn_cancel = ttk.Button(footer_frame, text="Abbrechen", command=self.destroy)
         btn_cancel.pack(side="right", padx=5)
 
-        btn_generate = ttk.Button(footer_frame, text="▶ Datei generieren", command=self._generate)
-        btn_generate.pack(side="right", padx=5)
+        self.btn_generate = ttk.Button(footer_frame, text="▶ Datei generieren", command=self._generate)
+        self.btn_generate.pack(side="right", padx=5)
+
+        # Update button text on VK selection change
+        r1.configure(command=self._on_vk_changed)
+        r2.configure(command=self._on_vk_changed)
+        r3.configure(command=self._on_vk_changed)
+        r4.configure(command=self._on_vk_changed)
+        self._on_vk_changed()
+
+    def _on_vk_changed(self):
+        if self.vk_var.get() == "02":
+            self.btn_generate.config(text="Weiter zur Detail-Korrektur ▶")
+        else:
+            self.btn_generate.config(text="▶ Datei generieren")
 
     def _on_tree_click(self, event):
         item_id = self.tree.identify_row(event.y)
@@ -201,6 +214,27 @@ class CorrectionSelectionDialog(tk.Toplevel):
 
         zkz_text = self.zkz_combo.get()
         selected_zkz = zkz_text.split(" ")[0] if zkz_text else "2"
+
+        if target_vk == "02":
+            from vk02_correction_editor import VK02CorrectionEditorDialog
+
+            parent_tk = self.master
+            cb = self.on_complete_callback
+            f_path = str(self.file_path)
+            o_dir = self.output_dir
+            self.destroy()
+
+            VK02CorrectionEditorDialog(
+                parent=parent_tk,
+                file_path=f_path,
+                selected_belegnr_list=selected_belege,
+                output_dir=o_dir,
+                new_rec_nr=new_rec_nr,
+                new_rec_date=new_rec_date,
+                zuzahlungskennzeichen=selected_zkz,
+                on_complete_callback=cb,
+            )
+            return
 
         try:
             res_path = generate_correction_file(
