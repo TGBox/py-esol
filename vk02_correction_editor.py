@@ -19,6 +19,7 @@ from tools.generate_correction import (
     generate_correction_esol,
     generate_correction_file,
     read_esol_file_text,
+    format_date_german,
 )
 
 
@@ -30,8 +31,9 @@ class PositionEditDialog(tk.Toplevel):
     def __init__(self, parent: tk.Widget, position_data: Optional[Dict[str, Any]] = None, default_tarif_kz: str = ""):
         super().__init__(parent)
         self.title("Leistungsposition bearbeiten" if position_data else "Neue Leistungsposition hinzufügen")
-        self.geometry("500x480")
-        self.resizable(False, False)
+        self.geometry("500x520")
+        self.minsize(450, 420)
+        self.resizable(True, True)
         self.transient(parent)
         self.grab_set()
 
@@ -167,8 +169,9 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         self.on_complete_callback = on_complete_callback
 
         self.title("VKZ 02 — Detail-Korrektureditor (Nachforderung & Positionsbearbeitung)")
-        self.geometry("1100x780")
-        self.minsize(1000, 700)
+        self.geometry("1280x820")
+        self.minsize(950, 650)
+        self.resizable(True, True)
 
         # Make dialog modal
         self.transient(parent)
@@ -359,21 +362,23 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         self.pos_tree.heading("zuz", text="Zuz. €")
         self.pos_tree.heading("zuz_gesamt", text="Zuz. Ges €")
 
-        self.pos_tree.column("tag", width=60, anchor="center")
-        self.pos_tree.column("code", width=100, anchor="w")
-        self.pos_tree.column("tarif_kz", width=100, anchor="center")
-        self.pos_tree.column("datum", width=90, anchor="center")
-        self.pos_tree.column("anzahl", width=60, anchor="e")
-        self.pos_tree.column("einzel", width=80, anchor="e")
-        self.pos_tree.column("gesamt", width=90, anchor="e")
-        self.pos_tree.column("zuz", width=70, anchor="e")
-        self.pos_tree.column("zuz_gesamt", width=80, anchor="e")
+        self.pos_tree.column("tag", width=60, minwidth=50, anchor="center")
+        self.pos_tree.column("code", width=110, minwidth=80, anchor="w")
+        self.pos_tree.column("tarif_kz", width=100, minwidth=80, anchor="center")
+        self.pos_tree.column("datum", width=100, minwidth=80, anchor="center")
+        self.pos_tree.column("anzahl", width=70, minwidth=50, anchor="e")
+        self.pos_tree.column("einzel", width=90, minwidth=70, anchor="e")
+        self.pos_tree.column("gesamt", width=100, minwidth=80, anchor="e")
+        self.pos_tree.column("zuz", width=80, minwidth=60, anchor="e")
+        self.pos_tree.column("zuz_gesamt", width=95, minwidth=75, anchor="e")
 
-        p_scroll = ttk.Scrollbar(self.tab_pos, orient="vertical", command=self.pos_tree.yview)
-        self.pos_tree.configure(yscrollcommand=p_scroll.set)
+        p_scroll_y = ttk.Scrollbar(self.tab_pos, orient="vertical", command=self.pos_tree.yview)
+        p_scroll_x = ttk.Scrollbar(self.tab_pos, orient="horizontal", command=self.pos_tree.xview)
+        self.pos_tree.configure(yscrollcommand=p_scroll_y.set, xscrollcommand=p_scroll_x.set)
 
+        p_scroll_y.pack(side="right", fill="y")
+        p_scroll_x.pack(side="bottom", fill="x")
         self.pos_tree.pack(side="left", fill="both", expand=True)
-        p_scroll.pack(side="right", fill="y")
 
         self.pos_tree.bind("<Double-1>", lambda e: self._edit_position())
 
@@ -424,7 +429,9 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         name = f"{b.get('nachname', '')}, {b.get('vorname', '')}".strip(", ")
         self.lbl_vers_name.config(text=f"Versicherter: {name}")
         self.lbl_vers_nr.config(text=f"Versichertennr: {b.get('versichertennummer', '-')}")
-        self.lbl_geburtstag.config(text=f"Geburtsdatum: {b.get('geburtstag', '-')}")
+        geb_raw = b.get("geburtstag", "")
+        geb_fmt = format_date_german(geb_raw) if geb_raw else "-"
+        self.lbl_geburtstag.config(text=f"Geburtsdatum: {geb_fmt}")
 
         # Fill edit fields
         self.entry_tarif_kz.delete(0, "end")
@@ -456,7 +463,7 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
             tag = pos.get("tag", "EHE")
             code = pos.get("code", "")
             tarif_kz = pos.get("tarif_kz", "")
-            datum = pos.get("datum", "")
+            datum = format_date_german(pos.get("datum", ""))
             anzahl = f"{pos.get('anzahl', 0.0):g}"
             einzel = f"{pos.get('einzelbetrag', 0.0):.2f}".replace(".", ",")
             gesamt = f"{pos.get('gesamtbetrag', 0.0):.2f}".replace(".", ",")

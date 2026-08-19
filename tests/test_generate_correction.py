@@ -472,6 +472,56 @@ def test_generate_correction_file_with_out_dir(tmp_path: Path):
     assert res_file.name == "ESOL0300_VK03"
 
 
+def test_parse_esol_belege_summary_tarifkennzeichen_vs_diagnosegruppe():
+    orig_esol = "\n".join([
+        "UNB+UNOC:3+123456789+661430035+20260323:1040+00118+B+SL030179S03+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++123456789+101777502+101777502+123456789'",
+        "REC+51:0+20260122+1'",
+        "GES+00+100,00+100,00+0,00'",
+        "GES+31+100,00+100,00+0,00'",
+        "NAM+Physio Praxis+++info@physio.de'",
+        "UNT+000007+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++123456789+101777502+101777502'",
+        "REC+51:0+20260122+1'",
+        "INV+A123456789+30000+1+00001'",
+        "NAD+Muster+Max+19900101'",
+        "ZHE+110178400+906716934+20250528+0+EN1+04+++++1++1110++0+1+2'",
+        "EHE+26:00501+59702+1,00+100,00+20260115+10,00'",
+        "DIA+F98.9'",
+        "BES+100,00+10,00+0,00+10,00'",
+        "UNT+000010+00002'",
+        "UNZ+000002+00118'",
+    ])
+
+    belege = parse_esol_belege_summary(orig_esol)
+    assert len(belege) == 1
+    beleg = belege[0]
+    assert beleg.get("diagnosegruppe") == "EN1"
+    # Tarifkennzeichen from EHE should be "00501", NOT "EN1"
+    assert beleg.get("tarifkennzeichen") == "00501"
+
+    # EHE position checks: code should be Abrechnungspositionsnummer ("59702"), datum should be "20260115"
+    assert len(beleg["positions"]) == 1
+    pos = beleg["positions"][0]
+    assert pos["code"] == "59702"
+    assert pos["datum"] == "20260115"
+    assert pos["abr_code"] == "26"
+
+
+def test_format_date_german():
+    from tools.generate_correction import format_date_german
+
+    assert format_date_german("19690930") == "30.09.1969"
+    assert format_date_german("20260115") == "15.01.2026"
+    assert format_date_german("01.01.1990") == "01.01.1990"
+    assert format_date_german("") == ""
+    assert format_date_german(None) == ""
+
+
+
+
 
 
 

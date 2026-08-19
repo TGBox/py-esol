@@ -13,7 +13,7 @@ project_root = Path(__file__).resolve().parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from tools.generate_correction import parse_esol_belege_summary, generate_correction_file, read_esol_file_text
+from tools.generate_correction import parse_esol_belege_summary, generate_correction_file, read_esol_file_text, format_date_german
 
 
 class CorrectionSelectionDialog(tk.Toplevel):
@@ -31,8 +31,9 @@ class CorrectionSelectionDialog(tk.Toplevel):
         self.on_complete_callback = on_complete_callback
 
         self.title("Korrektur- & Zuzahlungs-Konfigurator")
-        self.geometry("800x700")
-        self.minsize(800, 700)
+        self.geometry("850x720")
+        self.minsize(800, 650)
+        self.resizable(True, True)
 
         # Make dialog modal
         self.transient(parent)
@@ -99,7 +100,7 @@ class CorrectionSelectionDialog(tk.Toplevel):
         for b in self.belege_list:
             b_nr = b.get("belegnr", "")
             name = f"{b.get('nachname', '')}, {b.get('vorname', '')}".strip(", ")
-            geb = b.get("geburtstag", "")
+            geb = format_date_german(b.get("geburtstag", ""))
             brutto_str = f"{b.get('brutto', 0.0):.2f}".replace(".", ",")
             zuz_str = f"{b.get('total_zuzahlung', 0.0):.2f}".replace(".", ",")
 

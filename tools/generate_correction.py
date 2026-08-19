@@ -58,6 +58,19 @@ def parse_segment_fields(raw_segment: str) -> Tuple[str, List[Any]]:
     return tag, fields
 
 
+def format_date_german(date_str: str) -> str:
+    """
+    Formats a date string (e.g. YYYYMMDD '19690930') to German format DD.MM.YYYY ('30.09.1969').
+    If format is invalid or empty, returns original date_str.
+    """
+    if not date_str:
+        return ""
+    s = str(date_str).strip()
+    if len(s) == 8 and s.isdigit():
+        return f"{s[6:8]}.{s[4:6]}.{s[0:4]}"
+    return s
+
+
 def build_segment_string(tag: str, fields: List[Any]) -> str:
     """Builds a formatted raw EDIFACT segment string from tag and fields."""
     parts = [tag]
@@ -124,61 +137,77 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                     if len(fields) > 3 and fields[3]:
                         current_beleg["zuzahlungskennzeichen"] = str(fields[3])
                     if len(fields) > 4 and fields[4]:
-                        current_beleg["tarifkennzeichen"] = str(fields[4])
+                        current_beleg["diagnosegruppe"] = str(fields[4])
 
             elif tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
                 anzahl = 0.0
                 betrag_zuz = 0.0
                 code = ""
                 tarif_kz = ""
+                abr_code = ""
                 einzelbetrag = 0.0
                 datum = ""
 
-                # Code / Composite check
-                c_field = fields[0] if len(fields) > 0 else ""
+                # Code / composite check
+                if tag == "ENF":
+                    c_field = fields[1] if len(fields) > 1 else ""
+                else:
+                    c_field = fields[0] if len(fields) > 0 else ""
+
                 if isinstance(c_field, list):
-                    code = str(c_field[0]) if len(c_field) > 0 else ""
+                    abr_code = str(c_field[0]) if len(c_field) > 0 else ""
                     tarif_kz = str(c_field[1]) if len(c_field) > 1 else ""
                 else:
                     raw_c = str(c_field)
                     if ":" in raw_c:
                         parts = raw_c.split(":")
-                        code = parts[0]
+                        abr_code = parts[0]
                         tarif_kz = parts[1]
                     else:
-                        code = raw_c
+                        abr_code = raw_c
 
                 if tarif_kz and not current_beleg.get("tarifkennzeichen"):
                     current_beleg["tarifkennzeichen"] = tarif_kz
 
                 if tag == "EHE":
-                    datum = str(fields[1]) if len(fields) > 1 and fields[1] else ""
+                    code = str(fields[1]) if len(fields) > 1 and fields[1] else ""
                     anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
                     einzelbetrag = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
+                    datum = str(fields[4]) if len(fields) > 4 and fields[4] else ""
                     betrag_zuz = float(str(fields[5]).replace(",", ".")) if len(fields) > 5 and fields[5] else 0.0
                 elif tag == "ENF":
-                    if isinstance(fields[1], list):
-                        code = str(fields[1][0]) if len(fields[1]) > 0 else ""
-                        tarif_kz = str(fields[1][1]) if len(fields[1]) > 1 else ""
-                    elif len(fields) > 1:
-                        code = str(fields[1])
+                    code = str(fields[2]) if len(fields) > 2 and fields[2] else ""
                     anzahl = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
                     einzelbetrag = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
+                    datum = str(fields[5]) if len(fields) > 5 and fields[5] else ""
                     betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
                 elif tag == "EHI":
+                    code = str(fields[1]) if len(fields) > 1 and fields[1] else ""
                     anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
                     einzelbetrag = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
+                    datum = str(fields[5]) if len(fields) > 5 and fields[5] else ""
                     betrag_zuz = float(str(fields[6]).replace(",", ".")) if len(fields) > 6 and fields[6] else 0.0
-                elif tag in ["EHK", "EKT", "EHB", "ESP"]:
+                elif tag in ["EHK", "ESP"]:
+                    code = str(fields[1]) if len(fields) > 1 and fields[1] else ""
                     anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
                     einzelbetrag = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
                     betrag_zuz = float(str(fields[4]).replace(",", ".")) if len(fields) > 4 and fields[4] else 0.0
+                elif tag == "EKT":
+                    code = str(fields[1]) if len(fields) > 1 and fields[1] else ""
+                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    einzelbetrag = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
+                    datum = str(fields[4]) if len(fields) > 4 and fields[4] else ""
+                elif tag == "EHB":
+                    code = str(fields[1]) if len(fields) > 1 and fields[1] else ""
+                    anzahl = float(str(fields[2]).replace(",", ".")) if len(fields) > 2 and fields[2] else 0.0
+                    einzelbetrag = float(str(fields[3]).replace(",", ".")) if len(fields) > 3 and fields[3] else 0.0
 
                 current_beleg["zuzahlung_proz"] += round(anzahl * betrag_zuz, 2)
                 current_beleg["positions"].append({
                     "id": len(current_beleg["positions"]),
                     "tag": tag,
                     "code": code,
+                    "abr_code": abr_code,
                     "tarif_kz": tarif_kz,
                     "datum": datum,
                     "anzahl": anzahl,
