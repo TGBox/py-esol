@@ -271,6 +271,9 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         self.notebook.add(self.tab_diff, text=" 🔍 Vorschau & EDIFACT-Diff ")
         self._setup_diff_tab()
 
+        # Automatically update preview when switching to preview tab
+        self.notebook.bind("<<NotebookTabChanged>>", self._on_tab_changed)
+
         # -------------------------------------------------------------
         # Footer Action Bar
         # -------------------------------------------------------------
@@ -284,6 +287,11 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
             footer, text="▶ Korrekturdatei (VKZ 02) generieren", command=self._generate_correction
         )
         btn_generate.pack(side="right", padx=5)
+
+    def _on_tab_changed(self, event):
+        selected_tab = self.notebook.select()
+        if selected_tab == str(self.tab_diff):
+            self._update_diff_preview()
 
     def _setup_meta_tab(self):
         pad = {"padx": 10, "pady": 8}
@@ -458,8 +466,8 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
             return
 
         b = self.belege_map[self.active_belegnr]
-        for pos in b.get("positions", []):
-            p_id = str(pos.get("id", len(self.pos_tree.get_children())))
+        for idx, pos in enumerate(b.get("positions", [])):
+            p_id = str(idx)
             tag = pos.get("tag", "EHE")
             code = pos.get("code", "")
             tarif_kz = pos.get("tarif_kz", "")
@@ -483,9 +491,10 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         b = self.belege_map[self.active_belegnr]
         positions = b.get("positions", [])
 
+        zkz = str(b.get("zuzahlungskennzeichen", "2"))
         brutto = sum(round(p.get("anzahl", 0.0) * p.get("einzelbetrag", 0.0), 2) for p in positions)
         zuz_proz = sum(round(p.get("anzahl", 0.0) * p.get("zuzahlung", 0.0), 2) for p in positions)
-        zuz_pausch = b.get("zuzahlung_pausch", 10.0)
+        zuz_pausch = 0.0 if zkz in ["0", "1"] else b.get("zuzahlung_pausch", 10.0)
         tot_zuz = round(zuz_proz + zuz_pausch, 2)
         netto = round(brutto - tot_zuz, 2)
 
@@ -527,7 +536,9 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         zkz_text = self.combo_zkz.get()
         b["zuzahlungskennzeichen"] = zkz_text.split(" ")[0] if zkz_text else "2"
 
+        self._update_sums_display()
         self._mark_active_beleg_modified()
+        self._update_diff_preview()
 
     def _add_position(self):
         if not self.active_belegnr:
@@ -545,6 +556,7 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
             self._refresh_positions_table()
             self._update_sums_display()
             self._mark_active_beleg_modified()
+            self._update_diff_preview()
 
     def _edit_position(self):
         if not self.active_belegnr:
@@ -554,32 +566,26 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
             messagebox.showwarning("Keine Position", "Bitte wählen Sie eine Leistungsposition zum Bearbeiten aus.")
             return
 
-        p_id = int(sel[0])
+        p_idx = int(sel[0])
         b = self.belege_map[self.active_belegnr]
         positions = b.get("positions", [])
 
-        target_pos = None
-        target_idx = -1
-        for idx, p in enumerate(positions):
-            if p.get("id") == p_id or idx == p_id:
-                target_pos = p
-                target_idx = idx
-                break
-
-        if not target_pos:
+        if not (0 <= p_idx < len(positions)):
             return
 
+        target_pos = positions[p_idx]
         def_tk = b.get("tarifkennzeichen", "")
         dlg = PositionEditDialog(self, position_data=target_pos, default_tarif_kz=def_tk)
         self.wait_window(dlg)
 
         if dlg.result:
             updated = dlg.result
-            updated["id"] = target_pos.get("id", p_id)
-            positions[target_idx] = updated
+            updated["id"] = target_pos.get("id", p_idx)
+            positions[p_idx] = updated
             self._refresh_positions_table()
             self._update_sums_display()
             self._mark_active_beleg_modified()
+            self._update_diff_preview()
 
     def _delete_position(self):
         if not self.active_belegnr:
@@ -589,16 +595,18 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
             messagebox.showwarning("Keine Position", "Bitte wählen Sie eine Leistungsposition zum Entfernen aus.")
             return
 
-        p_id = int(sel[0])
+        p_idx = int(sel[0])
         b = self.belege_map[self.active_belegnr]
         positions = b.get("positions", [])
 
-        new_positions = [p for idx, p in enumerate(positions) if p.get("id") != p_id and idx != p_id]
-        b["positions"] = new_positions
+        if 0 <= p_idx < len(positions):
+            positions.pop(p_idx)
+            b["positions"] = positions
 
         self._refresh_positions_table()
         self._update_sums_display()
         self._mark_active_beleg_modified()
+        self._update_diff_preview()
 
     def _restore_original_beleg(self):
         if not self.active_belegnr:

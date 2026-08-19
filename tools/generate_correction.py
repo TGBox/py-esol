@@ -236,6 +236,21 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
     return belege
 
 
+def _get_beleg_mod(belegnr: str, mods: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """Helper to retrieve beleg modifications matching belegnr regardless of leading zeros."""
+    if not mods or not belegnr:
+        return None
+    if belegnr in mods:
+        return mods[belegnr]
+    clean_nr = belegnr.lstrip("0") or "0"
+    if clean_nr in mods:
+        return mods[clean_nr]
+    for k, v in mods.items():
+        if k.lstrip("0") == clean_nr:
+            return v
+    return None
+
+
 def generate_correction_esol(
     raw_content: str,
     target_vk: str = "03",  # "02" Nachforderung, "03" Zuzahlungsforderung, "04" Korrekturrechnung
@@ -343,14 +358,17 @@ def generate_correction_esol(
             current_inv_brutto_p1 = 0.0
 
         elif in_inv_block_p1:
-            b_mod = mods.get(current_belegnr_p1)
+            b_mod = _get_beleg_mod(current_belegnr_p1, mods)
             if keep_block_p1 and b_mod and "positions" in b_mod:
                 # Calculate totals from modified positions
                 if tag == "BES":
                     mod_positions = b_mod["positions"]
                     mod_brutto = sum(round(p.get("anzahl", 0.0) * p.get("einzelbetrag", 0.0), 2) for p in mod_positions)
                     mod_zuz_proz = sum(round(p.get("anzahl", 0.0) * p.get("zuzahlung", 0.0), 2) for p in mod_positions)
-                    if len(fields) > 3 and fields[3]:
+                    zkz = str(b_mod.get("zuzahlungskennzeichen", "2"))
+                    if zkz in ["0", "1"]:
+                        mod_zuz_pausch = 0.0
+                    elif len(fields) > 3 and fields[3]:
                         mod_zuz_pausch = float(str(fields[3]).replace(",", "."))
                     else:
                         mod_zuz_pausch = b_mod.get("zuzahlung_pausch", 10.0)
@@ -450,6 +468,7 @@ def generate_correction_esol(
     current_inv_brutto = 0.0
     inv_block_segments: List[Tuple[str, List[Any]]] = []
     written_ges_statuses = set()
+    positions_inserted = False
 
     def make_ges_segment(st_code: str, st_b: float, st_z: float) -> str:
         st_rechn = round(st_b - st_z, 2)
@@ -598,6 +617,7 @@ def generate_correction_esol(
             current_inv_zuz_proz = 0.0
             current_inv_zuz_pausch = 0.0
             current_inv_brutto = 0.0
+            positions_inserted = False
 
         elif in_inv_block:
             if not keep_block:
@@ -606,7 +626,30 @@ def generate_correction_esol(
                     inv_block_segments = []
                 continue
 
-            b_mod = mods.get(current_inv_belegnr)
+            b_mod = _get_beleg_mod(current_inv_belegnr, mods)
+
+            # Insert modified position segments at correct EDIFACT segment location (before ZHE / DIA / BES)
+            if b_mod and "positions" in b_mod and not positions_inserted:
+                if tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP", "DIA", "BES"] or tag in [
+                    "EHE",
+                    "ENF",
+                    "EHI",
+                    "EHK",
+                    "EKT",
+                    "EHB",
+                    "ESP",
+                ]:
+                    current_inv_brutto = 0.0
+                    current_inv_zuz_proz = 0.0
+                    for pos in b_mod["positions"]:
+                        p_tag, p_fields = format_pos_segment(pos)
+                        inv_block_segments.append((p_tag, p_fields))
+                        p_anz = float(pos.get("anzahl", 0.0))
+                        p_einzel = float(pos.get("einzelbetrag", 0.0))
+                        p_zuz = float(pos.get("zuzahlung", 0.0))
+                        current_inv_brutto += round(p_anz * p_einzel, 2)
+                        current_inv_zuz_proz += round(p_anz * p_zuz, 2)
+                    positions_inserted = True
 
             if tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
                 zkz_val = (
@@ -620,7 +663,7 @@ def generate_correction_esol(
 
             elif tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
                 if b_mod and "positions" in b_mod:
-                    # Skip original position segments; modified positions will be rebuilt at BES
+                    # Skip original position segments as modified positions have already been inserted above
                     pass
                 else:
                     anzahl = 0.0
@@ -676,20 +719,10 @@ def generate_correction_esol(
                     clean_belegnr,
                 ]
 
-                # Insert modified position segments if present
-                if b_mod and "positions" in b_mod:
-                    current_inv_brutto = 0.0
-                    current_inv_zuz_proz = 0.0
-                    for pos in b_mod["positions"]:
-                        p_tag, p_fields = format_pos_segment(pos)
-                        inv_block_segments.append((p_tag, p_fields))
-                        p_anz = float(pos.get("anzahl", 0.0))
-                        p_einzel = float(pos.get("einzelbetrag", 0.0))
-                        p_zuz = float(pos.get("zuzahlung", 0.0))
-                        current_inv_brutto += round(p_anz * p_einzel, 2)
-                        current_inv_zuz_proz += round(p_anz * p_zuz, 2)
-
-                if len(fields) > 3 and fields[3]:
+                zkz = str(b_mod.get("zuzahlungskennzeichen", "2")) if b_mod else "2"
+                if zkz in ["0", "1"]:
+                    current_inv_zuz_pausch = 0.0
+                elif len(fields) > 3 and fields[3]:
                     current_inv_zuz_pausch = float(str(fields[3]).replace(",", "."))
                 else:
                     current_inv_zuz_pausch = 10.0
