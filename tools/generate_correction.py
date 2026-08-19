@@ -500,11 +500,20 @@ def generate_correction_esol(
                 code_val,
                 code,
                 ContentHelper.format_decimal(anzahl),
-                datum,
+                "",  # Mengeneinheit (optional)
                 ContentHelper.format_decimal(einzel),
+                datum,
                 ContentHelper.format_decimal(zuz),
             ]
-        else:  # EHK, EKT, EHB, ESP
+        elif tag == "EKT":
+            fields = [
+                code_val,
+                code,
+                ContentHelper.format_decimal(anzahl),
+                ContentHelper.format_decimal(einzel),
+                datum,
+            ]
+        else:  # EHK, EHB, ESP
             fields = [
                 code_val,
                 code,
