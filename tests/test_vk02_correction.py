@@ -248,3 +248,71 @@ def test_vk02_segment_order_and_deleted_positions(tmp_path: Path):
     res = validator.validate_string(content)
     assert res.is_valid(), f"Expected valid VK02 file, got errors: {res.get_errors()}"
 
+
+def test_vk02_copayment_pauschale_toggle(tmp_path: Path):
+    orig_esol = "\n".join([
+        "UNB+UNOC:3+480512931+107436557+20260819:1330+00400+B+SL05'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+02++480512931+103724272+103724272+480512931'",
+        "REC+400:0+20260819+1'",
+        "GES+00+100,00+100,00+0,00'",
+        "GES+11+100,00+100,00+0,00'",
+        "NAM+Praxis fuer Ergotherapie und N+++info@ergotherapie-rom.de'",
+        "UNT+000007+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+02++480512931+103724272+103724272'",
+        "REC+400:0+20260819+1'",
+        "INV+D952924656+10000+1+00122'",
+        "URI+480512931+105:122+20260505+122'",
+        "NAD+Schneider+Britta+19690930'",
+        "EHE+26:00502+59741+1,00+100,00+20251204+0,00'",
+        "ZHE+243203100+512378658+20251113+2+PS3+05+++++1++1000++0+'",
+        "DIA+F33.1'",
+        "BES+100,00+10,00+0,00+10,00'",
+        "UNT+000011+00002'",
+        "UNZ+000002+00400'",
+    ])
+
+    orig_file = tmp_path / "orig_esol_pausch.txt"
+    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+
+    # Set zuzahlung_pausch to 0.0 (patient already paid 10 € pauschale)
+    beleg_mods = {
+        "00122": {
+            "tarifkennzeichen": "00502",
+            "zuzahlungskennzeichen": "2",
+            "zuzahlung_pausch": 0.0,
+            "positions": [
+                {
+                    "tag": "EHE",
+                    "code": "59741",
+                    "tarif_kz": "00502",
+                    "datum": "20251204",
+                    "anzahl": 1.0,
+                    "einzelbetrag": 100.00,
+                    "zuzahlung": 0.00,
+                }
+            ],
+        }
+    }
+
+    res_file = generate_correction_file(
+        orig_file,
+        target_vk="02",
+        selected_belegnr_list=["00122"],
+        beleg_modifications=beleg_mods,
+    )
+
+    content = res_file.read_text(encoding="iso-8859-15")
+
+    # When 10 € pauschale is 0.0, total co-payment is 0.00, Netto is 100.00
+    assert "BES+100,00+0,00+0,00+0,00'" in content
+    assert "GES+00+100,00+100,00+0,00'" in content
+
+    # Validate file
+    validator = EsolValidator()
+    validator.register_default_rules()
+    res = validator.validate_string(content)
+    assert res.is_valid(), f"Expected valid VK02 file, got errors: {res.get_errors()}"
+
+

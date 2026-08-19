@@ -20,6 +20,7 @@ from tools.generate_correction import (
     generate_correction_file,
     read_esol_file_text,
     format_date_german,
+    parse_date_to_iso,
 )
 
 
@@ -72,10 +73,12 @@ class PositionEditDialog(tk.Toplevel):
         self.tarif_entry.insert(0, str(tkz))
         self.tarif_entry.grid(row=2, column=1, sticky="w", **pad)
 
-        # Behandlungsdatum
-        ttk.Label(frame, text="Behandlungsdatum (JJJJMMTT):").grid(row=3, column=0, sticky="w", **pad)
+        # Behandlungsdatum (TT.MM.JJJJ)
+        ttk.Label(frame, text="Behandlungsdatum (TT.MM.JJJJ):").grid(row=3, column=0, sticky="w", **pad)
         self.datum_entry = ttk.Entry(frame, width=20)
-        self.datum_entry.insert(0, str(self.position_data.get("datum", datetime.datetime.now().strftime("%Y%m%d"))))
+        raw_datum = str(self.position_data.get("datum", datetime.datetime.now().strftime("%Y%m%d")))
+        fmt_datum = format_date_german(raw_datum) if raw_datum else ""
+        self.datum_entry.insert(0, fmt_datum)
         self.datum_entry.grid(row=3, column=1, sticky="w", **pad)
 
         # Anzahl
@@ -110,7 +113,8 @@ class PositionEditDialog(tk.Toplevel):
             tag = self.tag_combo.get().strip()
             code = self.code_entry.get().strip()
             tarif_kz = self.tarif_entry.get().strip()
-            datum = self.datum_entry.get().strip()
+            datum_raw = self.datum_entry.get().strip()
+            datum_iso = parse_date_to_iso(datum_raw)
 
             anzahl_str = self.anzahl_entry.get().strip().replace(",", ".")
             anzahl = float(anzahl_str) if anzahl_str else 0.0
@@ -125,11 +129,17 @@ class PositionEditDialog(tk.Toplevel):
                 messagebox.showwarning("Eingabefehler", "Bitte geben Sie einen Leistungsschlüssel (Code) ein.")
                 return
 
+            if datum_raw and not (len(datum_iso) == 8 and datum_iso.isdigit()):
+                messagebox.showwarning(
+                    "Eingabefehler", "Bitte geben Sie ein gültiges Behandlungsdatum im Format TT.MM.JJJJ (z.B. 04.12.2025) ein."
+                )
+                return
+
             self.result = {
                 "tag": tag,
                 "code": code,
                 "tarif_kz": tarif_kz,
-                "datum": datum,
+                "datum": datum_iso,
                 "anzahl": anzahl,
                 "einzelbetrag": round(einzel, 2),
                 "gesamtbetrag": round(anzahl * einzel, 2),
@@ -331,6 +341,16 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         self.combo_zkz.grid(row=1, column=1, columnspan=2, sticky="w", **pad)
         self.combo_zkz.bind("<<ComboboxSelected>>", lambda e: self._on_meta_changed())
 
+        ttk.Label(edit_frame, text="10 € Verordnungs-Zuzahlung:").grid(row=2, column=0, sticky="w", **pad)
+        self.var_pausch = tk.BooleanVar(value=True)
+        self.chk_pausch = ttk.Checkbutton(
+            edit_frame,
+            text="10,00 € Pauschale einrechnen (Patient hat 10 € Gebühr noch nicht bezahlt)",
+            variable=self.var_pausch,
+            command=self._on_meta_changed,
+        )
+        self.chk_pausch.grid(row=2, column=1, columnspan=2, sticky="w", **pad)
+
         # Recalculated Sums Display Box
         sum_frame = ttk.LabelFrame(self.tab_meta, text=" Berechnete Belegsummen ", padding=10)
         sum_frame.pack(fill="x", pady=10)
@@ -358,7 +378,7 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
 
         # Positions Treeview Table
         cols = ("tag", "code", "tarif_kz", "datum", "anzahl", "einzel", "gesamt", "zuz", "zuz_gesamt")
-        self.pos_tree = ttk.Treeview(self.tab_pos, columns=cols, show="headings", selectmode="browse")
+        self.pos_tree = ttk.Treeview(self.tab_pos, columns=cols, show="headings", selectmode="extended")
 
         self.pos_tree.heading("tag", text="Tag")
         self.pos_tree.heading("code", text="Code")
@@ -453,6 +473,10 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
                 break
         self.combo_zkz.current(idx)
 
+        # Set pauschale checkbox state based on Beleg data
+        p_val = b.get("zuzahlung_pausch", 10.0)
+        self.var_pausch.set(p_val > 0.0)
+
         # Refresh position table
         self._refresh_positions_table()
         self._update_sums_display()
@@ -494,12 +518,20 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         zkz = str(b.get("zuzahlungskennzeichen", "2"))
         brutto = sum(round(p.get("anzahl", 0.0) * p.get("einzelbetrag", 0.0), 2) for p in positions)
         zuz_proz = sum(round(p.get("anzahl", 0.0) * p.get("zuzahlung", 0.0), 2) for p in positions)
-        zuz_pausch = 0.0 if zkz in ["0", "1"] else b.get("zuzahlung_pausch", 10.0)
+
+        if zkz in ["0", "1"]:
+            zuz_pausch = 0.0
+        elif "zuzahlung_pausch" in b:
+            zuz_pausch = float(b["zuzahlung_pausch"])
+        else:
+            zuz_pausch = 10.0 if self.var_pausch.get() else 0.0
+
         tot_zuz = round(zuz_proz + zuz_pausch, 2)
         netto = round(brutto - tot_zuz, 2)
 
         b["brutto"] = brutto
         b["zuzahlung_proz"] = zuz_proz
+        b["zuzahlung_pausch"] = zuz_pausch
         b["total_zuzahlung"] = tot_zuz
 
         self.lbl_sum_brutto.config(text=f"Brutto: {brutto:.2f} €".replace(".", ","))
@@ -516,10 +548,12 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         zkz_text = self.combo_zkz.get()
         selected_zkz = zkz_text.split(" ")[0] if zkz_text else "2"
         tarif_kz = self.entry_tarif_kz.get().strip()
+        pausch_val = 10.0 if self.var_pausch.get() else 0.0
 
         self.modifications[b_nr] = {
             "tarifkennzeichen": tarif_kz,
             "zuzahlungskennzeichen": selected_zkz,
+            "zuzahlung_pausch": pausch_val,
             "positions": b.get("positions", []),
         }
 
@@ -535,6 +569,7 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         b["tarifkennzeichen"] = self.entry_tarif_kz.get().strip()
         zkz_text = self.combo_zkz.get()
         b["zuzahlungskennzeichen"] = zkz_text.split(" ")[0] if zkz_text else "2"
+        b["zuzahlung_pausch"] = 10.0 if self.var_pausch.get() else 0.0
 
         self._update_sums_display()
         self._mark_active_beleg_modified()
@@ -565,6 +600,9 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         if not sel:
             messagebox.showwarning("Keine Position", "Bitte wählen Sie eine Leistungsposition zum Bearbeiten aus.")
             return
+        if len(sel) > 1:
+            messagebox.showwarning("Mehrfachauswahl", "Bitte wählen Sie genau eine Leistungsposition zum Bearbeiten aus.")
+            return
 
         p_idx = int(sel[0])
         b = self.belege_map[self.active_belegnr]
@@ -592,16 +630,18 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
             return
         sel = self.pos_tree.selection()
         if not sel:
-            messagebox.showwarning("Keine Position", "Bitte wählen Sie eine Leistungsposition zum Entfernen aus.")
+            messagebox.showwarning("Keine Position", "Bitte wählen Sie mindestens eine Leistungsposition zum Entfernen aus.")
             return
 
-        p_idx = int(sel[0])
         b = self.belege_map[self.active_belegnr]
         positions = b.get("positions", [])
 
-        if 0 <= p_idx < len(positions):
-            positions.pop(p_idx)
-            b["positions"] = positions
+        indices_to_remove = sorted([int(x) for x in sel], reverse=True)
+        for p_idx in indices_to_remove:
+            if 0 <= p_idx < len(positions):
+                positions.pop(p_idx)
+
+        b["positions"] = positions
 
         self._refresh_positions_table()
         self._update_sums_display()

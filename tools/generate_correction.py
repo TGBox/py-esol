@@ -71,6 +71,27 @@ def format_date_german(date_str: str) -> str:
     return s
 
 
+def parse_date_to_iso(date_str: str) -> str:
+    """
+    Converts a German date string (DD.MM.YYYY or D.M.YYYY) or ISO date (YYYYMMDD) to 8-digit YYYYMMDD format.
+    If format is invalid or empty, returns original date_str.
+    """
+    if not date_str:
+        return ""
+    s = str(date_str).strip()
+    if len(s) == 8 and s.isdigit():
+        return s
+    if "." in s:
+        parts = s.split(".")
+        if len(parts) == 3:
+            day, month, year = parts[0].zfill(2), parts[1].zfill(2), parts[2].strip()
+            if len(year) == 2:
+                year = "20" + year
+            if len(year) == 4 and day.isdigit() and month.isdigit() and year.isdigit():
+                return f"{year}{month}{day}"
+    return s
+
+
 def build_segment_string(tag: str, fields: List[Any]) -> str:
     """Builds a formatted raw EDIFACT segment string from tag and fields."""
     parts = [tag]
@@ -368,6 +389,8 @@ def generate_correction_esol(
                     zkz = str(b_mod.get("zuzahlungskennzeichen", "2"))
                     if zkz in ["0", "1"]:
                         mod_zuz_pausch = 0.0
+                    elif "zuzahlung_pausch" in b_mod:
+                        mod_zuz_pausch = float(b_mod["zuzahlung_pausch"])
                     elif len(fields) > 3 and fields[3]:
                         mod_zuz_pausch = float(str(fields[3]).replace(",", "."))
                     else:
@@ -722,6 +745,8 @@ def generate_correction_esol(
                 zkz = str(b_mod.get("zuzahlungskennzeichen", "2")) if b_mod else "2"
                 if zkz in ["0", "1"]:
                     current_inv_zuz_pausch = 0.0
+                elif b_mod and "zuzahlung_pausch" in b_mod:
+                    current_inv_zuz_pausch = float(b_mod["zuzahlung_pausch"])
                 elif len(fields) > 3 and fields[3]:
                     current_inv_zuz_pausch = float(str(fields[3]).replace(",", "."))
                 else:
