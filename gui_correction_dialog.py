@@ -13,7 +13,7 @@ project_root = Path(__file__).resolve().parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from tools.generate_correction import parse_esol_belege_summary, generate_correction_file, read_esol_file_text, format_date_german
+from tools.generate_correction import parse_esol_belege_summary, read_esol_file_text, format_date_german
 
 
 class CorrectionSelectionDialog(tk.Toplevel):
@@ -169,10 +169,8 @@ class CorrectionSelectionDialog(tk.Toplevel):
         self._on_vk_changed()
 
     def _on_vk_changed(self):
-        if self.vk_var.get() == "02":
-            self.btn_generate.config(text="Weiter zur Detail-Korrektur ▶")
-        else:
-            self.btn_generate.config(text="▶ Datei generieren")
+        # All VKZ open the detail editor, so the button text is always the same.
+        self.btn_generate.config(text="Weiter zur Detail-Korrektur ▶")
 
     def _on_tree_click(self, event):
         item_id = self.tree.identify_row(event.y)
@@ -216,45 +214,23 @@ class CorrectionSelectionDialog(tk.Toplevel):
         zkz_text = self.zkz_combo.get()
         selected_zkz = zkz_text.split(" ")[0] if zkz_text else "2"
 
-        if target_vk == "02":
-            from vk02_correction_editor import VK02CorrectionEditorDialog
+        # All VKZ open the generic detail editor.
+        from vkz_correction_editor import VKZCorrectionEditorDialog
 
-            parent_tk = self.master
-            cb = self.on_complete_callback
-            f_path = str(self.file_path)
-            o_dir = self.output_dir
-            self.destroy()
+        parent_tk = self.master
+        cb = self.on_complete_callback
+        f_path = str(self.file_path)
+        o_dir = self.output_dir
+        self.destroy()
 
-            VK02CorrectionEditorDialog(
-                parent=parent_tk,
-                file_path=f_path,
-                selected_belegnr_list=selected_belege,
-                output_dir=o_dir,
-                new_rec_nr=new_rec_nr,
-                new_rec_date=new_rec_date,
-                zuzahlungskennzeichen=selected_zkz,
-                on_complete_callback=cb,
-            )
-            return
-
-        try:
-            res_path = generate_correction_file(
-                input_path=self.file_path,
-                output_path=None,
-                target_vk=target_vk,
-                selected_belegnr_list=selected_belege,
-                new_rec_nr=new_rec_nr,
-                new_rec_date=new_rec_date,
-                zuzahlungskennzeichen=selected_zkz,
-                out_dir=Path(self.output_dir) if self.output_dir else None,
-            )
-
-            msg = f"Korrekturdatei (VKZ {target_vk}) wurde erfolgreich erstellt:\n\n{res_path}"
-            messagebox.showinfo("Erfolg", msg)
-
-            if self.on_complete_callback:
-                self.on_complete_callback(str(res_path))
-
-            self.destroy()
-        except Exception as e:
-            messagebox.showerror("Fehler", f"Fehler bei Erstellung der Korrekturdatei:\n{e}")
+        VKZCorrectionEditorDialog(
+            parent=parent_tk,
+            file_path=f_path,
+            selected_belegnr_list=selected_belege,
+            target_vk=target_vk,
+            output_dir=o_dir,
+            new_rec_nr=new_rec_nr,
+            new_rec_date=new_rec_date,
+            zuzahlungskennzeichen=selected_zkz,
+            on_complete_callback=cb,
+        )

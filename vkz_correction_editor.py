@@ -23,6 +23,14 @@ from tools.generate_correction import (
     parse_date_to_iso,
 )
 
+# Human-readable labels for each supported VKZ
+_VKZ_LABELS: Dict[str, str] = {
+    "02": "Nachforderung (VKZ 02)",
+    "03": "Zuzahlungsforderung (VKZ 03)",
+    "04": "Korrekturrechnung (VKZ 04)",
+    "10": "Wiederaufnahme Blankoverordnung (VKZ 10)",
+}
+
 
 class PositionEditDialog(tk.Toplevel):
     """
@@ -151,10 +159,11 @@ class PositionEditDialog(tk.Toplevel):
             messagebox.showerror("Eingabefehler", "Bitte gültige Zahlen für Anzahl, Einzelpreis und Zuzahlung eingeben.")
 
 
-class VK02CorrectionEditorDialog(tk.Toplevel):
+class VKZCorrectionEditorDialog(tk.Toplevel):
     """
-    Master-Detail Editor Dialog for VKZ 02 (Nachforderung / Teilnachforderung / Korrektur).
-    Allows precise selection and customization of prices, positions, dates, and tariffs.
+    Generischer Master-Detail-Editor-Dialog für alle VKZ (02, 03, 04, 10).
+    Erlaubt die gezielte Auswahl und Anpassung von Preisen, Positionen, Terminen
+    und Tarifen für Korrekturabrechnungen aller Art.
     """
 
     def __init__(
@@ -162,6 +171,7 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         parent: tk.Tk,
         file_path: str,
         selected_belegnr_list: List[str],
+        target_vk: str = "02",
         output_dir: Optional[str] = None,
         new_rec_nr: Optional[str] = None,
         new_rec_date: Optional[str] = None,
@@ -172,13 +182,15 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
 
         self.file_path = Path(file_path)
         self.selected_belegnr_list = selected_belegnr_list
+        self.target_vk = target_vk
         self.output_dir = output_dir
         self.new_rec_nr = new_rec_nr
         self.new_rec_date = new_rec_date
         self.zuzahlungskennzeichen = zuzahlungskennzeichen
         self.on_complete_callback = on_complete_callback
 
-        self.title("VKZ 02 — Detail-Korrektureditor (Nachforderung & Positionsbearbeitung)")
+        vkz_label = _VKZ_LABELS.get(target_vk, f"VKZ {target_vk}")
+        self.title(f"VKZ {target_vk} — Detail-Korrektureditor ({vkz_label})")
         self.geometry("1280x820")
         self.minsize(950, 650)
         self.resizable(True, True)
@@ -196,7 +208,7 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         # Filter to selected Belege
         selected_set = set(self.selected_belegnr_list)
         self.belege = [b for b in self.all_belege if b["belegnr"] in selected_set]
-        
+
         # Apply global pre-selection if provided by the user
         if self.zuzahlungskennzeichen is not None:
             for b in self.belege:
@@ -218,16 +230,18 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
             self._select_beleg(self.active_belegnr)
 
     def _setup_ui(self):
+        vkz_label = _VKZ_LABELS.get(self.target_vk, f"VKZ {self.target_vk}")
+
         # Top Header Info
         header = ttk.Frame(self, padding=(10, 8))
         header.pack(fill="x")
 
         ttk.Label(
             header,
-            text=f"VKZ 02 Korrektur-Spezifikation für {len(self.belege)} Belege",
+            text=f"VKZ {self.target_vk} Korrektur-Spezifikation für {len(self.belege)} Belege",
             font=("Consolas", 12, "bold"),
         ).pack(anchor="w")
-        ttk.Label(header, text=f"Quelldatei: {self.file_path.name}", font=("Consolas", 9)).pack(anchor="w")
+        ttk.Label(header, text=f"Quelldatei: {self.file_path.name}  |  Typ: {vkz_label}", font=("Consolas", 9)).pack(anchor="w")
 
         # Main PanedWindow (Master-Detail Split)
         main_paned = ttk.PanedWindow(self, orient="horizontal")
@@ -300,7 +314,9 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         btn_cancel.pack(side="right", padx=5)
 
         btn_generate = ttk.Button(
-            footer, text="▶ Korrekturdatei (VKZ 02) generieren", command=self._generate_correction
+            footer,
+            text=f"▶ Korrekturdatei (VKZ {self.target_vk}) generieren",
+            command=self._generate_correction,
         )
         btn_generate.pack(side="right", padx=5)
 
@@ -378,8 +394,13 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         ttk.Button(bar, text="➕ Position hinzufügen", command=self._add_position).pack(side="left", padx=2)
         ttk.Button(bar, text="✏ Position bearbeiten", command=self._edit_position).pack(side="left", padx=2)
         ttk.Button(bar, text="❌ Position entfernen", command=self._delete_position).pack(side="left", padx=2)
-        ttk.Button(bar, text="0️⃣ Alle Preise nullen (nur Zuzahlung)", command=self._zero_prices).pack(side="left", padx=2)
-        ttk.Button(bar, text="0️⃣ Zuzahlungen nullen (Preise behalten)", command=self._zero_zuzahlungen).pack(side="left", padx=2)
+        btn_prices_label = (
+            "Preise nullen — Zuzahlung bleibt (VKZ 03 Nachforderung)"
+            if self.target_vk == "03"
+            else "Alle Preise nullen (nur Zuzahlung)"
+        )
+        ttk.Button(bar, text=btn_prices_label, command=self._zero_prices).pack(side="left", padx=2)
+        ttk.Button(bar, text="Zuzahlungen nullen (Preise behalten)", command=self._zero_zuzahlungen).pack(side="left", padx=2)
         ttk.Button(bar, text="🔄 Original wiederherstellen", command=self._restore_original_beleg).pack(
             side="right", padx=2
         )
@@ -544,7 +565,11 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
 
         self.lbl_sum_brutto.config(text=f"Brutto: {brutto:.2f} €".replace(".", ","))
         self.lbl_sum_zuz.config(text=f"Zuzahlung: {tot_zuz:.2f} €".replace(".", ","))
-        self.lbl_sum_rechn.config(text=f"Rechnungsbetrag (Netto): {netto:.2f} €".replace(".", ","))
+        if self.target_vk == "03":
+            # For VKZ 03, the Rechnungsbetrag IS the Zuzahlung demand, not Brutto minus Zuzahlung.
+            self.lbl_sum_rechn.config(text=f"Nachgeforderte Zuzahlung: {tot_zuz:.2f} €".replace(".", ","))
+        else:
+            self.lbl_sum_rechn.config(text=f"Rechnungsbetrag (Netto): {netto:.2f} €".replace(".", ","))
 
     def _mark_active_beleg_modified(self):
         if not self.active_belegnr:
@@ -659,16 +684,16 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
     def _zero_prices(self):
         if not self.active_belegnr:
             return
-            
+
         b = self.belege_map[self.active_belegnr]
         positions = b.get("positions", [])
-        
+
         if not positions:
             return
-            
+
         if not messagebox.askyesno("Preise nullen", "Möchten Sie wirklich die Preise (Einzelbetrag) aller Positionen in diesem Beleg auf 0,00 € setzen? Die Zuzahlungen bleiben dabei erhalten."):
             return
-            
+
         for pos in positions:
             pos["einzelbetrag"] = 0.0
             pos["gesamtbetrag"] = 0.0
@@ -683,16 +708,33 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
     def _zero_zuzahlungen(self):
         if not self.active_belegnr:
             return
-            
+
         b = self.belege_map[self.active_belegnr]
         positions = b.get("positions", [])
-        
+
         if not positions:
             return
-            
-        if not messagebox.askyesno("Zuzahlungen nullen", "Möchten Sie wirklich die Zuzahlungen aller Positionen in diesem Beleg auf 0,00 € setzen? Die regulären Preise bleiben dabei erhalten."):
-            return
-            
+
+        if self.target_vk == "03":
+            # For VKZ 03, the Rechnungsbetrag IS the Zuzahlung. Zeroing it results
+            # in a 0-demand file. Warn the user explicitly before proceeding.
+            if not messagebox.askyesno(
+                "⚠️ Zuzahlungen nullen — VKZ 03",
+                "Achtung: Bei VKZ 03 ist die Zuzahlung der Nachforderungsbetrag!\n\n"
+                "Wenn Sie die Zuzahlungen nullen, ist der Rechnungsbetrag der erzeugten Datei 0,00 €.\n\n"
+                "Möchten Sie stattdessen die Einzelbeträge nullen und die Zuzahlungen behalten,\n"
+                "verwenden Sie den Button \u201ePreise nullen — Zuzahlung bleibt (VKZ 03 Nachforderung)\u201c.\n\n"
+                "Trotzdem fortfahren und Zuzahlungen auf 0,00 € setzen?",
+            ):
+                return
+        else:
+            if not messagebox.askyesno(
+                "Zuzahlungen nullen",
+                "Möchten Sie wirklich die Zuzahlungen aller Positionen in diesem Beleg auf 0,00 € setzen? "
+                "Die regulären Preise bleiben dabei erhalten.",
+            ):
+                return
+
         for pos in positions:
             pos["zuzahlung"] = 0.0
             pos["zuzahlung_gesamt"] = 0.0
@@ -747,7 +789,7 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         try:
             mod_content = generate_correction_esol(
                 raw_content=self.raw_content,
-                target_vk="02",
+                target_vk=self.target_vk,
                 selected_belegnr_list=[b_nr],
                 new_rec_nr=self.new_rec_nr,
                 new_rec_date=self.new_rec_date,
@@ -767,7 +809,7 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
             res_path = generate_correction_file(
                 input_path=self.file_path,
                 output_path=None,
-                target_vk="02",
+                target_vk=self.target_vk,
                 selected_belegnr_list=self.selected_belegnr_list,
                 new_rec_nr=self.new_rec_nr,
                 new_rec_date=self.new_rec_date,
@@ -776,7 +818,7 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
                 beleg_modifications=self.modifications,
             )
 
-            msg = f"Korrekturdatei (VKZ 02) wurde erfolgreich erstellt:\n\n{res_path}"
+            msg = f"Korrekturdatei (VKZ {self.target_vk}) wurde erfolgreich erstellt:\n\n{res_path}"
             messagebox.showinfo("Erfolg", msg)
 
             if self.on_complete_callback:
@@ -784,4 +826,4 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
 
             self.destroy()
         except Exception as e:
-            messagebox.showerror("Fehler", f"Fehler bei Erstellung der VKZ 02 Korrekturdatei:\n{e}")
+            messagebox.showerror("Fehler", f"Fehler bei Erstellung der VKZ {self.target_vk} Korrekturdatei:\n{e}")
