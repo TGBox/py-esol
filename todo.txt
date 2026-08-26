@@ -1,0 +1,63 @@
+From Gemini WebInterface:
+
+Feature-Ideen
+
+    IK- & Prüfziffern-Validierung:
+
+        Validierung der Institutionskennzeichen (IK) von Kostenträgern und Leistungserbringern mittels Modulo-10-Prüfziffer.
+
+        Format- und Prüfziffernprüfung für Versichertennummern (KVNR) und Betriebsstättennummern (BSNR/LANR).
+
+    Mathematische Konsistenzprüfungen (Level 4):
+
+        Automatischer Summenabgleich: ∑(EHE)+∑(ZHE)−∑(GZF)=?GES.
+
+        Plausibilisierung von Steuersätzen und Cent-Rundungen bei gesplitteten Positionen.
+
+    Erweiterte Korrektur- & Nachforderungswerkzeuge:
+
+        Automatische Generierung von Stornierungsnachrichten bei fehlerhaften Ursprungsrechnungen vor Neuerstellung.
+
+        Differenz-Viewer im GUI zur Gegenüberstellung von Originaldatei und korrigierter Datei.
+
+    Export- & Reporting-Funktionen:
+
+        Export strukturierter Prüfberichte (PDF, CSV oder HTML) mit Zeilennummer, Segment-Offset und Fehlercode.
+
+        Begleitdateien-Generator (z. B. passende Auftragsdatei/AUF oder Begleitzettel für Abrechnungszentren).
+
+    Entwickler- & Support-Tools:
+
+        Anonymisierungs-/Pseudonymisierungsfunktion für NAM- und BES-Segmente zur DSGVO-konformen Fehleranalyse von Kundendateien.
+
+        Watcher-Modus / Hotfolder zur automatischen Validierung eingehender ESOL-Dateien.
+
+Empfohlene Testfälle & Randfälle
+
+    Sonderzeichen & Escaping:
+
+        Escapte Trennzeichen direkt vor dem Segmentende (z. B. ?+' oder ??').
+
+        Mehrfaches/verschachteltes Escaping in Freitextfeldern (BES, NAM).
+
+        Zeilenumbrüche (CR, LF, CRLF) innerhalb von Segmenten oder Freitexten.
+
+    Encoding-Grenzfälle:
+
+        Zeichen außerhalb des ISO-8859-15-Zeichensatzes (z. B. UTF-8-spezifische Emojis, Sonderzeichen €, typografische Anführungszeichen).
+
+        Falsch deklariertes Encoding im UNB-Header im Vergleich zum tatsächlichen Datei-Byte-Stream.
+
+    Mathematische & fachliche Inkonsistenzen:
+
+        GZF-Zuzahlungsbetrag vorhanden, obwohl Befreiungskennzeichen gesetzt ist (und umgekehrt).
+
+        Fehlende oder syntaktisch ungültige URI-Referenz bei Korrektur- oder Nachforderungs-Rechnungsarten.
+
+        Datumslogik-Verletzungen: Verordnungsdatum liegt nach dem Behandlungsdatum (EHE) oder Behandlungsdatum liegt nach dem Rechnungsdatum (INV).
+
+    Strukturelle Belastungstests:
+
+        Maximal- und Minimalgrenzen: Einzelne ESOL-Datei mit 0 Rechnungen (UNH/UNT-Hülle), genau 1 Rechnung und Dateien mit mehreren tausend EHE-Segmenten.
+
+        Abrupter Dateiabbruch mitten in einem Segment (Truncated File) zur Prüfung robuster Fehlermeldungen ohne unbehandelte Exceptions.
