@@ -196,6 +196,12 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         # Filter to selected Belege
         selected_set = set(self.selected_belegnr_list)
         self.belege = [b for b in self.all_belege if b["belegnr"] in selected_set]
+        
+        # Apply global pre-selection if provided by the user
+        if self.zuzahlungskennzeichen is not None:
+            for b in self.belege:
+                b["zuzahlungskennzeichen"] = self.zuzahlungskennzeichen
+
         self.belege_map: Dict[str, Dict[str, Any]] = {b["belegnr"]: b for b in self.belege}
 
         # Keep track of original copies for restore
