@@ -378,6 +378,7 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         ttk.Button(bar, text="➕ Position hinzufügen", command=self._add_position).pack(side="left", padx=2)
         ttk.Button(bar, text="✏ Position bearbeiten", command=self._edit_position).pack(side="left", padx=2)
         ttk.Button(bar, text="❌ Position entfernen", command=self._delete_position).pack(side="left", padx=2)
+        ttk.Button(bar, text="0️⃣ Alle Preise nullen (nur Zuzahlung)", command=self._zero_prices).pack(side="left", padx=2)
         ttk.Button(bar, text="🔄 Original wiederherstellen", command=self._restore_original_beleg).pack(
             side="right", padx=2
         )
@@ -646,6 +647,30 @@ class VK02CorrectionEditorDialog(tk.Toplevel):
         for p_idx in indices_to_remove:
             if 0 <= p_idx < len(positions):
                 positions.pop(p_idx)
+
+        b["positions"] = positions
+
+        self._refresh_positions_table()
+        self._update_sums_display()
+        self._mark_active_beleg_modified()
+        self._update_diff_preview()
+
+    def _zero_prices(self):
+        if not self.active_belegnr:
+            return
+            
+        b = self.belege_map[self.active_belegnr]
+        positions = b.get("positions", [])
+        
+        if not positions:
+            return
+            
+        if not messagebox.askyesno("Preise nullen", "Möchten Sie wirklich die Preise (Einzelbetrag) aller Positionen in diesem Beleg auf 0,00 € setzen? Die Zuzahlungen bleiben dabei erhalten."):
+            return
+            
+        for pos in positions:
+            pos["einzelbetrag"] = 0.0
+            pos["gesamtbetrag"] = 0.0
 
         b["positions"] = positions
 
