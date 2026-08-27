@@ -139,18 +139,6 @@ class CorrectionSelectionDialog(tk.Toplevel):
         self.zkz_combo.grid(row=4, column=1, columnspan=3, sticky="w", padx=5, pady=5)
         self.zkz_combo.current(2)  # Default option 2
 
-        ttk.Label(opt_frame, text="Neue Rechnungsnummer:").grid(row=5, column=0, sticky="w", pady=5)
-        self.rec_nr_entry = ttk.Entry(opt_frame, width=25)
-        self.rec_nr_entry.grid(row=5, column=1, sticky="w", padx=5, pady=5)
-        self.rec_nr_entry.insert(0, f"RE{datetime.datetime.now().strftime('%d%m')}Z")
-        self.rec_nr_entry.bind("<Return>", lambda event: self._generate())
-
-        ttk.Label(opt_frame, text="Neues Rechnungsdatum:").grid(row=5, column=2, sticky="w", pady=5)
-        self.rec_date_entry = ttk.Entry(opt_frame, width=15)
-        self.rec_date_entry.grid(row=5, column=3, sticky="w", padx=5, pady=5)
-        self.rec_date_entry.insert(0, datetime.datetime.now().strftime("%Y%m%d"))
-        self.rec_date_entry.bind("<Return>", lambda event: self._generate())
-
         # Footer Buttons
         footer_frame = ttk.Frame(self)
         footer_frame.pack(side="bottom", fill="both", padx=10, pady=10, expand=True)
@@ -208,9 +196,6 @@ class CorrectionSelectionDialog(tk.Toplevel):
             return
 
         target_vk = self.vk_var.get()
-        new_rec_nr = self.rec_nr_entry.get().strip() or None
-        new_rec_date = self.rec_date_entry.get().strip() or None
-
         zkz_text = self.zkz_combo.get()
         selected_zkz = zkz_text.split(" ")[0] if zkz_text else "2"
 
@@ -229,8 +214,6 @@ class CorrectionSelectionDialog(tk.Toplevel):
             selected_belegnr_list=selected_belege,
             target_vk=target_vk,
             output_dir=o_dir,
-            new_rec_nr=new_rec_nr,
-            new_rec_date=new_rec_date,
             zuzahlungskennzeichen=selected_zkz,
             on_complete_callback=cb,
         )

@@ -21,8 +21,10 @@ def test_user_selected_out_dir_flag_behavior():
         with patch("tkinter.filedialog.askopenfilenames", return_value=["/path/a/file1.esol"]):
             app._select_files()
 
-        # out_dir_entry should be updated to /path/a
+        # out_dir_entry should be updated to /path/a and cursor set to end
         assert app.out_dir_entry.get() == "/path/a"
+        assert app.path_entry.index(tk.INSERT) == len(app.path_entry.get())
+        assert app.out_dir_entry.index(tk.INSERT) == len(app.out_dir_entry.get())
         assert app.user_selected_out_dir is False  # Still False because user didn't pick out_dir manually
 
         # User explicitly selects output directory /path/custom
@@ -30,6 +32,7 @@ def test_user_selected_out_dir_flag_behavior():
             app._select_out_directory()
 
         assert app.out_dir_entry.get() == "/path/custom"
+        assert app.out_dir_entry.index(tk.INSERT) == len("/path/custom")
         assert app.user_selected_out_dir is True
 
         # Now simulate selecting files in another folder /path/b
@@ -38,6 +41,7 @@ def test_user_selected_out_dir_flag_behavior():
 
         # Path entry updated to /path/b/file2.esol
         assert app.path_entry.get() == "/path/b/file2.esol"
+        assert app.path_entry.index(tk.INSERT) == len("/path/b/file2.esol")
         # Out dir entry MUST NOT be overwritten, it must stay /path/custom
         assert app.out_dir_entry.get() == "/path/custom"
 

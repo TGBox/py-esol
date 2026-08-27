@@ -328,9 +328,33 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
     def _setup_meta_tab(self):
         pad = {"padx": 10, "pady": 8}
 
+        # Rechnungs- & Dateieinstellungen
+        rec_frame = ttk.LabelFrame(self.tab_meta, text=" Rechnungs- & Dateieinstellungen ", padding=10)
+        rec_frame.pack(fill="x", pady=(0, 10))
+
+        ttk.Label(rec_frame, text="Neue Rechnungsnummer / Dateiname:").grid(row=0, column=0, sticky="w", **pad)
+        self.entry_rec_nr = ttk.Entry(rec_frame, width=25)
+        self.entry_rec_nr.grid(row=0, column=1, sticky="w", **pad)
+
+        suffix = "Z" if self.target_vk == "03" else ("K" if self.target_vk == "04" else ("W" if self.target_vk == "10" else "N"))
+        default_rec_nr = self.new_rec_nr or f"RE{datetime.datetime.now().strftime('%d%m')}{suffix}"
+        self.entry_rec_nr.insert(0, default_rec_nr)
+        self.entry_rec_nr.bind("<FocusOut>", lambda e: self._on_meta_changed())
+
+        ttk.Label(rec_frame, text="Neues Rechnungsdatum (TT.MM.JJJJ):").grid(row=0, column=2, sticky="w", **pad)
+        self.entry_rec_date = ttk.Entry(rec_frame, width=15)
+        self.entry_rec_date.grid(row=0, column=3, sticky="w", **pad)
+
+        if self.new_rec_date:
+            default_rec_date = format_date_german(self.new_rec_date)
+        else:
+            default_rec_date = datetime.datetime.now().strftime("%d.%m.%Y")
+        self.entry_rec_date.insert(0, default_rec_date)
+        self.entry_rec_date.bind("<FocusOut>", lambda e: self._on_meta_changed())
+
         # Info Box (Readonly)
         info_frame = ttk.LabelFrame(self.tab_meta, text=" Versichertendaten (Original) ", padding=10)
-        info_frame.pack(fill="x", pady=(0, 10))
+        info_frame.pack(fill="x", pady=10)
 
         self.lbl_vers_name = ttk.Label(info_frame, text="Versicherter: -", font=("Consolas", 10, "bold"))
         self.lbl_vers_name.grid(row=0, column=0, sticky="w", **pad)
@@ -761,6 +785,20 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             self.beleg_tree.item(b_nr, values=(b_nr, name, "Unverändert"))
             self._select_beleg(b_nr)
 
+    def get_current_rec_nr(self) -> Optional[str]:
+        if hasattr(self, "entry_rec_nr"):
+            val = self.entry_rec_nr.get().strip()
+            return val if val else None
+        return self.new_rec_nr
+
+    def get_current_rec_date_iso(self) -> Optional[str]:
+        if hasattr(self, "entry_rec_date"):
+            raw_val = self.entry_rec_date.get().strip()
+            if not raw_val:
+                return None
+            return parse_date_to_iso(raw_val)
+        return parse_date_to_iso(self.new_rec_date) if self.new_rec_date else None
+
     def _update_diff_preview(self):
         if not self.active_belegnr:
             return
@@ -786,13 +824,15 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         self.txt_orig.insert("1.0", "\n".join(orig_lines))
 
         # Generate modified preview content for this single Beleg
+        rec_nr = self.get_current_rec_nr()
+        rec_date_iso = self.get_current_rec_date_iso()
         try:
             mod_content = generate_correction_esol(
                 raw_content=self.raw_content,
                 target_vk=self.target_vk,
                 selected_belegnr_list=[b_nr],
-                new_rec_nr=self.new_rec_nr,
-                new_rec_date=self.new_rec_date,
+                new_rec_nr=rec_nr,
+                new_rec_date=rec_date_iso,
                 zuzahlungskennzeichen=self.zuzahlungskennzeichen,
                 beleg_modifications=self.modifications,
             )
@@ -805,14 +845,24 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             messagebox.showwarning("Keine Belege", "Keine Belege für die Korrektur ausgewählt.")
             return
 
+        rec_nr = self.get_current_rec_nr()
+        rec_date_iso = self.get_current_rec_date_iso()
+
+        if rec_date_iso and not (len(rec_date_iso) == 8 and rec_date_iso.isdigit()):
+            messagebox.showwarning(
+                "Eingabefehler",
+                "Bitte geben Sie ein gültiges Rechnungsdatum im Format TT.MM.JJJJ (z.B. 27.08.2026) ein.",
+            )
+            return
+
         try:
             res_path = generate_correction_file(
                 input_path=self.file_path,
                 output_path=None,
                 target_vk=self.target_vk,
                 selected_belegnr_list=self.selected_belegnr_list,
-                new_rec_nr=self.new_rec_nr,
-                new_rec_date=self.new_rec_date,
+                new_rec_nr=rec_nr,
+                new_rec_date=rec_date_iso,
                 zuzahlungskennzeichen=self.zuzahlungskennzeichen,
                 out_dir=Path(self.output_dir) if self.output_dir else None,
                 beleg_modifications=self.modifications,

@@ -316,3 +316,78 @@ def test_vk02_copayment_pauschale_toggle(tmp_path: Path):
     assert res.is_valid(), f"Expected valid VK02 file, got errors: {res.get_errors()}"
 
 
+def test_dialog_rec_nr_and_german_date_moved_to_second_dialog(tmp_path: Path):
+    import tkinter as tk
+    import pytest
+    from gui_correction_dialog import CorrectionSelectionDialog
+    from vkz_correction_editor import VKZCorrectionEditorDialog
+
+    try:
+        root = tk.Tk()
+        root.withdraw()
+    except Exception as e:
+        pytest.skip(f"Tkinter environment not available: {e}")
+
+    orig_esol = "\n".join([
+        "UNB+UNOC:3+123456789+661430035+20260323:1040+00118+B+SL030179S03+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++123456789+101777502+101777502+123456789'",
+        "REC+51:0+20260122+1'",
+        "GES+00+100,00+100,00+0,00'",
+        "NAM+Praxis+++info@praxis.de'",
+        "UNT+000006+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++123456789+101777502+101777502'",
+        "REC+51:0+20260122+1'",
+        "INV+A123456789+31000+1+00001'",
+        "NAD+Muster+Max+19900101'",
+        "ZHE+110178400+906716934+20250528+3+EN1+04+++++1++1110++0+1+2+00501'",
+        "EHE+26:00501+59702+1,00+100,00+20260115+10,00'",
+        "BES+100,00+20,00+10,00+10,00'",
+        "UNT+000009+00002'",
+        "UNZ+000002+00118'",
+    ])
+
+    orig_file = tmp_path / "test_dialog_move.esol"
+    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+
+    try:
+        # 1. Verify First Dialog no longer has rec_nr_entry and rec_date_entry
+        dlg1 = CorrectionSelectionDialog(root, str(orig_file))
+        assert not hasattr(dlg1, "rec_nr_entry")
+        assert not hasattr(dlg1, "rec_date_entry")
+        dlg1.destroy()
+
+        # 2. Verify Second Dialog has entry_rec_nr and entry_rec_date in German format (DD.MM.YYYY)
+        dlg2 = VKZCorrectionEditorDialog(
+            parent=root,
+            file_path=str(orig_file),
+            selected_belegnr_list=["00001"],
+            target_vk="03",
+        )
+        assert hasattr(dlg2, "entry_rec_nr")
+        assert hasattr(dlg2, "entry_rec_date")
+
+        # German date format display
+        raw_date_displayed = dlg2.entry_rec_date.get()
+        assert "." in raw_date_displayed
+        parts = raw_date_displayed.split(".")
+        assert len(parts) == 3
+        assert len(parts[0]) == 2 and len(parts[1]) == 2 and len(parts[2]) == 4
+
+        # Edit date in German format: 15.09.2026
+        dlg2.entry_rec_date.delete(0, "end")
+        dlg2.entry_rec_date.insert(0, "15.09.2026")
+        assert dlg2.get_current_rec_date_iso() == "20260915"
+
+        # Edit invoice number
+        dlg2.entry_rec_nr.delete(0, "end")
+        dlg2.entry_rec_nr.insert(0, "RE9999Z")
+        assert dlg2.get_current_rec_nr() == "RE9999Z"
+
+        dlg2.destroy()
+    finally:
+        root.destroy()
+
+
+

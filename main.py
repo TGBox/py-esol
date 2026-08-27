@@ -187,28 +187,38 @@ class EsolValidatorGUI(tk.Tk):
             # Pfade durch Semikolon getrennt eintragen
             self.path_entry.delete(0, tk.END)
             self.path_entry.insert(0, "; ".join(files))
+            self.path_entry.xview_moveto(1.0)
+            self.path_entry.icursor(tk.END)
             # Automatisch das Verzeichnis der ersten Quelldatei als Ausgabeordner eintragen (falls nicht selbst gewählt)
             if not self.user_selected_out_dir or not self.out_dir_entry.get().strip():
                 source_dir = os.path.dirname(files[0])
                 if source_dir:
                     self.out_dir_entry.delete(0, tk.END)
                     self.out_dir_entry.insert(0, source_dir)
+                    self.out_dir_entry.xview_moveto(1.0)
+                    self.out_dir_entry.icursor(tk.END)
 
     def _select_directory(self):
         directory = filedialog.askdirectory(title="Batch-Ordner auswählen")
         if directory:
             self.path_entry.delete(0, tk.END)
             self.path_entry.insert(0, directory)
+            self.path_entry.xview_moveto(1.0)
+            self.path_entry.icursor(tk.END)
             # Automatisch den Quellordner als Ausgabeordner eintragen (falls nicht selbst gewählt)
             if not self.user_selected_out_dir or not self.out_dir_entry.get().strip():
                 self.out_dir_entry.delete(0, tk.END)
                 self.out_dir_entry.insert(0, directory)
+                self.out_dir_entry.xview_moveto(1.0)
+                self.out_dir_entry.icursor(tk.END)
 
     def _select_out_directory(self):
         directory = filedialog.askdirectory(title="Ausgabeordner auswählen")
         if directory:
             self.out_dir_entry.delete(0, tk.END)
             self.out_dir_entry.insert(0, directory)
+            self.out_dir_entry.xview_moveto(1.0)
+            self.out_dir_entry.icursor(tk.END)
             self.user_selected_out_dir = True
 
     def _clear_log(self):
