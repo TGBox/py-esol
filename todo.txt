@@ -61,3 +61,32 @@ Empfohlene Testfälle & Randfälle
         Maximal- und Minimalgrenzen: Einzelne ESOL-Datei mit 0 Rechnungen (UNH/UNT-Hülle), genau 1 Rechnung und Dateien mit mehreren tausend EHE-Segmenten.
 
         Abrupter Dateiabbruch mitten in einem Segment (Truncated File) zur Prüfung robuster Fehlermeldungen ohne unbehandelte Exceptions.
+
+    **1. Hierarchische Klartext-Ansicht (Rezept-Baum)** [ERLEDIGT]
+
+* **Baumstruktur statt Rohdaten:** Anzeige der EDIFACT-Struktur (`UNB` $\rightarrow$ `SLGA` $\rightarrow$ `INV` $\rightarrow$ `BES`) über ein Tkinter-`ttk.Treeview`.
+* **Fachbegriffe statt Segment-Kürzel:** Segmente automatisch in Praxissprache übersetzen (z. B. `INV` als „Rezept / Beleg“, `DIA` als „Diagnose“, `BES` als „Behandlungsleistung“).
+* **Formatierte Werte:** Datumsangaben (`JJJJMMTT` $\rightarrow$ `TT.MM.JJJJ`) und Beträge automatisch lesbar mit Währungszeichen formatieren.
+
+
+**2. Support-taugliche Fehlerübersetzung mit Handlungsempfehlung** [ERLEDIGT]
+
+* **Klartext-Fehler:** Technische Validierungsfehler verständlich umschreiben (z. B. statt *„Stufe 3: Prüfziffer IK fehlerhaft“* $\rightarrow$ *„Das Institutionskennzeichen der Krankenkasse ist ungültig (Tippfehler)“*).
+* **„Was ist zu tun?“-Feld:** Direkte Anweisung für die Hotline einblenden (z. B. *„Kunden bitten, das IK der Krankenkasse in den Stammdaten zu korrigieren“*).
+* **Fokus-Sprung:** Klick auf einen Fehler springt direkt zum betroffenen Beleg im Viewer.
+
+**3. Interaktives Beleg-Dashboard** [ERLEDIGT]
+
+* **Übersichtstabelle:** Liste aller Belege (`INV`) mit Spalten für *Belegnummer*, *Versicherter*, *Bruttobetrag*, *Zuzahlung* und *Status (Grün/Rot)*.
+* **Schnellfilter & Volltextsuche:** Schnelle Suche nach Versichertennummer, IK des Kostenträgers oder Belegnummer während des Telefonats.
+* **Kennzahlen-Kacheln:** Direkte Anzeige von Gesamtsumme, Anzahl der Belege und Anzahl fehlerhafter Datensätze im Kopfbereich.
+
+**4. Visuelle Rezept-Vorschau (Virtuelles Verordnungsblatt)** [ERLEDIGT]
+
+* **Detail-Panel:** Klick auf einen Beleg öffnet ein Formular, das optisch an das vertraute Muster 13/18 (Heilmittelverordnung) angelehnt ist.
+* **Aufschlüsselung:** Klare Gegenüberstellung von Kassenanteil, Zuzahlung und Positionsnummern mit Klartext-Leistungsbeschreibung.
+
+**5. 1-Klick Ticket-Zusammenfassung** [ERLEDIGT]
+
+* **Kopierfunktion für Tickets:** Button *„Support-Bericht kopieren“*, der alle relevanten Falldaten (IKs, Belegnummer, aufgetretene Fehler, Ursache) in strukturierter Textform für das Ticketsystem in die Zwischenablage legt.
+* **HTML/PDF-Export:** Schneller Export einer lesbaren Prüf- und Abrechnungsübersicht für die Praxis.

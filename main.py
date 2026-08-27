@@ -4,11 +4,17 @@ import sys
 import multiprocessing
 import threading
 import tkinter as tk
+from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 import theme_manager
+from gui_beleg_dashboard import BelegDashboardFrame
+from gui_muster13_preview import Muster13PreviewFrame
+from gui_recipe_tree import RecipeTreeFrame
+from support_helper import generate_html_report, generate_ticket_summary
+from tools.generate_correction import parse_esol_belege_summary, read_esol_file_text
 
 
 class EsolValidatorGUI(tk.Tk):
@@ -16,9 +22,9 @@ class EsolValidatorGUI(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.title("ESOL Datei-Validator")
-        self.geometry("850x700")
-        self.minsize(700, 650)
+        self.title("ESOL Datei-Validator & Support-Dashboard")
+        self.geometry("1100x820")
+        self.minsize(900, 700)
 
         # Pfade zu den Skripten bestimmen
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -29,6 +35,9 @@ class EsolValidatorGUI(tk.Tk):
         self.correction_script = os.path.join(self.base_dir, "tools", "generate_correction.py")
 
         self.user_selected_out_dir: bool = False
+        self.last_belege_summary: List[Dict[str, Any]] = []
+        self.last_validation_errors: List[str] = []
+        self.last_processed_file: Optional[str] = None
 
         self._setup_ui()
         self._apply_theme()
@@ -126,29 +135,66 @@ class EsolValidatorGUI(tk.Tk):
         # Progressbar (optional/visuell)
         self.progress = ttk.Progressbar(top_frame, mode="indeterminate")
 
-        # Frame unten: Ausgabepanel
-        output_frame = ttk.LabelFrame(self, text=" Ergebnis ", padding=10)
-        output_frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+        # Main Tabbed Notebook Container
+        self.main_notebook = ttk.Notebook(self)
+        self.main_notebook.pack(fill="both", expand=True, padx=10, pady=(0, 5))
 
-        # Text-Panel für Log
+        # Tab 1: Validierungs-Log & Ausgabe
+        self.tab_log = ttk.Frame(self.main_notebook, padding=5)
+        self.main_notebook.add(self.tab_log, text=" 📋 Validierung & Log ")
+
         self.log_text = ScrolledText(
-            output_frame, wrap="word", font=("Consolas", 10)
+            self.tab_log, wrap="word", font=("Consolas", 10)
         )
-        self.log_text.pack(fill="both", expand=True, side="top")
+        self.log_text.pack(fill="both", expand=True)
 
-        # Footer mit Kopieren-Button
-        footer_frame = ttk.Frame(output_frame)
-        footer_frame.pack(fill="x", pady=(5, 0))
+        # Tab 2: Beleg-Dashboard & Rezept-Baum (Master-Detail Split)
+        self.tab_dashboard = ttk.Frame(self.main_notebook, padding=5)
+        self.main_notebook.add(self.tab_dashboard, text=" 📊 Beleg-Dashboard & Rezept-Baum ")
 
-        btn_copy = ttk.Button(
-            footer_frame, text="📋 Ergebnisse kopieren", command=self._copy_to_clipboard
+        dash_paned = ttk.PanedWindow(self.tab_dashboard, orient="vertical")
+        dash_paned.pack(fill="both", expand=True)
+
+        self.dashboard_view = BelegDashboardFrame(
+            dash_paned,
+            on_select_beleg_cb=self._on_dashboard_beleg_selected,
+            on_open_editor_cb=self._open_editor_for_beleg,
         )
-        btn_copy.pack(side="right")
+        dash_paned.add(self.dashboard_view, weight=3)
+
+        self.recipe_tree_view = RecipeTreeFrame(dash_paned)
+        dash_paned.add(self.recipe_tree_view, weight=2)
+
+        # Tab 3: Virtuelles Verordnungsblatt (Muster 13/18)
+        self.tab_muster13 = ttk.Frame(self.main_notebook, padding=5)
+        self.main_notebook.add(self.tab_muster13, text=" 📜 Virtuelles Verordnungsblatt (Muster 13/18) ")
+
+        self.muster13_view = Muster13PreviewFrame(self.tab_muster13)
+        self.muster13_view.pack(fill="both", expand=True)
+
+        # Footer Action Toolbar
+        footer_frame = ttk.Frame(self, padding=(10, 5))
+        footer_frame.pack(fill="x", side="bottom")
+
+        btn_ticket = ttk.Button(
+            footer_frame, text="📋 Support-Bericht kopieren", command=self._copy_ticket_summary
+        )
+        btn_ticket.pack(side="left", padx=3)
+
+        btn_html = ttk.Button(
+            footer_frame, text="🌐 HTML-Bericht exportieren", command=self._export_html_report
+        )
+        btn_html.pack(side="left", padx=3)
+
+        btn_copy_log = ttk.Button(
+            footer_frame, text="📋 Log kopieren", command=self._copy_to_clipboard
+        )
+        btn_copy_log.pack(side="right", padx=3)
 
         btn_clear = ttk.Button(
             footer_frame, text="Löschen", command=self._clear_log
         )
-        btn_clear.pack(side="right", padx=5)
+        btn_clear.pack(side="right", padx=3)
 
     def _toggle_theme(self):
         current = theme_manager.get_current_theme()
@@ -173,6 +219,11 @@ class EsolValidatorGUI(tk.Tk):
         self.log_text.tag_config("ERROR", foreground=colors["log_error"])
         self.log_text.tag_config("OK", foreground=colors["log_ok"])
         self.log_text.tag_config("HEADER", foreground=colors["log_header"], font=("Consolas", 10, "bold"))
+
+        if hasattr(self, "dashboard_view"):
+            self.dashboard_view.apply_theme(mode)
+        if hasattr(self, "muster13_view"):
+            self.muster13_view.apply_theme(mode)
 
     def _on_out_dir_key_release(self, event=None):
         val = self.out_dir_entry.get().strip()
@@ -530,10 +581,110 @@ class EsolValidatorGUI(tk.Tk):
 
         self.after(0, write)
 
+    def _on_dashboard_beleg_selected(self, belegnr: str):
+        b = next((x for x in self.last_belege_summary if str(x.get("belegnr")) == belegnr), None)
+        if b:
+            self.muster13_view.load_beleg(b, self.last_validation_errors)
+        self.recipe_tree_view.focus_beleg(belegnr)
+
+    def _open_editor_for_beleg(self, belegnr: str):
+        if self.last_processed_file and os.path.isfile(self.last_processed_file):
+            from vkz_correction_editor import VKZCorrectionEditorDialog
+
+            def on_done(out_path: str):
+                self._clear_log()
+                self._append_log(f"=== Korrekturdatei generiert: {os.path.basename(out_path)} ===\n", tag="HEADER")
+                self._append_log(f"Pfad: {out_path}\n\n", tag="OK")
+                self._populate_support_tabs(out_path, [])
+
+            VKZCorrectionEditorDialog(
+                parent=self,
+                file_path=self.last_processed_file,
+                selected_belegnr_list=[belegnr],
+                target_vk="02",
+                on_complete_callback=on_done,
+            )
+
+    def _copy_ticket_summary(self):
+        file_name = os.path.basename(self.last_processed_file) if self.last_processed_file else "ESOL-Datei"
+        ticket_text = generate_ticket_summary(
+            file_name=file_name,
+            validation_errors=self.last_validation_errors,
+            belege_summary=self.last_belege_summary,
+        )
+        self.clipboard_clear()
+        self.clipboard_append(ticket_text)
+        messagebox.showinfo("Support-Bericht", "Der Support-Bericht wurde erfolgreich in die Zwischenablage kopiert!")
+
+    def _export_html_report(self):
+        file_name = os.path.basename(self.last_processed_file) if self.last_processed_file else "ESOL-Datei"
+        html_content = generate_html_report(
+            file_name=file_name,
+            validation_errors=self.last_validation_errors,
+            belege_summary=self.last_belege_summary,
+        )
+
+        out_dir = self.out_dir_entry.get().strip()
+        default_name = f"ESOL_Pruefbericht_{file_name}.html"
+
+        if out_dir and os.path.isdir(out_dir):
+            out_path = os.path.join(out_dir, default_name)
+        else:
+            out_path = filedialog.asksaveasfilename(
+                title="HTML-Prüfbericht speichern",
+                initialfile=default_name,
+                defaultextension=".html",
+                filetypes=[("HTML-Dateien", "*.html"), ("Alle Dateien", "*.*")],
+            )
+
+        if out_path:
+            Path(out_path).write_text(html_content, encoding="utf-8")
+            messagebox.showinfo("Export Erfolgreich", f"Der HTML-Prüfbericht wurde erfolgreich gespeichert:\n\n{out_path}")
+
+    def _populate_support_tabs(self, file_path: str, errors: List[str]):
+        if not os.path.isfile(file_path):
+            return
+
+        try:
+            raw_content = read_esol_file_text(Path(file_path))
+            belege = parse_esol_belege_summary(raw_content)
+
+            self.last_processed_file = file_path
+            self.last_belege_summary = belege
+            self.last_validation_errors = errors
+
+            # Populate Dashboard
+            self.dashboard_view.load_data(belege, errors)
+
+            # Populate Recipe Tree
+            self.recipe_tree_view.load_tree(raw_content)
+
+            # Populate Muster 13 preview with first Beleg
+            if belege:
+                self.muster13_view.load_beleg(belege[0], errors)
+        except Exception as e:
+            self._append_log(f"Konnte Support-Tabs für {file_path} nicht befüllen: {e}\n", tag="ERROR")
+
     def _finish_process(self):
         self.progress.stop()
         self.progress.grid_forget()
         self._set_buttons_state("normal")
+
+        # Automatically parse and populate support tabs for the first valid input file
+        raw_path = self.path_entry.get().strip()
+        if raw_path:
+            paths = [p.strip() for p in raw_path.split(";") if p.strip()]
+            for p in paths:
+                if os.path.isfile(p):
+                    # Gather errors logged in output text
+                    log_content = self.log_text.get("1.0", tk.END)
+                    errors = [
+                        line.strip()
+                        for line in log_content.splitlines()
+                        if ("FEHLER" in line or "UNGÜLTIG" in line or "Stufe" in line) and not line.startswith("===")
+                    ]
+                    self._populate_support_tabs(p, errors)
+                    break
 
 
 if __name__ == "__main__":

@@ -241,4 +241,32 @@ def apply_theme(root: tk.Tk | tk.Toplevel, mode: Optional[str] = None) -> str:
         bordercolor=colors["bg"],
     )
 
+    # Notebook & Tabs
+    style.configure(
+        "TNotebook",
+        background=colors["bg"],
+        bordercolor=colors["btn_bg"],
+        tabmargins=[2, 5, 2, 0],
+    )
+    style.configure(
+        "TNotebook.Tab",
+        background=colors["btn_bg"],
+        foreground=colors["btn_fg"],
+        bordercolor=colors["btn_bg"],
+        padding=[12, 5],
+        font=("Segoe UI", 9, "bold"),
+    )
+    style.map(
+        "TNotebook.Tab",
+        background=[("selected", colors["card_bg"]), ("active", colors["btn_active_bg"])],
+        foreground=[("selected", colors["fg"]), ("active", colors["fg"])],
+    )
+
+    # PanedWindow
+    style.configure(
+        "TPanedwindow",
+        background=colors["bg"],
+        sashcolor=colors["btn_bg"],
+    )
+
     return mode

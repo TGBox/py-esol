@@ -494,6 +494,18 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         self.txt_mod.pack(side="left", fill="both", expand=True)
         sb_mod.pack(side="right", fill="y")
 
+        colors = theme_manager.get_theme_colors()
+        self.txt_orig.config(
+            bg=colors["entry_bg"],
+            fg=colors["entry_fg"],
+            insertbackground=colors["entry_fg"],
+        )
+        self.txt_mod.config(
+            bg=colors["entry_bg"],
+            fg=colors["entry_fg"],
+            insertbackground=colors["entry_fg"],
+        )
+
     def _on_beleg_selected(self, event):
         sel = self.beleg_tree.selection()
         if sel:
