@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 
 import theme_manager
 from gui_beleg_dashboard import BelegDashboardFrame
+from gui_begleitzettel_dialog import BegleitzettelDialog
 from gui_muster13_preview import Muster13PreviewFrame
 from gui_recipe_tree import RecipeTreeFrame
 from support_helper import generate_html_report, generate_ticket_summary
@@ -131,6 +132,11 @@ class EsolValidatorGUI(tk.Tk):
             btn_frame, text="🛠️ Korrektur / Zuzahlung", command=self._start_correction_dialog
         )
         self.btn_correction.pack(side="left", fill="x", expand=True, padx=2)
+
+        self.btn_begleitzettel = ttk.Button(
+            btn_frame, text="📄 Begleitzettel PDF", command=self._start_begleitzettel_dialog
+        )
+        self.btn_begleitzettel.pack(side="left", fill="x", expand=True, padx=2)
 
         # Progressbar (optional/visuell)
         self.progress = ttk.Progressbar(top_frame, mode="indeterminate")
@@ -286,6 +292,7 @@ class EsolValidatorGUI(tk.Tk):
         self.btn_convert.config(state=state)
         self.btn_auf.config(state=state)
         self.btn_correction.config(state=state)
+        self.btn_begleitzettel.config(state=state)
 
     def _start_validation(self):
         raw_path = self.path_entry.get().strip()
@@ -385,6 +392,26 @@ class EsolValidatorGUI(tk.Tk):
             output_dir=out_dir,
             on_complete_callback=on_generated,
         )
+
+    def _start_begleitzettel_dialog(self):
+        raw_path = self.path_entry.get().strip()
+        first_file = None
+        if raw_path:
+            paths = [p.strip() for p in raw_path.split(";") if p.strip()]
+            for p in paths:
+                if os.path.isfile(p):
+                    first_file = p
+                    break
+                elif os.path.isdir(p):
+                    for root, _, files in os.walk(p):
+                        for file in files:
+                            if not file.endswith(".txt") and not file.endswith(".auf") and not file.startswith("."):
+                                first_file = os.path.join(root, file)
+                                break
+                        if first_file:
+                            break
+
+        BegleitzettelDialog(self, esol_file_path=first_file)
 
     def _run_process(self, path_input: str):
         try:
