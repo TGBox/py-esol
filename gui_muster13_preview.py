@@ -5,6 +5,7 @@ assets/Muster13_2_1280x1280.jpg (Rückseite).
 """
 
 import os
+from datetime import datetime, timedelta
 import tkinter as tk
 from tkinter import messagebox, ttk
 from typing import Any, Dict, List, Optional
@@ -484,6 +485,31 @@ class Muster13PreviewFrame(ttk.Frame):
 
         return font_regular, font_bold, font_small
 
+    @classmethod
+    def _get_handwriting_font(cls, size: int = 22) -> Any:
+        """Handschrift-Font für Unterschriften (z.B. Segoe Script, Ink Free oder kursiver Fallback)."""
+        candidates = ("segoesc.ttf", "Inkfree.ttf", "segoescb.ttf", "BRUSHSCI.TTF", "LHANDW.TTF", "ariali.ttf")
+        for fname in candidates:
+            try:
+                return ImageFont.truetype(fname, size)
+            except IOError:
+                continue
+        try:
+            return ImageFont.truetype("arial.ttf", size)
+        except IOError:
+            return ImageFont.load_default()
+
+    @classmethod
+    def _get_stamp_font(cls, size: int = 13) -> Any:
+        """Kompakte serifenlose Schrift für Praxisstempel."""
+        try:
+            return ImageFont.truetype("arial.ttf", size)
+        except IOError:
+            try:
+                return ImageFont.truetype("consola.ttf", size)
+            except IOError:
+                return ImageFont.load_default()
+
     def _render_active_beleg(self):
         if not self.current_beleg:
             return
@@ -658,6 +684,99 @@ class Muster13PreviewFrame(ttk.Frame):
                 cur_x = x + pad_x
 
             draw.text((cur_x, cur_y), line, fill=fill, font=font)
+
+    @classmethod
+    def _draw_comb_digits(
+        cls,
+        draw: ImageDraw.ImageDraw,
+        dividers: List[int],
+        y: int,
+        h: int,
+        text: str,
+        font: Any,
+        fill: tuple = (5, 20, 90),
+    ):
+        """
+        Platziert einzelne Ziffern zentriert in den durch 'dividers' definierten Kästchen.
+        dividers: Liste von X-Koordinaten der vertikalen Trennlinien (N+1 Trennlinien für N Kästchen).
+        """
+        digits = [c for c in str(text or "") if c.isdigit()]
+        n_boxes = max(len(dividers) - 1, 0)
+        for i, digit in enumerate(digits[:n_boxes]):
+            x0 = dividers[i]
+            x1 = dividers[i + 1]
+            w = x1 - x0
+            cls._draw_text_in_box(
+                draw,
+                (x0, y, w, h),
+                digit,
+                font=font,
+                fill=fill,
+                pad_x=1,
+                align_h="center",
+            )
+
+    @classmethod
+    def _draw_fitted_text(
+        cls,
+        img_target: Image.Image,
+        box: tuple,
+        text: str,
+        font: Any,
+        fill: tuple = (5, 20, 90),
+        pad_x: int = 4,
+        align_h: str = "center",
+    ):
+        """
+        Rendert einzeiligen Text in einer Bounding-Box (x, y, w, h).
+        Falls die Textbreite die Boxbreite (w - 2 * pad_x) überschreitet,
+        wird die Buchstabenbreite und der Zeichenabstand stufenlos gestaucht (horizontal scaling),
+        sodass der vollständige Text ohne Überschreitung der Grenzen abgebildet wird.
+        """
+        if not text:
+            return
+
+        x, y, w, h = box[0], box[1], box[2], box[3]
+        max_w = max(w - 2 * pad_x, 10)
+
+        dummy_draw = ImageDraw.Draw(img_target)
+        bb = dummy_draw.textbbox((0, 0), text, font=font)
+        tw = max(bb[2] - bb[0], 1)
+        th = max(bb[3] - bb[1], 1)
+
+        if tw <= max_w:
+            cls._draw_text_in_box(
+                dummy_draw,
+                box,
+                text,
+                font=font,
+                fill=fill,
+                pad_x=pad_x,
+                align_h=align_h,
+            )
+        else:
+            scale_x = max_w / tw
+            target_w = max(int(tw * scale_x), 1)
+
+            txt_surface = Image.new("RGBA", (tw + 10, th + 10), (0, 0, 0, 0))
+            d_txt = ImageDraw.Draw(txt_surface)
+            rgba_fill = fill + (255,) if len(fill) == 3 else fill
+            d_txt.text((-bb[0], -bb[1]), text, font=font, fill=rgba_fill)
+
+            txt_crop = txt_surface.crop((0, 0, tw, th))
+            txt_scaled = txt_crop.resize((target_w, th), Image.Resampling.LANCZOS)
+
+            if align_h == "center":
+                pos_x = int(x + (w - target_w) / 2.0)
+            elif align_h == "right":
+                pos_x = int(x + w - pad_x - target_w)
+            else:
+                pos_x = int(x + pad_x)
+
+            sample_bb = dummy_draw.textbbox((0, 0), "Ag123q", font=font)
+            line_glyph_h = sample_bb[3] - sample_bb[1]
+            pos_y = int(y + (h - line_glyph_h) / 2.0)
+            img_target.paste(txt_scaled, (pos_x, pos_y), txt_scaled)
 
     def _render_front_side(
         self, beleg: Dict[str, Any], font_reg, font_bold, font_small
@@ -949,38 +1068,56 @@ class Muster13PreviewFrame(ttk.Frame):
 
         # 12. Fusszeile (IK des Leistungserbringers, Arztstempel & Unterschrift)
         ik_le = str(beleg.get("leistungserbringer_ik") or beleg.get("ik_leistungserbringer", beleg.get("ik", "")))
-        self._draw_text_in_box(
+        dividers_le = [462, 492, 522, 553, 584, 614, 645, 675, 706, 736]
+        self._draw_comb_digits(
             draw,
-            c.get("ik_leistungserbringer", DEFAULT_MUSTER13_BOXES["ik_leistungserbringer"]),
-            ik_le,
-            font=font_reg,
+            dividers_le,
+            y=1174,
+            h=38,
+            text=ik_le,
+            font=font_bold,
             fill=ink_color,
         )
 
-        if "arztstempel" in c:
-            self._draw_text_in_box(
-                draw,
-                c["arztstempel"],
-                "Praxis Dr. med. Musterarzt\nFacharzt für Allgemeinmedizin",
-                font=font_small,
-                fill=(20, 20, 100),
-            )
+        # Arztstempel zentriert in den oberen 60% des Feldes
+        # Arztunterschrift zentriert in den unteren 40% des Feldes (in Handschrift-Schriftart)
+        box_arzt = c.get("arztstempel", DEFAULT_MUSTER13_BOXES["arztstempel"])
+        bx, by, bw, bh = box_arzt
+        h_stamp = int(bh * 0.60)
+        h_sig = bh - h_stamp
+        box_stamp = (bx, by, bw, h_stamp)
+        box_sig = (bx, by + h_stamp, bw, h_sig)
 
-        if "arztunterschrift" in c:
-            self._draw_text_in_box(
-                draw,
-                c["arztunterschrift"],
-                "Dr. Musterarzt",
-                font=font_reg,
-                fill=(10, 10, 80),
-            )
+        bsnr = str(beleg.get("bsnr", "")).strip()
+        lanr = str(beleg.get("lanr", "")).strip()
+        meta_stamp = f"BSNR: {bsnr} • LANR: {lanr}" if (bsnr or lanr) else "Musterstadt"
+        stamp_text = f"Praxis Dr. med. Musterarzt\nFacharzt für Allgemeinmedizin\n{meta_stamp}"
+        font_stamp = self._get_stamp_font(13)
+        self._draw_text_in_box(
+            draw,
+            box_stamp,
+            stamp_text,
+            font=font_stamp,
+            fill=(20, 30, 110),
+            align_h="center",
+        )
+
+        font_hand = self._get_handwriting_font(22)
+        self._draw_text_in_box(
+            draw,
+            box_sig,
+            "Dr. Musterarzt",
+            font=font_hand,
+            fill=(10, 20, 90),
+            align_h="center",
+        )
 
         return base_img
 
     def _render_back_side(
         self, beleg: Dict[str, Any], font_reg, font_bold, font_small
     ) -> Image.Image:
-        """Rendert die Rückseite des Muster 13 Verordnungsblatts (Abrechnung & Bestätigung)."""
+        """Rendert die Rückseite des Muster 13 Verordnungsblatts (Behandlungsbestätigung & Abrechnungsdaten)."""
         if os.path.exists(self.path_back_asset):
             base_img = Image.open(self.path_back_asset).convert("RGB")
         else:
@@ -989,78 +1126,172 @@ class Muster13PreviewFrame(ttk.Frame):
         draw = ImageDraw.Draw(base_img)
         ink_color = (5, 20, 90)
 
-        # Behandlungsbestätigungs-Tabelle (y = 203, 236, 269, 302, 334, 368...)
+        # 1. Behandlungsbestätigungs-Tabelle (20 Zeilen, y=203, 236, 269... bis y=830)
+        # Spalten laut Vordruck:
+        # Col 1 (Datum): x=235, w=143
+        # Col 2 (Maßnahmen / erhaltene Heilmittel): x=379, w=327
+        # Col 3 (Leistungserbringer): x=708, w=136
+        # Col 4 (Unterschrift des Versicherten): x=846, w=196
         positions = beleg.get("positions", [])
-        nachname = beleg.get("nachname", "Versicherter")
-        vorname = beleg.get("vorname", "")
-        patient_label = f"{nachname}, {vorname}".strip(", ")
+        nachname = str(beleg.get("nachname", "Versicherter")).strip()
+        vorname = str(beleg.get("vorname", "")).strip()
+        patient_sig = f"{vorname[0]}. {nachname}" if vorname else nachname
+        if not patient_sig:
+            patient_sig = "M. Mustermann"
 
-        row_y_list = [203, 236, 269, 302, 334, 368, 400, 433, 466, 499, 532, 565, 598, 630, 664, 696]
-        row_height = 32
+        code_labels = {
+            "20501": "Krankengymnastik (Einzelbehandlung)",
+            "29901": "Wärmetherapie / Fango",
+            "54001": "Motorisch-funktionelle Behandlung",
+            "40101": "Sprachtherapie (Einzelbehandlung 45 Min)",
+            "59702": "Ergotherapeutische Schienenbehandlung",
+        }
+
+        font_hand_patient = self._get_handwriting_font(18)
+
+        row_y_start = 170
+        row_height = 33
+        max_rows = 20
         row_idx = 0
 
         for pos in positions:
-            datum_raw = str(pos.get("datum", ""))
-            datum_fmt = format_date_german(datum_raw)
-            code = str(pos.get("code", ""))
+            code = str(pos.get("code", "")).strip()
+            label = code_labels.get(code, f"Heilmittel Pos. {code}" if code else f"Behandlung ({pos.get('tag', 'EHE')})")
             anzahl = int(pos.get("anzahl", 1))
+            raw_datum = str(pos.get("datum", "")).strip()
+            datum_base = format_date_german(raw_datum) if raw_datum else ""
 
-            for _ in range(min(anzahl, 6)):
-                if row_idx >= len(row_y_list):
+            parsed_dt = None
+            if len(raw_datum) == 8 and raw_datum.isdigit():
+                try:
+                    parsed_dt = datetime.strptime(raw_datum, "%Y%m%d")
+                except Exception:
+                    parsed_dt = None
+
+            for i_sess in range(anzahl):
+                if row_idx >= max_rows:
                     break
-                y_r = row_y_list[row_idx]
+                y_r = row_y_start + row_idx * row_height
+
+                if parsed_dt:
+                    # 2-3 Tage Abstand zwischen Behandlungsterminen
+                    sess_dt = parsed_dt + timedelta(days=i_sess * 3 + (1 if i_sess % 2 == 1 else 0))
+                    cur_date = sess_dt.strftime("%d.%m.%Y")
+                else:
+                    cur_date = datum_base or format_date_german(str(beleg.get("verordnungsdatum", "")))
+
+                # 1. Datum zentriert
                 self._draw_text_in_box(
-                    draw, (270, y_r, 110, row_height), datum_fmt or "-", font=font_reg, fill=ink_color
+                    draw,
+                    (235, y_r, 143, row_height),
+                    cur_date or "-",
+                    font=font_reg,
+                    fill=ink_color,
+                    align_h="center",
                 )
+
+                # 2. Maßnahmen: Titel der Behandlung, angepasst & zentriert
+                self._draw_fitted_text(
+                    base_img,
+                    (379, y_r, 327, row_height),
+                    label,
+                    font=font_reg,
+                    fill=ink_color,
+                    align_h="center",
+                )
+
+                # 3. Leistungserbringer zentriert (Kürzel des Therapeuten)
                 self._draw_text_in_box(
-                    draw, (390, y_r, 120, row_height), code or "-", font=font_reg, fill=ink_color
+                    draw,
+                    (708, y_r, 136, row_height),
+                    "TH",
+                    font=font_reg,
+                    fill=ink_color,
+                    align_h="center",
                 )
+
+                # 4. Unterschrift des Versicherten in Handschrift-Font zentriert
                 self._draw_text_in_box(
-                    draw, (520, y_r, 450, row_height), patient_label[:22], font=font_small, fill=ink_color
+                    draw,
+                    (846, y_r, 196, row_height),
+                    patient_sig,
+                    font=font_hand_patient,
+                    fill=(10, 20, 80),
+                    align_h="center",
                 )
+
                 row_idx += 1
 
-        # Abrechnungstabelle unten (y=935, 968, 1001...)
-        y_abr = 935
-        row_h_abr = 33
-        for pos in positions[:5]:
-            code = str(pos.get("code", ""))
-            anz = f"{pos.get('anzahl', 0.0):g}"
-            einzel = f"{pos.get('einzelbetrag', 0.0):.2f}".replace(".", ",")
-            gesamt = f"{pos.get('gesamtbetrag', 0.0):.2f}".replace(".", ",")
-            zuz = f"{pos.get('zuzahlung', 0.0):.2f}".replace(".", ",")
+        # 2. Abrechnungsdaten des Heilmittelerbringers (unterer Block)
+        # Rechnungsnummer (18 Kästchen bei y=907, h=38)
+        rechnungsnr = str(beleg.get("rechnungsnummer", "")).strip()
+        if rechnungsnr:
+            dividers_rech = [234, 264, 295, 325, 356, 386, 417, 448, 478, 509, 539, 570, 601, 631, 661, 692, 723, 753, 784]
+            self._draw_comb_digits(
+                draw,
+                dividers_rech,
+                y=907,
+                h=38,
+                text=rechnungsnr,
+                font=font_bold,
+                fill=ink_color,
+            )
 
-            self._draw_text_in_box(
-                draw, (270, y_abr, 200, row_h_abr), code or "-", font=font_reg, fill=ink_color
+        # IK des Leistungserbringers (9 Kästchen bei y=958, h=38)
+        ik_le = str(beleg.get("leistungserbringer_ik") or beleg.get("ik_leistungserbringer", beleg.get("ik", ""))).strip()
+        if ik_le:
+            dividers_ik_back = [234, 264, 295, 325, 356, 386, 417, 448, 478, 509]
+            self._draw_comb_digits(
+                draw,
+                dividers_ik_back,
+                y=958,
+                h=38,
+                text=ik_le,
+                font=font_bold,
+                fill=ink_color,
             )
-            self._draw_text_in_box(
-                draw, (480, y_abr, 110, row_h_abr), anz, font=font_reg, fill=ink_color
-            )
-            self._draw_text_in_box(
-                draw, (600, y_abr, 140, row_h_abr), einzel + " €", font=font_reg, fill=ink_color
-            )
-            self._draw_text_in_box(
-                draw, (750, y_abr, 140, row_h_abr), gesamt + " €", font=font_reg, fill=ink_color
-            )
-            self._draw_text_in_box(
-                draw, (900, y_abr, 140, row_h_abr), zuz + " €", font=font_reg, fill=ink_color
-            )
-            y_abr += row_h_abr
 
-        # Summenblock unten (y=1185)
-        brutto = float(beleg.get("brutto", 0.0))
-        tot_zuz = float(beleg.get("total_zuzahlung", 0.0))
-        netto = round(brutto - tot_zuz, 2)
-        sum_h = 40
+        # Belegnummer (10 Kästchen bei y=958, h=38)
+        belegnr = str(beleg.get("belegnr", "")).strip()
+        if belegnr:
+            dividers_beleg = [539, 570, 601, 631, 661, 692, 723, 753, 784, 814, 845]
+            self._draw_comb_digits(
+                draw,
+                dividers_beleg,
+                y=958,
+                h=38,
+                text=belegnr,
+                font=font_bold,
+                fill=ink_color,
+            )
 
-        self._draw_text_in_box(
-            draw, (300, 1185, 250, sum_h), f"{brutto:.2f} €".replace(".", ","), font=font_bold, fill=ink_color
+        # Stempel/Unterschrift des Leistungserbringers (Rechte Box bei x=746, y=1021, w=297, h=191)
+        stamp_le_box = (746, 1021, 297, 114)
+        sig_le_box = (746, 1135, 297, 75)
+
+        therapie_praxis = (
+            f"Physiotherapie & Heilmittelpraxis\nZugelassene Praxis für Heilmittel\nIK: {ik_le}"
+            if ik_le
+            else "Physiotherapie & Heilmittelpraxis\nZugelassene Praxis für Heilmittel"
         )
+        font_stamp_le = self._get_stamp_font(13)
         self._draw_text_in_box(
-            draw, (600, 1185, 250, sum_h), f"{tot_zuz:.2f} €".replace(".", ","), font=font_bold, fill=ink_color
+            draw,
+            stamp_le_box,
+            therapie_praxis,
+            font=font_stamp_le,
+            fill=(20, 30, 110),
+            align_h="center",
         )
+
+        font_sig_le = self._get_handwriting_font(20)
         self._draw_text_in_box(
-            draw, (880, 1185, 250, sum_h), f"{netto:.2f} €".replace(".", ","), font=font_bold, fill=ink_color
+            draw,
+            sig_le_box,
+            "Therapeut / Praxisleitung",
+            font=font_sig_le,
+            fill=(10, 20, 90),
+            align_h="center",
         )
 
         return base_img

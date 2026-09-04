@@ -322,4 +322,115 @@ def test_muster13_export_prescription(tk_root, tmp_path):
         assert os.path.getsize(back_png) > 1000
 
 
+def test_muster13_draw_comb_digits():
+    from PIL import Image, ImageDraw
+    img = Image.new("RGB", (300, 100))
+    draw = ImageDraw.Draw(img)
+    font, _, _ = Muster13PreviewFrame._get_fonts(Muster13PreviewFrame)
+
+    drawn_boxes = []
+    orig_draw_box = Muster13PreviewFrame._draw_text_in_box
+
+    def mock_draw(d, box, txt, *args, **kwargs):
+        drawn_boxes.append((box, txt))
+        return orig_draw_box(d, box, txt, *args, **kwargs)
+
+    with patch.object(Muster13PreviewFrame, "_draw_text_in_box", side_effect=mock_draw):
+        dividers = [100, 130, 160, 190, 220]
+        Muster13PreviewFrame._draw_comb_digits(draw, dividers, y=20, h=35, text="1042", font=font)
+
+    assert len(drawn_boxes) == 4
+    assert drawn_boxes[0] == ((100, 20, 30, 35), "1")
+    assert drawn_boxes[1] == ((130, 20, 30, 35), "0")
+    assert drawn_boxes[2] == ((160, 20, 30, 35), "4")
+    assert drawn_boxes[3] == ((190, 20, 30, 35), "2")
+
+
+def test_muster13_draw_fitted_text():
+    from PIL import Image
+    img = Image.new("RGB", (400, 100), color=(255, 255, 255))
+    font, _, _ = Muster13PreviewFrame._get_fonts(Muster13PreviewFrame)
+
+    # 1. Short text fitting directly
+    box_normal = (50, 20, 300, 30)
+    Muster13PreviewFrame._draw_fitted_text(img, box_normal, "Kurzer Text", font=font)
+
+    # 2. Overlong text fitting with scaling
+    box_narrow = (50, 50, 150, 30)
+    overlong_text = "Sprachtherapie (Einzelbehandlung 45 Min)"
+    Muster13PreviewFrame._draw_fitted_text(img, box_narrow, overlong_text, font=font)
+    # Ensure no crash and valid pixel buffer
+    assert img.size == (400, 100)
+
+
+def test_muster13_doctor_stamp_and_signature_layout(tk_root):
+    frame = Muster13PreviewFrame(tk_root)
+    beleg = {
+        "belegnr": "5005",
+        "bsnr": "123456789",
+        "lanr": "987654321",
+        "positions": [],
+    }
+
+    boxes_called = []
+    orig_draw = frame._draw_text_in_box
+
+    def intercept(draw, box, text, *args, **kwargs):
+        boxes_called.append((box, text))
+        return orig_draw(draw, box, text, *args, **kwargs)
+
+    frame._draw_text_in_box = intercept
+    font_reg, font_bold, font_small = frame._get_fonts()
+    frame._render_front_side(beleg, font_reg, font_bold, font_small)
+
+    # Find stamp and signature in called boxes
+    stamp_entries = [b for b in boxes_called if "Dr. med. Musterarzt" in b[1]]
+    sig_entries = [b for b in boxes_called if b[1] == "Dr. Musterarzt"]
+
+    assert len(stamp_entries) >= 1
+    assert len(sig_entries) >= 1
+
+    stamp_box = stamp_entries[0][0]
+    sig_box = sig_entries[0][0]
+
+    # Check that stamp is on top and signature is below it
+    assert stamp_box[1] < sig_box[1]
+    # Check 60% / 40% height ratio roughly
+    total_h = stamp_box[3] + sig_box[3]
+    assert abs(stamp_box[3] / total_h - 0.60) < 0.05
+    assert abs(sig_box[3] / total_h - 0.40) < 0.05
+
+
+def test_muster13_back_side_fitted_table_rendering(tk_root):
+    frame = Muster13PreviewFrame(tk_root)
+    beleg = {
+        "belegnr": "6006",
+        "rechnungsnummer": "RE12345",
+        "leistungserbringer_ik": "104212505",
+        "positions": [
+            {"code": "20501", "anzahl": 2, "datum": "20251002"}
+        ],
+    }
+
+    fitted_calls = []
+    orig_fitted = frame._draw_fitted_text
+
+    def intercept_fitted(target_img, box, text, *args, **kwargs):
+        fitted_calls.append((box, text))
+        return orig_fitted(target_img, box, text, *args, **kwargs)
+
+    frame._draw_fitted_text = intercept_fitted
+    font_reg, font_bold, font_small = frame._get_fonts()
+    img_back = frame._render_back_side(beleg, font_reg, font_bold, font_small)
+
+    assert img_back is not None
+    assert len(fitted_calls) == 2  # 2 treatment sessions
+    # Treatment title rendered into column 2
+    for box, text in fitted_calls:
+        assert box[0] == 379  # Col 2 x-coord
+        assert box[2] == 327  # Col 2 width
+        assert "Krankengymnastik" in text
+
+
+
 
