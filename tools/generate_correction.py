@@ -115,10 +115,15 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
     in_inv = False
     current_beleg: Dict[str, Any] = {}
 
+    global_ik = ""
     for raw_seg in raw_segments:
         tag, fields = parse_segment_fields(raw_seg)
-
-        if tag == "INV":
+        if tag in ["UNB", "URI"] and fields:
+            if tag == "UNB" and len(fields) > 2 and fields[2]:
+                global_ik = str(fields[2])
+            elif tag == "URI" and len(fields) > 0 and fields[0]:
+                global_ik = str(fields[0])
+        elif tag == "INV":
             if in_inv and current_beleg:
                 belege.append(current_beleg)
             in_inv = True
@@ -132,6 +137,14 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 "nachname": "",
                 "vorname": "",
                 "geburtstag": "",
+                "ik": global_ik,
+                "bsnr": "",
+                "lanr": "",
+                "verordnungsdatum": "",
+                "verordnungsart": "",
+                "diagnosegruppe": "",
+                "icd10": "",
+                "leitsymptomatik": "",
                 "tarifkennzeichen": "",
                 "zuzahlungskennzeichen": "2",
                 "brutto": 0.0,
@@ -154,11 +167,24 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                     current_beleg["geburtstag"] = str(fields[2])
 
             elif tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
-                if tag == "ZHE":
-                    if len(fields) > 3 and fields[3]:
-                        current_beleg["zuzahlungskennzeichen"] = str(fields[3])
-                    if len(fields) > 4 and fields[4]:
-                        current_beleg["diagnosegruppe"] = str(fields[4])
+                if len(fields) > 0 and fields[0]:
+                    current_beleg["bsnr"] = str(fields[0])
+                if len(fields) > 1 and fields[1]:
+                    current_beleg["lanr"] = str(fields[1])
+                if len(fields) > 2 and fields[2]:
+                    current_beleg["verordnungsdatum"] = str(fields[2])
+                if len(fields) > 3 and fields[3]:
+                    current_beleg["zuzahlungskennzeichen"] = str(fields[3])
+                if len(fields) > 4 and fields[4]:
+                    current_beleg["diagnosegruppe"] = str(fields[4])
+                if len(fields) > 5 and fields[5]:
+                    current_beleg["verordnungsart"] = str(fields[5])
+                if len(fields) > 12 and fields[12]:
+                    current_beleg["leitsymptomatik"] = str(fields[12])
+
+            elif tag == "DIA":
+                if len(fields) > 0 and fields[0]:
+                    current_beleg["icd10"] = str(fields[0])
 
             elif tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
                 anzahl = 0.0
