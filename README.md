@@ -156,8 +156,23 @@ python tools/generate_auf.py path/to/ESOL_FILE
 #### E. UTF-8 zu ISO-8859-15 konvertieren
 
 ```bash
-python tools/convert_utf8_to_iso.py path/to/ESOL_FILE
+# Ersetzt die Datei an ihrem Platz — der Dateiname bleibt unverändert
+python tools/convert_utf8_to_iso.py path/to/ESOL0253
+
+# Ganzen Ordner konvertieren (alle Dateien werden ersetzt)
+python tools/convert_utf8_to_iso.py path/to/ordner
+
+# Kopien in einen anderen Ordner schreiben, Dateinamen bleiben gleich
+python tools/convert_utf8_to_iso.py path/to/ESOL0253 --out-dir konvertiert/
 ```
+
+> **Der Dateiname wird nie verändert.** ESOL-Dateien tragen bewusst keine Endung
+> (`ESOL0253`), und der Name gehört zur Einreichung — eine angehängte Endung würde
+> die Datei beim Abrechnungszentrum unbrauchbar machen. Zeigt das Ziel auf die
+> Quelle (das ist der Standard, und auch was die GUI tut), wird die Datei ersetzt.
+> Geschrieben wird über eine temporäre Datei und ein atomares Umbenennen, damit ein
+> Abbruch das Original nicht halb überschrieben zurücklässt.
+> `--inplace` ist dadurch wirkungslos und nur noch aus Kompatibilität vorhanden.
 
 ---
 
@@ -172,8 +187,21 @@ python -m pytest
 Output:
 
 ```bash
-============================= 90 passed ==============================
+============================= 78 passed ==============================
 ```
+
+Die Testsuite darf keine modalen Dialoge öffnen — eine `autouse`-Fixture in
+`tests/conftest.py` ersetzt alle `messagebox`-, `filedialog`- und
+`simpledialog`-Funktionen durch nicht blockierende Stubs und protokolliert die
+Aufrufe. Ein Test kann das Protokoll auswerten:
+
+```python
+def test_x(dialog_protokoll):
+    ...
+    assert dialog_protokoll.wurde_aufgerufen("showinfo")
+```
+
+Braucht ein Test wirklich echte Dialoge, hebt `@pytest.mark.echte_dialoge` das auf.
 
 ---
 
@@ -207,7 +235,7 @@ py-esol/
 │   ├── convert_utf8_to_iso.py    # UTF-8 -> ISO-8859-15 Konverter
 │   ├── generate_auf.py           # Generierung von .auf Auftragsdateien
 │   └── generate_correction.py    # Generator für VKZ 02, 03, 04, 10
-└── tests/                        # Pytest Test-Suite (44 Tests)
+└── tests/                       # Pytest Test-Suite
 ```
 
 ---

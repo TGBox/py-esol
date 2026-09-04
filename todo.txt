@@ -116,3 +116,23 @@ OFFEN dazu:
 * Bezeichnungen in data/codelisten.json nachtragen (Verordnungsart 01-20/99, Diagnosegruppen,
   Therapiefrequenz, Heilmittel-Bereich 1-5, Positionsnummern je Abrechnungscode).
 * Optional: Verordnungsdatum / Diagnosegruppe als Spalte + Filter im Beleg-Dashboard.
+
+
+**7. Fehlerkorrekturen aus dem Praxisbetrieb** [ERLEDIGT]
+
+* **URI-Belegnummer:** Die ursprüngliche Belegnummer im URI-Segment wird nicht mehr um
+  führende Nullen gekürzt (Rückmeldung der Abrechnungszentren). Aus
+  URI+...+20260605+71 wurde wieder URI+...+20260605+00071. Die Einzel-Rechnungsnummer
+  im Composite bleibt gekürzt — sie ist fachlich eine Rechnungs-, keine Belegnummer
+  und laut Schema auf 6 Zeichen begrenzt.
+* **Konverter-Dateiname:** UTF-8 -> ISO-8859-15 hängt kein ".iso" mehr an. Die Datei wird
+  an ihrem Platz ersetzt, der Name bleibt unverändert. Geschrieben wird atomar
+  (temporäre Datei + os.replace), damit ein Abbruch das Original nicht beschädigt.
+  --inplace ist damit wirkungslos, bleibt aber akzeptiert.
+* **Blockierender Dialog in der Testsuite:** _copy_ticket_summary zeigt eine
+  messagebox, die den Testlauf anhielt, bis jemand klickte. Neue autouse-Fixture in
+  tests/conftest.py ersetzt alle tkinter-Dialoge durch nicht blockierende Stubs und
+  protokolliert sie (dialog_protokoll). Verhindert die ganze Fehlerklasse, nicht nur
+  diesen einen Fall — wichtig für den CI-Lauf.
+* **GitHub Actions:** .github/workflows/tests.yml führt die Suite bei jedem Push auf
+  windows-latest mit uv aus (Python 3.14 aus uv.lock).

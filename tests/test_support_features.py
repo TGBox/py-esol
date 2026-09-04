@@ -219,7 +219,7 @@ def test_gui_support_components():
         root.destroy()
 
 
-def test_main_gui_support_notebook_integration(tmp_path: Path):
+def test_main_gui_support_notebook_integration(tmp_path: Path, dialog_protokoll):
     try:
         app = main.EsolValidatorGUI()
         app.withdraw()
@@ -261,6 +261,10 @@ def test_main_gui_support_notebook_integration(tmp_path: Path):
             args = mock_clip.call_args[0][0]
             assert "SUPPORT-TICKET BERICHT" in args
             assert "Muster, Max" in args
+
+        # Die Erfolgsmeldung ist gewolltes Verhalten, darf den Testlauf aber
+        # nicht blockieren — die conftest-Fixture fängt sie ab.
+        assert dialog_protokoll.wurde_aufgerufen("showinfo")
 
     finally:
         app.destroy()
