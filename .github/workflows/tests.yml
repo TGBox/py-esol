@@ -1,0 +1,43 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    name: pytest (Windows, Python 3.14)
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    env:
+      PYTHONIOENCODING: utf-8
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v7
+
+      - name: uv einrichten
+        uses: astral-sh/setup-uv@v9
+        with:
+          enable-cache: true
+
+      - name: Python 3.14 und Abhängigkeiten aus uv.lock installieren
+        run: uv sync --locked
+
+      - name: Tests ausführen
+        run: uv run pytest -v --junitxml=pytest-report.xml
+
+      - name: Testbericht als Artefakt ablegen
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pytest-report
+          path: pytest-report.xml
+          if-no-files-found: warn
