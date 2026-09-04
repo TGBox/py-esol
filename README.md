@@ -19,10 +19,31 @@ Es unterstützt Leistungserbringer im Heilmittelbereich (Physiotherapie, Ergothe
   * **VKZ 04 (Korrekturrechnung)**: Neuberechnung/Korrektur abgesetzter Rechnungsbelege.
   * **VKZ 10 (Wiederaufnahme Blankoverordnung § 125a SGB V)**: Abrechnung nach Unterbrechung bei Blankoverordnungen.
   * **Interaktive Belegauswahl**: Gezielte Auswahl einzelner Belege per Checkbox-Dialog in der GUI mit automatischer Neuberechnung aller `GES`-Gesamtsummen.
+  * **Bearbeitbare Vorschau**: Im Tab *Vorschau & EDIFACT-Diff* steht rechts die
+    vollständige Korrekturdatei — und die lässt sich direkt dort von Hand
+    nachbearbeiten. Vor dem Speichern läuft die bearbeitete Fassung durch die
+    4-stufige Validierung; Fehler verhindern das Speichern.
 * **📄 Auftragsdatei-Generator (`.auf`)**:
   * Automatische Erstellung von EDIFACT-Begleitdateien (`50000001...`) für die physikalische Datenübertragung.
 * **🔄 UTF-8 ➔ ISO-8859-15 Konverter**:
   * Stapelkonvertierung fehlerhaft kodierter Dateien in den geforderten ISO-8859-15 EDIFACT-Standard.
+* **📋 Verordnungs-Ansicht (Support & Hotline)**:
+  * **Virtuelles Muster 13/18**: Eigene Box „Verordnung / verordnender Arzt" mit Verordnungsdatum,
+    BSNR/LANR, Verordnungsart, Diagnosegruppe, dekodierter Leitsymptomatik (Stellen a/b/c/X),
+    Therapiefrequenz, Therapiebericht, Hausbesuch, Dringlichkeit, Verordnungsbesonderheiten,
+    ICD-10-Diagnosen (`DIA`), Genehmigung (`SKZ`) und Ursprungsrechnung (`URI`) — alle
+    17 `ZHE`-Felder statt bisher nur dem Zuzahlungskennzeichen.
+  * **Behandlungsverlauf statt Positionsflut**: Gleiche Leistungen werden zu Leistungsgruppen
+    zusammengefasst (Anzahl Termine, Zeitraum von–bis, Summen); die Einzeltermine bleiben
+    aufklappbar. Aus 54 `EHE`-Zeilen werden 4 lesbare Gruppen.
+  * **Plausibilitätshinweise**: Behandlung vor Verordnungsdatum, fehlende Pflichtfelder,
+    fehlendes `DIA`, Zuzahlungs-Widersprüche, fehlende individuelle Leitsymptomatik.
+  * **Rezept-Baum**: `UNB → Nachricht → Verordnung/Beleg → Verordnungsdaten / Diagnosen /
+    Leistungen / Belegsumme`, jedes Feld mit Namen aus der `SchemaRegistry`; Filter durchsucht
+    den gesamten Baum inklusive Unterknoten.
+  * **Editierbare Klartexte**: `data/codelisten.json` (Verordnungsart, Diagnosegruppe,
+    Positionsnummern, …). Codes ohne Eintrag werden ausdrücklich als
+    *„kein Klartext hinterlegt"* angezeigt — es wird nie ein Text geraten.
 * **🖥️ Grafische Benutzeroberfläche (Tkinter GUI)**:
   * Moderne Desktop-Oberfläche zur einfachen Bedienung ohne Kommandozeilenkenntnisse.
 
@@ -70,6 +91,58 @@ Oder Verwenden der vorkompilierten Binärdatei `dist/pyesol.exe`.
 * **`🔄 UTF-8 ➔ ISO`**: Konvertiert ausgewählte Dateien zu ISO-8859-15.
 * **`📄 .auf erstellen`**: Erstellt passende `.auf`-Auftragsdateien.
 * **`🛠️ Korrektur / Zuzahlung`**: Öffnet den interaktiven Konfigurator zur Belegauswahl und VKZ-Generierung (02, 03, 04, 10).
+* **Tab `📜 Virtuelles Verordnungsblatt`**: Verordnung im Muster-13/18-Layout inklusive
+  Arzt-, Diagnose- und Leitsymptomatik-Daten sowie gruppiertem Behandlungsverlauf.
+* **Tab `📊 Beleg-Dashboard & Rezept-Baum`**: Belegtabelle mit Fehlerstatus und darunter der
+  Klartext-Baum der gesamten Datei.
+
+### Vorschau von Hand nachbearbeiten
+
+Im Korrektur-Editor zeigt der Tab **`🔍 Vorschau & EDIFACT-Diff`** links das Original
+und rechts die neue Fassung. Über den Schalter oben wählt man den Umfang:
+
+| Anzeige | Rechte Seite | Bearbeitbar |
+|---|---|---|
+| **Ganze Datei** (Standard) | die vollständige Korrekturdatei mit allen ausgewählten Belegen — genau das, was gespeichert wird | **ja** |
+| **Nur dieser Beleg** | nur der aktive Beleg, zum Vergleich mit links | nein |
+
+Sobald rechts getippt wird, gilt diese Fassung als maßgeblich: der Rahmen wechselt
+auf *HANDBEARBEITET* und die Statuszeile warnt, dass spätere Änderungen an
+Stammdaten oder Positionen darin **nicht** enthalten sind. `🔄 Neu generieren`
+verwirft die Handarbeit nach Rückfrage.
+
+Beim Generieren wird die bearbeitete Fassung geprüft, bevor sie geschrieben wird:
+
+* **Fehler** verhindern das Speichern. Die häufigste Ursache nach Handarbeit sind
+  abgeleitete Werte, die nicht mehr passen — der Segmentzähler im `UNT`, die Summen
+  im `GES` oder die Nachrichtenzahl im `UNZ`. Der Hinweistext nennt das ausdrücklich.
+* **Warnungen** werden angezeigt und lassen sich per Rückfrage durchlassen.
+* **Zeichen außerhalb von ISO-8859-15** werden mit Zeile und Spalte gemeldet.
+  Typische Ursache: Text aus Word oder Outlook eingefügt (typografische
+  Anführungszeichen, Gedankenstriche).
+
+`✓ Bearbeitete Fassung prüfen` führt dieselbe Prüfung aus, ohne zu speichern.
+
+### Klartexte pflegen
+
+Bezeichnungen zu Verordnungsart, Diagnosegruppe, Therapiefrequenz, Heilmittel-Bereich und
+Abrechnungspositionsnummern stehen in `data/codelisten.json`. Leere Einträge (`""`) sind
+absichtlich leer und erscheinen in der GUI als *„kein Klartext hinterlegt"*, damit in der
+Hotline kein geratener Text genannt wird. Nach dem Nachtragen genügt der Button
+**`🔄 Codelisten neu laden`** im Verordnungsblatt — kein Neustart nötig.
+
+Positionsnummern dürfen nach Abrechnungscode gestaffelt werden:
+
+```json
+"positionsnummern": {
+  "*":  { "59702": "Allgemeine Position" },
+  "26": { "54103": "Ergotherapeutische Einzelbehandlung" }
+}
+```
+
+Im gebauten `.exe` wird zuerst `data/codelisten.json` **neben der EXE** gesucht, danach die
+gebündelte Datei. Mit der Umgebungsvariablen `PY_ESOL_CODELISTEN` lässt sich ein beliebiger
+Pfad erzwingen.
 
 ---
 
@@ -114,14 +187,29 @@ python tools/generate_auf.py path/to/ESOL_FILE
 #### E. UTF-8 zu ISO-8859-15 konvertieren
 
 ```bash
-python tools/convert_utf8_to_iso.py path/to/ESOL_FILE
+# Ersetzt die Datei an ihrem Platz — der Dateiname bleibt unverändert
+python tools/convert_utf8_to_iso.py path/to/ESOL0253
+
+# Ganzen Ordner konvertieren (alle Dateien werden ersetzt)
+python tools/convert_utf8_to_iso.py path/to/ordner
+
+# Kopien in einen anderen Ordner schreiben, Dateinamen bleiben gleich
+python tools/convert_utf8_to_iso.py path/to/ESOL0253 --out-dir konvertiert/
 ```
+
+> **Der Dateiname wird nie verändert.** ESOL-Dateien tragen bewusst keine Endung
+> (`ESOL0253`), und der Name gehört zur Einreichung — eine angehängte Endung würde
+> die Datei beim Abrechnungszentrum unbrauchbar machen. Zeigt das Ziel auf die
+> Quelle (das ist der Standard, und auch was die GUI tut), wird die Datei ersetzt.
+> Geschrieben wird über eine temporäre Datei und ein atomares Umbenennen, damit ein
+> Abbruch das Original nicht halb überschrieben zurücklässt.
+> `--inplace` ist dadurch wirkungslos und nur noch aus Kompatibilität vorhanden.
 
 ---
 
 ## 🧪 Tests ausführen
 
-Das Projekt verfügt über ein umfassendes `pytest`-Testpaket mit 44 Unit-Tests:
+Das Projekt verfügt über ein umfassendes `pytest`-Testpaket:
 
 ```bash
 python -m pytest
@@ -130,8 +218,21 @@ python -m pytest
 Output:
 
 ```bash
-============================= 44 passed in 0.19s ==============================
+============================= 99 passed ==============================
 ```
+
+Die Testsuite darf keine modalen Dialoge öffnen — eine `autouse`-Fixture in
+`tests/conftest.py` ersetzt alle `messagebox`-, `filedialog`- und
+`simpledialog`-Funktionen durch nicht blockierende Stubs und protokolliert die
+Aufrufe. Ein Test kann das Protokoll auswerten:
+
+```python
+def test_x(dialog_protokoll):
+    ...
+    assert dialog_protokoll.wurde_aufgerufen("showinfo")
+```
+
+Braucht ein Test wirklich echte Dialoge, hebt `@pytest.mark.echte_dialoge` das auf.
 
 ---
 
@@ -140,9 +241,17 @@ Output:
 ```txt
 py-esol/
 ├── esol_validator.py             # Hauptklasse EsolValidator
+├── verordnung.py                 # Verordnungs-Auswertung (ZHE/DIA/SKZ, Positionsgruppen)
+├── codelisten.py                 # Loader für die editierbaren Klartext-Tabellen
+├── data/
+│   └── codelisten.json           # Editierbare Klartexte (Verordnungsart, Positionsnummern, …)
 ├── validate.py                   # CLI-Validator für Einzeldateien
 ├── batch_validate.py             # CLI-Batch-Validator für Ordner
-├── main.py                        # Hauptfenster der Tkinter GUI
+├── main.py                       # Hauptfenster der Tkinter GUI
+├── gui_muster13_preview.py       # Virtuelles Verordnungsblatt (Muster 13/18)
+├── gui_recipe_tree.py            # Klartext-Rezept-Baum
+├── gui_beleg_dashboard.py        # Beleg-Dashboard mit KPI-Kacheln
+├── support_helper.py             # Fehlerübersetzung, Ticket-/HTML-Bericht, Baumaufbau
 ├── gui_correction_dialog.py      # Interaktiver Korrektur- & Belegauswahl-Dialog
 ├── pyesol.spec                   # PyInstaller Build-Spezifikation
 ├── parser/
@@ -157,8 +266,74 @@ py-esol/
 │   ├── convert_utf8_to_iso.py    # UTF-8 -> ISO-8859-15 Konverter
 │   ├── generate_auf.py           # Generierung von .auf Auftragsdateien
 │   └── generate_correction.py    # Generator für VKZ 02, 03, 04, 10
-└── tests/                        # Pytest Test-Suite (44 Tests)
+└── tests/                       # Pytest Test-Suite
 ```
+
+---
+
+## 📦 Standalone-EXE erzeugen & weitergeben
+
+Die EXE braucht auf dem Zielrechner **kein Python und keine IDE** — eine einzelne
+Datei, Doppelklick, fertig.
+
+### Lokal bauen
+
+```bash
+uv sync
+uv run pyinstaller py-esol.spec --noconfirm --clean
+```
+
+Ergebnis: `dist/py-esol.exe` (~21 MB). Maßgeblich ist **`py-esol.spec`** — die
+übrigen `.spec`-Dateien (`main.spec`, `pyesol.spec`, `ESOL-Validator.spec`) sind
+Altlasten ohne die nötigen `datas`-Einträge und können gelöscht werden.
+
+### Automatisch bei jedem Push auf `main`
+
+`.github/workflows/tests.yml` enthält dafür den Job **`exe`**. Er läuft nur auf
+`main` und nur, wenn die Tests grün sind — es soll nie eine EXE herausgehen, die
+eine kaputte Testsuite hinter sich hat. Nach dem Build validiert der Workflow
+`tests/fixtures/valid_esol_smoke` mit der frisch gebauten EXE. Fehlt ein Modul im
+Bundle, fällt es dort auf und nicht erst beim Mitarbeiter.
+
+GitHub Actions läuft in der Cloud und kann **nicht** in den lokalen Projektordner
+schreiben. Die EXE hängt als Artefakt am Lauf und wird abgeholt:
+
+```bat
+hole-exe.cmd
+```
+
+Das Skript sucht den letzten erfolgreichen `main`-Lauf und lädt die EXE nach
+`dist\py-esol.exe`. Voraussetzung ist die GitHub CLI, einmalig eingerichtet:
+
+```bash
+winget install --id GitHub.cli
+gh auth login
+```
+
+Ohne CLI geht es auch im Browser: *Repo → Actions → letzter CI-Lauf auf `main` →
+Artifacts → `py-esol-exe`*.
+
+### Weitergabe an Mitarbeiter
+
+* **SmartScreen:** Beim ersten Start warnt Windows bei nicht signierten
+  Programmen („Der Computer wurde geschützt"). *Weitere Informationen →
+  Trotzdem ausführen*. Das verschwindet erst mit einem Code-Signing-Zertifikat.
+* **Startzeit:** Eine One-File-EXE entpackt sich bei jedem Start in ein
+  Temp-Verzeichnis — die ersten paar Sekunden tut sich nichts. Das ist normal.
+* **Klartexte anpassen:** Wer `data/codelisten.json` **neben** die EXE legt, hat
+  Vorrang vor der eingebauten Fassung. So lassen sich Bezeichnungen beim Kunden
+  pflegen, ohne neu zu bauen.
+* **Artefakte verfallen nach 90 Tagen.** Für dauerhafte Links an Dritte ist ein
+  GitHub Release die bessere Wahl.
+
+### Warum die EXE die Werkzeuge findet
+
+Die GUI startet Validierung, Konvertierung, `.auf`- und Korrektur-Generierung als
+eigenen Prozess über `[sys.executable, <skriptpfad>, ...]`. Im gefrorenen Zustand
+ist `sys.executable` die EXE selbst; der Dispatcher am Ende von `main.py` wertet
+`sys.argv[1]` aus und ruft das passende **eingebettete** Modul auf. Die
+`.py`-Dateien müssen deshalb nicht mitgeliefert werden — der Pfad dient nur als
+Wegweiser. Wer diesen Dispatcher umbaut, macht die EXE unbrauchbar.
 
 ---
 

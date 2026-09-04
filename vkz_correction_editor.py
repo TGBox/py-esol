@@ -5,7 +5,7 @@ import sys
 import tkinter as tk
 from pathlib import Path
 from tkinter import messagebox, ttk, simpledialog
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import theme_manager
 
@@ -14,10 +14,12 @@ project_root = Path(__file__).resolve().parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
+from esol_validator import EsolValidator
 from tools.generate_correction import (
     parse_esol_belege_summary,
     generate_correction_esol,
     generate_correction_file,
+    pruefe_iso_8859_15,
     read_esol_file_text,
     format_date_german,
     parse_date_to_iso,
@@ -222,6 +224,13 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         # Storage for user modifications per Beleg
         # belegnr -> {"tarifkennzeichen": str, "zuzahlungskennzeichen": str, "positions": list}
         self.modifications: Dict[str, Dict[str, Any]] = {}
+
+        # Von Hand bearbeitete Fassung der vollständigen Korrekturdatei.
+        # Ist sie gesetzt, wird SIE gespeichert und nicht neu generiert.
+        self.manual_content: Optional[str] = None
+        # Schutz gegen Selbstauslösung: während die Vorschau programmatisch
+        # gefüllt wird, darf das <<Modified>>-Ereignis nichts als Handarbeit werten.
+        self._filling_preview: bool = False
 
         self.active_belegnr: Optional[str] = self.belege[0]["belegnr"] if self.belege else None
 
@@ -467,32 +476,64 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         bar = ttk.Frame(self.tab_diff)
         bar.pack(fill="x", pady=(0, 5))
 
-        ttk.Button(bar, text="🔄 Vorschau & EDIFACT-Diff aktualisieren", command=self._update_diff_preview).pack(
-            side="left"
+        # --- Umfang der Anzeige --------------------------------------------
+        # "datei": rechts steht die vollständige Korrekturdatei — genau das, was
+        #          beim Generieren geschrieben wird, und daher bearbeitbar.
+        # "beleg":  rechts steht nur der aktive Beleg, zum Vergleich mit links.
+        #          Nicht bearbeitbar, weil eine Teilbearbeitung nicht sauber in
+        #          die Gesamtdatei zurückgeführt werden kann.
+        ttk.Label(bar, text="Anzeige:").pack(side="left", padx=(0, 5))
+        self.diff_scope = tk.StringVar(value="datei")
+        ttk.Radiobutton(
+            bar, text="Ganze Datei (bearbeitbar)", value="datei",
+            variable=self.diff_scope, command=self._on_diff_scope_changed,
+        ).pack(side="left")
+        ttk.Radiobutton(
+            bar, text="Nur dieser Beleg (Vergleich)", value="beleg",
+            variable=self.diff_scope, command=self._on_diff_scope_changed,
+        ).pack(side="left", padx=(5, 15))
+
+        self.btn_diff_regen = ttk.Button(
+            bar, text="🔄 Neu generieren", command=self._regenerate_diff_preview
         )
+        self.btn_diff_regen.pack(side="left", padx=2)
+
+        self.btn_diff_check = ttk.Button(
+            bar, text="✓ Bearbeitete Fassung prüfen", command=self._validate_manual_content
+        )
+        self.btn_diff_check.pack(side="left", padx=2)
+
+        # Statuszeile: sagt jederzeit, ob rechts eine generierte oder eine von
+        # Hand bearbeitete Fassung steht — und was davon gespeichert wird.
+        self.lbl_diff_status = ttk.Label(self.tab_diff, text="", font=("Segoe UI", 9), wraplength=1000,
+                                         justify="left")
+        self.lbl_diff_status.pack(fill="x", pady=(0, 5))
 
         paned = ttk.PanedWindow(self.tab_diff, orient="horizontal")
         paned.pack(fill="both", expand=True)
 
         # Original Segments Pane
-        orig_frame = ttk.LabelFrame(paned, text=" Original EDIFACT-Segmente ", padding=5)
-        paned.add(orig_frame, weight=1)
+        self.frame_orig = ttk.LabelFrame(paned, text=" Original ", padding=5)
+        paned.add(self.frame_orig, weight=1)
 
-        self.txt_orig = tk.Text(orig_frame, wrap="none", font=("Consolas", 9), width=50)
-        sb_orig = ttk.Scrollbar(orig_frame, orient="vertical", command=self.txt_orig.yview)
+        self.txt_orig = tk.Text(self.frame_orig, wrap="none", font=("Consolas", 9), width=50)
+        sb_orig = ttk.Scrollbar(self.frame_orig, orient="vertical", command=self.txt_orig.yview)
         self.txt_orig.configure(yscrollcommand=sb_orig.set)
         self.txt_orig.pack(side="left", fill="both", expand=True)
         sb_orig.pack(side="right", fill="y")
 
         # Modified Segments Pane
-        mod_frame = ttk.LabelFrame(paned, text=" Korrigierte EDIFACT-Segmente (Vorschau) ", padding=5)
-        paned.add(mod_frame, weight=1)
+        self.frame_mod = ttk.LabelFrame(paned, text=" Neue Fassung ", padding=5)
+        paned.add(self.frame_mod, weight=1)
 
-        self.txt_mod = tk.Text(mod_frame, wrap="none", font=("Consolas", 9), width=50)
-        sb_mod = ttk.Scrollbar(mod_frame, orient="vertical", command=self.txt_mod.yview)
+        self.txt_mod = tk.Text(self.frame_mod, wrap="none", font=("Consolas", 9), width=50, undo=True)
+        sb_mod = ttk.Scrollbar(self.frame_mod, orient="vertical", command=self.txt_mod.yview)
         self.txt_mod.configure(yscrollcommand=sb_mod.set)
         self.txt_mod.pack(side="left", fill="both", expand=True)
         sb_mod.pack(side="right", fill="y")
+
+        # Tippt der Anwender rechts hinein, gilt ab dann seine Fassung.
+        self.txt_mod.bind("<<Modified>>", self._on_mod_text_modified)
 
         colors = theme_manager.get_theme_colors()
         self.txt_orig.config(
@@ -505,6 +546,9 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             fg=colors["entry_fg"],
             insertbackground=colors["entry_fg"],
         )
+        self.lbl_diff_status.config(foreground=colors["fg_subdued"])
+
+        self._update_diff_controls()
 
     def _on_beleg_selected(self, event):
         sel = self.beleg_tree.selection()
@@ -811,46 +855,268 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             return parse_date_to_iso(raw_val)
         return parse_date_to_iso(self.new_rec_date) if self.new_rec_date else None
 
-    def _update_diff_preview(self):
-        if not self.active_belegnr:
-            return
-        b_nr = self.active_belegnr
+    # ------------------------------------------------------------------
+    # Vorschau & Diff
+    # ------------------------------------------------------------------
 
-        self.txt_orig.delete("1.0", "end")
-        self.txt_mod.delete("1.0", "end")
+    def _ist_dateiansicht(self) -> bool:
+        return self.diff_scope.get() == "datei"
 
-        # Show raw original segments for this Beleg
-        orig_b = self.original_belege_map.get(b_nr, {})
-        orig_segs = orig_b.get("raw_segments", [])
+    def _on_diff_scope_changed(self):
+        self._update_diff_preview()
 
-        orig_lines = []
-        for tag, fields in orig_segs:
+    def _regenerate_diff_preview(self):
+        """Verwirft eine etwaige Handbearbeitung und erzeugt die Vorschau neu."""
+        if self.manual_content is not None:
+            if not messagebox.askyesno(
+                "Handbearbeitung verwerfen",
+                "Die rechts stehende Fassung wurde von Hand bearbeitet.\n\n"
+                "Beim Neu-Generieren gehen diese Änderungen verloren. Fortfahren?",
+            ):
+                return
+            self.manual_content = None
+        self._update_diff_preview()
+
+    def _generiere_vorschau(self, nur_aktiver_beleg: bool) -> str:
+        """Erzeugt den EDIFACT-Text der Korrekturdatei für die Vorschau."""
+        belege = [self.active_belegnr] if nur_aktiver_beleg else list(self.selected_belegnr_list)
+        return generate_correction_esol(
+            raw_content=self.raw_content,
+            target_vk=self.target_vk,
+            selected_belegnr_list=belege,
+            new_rec_nr=self.get_current_rec_nr(),
+            new_rec_date=self.get_current_rec_date_iso(),
+            zuzahlungskennzeichen=self.zuzahlungskennzeichen,
+            beleg_modifications=self.modifications,
+        )
+
+    def _original_text(self, nur_aktiver_beleg: bool) -> str:
+        """Linke Seite: Rohsegmente des aktiven Belegs bzw. die ganze Quelldatei."""
+        if not nur_aktiver_beleg:
+            # Segmentweise umbrechen, damit sich links und rechts vergleichen lassen
+            return "\n".join(
+                s.strip() + "'"
+                for s in self.raw_content.split("'")
+                if s.strip()
+            )
+
+        orig_b = self.original_belege_map.get(self.active_belegnr or "", {})
+        zeilen = []
+        for tag, fields in orig_b.get("raw_segments", []):
             parts = [tag]
             for f in fields:
                 if isinstance(f, list):
                     parts.append(":".join(str(x) for x in f))
                 else:
                     parts.append(str(f))
-            orig_lines.append("+".join(parts) + "'")
+            zeilen.append("+".join(parts) + "'")
+        return "\n".join(zeilen)
 
-        self.txt_orig.insert("1.0", "\n".join(orig_lines))
-
-        # Generate modified preview content for this single Beleg
-        rec_nr = self.get_current_rec_nr()
-        rec_date_iso = self.get_current_rec_date_iso()
+    def _fuelle_vorschau(self, text: str):
+        """Setzt den Text der rechten Seite, ohne ihn als Handarbeit zu werten."""
+        self._filling_preview = True
         try:
-            mod_content = generate_correction_esol(
-                raw_content=self.raw_content,
-                target_vk=self.target_vk,
-                selected_belegnr_list=[b_nr],
-                new_rec_nr=rec_nr,
-                new_rec_date=rec_date_iso,
-                zuzahlungskennzeichen=self.zuzahlungskennzeichen,
-                beleg_modifications=self.modifications,
+            self.txt_mod.config(state="normal")
+            self.txt_mod.delete("1.0", "end")
+            self.txt_mod.insert("1.0", text)
+            self.txt_mod.edit_modified(False)
+        finally:
+            self._filling_preview = False
+
+    def _update_diff_preview(self):
+        if not self.active_belegnr:
+            return
+
+        nur_beleg = not self._ist_dateiansicht()
+
+        self.txt_orig.config(state="normal")
+        self.txt_orig.delete("1.0", "end")
+        self.txt_orig.insert("1.0", self._original_text(nur_aktiver_beleg=nur_beleg))
+        self.txt_orig.config(state="disabled")
+
+        if self.manual_content is not None and not nur_beleg:
+            # Handbearbeitete Fassung stehen lassen — sie ist maßgeblich.
+            self._fuelle_vorschau(self.manual_content)
+        else:
+            try:
+                self._fuelle_vorschau(self._generiere_vorschau(nur_aktiver_beleg=nur_beleg))
+            except Exception as e:
+                self._fuelle_vorschau(f"Vorschau konnte nicht generiert werden:\n{e}")
+
+        self._update_diff_controls()
+
+    def _update_diff_controls(self):
+        """Beschriftungen, Bearbeitbarkeit und Statuszeile an den Zustand anpassen."""
+        nur_beleg = not self._ist_dateiansicht()
+        b_nr = self.active_belegnr or "-"
+        anzahl = len(self.selected_belegnr_list)
+
+        if nur_beleg:
+            self.frame_orig.config(text=f" Original — Beleg {b_nr} ")
+            self.frame_mod.config(text=f" Neue Fassung — Beleg {b_nr} (nur Vergleich) ")
+            # Nur-Lesen: eine Teilbearbeitung liesse sich nicht sauber
+            # in die Gesamtdatei zurückschreiben.
+            self.txt_mod.config(state="disabled")
+            self.btn_diff_check.state(["disabled"])
+            status = ("Vergleichsansicht für einen Beleg. "
+                      "Zum Bearbeiten auf 'Ganze Datei' umschalten.")
+        else:
+            self.frame_orig.config(text=f" Original — {self.file_path.name} ")
+            self.txt_mod.config(state="normal")
+            self.btn_diff_check.state(["!disabled"])
+            if self.manual_content is not None:
+                self.frame_mod.config(text=f" Neue Fassung — HANDBEARBEITET ({anzahl} Belege) ")
+                status = ("⚠ Von Hand bearbeitet. Diese Fassung wird beim Generieren "
+                          "unverändert gespeichert — Änderungen in den Stammdaten oder "
+                          "Positionen sind darin NICHT enthalten. "
+                          "'Neu generieren' verwirft die Handarbeit.")
+            else:
+                self.frame_mod.config(text=f" Neue Fassung — Vorschau ({anzahl} Belege) ")
+                status = ("Diese Fassung wird beim Generieren gespeichert. Sie ist "
+                          "bearbeitbar — vor dem Speichern wird sie geprüft.")
+
+        self.lbl_diff_status.config(text=status)
+
+        colors = theme_manager.get_theme_colors()
+        if not nur_beleg and self.manual_content is not None:
+            self.lbl_diff_status.config(foreground=colors["log_error"])
+        else:
+            self.lbl_diff_status.config(foreground=colors["fg_subdued"])
+
+    def _on_mod_text_modified(self, event=None):
+        """Wird ausgelöst, sobald der Anwender die rechte Seite verändert."""
+        if self._filling_preview:
+            return
+        # Das Modified-Flag muss zurückgesetzt werden, sonst feuert das
+        # Ereignis nur ein einziges Mal.
+        try:
+            self.txt_mod.edit_modified(False)
+        except Exception:
+            pass
+
+        if not self._ist_dateiansicht():
+            return
+
+        neu = self.txt_mod.get("1.0", "end-1c")
+        war_handarbeit = self.manual_content is not None
+        self.manual_content = neu
+        if not war_handarbeit:
+            self._update_diff_controls()
+
+    def _pruefe_manuelle_fassung(self, text: str) -> Tuple[List[str], List[str], List[str]]:
+        """
+        Prüft eine von Hand bearbeitete Fassung.
+        Rückgabe: (Fehler, Warnungen, Encoding-Probleme) — jeweils als Klartext.
+        """
+        encoding_probleme: List[str] = []
+        for zeile, spalte, zeichen in pruefe_iso_8859_15(text)[:10]:
+            encoding_probleme.append(
+                f"Zeile {zeile}, Spalte {spalte}: '{zeichen}' (U+{ord(zeichen):04X}) "
+                f"lässt sich nicht in ISO-8859-15 speichern"
             )
-            self.txt_mod.insert("1.0", mod_content)
+
+        fehler: List[str] = []
+        warnungen: List[str] = []
+        try:
+            validator = EsolValidator()
+            validator.register_default_rules()
+            ergebnis = validator.validate_string(text)
+            fehler = [str(e) for e in ergebnis.get_errors()]
+            warnungen = [str(w) for w in ergebnis.get_warnings()]
         except Exception as e:
-            self.txt_mod.insert("1.0", f"Vorschau konnte nicht generiert werden:\n{e}")
+            fehler.append(f"Die Datei konnte nicht geprüft werden: {e}")
+
+        return fehler, warnungen, encoding_probleme
+
+    def _validate_manual_content(self):
+        """Button 'Bearbeitete Fassung prüfen' — prüft, ohne zu speichern."""
+        text = self.txt_mod.get("1.0", "end-1c")
+        if not text.strip():
+            messagebox.showwarning("Nichts zu prüfen", "Die rechte Seite ist leer.")
+            return
+
+        fehler, warnungen, enc = self._pruefe_manuelle_fassung(text)
+
+        if enc:
+            messagebox.showerror(
+                "Zeichen nicht speicherbar",
+                "Die Fassung enthält Zeichen, die ISO-8859-15 nicht kennt:\n\n"
+                + "\n".join(enc)
+                + "\n\nTypische Ursache: Text aus Word oder Outlook eingefügt "
+                  "(typografische Anführungszeichen, Gedankenstriche).",
+            )
+            return
+
+        if fehler:
+            messagebox.showerror(
+                "Prüfung fehlgeschlagen",
+                f"{len(fehler)} Fehler gefunden:\n\n" + "\n".join(f"• {f}" for f in fehler[:15]),
+            )
+            return
+
+        if warnungen:
+            messagebox.showwarning(
+                "Gültig mit Warnungen",
+                f"Keine Fehler, aber {len(warnungen)} Warnungen:\n\n"
+                + "\n".join(f"• {w}" for w in warnungen[:15]),
+            )
+            return
+
+        messagebox.showinfo("Prüfung erfolgreich", "Die Fassung ist gültig — keine Fehler, keine Warnungen.")
+
+    def _pruefe_und_bestaetige_handarbeit(self):
+        """
+        Liefert den zu speichernden Text, wenn von Hand bearbeitet wurde,
+        None wenn regulär generiert werden soll, und False wenn abgebrochen
+        werden muss (Fehler oder Abwahl durch den Anwender).
+        """
+        if self.manual_content is None:
+            return None
+
+        text = self.manual_content
+        if not text.strip():
+            messagebox.showerror(
+                "Leere Fassung",
+                "Die bearbeitete Fassung ist leer. Bitte über 'Neu generieren' "
+                "die Vorschau wiederherstellen.",
+            )
+            return False
+
+        fehler, warnungen, enc = self._pruefe_manuelle_fassung(text)
+
+        if enc:
+            messagebox.showerror(
+                "Zeichen nicht speicherbar",
+                "Die bearbeitete Fassung enthält Zeichen, die ISO-8859-15 nicht kennt "
+                "und die deshalb nicht gespeichert werden können:\n\n"
+                + "\n".join(enc)
+                + "\n\nTypische Ursache: Text aus Word oder Outlook eingefügt.",
+            )
+            return False
+
+        if fehler:
+            messagebox.showerror(
+                "Bearbeitete Fassung ist ungültig",
+                f"Die Datei wurde NICHT gespeichert. {len(fehler)} Fehler:\n\n"
+                + "\n".join(f"• {f}" for f in fehler[:15])
+                + ("\n…" if len(fehler) > 15 else "")
+                + "\n\nHäufigste Ursache nach Handarbeit: Segmentzähler im UNT, "
+                  "Summen im GES oder die Nachrichtenzahl im UNZ passen nicht mehr "
+                  "zum geänderten Inhalt.",
+            )
+            return False
+
+        if warnungen:
+            if not messagebox.askyesno(
+                "Warnungen in der bearbeiteten Fassung",
+                f"Keine Fehler, aber {len(warnungen)} Warnungen:\n\n"
+                + "\n".join(f"• {w}" for w in warnungen[:10])
+                + ("\n…" if len(warnungen) > 10 else "")
+                + "\n\nTrotzdem speichern?",
+            ):
+                return False
+
+        return text
 
     def _generate_correction(self):
         if not self.selected_belegnr_list:
@@ -867,6 +1133,14 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             )
             return
 
+        # Wurde die Vorschau von Hand bearbeitet, wird SIE gespeichert — aber
+        # nur, wenn sie die Validierung besteht. Eine handbearbeitete Datei kann
+        # abgeleitete Werte (UNT-Segmentzähler, GES-Summen, UNZ) zerstören, und
+        # das fällt sonst erst beim Abrechnungszentrum auf.
+        content_override = self._pruefe_und_bestaetige_handarbeit()
+        if content_override is False:
+            return
+
         try:
             res_path = generate_correction_file(
                 input_path=self.file_path,
@@ -878,9 +1152,12 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
                 zuzahlungskennzeichen=self.zuzahlungskennzeichen,
                 out_dir=Path(self.output_dir) if self.output_dir else None,
                 beleg_modifications=self.modifications,
+                content_override=content_override or None,
             )
 
-            msg = f"Korrekturdatei (VKZ {self.target_vk}) wurde erfolgreich erstellt:\n\n{res_path}"
+            hinweis = "\n\n(Von Hand bearbeitete Fassung)" if content_override else ""
+            msg = (f"Korrekturdatei (VKZ {self.target_vk}) wurde erfolgreich erstellt:"
+                   f"\n\n{res_path}{hinweis}")
             messagebox.showinfo("Erfolg", msg)
 
             if self.on_complete_callback:

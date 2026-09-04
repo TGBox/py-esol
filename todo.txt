@@ -90,3 +90,99 @@ Empfohlene Testfälle & Randfälle
 
 * **Kopierfunktion für Tickets:** Button *„Support-Bericht kopieren“*, der alle relevanten Falldaten (IKs, Belegnummer, aufgetretene Fehler, Ursache) in strukturierter Textform für das Ticketsystem in die Zwischenablage legt.
 * **HTML/PDF-Export:** Schneller Export einer lesbaren Prüf- und Abrechnungsübersicht für die Praxis.
+
+**6. Vollständige Verordnungs-Anzeige (ZHE / DIA / SKZ / URI)** [ERLEDIGT]
+
+* **Alle 17 ZHE-Felder im Verordnungsblatt:** Verordnungsdatum, BSNR/LANR des verordnenden
+  Arztes, Verordnungsart, Diagnosegruppe, Leitsymptomatik, Therapiefrequenz, Therapiebericht,
+  Hausbesuch, Dringlichkeit, Verordnungsbesonderheiten, Unfall/BVG, Heilmittel-Bereich
+  (vorher wurde nur das Zuzahlungskennzeichen angezeigt).
+* **Leitsymptomatik dekodiert:** 4-stelliges Feld wird in die gesetzten Stellen a/b/c/X
+  aufgelöst, 9999 als patientenindividuelle Leitsymptomatik erkannt.
+* **ICD-10-Diagnosen, Genehmigung (SKZ) und Ursprungsrechnung (URI)** werden angezeigt;
+  Zeilen ohne Inhalt bleiben ausgeblendet.
+* **Behandlungsverlauf gruppiert:** gleiche Leistung = eine Zeile mit Anzahl Termine,
+  Zeitraum von–bis und Summen; Einzeltermine aufklappbar.
+* **Plausibilitätshinweise am Beleg:** Behandlung vor Verordnungsdatum, Verordnungsdatum in
+  der Zukunft, Verordnung älter als ein Jahr, fehlende Pflichtfelder, fehlendes DIA,
+  Zuzahlungskennzeichen vs. berechneter Zuzahlung, fehlende individuelle Leitsymptomatik.
+* **Rezept-Baum umgebaut:** Nachricht -> Verordnung/Beleg -> Verordnungsdaten / Diagnosen /
+  Leistungen / Belegsumme; Feldnamen kommen aus der SchemaRegistry, Filter greift über den
+  gesamten Baum.
+* **Editierbare Klartext-Tabellen:** data/codelisten.json; nicht hinterlegte Codes werden als
+  "kein Klartext hinterlegt" markiert statt geraten.
+
+OFFEN dazu:
+* Bezeichnungen in data/codelisten.json nachtragen (Verordnungsart 01-20/99, Diagnosegruppen,
+  Therapiefrequenz, Heilmittel-Bereich 1-5, Positionsnummern je Abrechnungscode).
+* Optional: Verordnungsdatum / Diagnosegruppe als Spalte + Filter im Beleg-Dashboard.
+
+
+**7. Fehlerkorrekturen aus dem Praxisbetrieb** [ERLEDIGT]
+
+* **URI-Belegnummer:** Die ursprüngliche Belegnummer im URI-Segment wird nicht mehr um
+  führende Nullen gekürzt (Rückmeldung der Abrechnungszentren). Aus
+  URI+...+20260605+71 wurde wieder URI+...+20260605+00071. Die Einzel-Rechnungsnummer
+  im Composite bleibt gekürzt — sie ist fachlich eine Rechnungs-, keine Belegnummer
+  und laut Schema auf 6 Zeichen begrenzt.
+* **Konverter-Dateiname:** UTF-8 -> ISO-8859-15 hängt kein ".iso" mehr an. Die Datei wird
+  an ihrem Platz ersetzt, der Name bleibt unverändert. Geschrieben wird atomar
+  (temporäre Datei + os.replace), damit ein Abbruch das Original nicht beschädigt.
+  --inplace ist damit wirkungslos, bleibt aber akzeptiert.
+* **Blockierender Dialog in der Testsuite:** _copy_ticket_summary zeigt eine
+  messagebox, die den Testlauf anhielt, bis jemand klickte. Neue autouse-Fixture in
+  tests/conftest.py ersetzt alle tkinter-Dialoge durch nicht blockierende Stubs und
+  protokolliert sie (dialog_protokoll). Verhindert die ganze Fehlerklasse, nicht nur
+  diesen einen Fall — wichtig für den CI-Lauf.
+* **GitHub Actions:** .github/workflows/tests.yml führt die Suite bei jedem Push auf
+  windows-latest mit uv aus (Python 3.14 aus uv.lock).
+
+
+**8. Standalone-EXE und automatischer Build** [ERLEDIGT]
+
+* py-esol.spec ist die maßgebliche Build-Spezifikation (data/codelisten.json wird
+  mitgeliefert, UPX aus wegen Virenscanner-Fehlalarmen, pytest/PyInstaller aus dem
+  Bundle ausgeschlossen). main.spec, pyesol.spec und ESOL-Validator.spec sind
+  Altlasten und können gelöscht werden.
+* .gitignore: Ausnahme !py-esol.spec ergänzt — vorher war die Spec durch *.spec
+  ignoriert und damit nicht im Repo, der CI-Build wäre sofort gescheitert.
+* Workflow-Job "exe": baut nur auf main und nur nach grünen Tests, validiert danach
+  tests/fixtures/valid_esol_smoke mit der fertigen EXE (Rauchtest: fehlt ein Modul im
+  Bundle, fällt es dort auf) und hängt sie als Artefakt "py-esol-exe" an.
+* hole-exe.cmd: holt die EXE des letzten erfolgreichen main-Laufs per gh CLI nach dist\.
+  GitHub Actions kann nicht in den lokalen Projektordner schreiben — daher Abholung.
+* tests/fixtures/valid_esol_smoke + tests/test_smoke_fixture.py: kleinster vollständig
+  gültiger ESOL-Vorgang, warnungsfrei. Deckt eine Lücke — die übrigen Tests prüfen fast
+  nur, dass Fehler erkannt werden.
+
+OFFEN dazu:
+* Code-Signing-Zertifikat, damit SmartScreen bei den Mitarbeitern nicht warnt.
+* Optional: GitHub Release bei Version-Tag für dauerhafte Download-Links.
+* Optional: Build-Version (Commit-SHA) im Fenstertitel anzeigen, damit man bei
+  Rückfragen weiß, welchen Stand ein Mitarbeiter hat.
+
+
+**9. Bearbeitbare Vorschau im Korrektur-Editor** [ERLEDIGT]
+
+* Der Tab "Vorschau & EDIFACT-Diff" hat einen Umfangs-Schalter: "Ganze Datei"
+  (Standard, bearbeitbar, entspricht genau dem was gespeichert wird) und
+  "Nur dieser Beleg" (nur Vergleich, nur lesbar). Vorher zeigte die rechte Seite
+  immer nur den aktiven Beleg, gespeichert wurde aber die Datei mit allen Belegen -
+  und die Vorschau wurde beim Generieren komplett verworfen.
+* Handbearbeitung wird erkannt (Rahmen "HANDBEARBEITET", warnende Statuszeile) und
+  ueberlebt einen Neuaufbau der Vorschau, damit Arbeit nicht stillschweigend
+  verloren geht. "Neu generieren" verwirft sie nach Rueckfrage.
+* Vor dem Speichern laeuft die bearbeitete Fassung durch die 4-stufige Validierung.
+  Fehler blockieren, Warnungen darf man durchlassen. Zusaetzlich wird geprueft, ob
+  sich alle Zeichen in ISO-8859-15 schreiben lassen (Word/Outlook-Zeichen) - mit
+  Zeile und Spalte im Fehlertext.
+* Neuer Button "Bearbeitete Fassung pruefen" prueft ohne zu speichern.
+* generate_correction_file hat einen Parameter content_override, damit die
+  Namens- und Ablagelogik fuer den Dateinamen an einer Stelle bleibt.
+* Neue Hilfsfunktion pruefe_iso_8859_15 in tools/generate_correction.py.
+* 17 neue Tests in tests/test_diff_edit.py.
+
+OFFEN dazu:
+* UNT/UNZ-Zaehler nach Handarbeit optional automatisch nachziehen (bewusst nicht
+  gemacht - erst mal soll der Fehler sichtbar sein).
+* Syntaxhervorhebung der Segment-Tags in der Vorschau waere hilfreich.

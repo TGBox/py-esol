@@ -38,8 +38,9 @@ def test_generate_vk03_zuzahlungsforderung(tmp_path: Path):
     assert "FKT+03+" in content
     # Check new REC number is composite 05100:0 and appears twice
     assert content.count("REC+05100:0+20260325+1'") == 2
-    # Check URI segment inserted (with unpadded Belegnummer '1' and Einzel-Rechnungsnummer '1')
-    assert "URI+123456789+51:1+20260122+1'" in content
+    # URI: Belegnummer bleibt wie im Original ('00001'), die Einzel-Rechnungsnummer
+    # im Composite wird aus der Belegnummer abgeleitet ('1')
+    assert "URI+123456789+51:1+20260122+00001'" in content
     # Check ZHE Zuzahlungskennzeichen changed to '2'
     assert "+2+EN1+04+" in content
     # Check GZF segment replaced BES segment
@@ -89,8 +90,8 @@ def test_generate_vk04_korrekturrechnung(tmp_path: Path):
 
     # Check FKT changed to VK 04
     assert "FKT+04+" in content
-    # Check URI segment inserted
-    assert "URI+123456789+51:1+20260122+1'" in content
+    # Check URI segment inserted (Belegnummer unverändert aus dem Original)
+    assert "URI+123456789+51:1+20260122+00001'" in content
     # Check BES segment preserved
     assert "BES+100,00'" in content
 
@@ -134,8 +135,8 @@ def test_generate_vk10_wiederaufnahme_blankoverordnung(tmp_path: Path):
 
     # Check FKT changed to VK 10
     assert "FKT+10+" in content
-    # Check URI segment inserted
-    assert "URI+123456789+51:1+20260122+1'" in content
+    # Check URI segment inserted (Belegnummer unverändert aus dem Original)
+    assert "URI+123456789+51:1+20260122+00001'" in content
 
     # Validate generated file with EsolValidator
     validator = EsolValidator()
@@ -196,7 +197,7 @@ def test_parse_belege_summary_and_selective_filtering(tmp_path: Path):
     content = res_file.read_text(encoding="iso-8859-15")
     assert "00002" in content
     assert "NAD+Muster" not in content
-    assert "URI+123456789+51:2+20260122+2'" in content
+    assert "URI+123456789+51:2+20260122+00002'" in content
 
     validator = EsolValidator()
     validator.register_default_rules()
@@ -277,8 +278,9 @@ def test_generate_vk03_composite_rec_300_0(tmp_path: Path):
     # Verify REC+300:0+20260813+1' appears twice in the generated file
     assert content.count("REC+300:0+20260813+1'") == 2, f"Expected REC+300:0+20260813+1' to appear twice, got:\n{content}"
 
-    # Verify URI segment contains composite original Rechnungsnummer 300:1 and unpadded Belegnummer 1
-    assert "URI+441481776+300:1+20260813+1'" in content
+    # Verify URI segment contains composite original Rechnungsnummer 300:1 and the
+    # unchanged Belegnummer 00001 (führende Nullen bleiben erhalten)
+    assert "URI+441481776+300:1+20260813+00001'" in content
 
     # Verify UNB and UNZ use zero-padded Datenaustauschreferenz 00300
     assert "+00300+B+" in content.splitlines()[0]
@@ -365,8 +367,8 @@ def test_uri_user_example_99_128(tmp_path: Path):
     res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="99", new_rec_date="20260813")
     content = res_file.read_text(encoding="iso-8859-15")
 
-    # Verify URI line is URI+441481776+99:128+20260614+128'
-    assert "URI+441481776+99:128+20260614+128'" in content, f"URI segment mismatch, got:\n{content}"
+    # Verify URI line is URI+441481776+99:128+20260614+00128'
+    assert "URI+441481776+99:128+20260614+00128'" in content, f"URI segment mismatch, got:\n{content}"
 
     # Validate file
     validator = EsolValidator()

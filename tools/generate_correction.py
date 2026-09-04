@@ -22,6 +22,7 @@ if str(project_root) not in sys.path:
 
 from parser.segment_tokenizer import SegmentTokenizer
 from rules.level3.content_helper import ContentHelper
+import verordnung as verordnung_mod
 
 
 def read_esol_file_text(file_path: Path) -> str:
@@ -103,10 +104,30 @@ def build_segment_string(tag: str, fields: List[Any]) -> str:
     return "+".join(parts) + "'"
 
 
+def _finalize_beleg(beleg: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Ergänzt einen fertig eingelesenen Beleg um die aufbereiteten Verordnungsdaten:
+    dekodiertes ZHE, gruppierte Behandlungspositionen, Behandlungsübersicht und
+    Plausibilitätshinweise. Bestehende Schlüssel bleiben unverändert.
+    """
+    if not beleg:
+        return beleg
+
+    if not beleg.get("verordnung"):
+        beleg["verordnung"] = verordnung_mod.leeres_zhe()
+
+    beleg["positionsgruppen"] = verordnung_mod.gruppiere_positionen(beleg.get("positions", []))
+    beleg["behandlung"] = verordnung_mod.behandlungsuebersicht(beleg.get("positions", []))
+    beleg["verordnung_hinweise"] = verordnung_mod.pruefe_verordnung(beleg)
+    return beleg
+
+
 def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
     """
     Parses an ESOL file content and returns a list of dictionaries with metadata for each Beleg (INV block).
-    Includes positions, prices, dates, tariff indicators, and co-payments.
+    Includes positions, prices, dates, tariff indicators, co-payments and — since the
+    Verordnungs-Anzeige — the fully decoded prescription data (ZHE), diagnoses (DIA),
+    approvals (SKZ) and original-invoice references (URI).
     """
     tokenizer = SegmentTokenizer()
     raw_segments = tokenizer.tokenize_segments(raw_content)
@@ -114,13 +135,41 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
     belege = []
     in_inv = False
     current_beleg: Dict[str, Any] = {}
+    # Nachrichtenkontext (FKT/REC der laufenden SLLA-Nachricht) — wird jedem Beleg
+    # mitgegeben, damit im Verordnungsblatt Kostenträger und Rechnung sichtbar sind.
+    ctx: Dict[str, str] = {}
 
     for raw_seg in raw_segments:
         tag, fields = parse_segment_fields(raw_seg)
 
+        if tag == "UNH":
+            msg_type = ""
+            if len(fields) > 1:
+                raw_t = fields[1]
+                msg_type = str(raw_t[0]) if isinstance(raw_t, list) and raw_t else str(raw_t)
+            ctx["nachrichtentyp"] = msg_type
+
+        elif tag == "FKT" and not in_inv:
+            def _f(i: int) -> str:
+                if len(fields) <= i or fields[i] in (None, ""):
+                    return ""
+                return ":".join(str(x) for x in fields[i]) if isinstance(fields[i], list) else str(fields[i])
+            ctx["verarbeitungskennzeichen"] = _f(0)
+            ctx["leistungserbringer_ik"] = _f(2)
+            ctx["kostentraeger_ik"] = _f(3)
+            ctx["krankenkasse_ik"] = _f(4)
+
+        elif tag == "REC" and not in_inv:
+            rec0 = fields[0] if len(fields) > 0 else ""
+            if isinstance(rec0, list):
+                ctx["rechnungsnummer"] = str(rec0[0]) if rec0 else ""
+            else:
+                ctx["rechnungsnummer"] = str(rec0)
+            ctx["rechnungsdatum"] = str(fields[1]) if len(fields) > 1 and fields[1] else ""
+
         if tag == "INV":
             if in_inv and current_beleg:
-                belege.append(current_beleg)
+                belege.append(_finalize_beleg(current_beleg))
             in_inv = True
             belegnr = str(fields[3]) if len(fields) > 3 and fields[3] else ""
             vers_nr = str(fields[0]) if len(fields) > 0 and fields[0] else ""
@@ -129,10 +178,13 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 "belegnr": belegnr,
                 "versichertennummer": vers_nr,
                 "versichertenstatus": vers_status,
+                "beleginformation": str(fields[2]) if len(fields) > 2 and fields[2] else "",
+                "versorgungsform": str(fields[4]) if len(fields) > 4 and fields[4] else "",
                 "nachname": "",
                 "vorname": "",
                 "geburtstag": "",
                 "tarifkennzeichen": "",
+                "abrechnungscode": "",
                 "zuzahlungskennzeichen": "2",
                 "brutto": 0.0,
                 "zuzahlung_proz": 0.0,
@@ -140,6 +192,21 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 "total_zuzahlung": 0.0,
                 "positions": [],
                 "raw_segments": [],
+                # --- Verordnungsdaten ---
+                "verordnung": None,
+                "verordnung_segment_tag": "",
+                "verordnung_felder": [],
+                "diagnosen": [],
+                "genehmigung": [],
+                "ursprungsrechnung": [],
+                "freitexte": [],
+                # --- Nachrichtenkontext ---
+                "kostentraeger_ik": ctx.get("kostentraeger_ik", ""),
+                "krankenkasse_ik": ctx.get("krankenkasse_ik", ""),
+                "leistungserbringer_ik": ctx.get("leistungserbringer_ik", ""),
+                "verarbeitungskennzeichen": ctx.get("verarbeitungskennzeichen", ""),
+                "rechnungsnummer": ctx.get("rechnungsnummer", ""),
+                "rechnungsdatum": ctx.get("rechnungsdatum", ""),
             }
             current_beleg["raw_segments"].append((tag, fields))
 
@@ -153,12 +220,47 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 if len(fields) > 2:
                     current_beleg["geburtstag"] = str(fields[2])
 
-            elif tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
+            elif tag in ["ZHE", "ZHI", "ZHK", "ZHH", "ZKT", "ZHB", "ZSP", "ZUZ", "ZUV"]:
+                # Verordnungssegment: Rohfelder immer schema-benannt mitführen, damit
+                # auch Leistungsbereiche ohne ZHE (Hilfsmittel, HKP, ...) anzeigbar sind.
+                current_beleg["verordnung_segment_tag"] = tag
+                current_beleg["verordnung_felder"] = verordnung_mod.segment_field_rows(tag, fields)
+
                 if tag == "ZHE":
+                    current_beleg["verordnung"] = verordnung_mod.decode_zhe(fields)
                     if len(fields) > 3 and fields[3]:
                         current_beleg["zuzahlungskennzeichen"] = str(fields[3])
                     if len(fields) > 4 and fields[4]:
                         current_beleg["diagnosegruppe"] = str(fields[4])
+
+            elif tag == "DIA":
+                dia_code = str(fields[0]) if len(fields) > 0 and fields[0] else ""
+                dia_text = str(fields[1]) if len(fields) > 1 and fields[1] else ""
+                if dia_code or dia_text:
+                    current_beleg["diagnosen"].append({"code": dia_code, "text": dia_text})
+
+            elif tag == "SKZ":
+                current_beleg["genehmigung"].append({
+                    "kennzeichen": str(fields[0]) if len(fields) > 0 and fields[0] else "",
+                    "datum": str(fields[1]) if len(fields) > 1 and fields[1] else "",
+                    "art": str(fields[2]) if len(fields) > 2 and fields[2] else "",
+                })
+
+            elif tag == "URI":
+                current_beleg["ursprungsrechnung"].append(
+                    "+".join(
+                        ":".join(str(x) for x in f) if isinstance(f, list) else str(f)
+                        for f in fields
+                    )
+                )
+
+            elif tag == "TXT":
+                txt = " ".join(
+                    ":".join(str(x) for x in f) if isinstance(f, list) else str(f)
+                    for f in fields
+                ).strip()
+                if txt:
+                    current_beleg["freitexte"].append(txt)
 
             elif tag in ["EHE", "ENF", "EHI", "EHK", "EKT", "EHB", "ESP"]:
                 anzahl = 0.0
@@ -189,6 +291,8 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
 
                 if tarif_kz and not current_beleg.get("tarifkennzeichen"):
                     current_beleg["tarifkennzeichen"] = tarif_kz
+                if abr_code and not current_beleg.get("abrechnungscode"):
+                    current_beleg["abrechnungscode"] = abr_code
 
                 if tag == "EHE":
                     code = str(fields[1]) if len(fields) > 1 and fields[1] else ""
@@ -247,12 +351,12 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 current_beleg["total_zuzahlung"] = round(
                     current_beleg["zuzahlung_proz"] + current_beleg["zuzahlung_pausch"], 2
                 )
-                belege.append(current_beleg)
+                belege.append(_finalize_beleg(current_beleg))
                 in_inv = False
                 current_beleg = {}
 
     if in_inv and current_beleg:
-        belege.append(current_beleg)
+        belege.append(_finalize_beleg(current_beleg))
 
     return belege
 
@@ -724,22 +828,34 @@ def generate_correction_esol(
                     inv_block_segments.append((tag, fields))
 
             elif tag == "BES":
-                clean_belegnr = current_inv_belegnr.lstrip("0") or "0"
-                uri_einzel = orig_einzel_nr if (orig_einzel_nr and orig_einzel_nr != "0") else clean_belegnr
+                # Ursprüngliche Belegnummer (URI-Feld 4) unverändert aus dem Original
+                # übernehmen — führende Nullen dürfen NICHT entfernt werden
+                # (Rückmeldung der Abrechnungszentren).
+                uri_belegnr = current_inv_belegnr
+
+                # Für die Einzel-Rechnungsnummer im Composite (URI-Feld 2, Teil 2)
+                # dient die Belegnummer nur als Rückfall, wenn das Original keine
+                # Einzel-Rechnungsnummer führt. Dort bleibt die gekürzte Form, weil
+                # das Feld eine Rechnungs- und keine Belegnummer ist (max. 6 Zeichen).
+                fallback_einzel_nr = current_inv_belegnr.lstrip("0") or "0"
+                uri_einzel = orig_einzel_nr if (orig_einzel_nr and orig_einzel_nr != "0") else fallback_einzel_nr
 
                 if orig_sammel_nr:
                     orig_rec_composite: Any = [orig_sammel_nr, uri_einzel]
                 elif ":" in orig_rec_nr:
                     parts = orig_rec_nr.split(":")
-                    orig_rec_composite = [parts[0], parts[1] if (len(parts) > 1 and parts[1] != "0") else clean_belegnr]
+                    orig_rec_composite = [
+                        parts[0],
+                        parts[1] if (len(parts) > 1 and parts[1] != "0") else fallback_einzel_nr,
+                    ]
                 else:
-                    orig_rec_composite = [orig_rec_nr, clean_belegnr] if orig_rec_nr else orig_rec_nr
+                    orig_rec_composite = [orig_rec_nr, fallback_einzel_nr] if orig_rec_nr else orig_rec_nr
 
                 uri_fields = [
                     orig_ik_le,
                     orig_rec_composite,
                     orig_rec_date,
-                    clean_belegnr,
+                    uri_belegnr,
                 ]
 
                 zkz = str(b_mod.get("zuzahlungskennzeichen", "2")) if b_mod else "2"
@@ -850,8 +966,16 @@ def generate_correction_file(
     zuzahlungskennzeichen: Optional[str] = None,
     out_dir: Optional[Path] = None,
     beleg_modifications: Optional[Dict[str, Any]] = None,
+    content_override: Optional[str] = None,
 ) -> Path:
-    """Reads an ESOL file and generates the corrected/demanded ESOL output file."""
+    """
+    Reads an ESOL file and generates the corrected/demanded ESOL output file.
+
+    content_override: Wird dieser Text übergeben, so wird er unverändert
+    geschrieben statt neu generiert. Das braucht der Korrektur-Editor, wenn der
+    Anwender die Vorschau von Hand nachbearbeitet hat — die Namens- und
+    Ablagelogik bleibt dadurch an einer Stelle.
+    """
     if not input_path.is_file():
         raise FileNotFoundError(f"Datei nicht gefunden: {input_path}")
 
@@ -873,18 +997,40 @@ def generate_correction_file(
             output_filename = f"{input_path.name}_VK{target_vk}"
         output_path = input_path.with_name(output_filename)
 
-    content = read_esol_file_text(input_path)
-    new_content = generate_correction_esol(
-        raw_content=content,
-        target_vk=target_vk,
-        selected_belegnr_list=selected_belegnr_list,
-        new_rec_nr=new_rec_nr,
-        new_rec_date=new_rec_date,
-        zuzahlungskennzeichen=zuzahlungskennzeichen,
-        beleg_modifications=beleg_modifications,
-    )
+    if content_override is not None:
+        new_content = content_override
+    else:
+        content = read_esol_file_text(input_path)
+        new_content = generate_correction_esol(
+            raw_content=content,
+            target_vk=target_vk,
+            selected_belegnr_list=selected_belegnr_list,
+            new_rec_nr=new_rec_nr,
+            new_rec_date=new_rec_date,
+            zuzahlungskennzeichen=zuzahlungskennzeichen,
+            beleg_modifications=beleg_modifications,
+        )
     output_path.write_text(new_content, encoding="iso-8859-15")
     return output_path
+
+
+def pruefe_iso_8859_15(text: str) -> List[Tuple[int, int, str]]:
+    """
+    Findet Zeichen, die sich nicht in ISO-8859-15 schreiben lassen.
+    Rückgabe: Liste aus (Zeile, Spalte, Zeichen) — jeweils 1-basiert.
+
+    Wird gebraucht, bevor eine von Hand bearbeitete Fassung gespeichert wird:
+    Text aus Word oder Outlook bringt oft typografische Anführungszeichen oder
+    Gedankenstriche mit, die ISO-8859-15 nicht kennt.
+    """
+    treffer: List[Tuple[int, int, str]] = []
+    for zeilen_nr, zeile in enumerate(text.splitlines(), start=1):
+        for spalte, zeichen in enumerate(zeile, start=1):
+            try:
+                zeichen.encode("iso-8859-15")
+            except UnicodeEncodeError:
+                treffer.append((zeilen_nr, spalte, zeichen))
+    return treffer
 
 
 def main() -> None:

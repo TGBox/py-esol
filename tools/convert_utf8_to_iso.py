@@ -2,19 +2,29 @@
 """
 ESOL File Encoding Converter — Konvertiert ESOL-Dateien von UTF-8 zu ISO-8859-15 (oder ISO-8859-1).
 
+Der Dateiname bleibt dabei immer unverändert — ESOL-Dateien tragen bewusst keine
+Endung und der Name ist Teil der Einreichung. Ohne --out-dir (oder wenn das
+Zielverzeichnis dem Quellverzeichnis entspricht) wird die Datei an ihrem Platz
+ersetzt; das Schreiben erfolgt atomar, damit ein Abbruch das Original nicht
+beschädigt.
+
 Nutzung:
   python convert_utf8_to_iso.py [Pfade ...] [Optionen]
 
 Beispiele:
-  python convert_utf8_to_iso.py ordner/
-  python convert_utf8_to_iso.py datei1.txt datei2.txt --out-dir konvertiert/
-  python convert_utf8_to_iso.py ordner/ --inplace
+  python convert_utf8_to_iso.py ordner/                                  # ersetzt die Dateien im Ordner
+  python convert_utf8_to_iso.py testdata/in/ESOL0253                      # ersetzt genau diese Datei
+  python convert_utf8_to_iso.py datei1 datei2 --out-dir konvertiert/       # Kopien mit gleichem Namen
 """
 
 import argparse
+import os
 import sys
 from pathlib import Path
 from typing import List, Tuple
+
+# Namensmuster der temporären Schreibdatei, in die convert_file zuerst schreibt
+_TMP_MARKER = ".convert-tmp-"
 
 
 def convert_file(
@@ -72,24 +82,47 @@ def convert_file(
         # Zielverzeichnis bei Bedarf erstellen
         dst_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Datei in Ziel-Encoding schreiben; newline="" bewahrt die ursprünglichen Zeilenumbrüche (\r\n bzw. \n)
-        with open(dst_path, "w", encoding=target_encoding, errors=errors_strategy, newline="") as f:
-            f.write(content)
+        ersetzt_original = dst_path.resolve() == src_path.resolve()
 
+        # Erst in eine temporäre Datei im Zielverzeichnis schreiben und danach
+        # atomar umbenennen. Das ist wichtig, weil die Datei üblicherweise an
+        # ihrer Originalstelle ersetzt wird: bricht das Schreiben ab (voller
+        # Datenträger, Virenscanner, Netzlaufwerk weg), bleibt die
+        # Ursprungsdatei unversehrt statt halb überschrieben liegen zu bleiben.
+        tmp_path = dst_path.with_name(f"{dst_path.name}{_TMP_MARKER}{os.getpid()}")
+        try:
+            # newline="" bewahrt die ursprünglichen Zeilenumbrüche (\r\n bzw. \n)
+            with open(tmp_path, "w", encoding=target_encoding, errors=errors_strategy, newline="") as f:
+                f.write(content)
+            os.replace(tmp_path, dst_path)
+        except Exception:
+            try:
+                tmp_path.unlink()
+            except OSError:
+                pass
+            raise
+
+        if ersetzt_original:
+            return True, f"Erfolgreich konvertiert (Original ersetzt): {dst_path}"
         return True, f"Erfolgreich konvertiert -> {dst_path}"
     except Exception as e:
         return False, f"Fehler bei Konvertierung von {src_path}: {e}"
 
 
 def collect_files(path: Path, recurse: bool = True) -> List[Path]:
-    """Sammelt alle Dateien aus einem Pfad oder Verzeichnis."""
+    """
+    Sammelt alle Dateien aus einem Pfad oder Verzeichnis.
+    Liegengebliebene temporäre Schreibdateien eines abgebrochenen Laufs
+    werden übersprungen.
+    """
+    def brauchbar(p: Path) -> bool:
+        return p.is_file() and _TMP_MARKER not in p.name
+
     if path.is_file():
-        return [path]
+        return [path] if brauchbar(path) else []
     elif path.is_dir():
-        if recurse:
-            return sorted([p for p in path.rglob("*") if p.is_file()])
-        else:
-            return sorted([p for p in path.glob("*") if p.is_file()])
+        pattern = path.rglob("*") if recurse else path.glob("*")
+        return sorted([p for p in pattern if brauchbar(p)])
     return []
 
 
@@ -123,7 +156,8 @@ def main() -> None:
         "--inplace",
         "-i",
         action="store_true",
-        help="Dateien direkt im Quellverzeichnis überschreiben",
+        help="Ohne Wirkung — das Ersetzen am Originalort ist das Standardverhalten. "
+             "Nur aus Kompatibilitätsgründen erhalten.",
     )
     parser.add_argument(
         "--encoding",
@@ -170,6 +204,11 @@ def main() -> None:
     out_dir_path = Path(args.out_dir) if args.out_dir else None
 
     for index, src_file in enumerate(all_files, start=1):
+        # Der Dateiname bleibt in JEDEM Fall unverändert. ESOL-Dateien tragen
+        # bewusst keine Endung (ESOL0253) und der Name gehört zur Einreichung —
+        # eine angehängte Endung würde die Datei beim Abrechnungszentrum
+        # unbrauchbar machen. Zeigt das Ziel auf die Quelle, wird die Datei an
+        # ihrem Platz ersetzt (convert_file schreibt dafür atomar).
         if out_dir_path:
             if input_paths and input_paths[0].is_file():
                 rel = Path(src_file.name)
@@ -181,14 +220,8 @@ def main() -> None:
             dst_file = out_dir_path / rel
             if dst_file.is_dir() or str(rel) == ".":
                 dst_file = out_dir_path / src_file.name
-
-            # Überschreiben des Quelloriginals verhindern, falls out_dir_path gleich dem Quellordner ist
-            if dst_file.resolve() == src_file.resolve() and not args.inplace:
-                dst_file = dst_file.with_name(f"{src_file.name}.iso")
-        elif args.inplace:
-            dst_file = src_file
         else:
-            dst_file = src_file.with_name(f"{src_file.name}.iso")
+            dst_file = src_file
 
         success, msg = convert_file(
             src_path=src_file,

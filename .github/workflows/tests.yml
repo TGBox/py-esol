@@ -1,0 +1,127 @@
+name: CI
+
+# Tests laufen bei jedem Push auf jeden Branch und bei Pull Requests gegen main.
+# Die EXE wird nur für main gebaut (siehe Job "exe").
+on:
+  push:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Ein neuer Push auf denselben Branch bricht den noch laufenden Lauf ab,
+# damit nicht mehrere Läufe für veraltete Commits Minuten verbrauchen.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    name: pytest (Windows, Python 3.14)
+    # windows-latest, weil das die Zielplattform ist (PyInstaller-EXE) und weil
+    # die Tk-basierten GUI-Tests hier wirklich durchlaufen statt sich zu überspringen.
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    env:
+      # Ohne das nutzt Python auf Windows-Runnern cp1252 für stdout. Ein
+      # Fehlerbericht mit €, – oder Umlauten (die in ESOL-Daten normal sind)
+      # würde dann an einem UnicodeEncodeError sterben statt den Fehler zu zeigen.
+      PYTHONIOENCODING: utf-8
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v7
+
+      - name: uv einrichten
+        uses: astral-sh/setup-uv@v6
+        with:
+          # uv.lock gehört zum Standard-Glob, der den Cache-Schlüssel bildet.
+          enable-cache: true
+
+      - name: Python 3.14 und Abhängigkeiten aus uv.lock installieren
+        # --locked schlägt fehl, wenn uv.lock nicht zu pyproject.toml passt.
+        # Das ist gewollt: ein vergessenes "uv lock" fällt so sofort auf.
+        run: uv sync --locked
+
+      - name: Tests ausführen
+        run: uv run pytest -v --junitxml=pytest-report.xml
+
+      - name: Testbericht als Artefakt ablegen
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pytest-report
+          path: pytest-report.xml
+          if-no-files-found: warn
+
+  exe:
+    name: Standalone-EXE bauen
+    # Nur für main und nur, wenn die Tests grün sind — es soll nie eine EXE an
+    # die Mitarbeiter gehen, die eine kaputte Testsuite hinter sich hat.
+    needs: pytest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v7
+
+      - name: uv einrichten
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Python 3.14 und Abhängigkeiten aus uv.lock installieren
+        run: uv sync --locked
+
+      - name: EXE mit PyInstaller bauen
+        run: uv run pyinstaller py-esol.spec --noconfirm --clean
+
+      - name: EXE-Rauchtest — echte Datei durch die gebaute EXE validieren
+        shell: pwsh
+        run: |
+          $exe = "dist/py-esol.exe"
+          if (-not (Test-Path $exe)) { throw "dist/py-esol.exe wurde nicht erzeugt" }
+          $mb = [math]::Round((Get-Item $exe).Length / 1MB, 1)
+          Write-Host "EXE gebaut: $mb MB"
+
+          # Die EXE im CLI-Modus auf eine bekannt gültige ESOL-Datei ansetzen.
+          # Der Dispatcher in main.py routet "validate.py" auf validate.main().
+          # Läuft das durch, sind Regelwerk, Schema, Parser und die Codelisten
+          # vollständig im Bundle — ein fehlendes Modul fällt hier auf und nicht
+          # erst beim Mitarbeiter. Exit 0 = gültig.
+          $out = & $exe "validate.py" "tests/fixtures/valid_esol_smoke" "--stufe=4" "--warnings" 2>&1 | Out-String
+          $code = $LASTEXITCODE
+          Write-Host $out
+          if ($code -ne 0) {
+            throw "EXE-Rauchtest fehlgeschlagen (Exit $code) — die Datei muss gueltig sein"
+          }
+          if ($out -notmatch "GÜLTIG") {
+            throw "EXE-Rauchtest lieferte keine Validierungsausgabe"
+          }
+
+      - name: EXE als Artefakt ablegen
+        uses: actions/upload-artifact@v7
+        with:
+          # Stabiler Name — hole-exe.cmd sucht genau danach.
+          name: py-esol-exe
+          path: dist/py-esol.exe
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Zusammenfassung
+        shell: pwsh
+        run: |
+          $mb = [math]::Round((Get-Item "dist/py-esol.exe").Length / 1MB, 1)
+          @"
+          ### Standalone-EXE fertig
+
+          | | |
+          |---|---|
+          | Datei | ``py-esol.exe`` ($mb MB) |
+          | Commit | ``${{ github.sha }}`` |
+          | Abholen | ``hole-exe.cmd`` im Projektordner doppelklicken |
+
+          Die EXE braucht auf dem Zielrechner kein Python und keine IDE.
+          "@ | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8

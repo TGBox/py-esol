@@ -1,0 +1,152 @@
+{
+  "_hinweis": [
+    "Editierbare Klartext-Tabellen für die Verordnungs-Anzeige (ZHE / DIA / SKZ / EHE).",
+    "Diese Datei wird zur Laufzeit gelesen. Änderungen wirken nach einem Neustart der Anwendung —",
+    "im laufenden Betrieb genügt der Button 'Codelisten neu laden' im Verordnungsblatt.",
+    "",
+    "WICHTIG: Leere Bezeichnungen ('') sind ABSICHTLICH leer. Sie werden in der GUI als",
+    "'kein Klartext hinterlegt' angezeigt, damit in der Hotline niemals ein geratener",
+    "Text genannt wird. Bitte aus dem jeweils gültigen Katalog / der Technischen Anlage 1",
+    "bzw. dem bundeseinheitlichen Positionsnummernverzeichnis nachtragen.",
+    "",
+    "Struktur: jede Liste ist ein Objekt { \"<code>\": \"<Klartext>\" }.",
+    "Bei 'positionsnummern' darf zusätzlich nach Abrechnungscode gestaffelt werden:",
+    "  \"positionsnummern\": { \"*\": {...allgemein...}, \"26\": {...nur Abrechnungscode 26...} }"
+  ],
+
+  "zuzahlungskennzeichen": {
+    "0": "Keine gesetzliche Zuzahlung",
+    "1": "Zuzahlungsbefreit",
+    "2": "Zuzahlungspflichtig — Zuzahlung nicht entrichtet",
+    "3": "Zuzahlungspflichtig — Zuzahlung entrichtet",
+    "4": "Übergang zuzahlungspflichtig → befreit",
+    "5": "Übergang befreit → zuzahlungspflichtig",
+    "6": "",
+    "7": "",
+    "8": "",
+    "9": ""
+  },
+
+  "verordnungsart": {
+    "01": "",
+    "02": "",
+    "03": "",
+    "04": "",
+    "05": "",
+    "06": "",
+    "07": "",
+    "08": "",
+    "09": "",
+    "10": "",
+    "11": "",
+    "12": "",
+    "13": "",
+    "14": "",
+    "15": "",
+    "16": "",
+    "17": "",
+    "18": "",
+    "19": "",
+    "20": "",
+    "99": ""
+  },
+
+  "verordnungsbesonderheiten": {
+    "0": "",
+    "1": "",
+    "2": "",
+    "3": ""
+  },
+
+  "unfallkennzeichen": {
+    "0": "",
+    "1": "",
+    "2": "",
+    "3": ""
+  },
+
+  "bvg_sonstiges_ser": {
+    "0": "",
+    "1": "",
+    "2": "",
+    "3": ""
+  },
+
+  "therapiebericht": {
+    "0": "Kein Therapiebericht verordnet",
+    "1": "Therapiebericht verordnet"
+  },
+
+  "hausbesuch": {
+    "0": "Kein Hausbesuch verordnet",
+    "1": "Hausbesuch verordnet"
+  },
+
+  "dringlicher_behandlungsbedarf": {
+    "0": "Kein dringlicher Behandlungsbedarf",
+    "1": "Dringlicher Behandlungsbedarf (Behandlungsbeginn binnen 14 Tagen)"
+  },
+
+  "heilmittelbereich": {
+    "1": "",
+    "2": "",
+    "3": "",
+    "4": "",
+    "5": ""
+  },
+
+  "therapiefrequenz": {
+    "0": "",
+    "1": "",
+    "2": "",
+    "3": "",
+    "4": "",
+    "5": "",
+    "6": "",
+    "7": "",
+    "8": "",
+    "9": ""
+  },
+
+  "diagnosegruppe": {
+    "EN1": "",
+    "EN2": "",
+    "EN3": "",
+    "PS1": "",
+    "PS2": "",
+    "PS3": "",
+    "PS4": "",
+    "SB1": "",
+    "SB2": ""
+  },
+
+  "abrechnungscode": {
+    "26": ""
+  },
+
+  "positionsnummern": {
+    "*": {},
+    "26": {
+      "54002": "",
+      "54003": "",
+      "54102": "",
+      "54103": "",
+      "54104": "",
+      "54105": "",
+      "54142": "",
+      "54144": "",
+      "54145": "",
+      "54251": "",
+      "54503": "",
+      "59702": "",
+      "59741": "",
+      "59952": "",
+      "59953": "",
+      "59973": "",
+      "59974": ""
+    }
+  },
+
+  "genehmigungsart": {
+  }
+}
