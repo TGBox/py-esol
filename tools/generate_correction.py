@@ -139,8 +139,10 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
     # mitgegeben, damit im Verordnungsblatt Kostenträger und Rechnung sichtbar sind.
     ctx: Dict[str, str] = {}
 
+    global_ik = ""
     for raw_seg in raw_segments:
         tag, fields = parse_segment_fields(raw_seg)
+<<<<<<< HEAD
 
         if tag == "UNH":
             msg_type = ""
@@ -168,6 +170,14 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
             ctx["rechnungsdatum"] = str(fields[1]) if len(fields) > 1 and fields[1] else ""
 
         if tag == "INV":
+=======
+        if tag in ["UNB", "URI"] and fields:
+            if tag == "UNB" and len(fields) > 2 and fields[2]:
+                global_ik = str(fields[2])
+            elif tag == "URI" and len(fields) > 0 and fields[0]:
+                global_ik = str(fields[0])
+        elif tag == "INV":
+>>>>>>> muster13-mask
             if in_inv and current_beleg:
                 belege.append(_finalize_beleg(current_beleg))
             in_inv = True
@@ -183,6 +193,14 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 "nachname": "",
                 "vorname": "",
                 "geburtstag": "",
+                "ik": global_ik,
+                "bsnr": "",
+                "lanr": "",
+                "verordnungsdatum": "",
+                "verordnungsart": "",
+                "diagnosegruppe": "",
+                "icd10": "",
+                "leitsymptomatik": "",
                 "tarifkennzeichen": "",
                 "abrechnungscode": "",
                 "zuzahlungskennzeichen": "2",
@@ -220,6 +238,7 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 if len(fields) > 2:
                     current_beleg["geburtstag"] = str(fields[2])
 
+<<<<<<< HEAD
             elif tag in ["ZHE", "ZHI", "ZHK", "ZHH", "ZKT", "ZHB", "ZSP", "ZUZ", "ZUV"]:
                 # Verordnungssegment: Rohfelder immer schema-benannt mitführen, damit
                 # auch Leistungsbereiche ohne ZHE (Hilfsmittel, HKP, ...) anzeigbar sind.
@@ -232,6 +251,27 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                         current_beleg["zuzahlungskennzeichen"] = str(fields[3])
                     if len(fields) > 4 and fields[4]:
                         current_beleg["diagnosegruppe"] = str(fields[4])
+=======
+            elif tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
+                if len(fields) > 0 and fields[0]:
+                    current_beleg["bsnr"] = str(fields[0])
+                if len(fields) > 1 and fields[1]:
+                    current_beleg["lanr"] = str(fields[1])
+                if len(fields) > 2 and fields[2]:
+                    current_beleg["verordnungsdatum"] = str(fields[2])
+                if len(fields) > 3 and fields[3]:
+                    current_beleg["zuzahlungskennzeichen"] = str(fields[3])
+                if len(fields) > 4 and fields[4]:
+                    current_beleg["diagnosegruppe"] = str(fields[4])
+                if len(fields) > 5 and fields[5]:
+                    current_beleg["verordnungsart"] = str(fields[5])
+                if len(fields) > 12 and fields[12]:
+                    current_beleg["leitsymptomatik"] = str(fields[12])
+
+            elif tag == "DIA":
+                if len(fields) > 0 and fields[0]:
+                    current_beleg["icd10"] = str(fields[0])
+>>>>>>> muster13-mask
 
             elif tag == "DIA":
                 dia_code = str(fields[0]) if len(fields) > 0 and fields[0] else ""

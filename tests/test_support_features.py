@@ -255,7 +255,7 @@ def test_main_gui_support_notebook_integration(tmp_path: Path, dialog_protokoll)
         assert app.muster13_view.lbl_name.cget("text") == "Muster, Max"
 
         # Test ticket summary copy
-        with patch.object(app, "clipboard_append") as mock_clip:
+        with patch.object(app, "clipboard_append") as mock_clip, patch("tkinter.messagebox.showinfo"):
             app._copy_ticket_summary()
             mock_clip.assert_called_once()
             args = mock_clip.call_args[0][0]

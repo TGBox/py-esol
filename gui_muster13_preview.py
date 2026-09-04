@@ -1,26 +1,19 @@
 """
-ESOL Visuelle Rezept-Vorschau — Virtuelles Verordnungsblatt im Stil des Musters 13/18
-(Heilmittelverordnung).
-
-Zeigt die Verordnung so, wie sie auf dem Papierformular steht:
-  * Kopf: Krankenkasse & Versicherter
-  * Verordnung: verordnender Arzt (BSNR/LANR), Verordnungsdatum, Verordnungsart,
-    Diagnosegruppe, Leitsymptomatik, ICD-10-Diagnosen, Therapiefrequenz,
-    Therapiebericht, Hausbesuch, Dringlichkeit, Genehmigung, Ursprungsrechnung
-  * Behandlungsverlauf: Leistungen gruppiert (Anzahl Termine, Zeitraum, Summen),
-    Einzeltermine aufklappbar
-  * Abrechnung: Kassenanteil / Zuzahlungs-Aufschlüsselung
-  * Hinweisleiste: Plausibilitätsprobleme der Verordnung + Validierungsfehler
+ESOL Visuelle Rezept-Vorschau — Fotorealistisches virtuelles Verordnungsblatt (Muster 13/18)
+mit Templating auf Basis der Vorlagenbilder in assets/Muster13_1280x1280.jpg (Vorderseite) und
+assets/Muster13_2_1280x1280.jpg (Rückseite).
 """
 
+import os
 import tkinter as tk
 from tkinter import messagebox, ttk
 from typing import Any, Dict, List, Optional
+from PIL import Image, ImageDraw, ImageFont, ImageTk
 
 import codelisten
 import theme_manager
-import verordnung as vo
 from support_helper import translate_error
+from tools.generate_correction import format_date_german
 
 _MONO = ("Consolas", 10)
 _MONO_B = ("Consolas", 10, "bold")
@@ -103,499 +96,574 @@ class ScrollableFrame(ttk.Frame):
 
 
 class Muster13PreviewFrame(ttk.Frame):
-    """Formularbasierter Rezept-Viewer im Layout der Heilmittelverordnung (Muster 13/18)."""
+    """
+    Grafische Verordnungsblatt-Vorschau im Layout der Heilmittelverordnung (Muster 13/18)
+    mit exakt kalibriertem Bild-Overlay (Vorder- und Rückseite) und Zoom-Modus.
+    """
 
     def __init__(self, parent: tk.Widget):
-        super().__init__(parent)
+        super().__init__(parent, padding=10)
 
         self.current_beleg: Optional[Dict[str, Any]] = None
         self.validation_errors: List[str] = []
-        self._detail_labels: Dict[str, ttk.Label] = {}
+
+        # Interner Zustand
+        self.active_side: str = "front"  # "front" oder "back"
+        self.zoom_mode: str = "fit"      # "fit" (An Fenster anpassen) oder "100" (Original 1280x1280)
+        self.current_rendered_image: Optional[Image.Image] = None
+        self.photo_image: Optional[ImageTk.PhotoImage] = None
+
+        # Pfade zu den Grafikvorlagen
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.path_front_asset = os.path.join(self.base_dir, "assets", "Muster13_1280x1280.jpg")
+        self.path_back_asset = os.path.join(self.base_dir, "assets", "Muster13_2_1280x1280.jpg")
 
         self._setup_ui()
 
-    # ------------------------------------------------------------------ UI
-
     def _setup_ui(self):
-        self.scroller = ScrollableFrame(self)
-        self.scroller.pack(fill="both", expand=True)
-        root = self.scroller.inner
+        # -------------------------------------------------------------
+        # Header / Control Toolbar
+        # -------------------------------------------------------------
+        toolbar = ttk.Frame(self)
+        toolbar.pack(fill="x", pady=(0, 8))
 
-        self._build_title(root)
-        self._build_hinweise(root)
-        self._build_versicherter(root)
-        self._build_verordnung(root)
-        self._build_positionen(root)
-        self._build_summen(root)
-        self._build_footer(root)
-
-    def _build_title(self, root: ttk.Frame):
-        title_bar = ttk.Frame(root)
-        title_bar.pack(fill="x", pady=(0, 10))
-
+        # Title & Beleg Info
         ttk.Label(
-            title_bar,
-            text="📋 Heilmittelverordnung — Virtuelles Muster 13 / 18",
-            font=("Segoe UI", 12, "bold"),
-        ).pack(side="left")
+            toolbar,
+            text="📋 Virtuelles Verordnungsblatt Muster 13 / 18",
+            font=("Segoe UI", 11, "bold"),
+        ).pack(side="left", padx=(0, 15))
 
         self.lbl_beleg_nr = ttk.Label(
-            title_bar, text="Kein Beleg gewählt", font=("Consolas", 11, "bold"), foreground="#0275d8"
+            toolbar, text="Kein Beleg gewählt", font=("Consolas", 10, "bold"), foreground="#0275d8"
         )
-        self.lbl_beleg_nr.pack(side="right")
+        self.lbl_beleg_nr.pack(side="left", padx=(0, 15))
 
-    def _build_hinweise(self, root: ttk.Frame):
-        """Hinweisleiste: Verordnungs-Plausibilität + zugeordnete Validierungsfehler."""
-        self.hinweis_frame = ttk.LabelFrame(root, text=" Hinweise zu dieser Verordnung ", padding=8)
-        # wird in load_beleg() bei Bedarf eingeblendet
+        # Side Switch Buttons (Vorderseite / Rückseite)
+        side_frame = ttk.Frame(toolbar)
+        side_frame.pack(side="left", padx=5)
 
-        self.hinweis_box = tk.Text(
-            self.hinweis_frame, wrap="word", font=_UI, height=4, state="disabled",
-            borderwidth=0, highlightthickness=0,
+        self.btn_side_front = ttk.Button(
+            side_frame, text="📜 Vorderseite (Muster 13)", command=lambda: self._set_active_side("front")
         )
-        self.hinweis_box.pack(fill="both", expand=True)
+        self.btn_side_front.pack(side="left", padx=2)
 
-    def _build_versicherter(self, root: ttk.Frame):
-        head = ttk.LabelFrame(root, text=" Krankenkasse & Versicherter ", padding=10)
-        head.pack(fill="x", pady=(0, 10))
-        for col in (1, 3):
-            head.columnconfigure(col, weight=1)
-        self._versicherter_box = head
+        self.btn_side_back = ttk.Button(
+            side_frame, text="📄 Rückseite (Abrechnung)", command=lambda: self._set_active_side("back")
+        )
+        self.btn_side_back.pack(side="left", padx=2)
 
-        self._grid_row(head, 0, 0, "Kostenträger-IK:", "ik", mono=True, bold=True)
-        self._grid_row(head, 0, 2, "Versicherter Name:", "name", mono=True, bold=True)
-        self._grid_row(head, 1, 0, "Krankenkassen-IK:", "ik_kasse", mono=True)
-        self._grid_row(head, 1, 2, "Geburtsdatum:", "geb", mono=True)
-        self._grid_row(head, 2, 0, "Versichertennummer:", "versnr", mono=True)
-        self._grid_row(head, 2, 2, "Versichertenstatus:", "versstatus", mono=True)
-        self._grid_row(head, 3, 0, "Rechnung:", "rechnung", mono=True)
-        self._grid_row(head, 3, 2, "Zuzahlungsstatus:", "zuz_status", bold=True)
+        # Zoom Toggle Button
+        self.btn_zoom = ttk.Button(
+            toolbar, text="🔍 Fit Window", command=self._toggle_zoom
+        )
+        self.btn_zoom.pack(side="right", padx=5)
 
-    def _build_verordnung(self, root: ttk.Frame):
-        box = ttk.LabelFrame(root, text=" Verordnung / verordnender Arzt ", padding=10)
-        box.pack(fill="x", pady=(0, 10))
-        for col in (1, 3):
-            box.columnconfigure(col, weight=1)
+        # Interactive Calibrator Button
+        self.btn_calibrate = ttk.Button(
+            toolbar, text="🎯 Feld-Kalibrator", command=self._open_calibrator
+        )
+        self.btn_calibrate.pack(side="right", padx=5)
 
-        self._grid_row(box, 0, 0, "Verordnungsdatum:", "vo_datum", mono=True, bold=True)
-        self._grid_row(box, 0, 2, "Verordnender Arzt:", "vo_arzt", mono=True)
-        self._grid_row(box, 1, 0, "Verordnungsart:", "vo_art")
-        self._grid_row(box, 1, 2, "Diagnosegruppe:", "vo_diagnosegruppe")
-        self._grid_row(box, 2, 0, "Leitsymptomatik:", "vo_leitsym")
-        self._grid_row(box, 2, 2, "Therapiefrequenz:", "vo_frequenz")
-        self._grid_row(box, 3, 0, "Therapiebericht:", "vo_bericht")
-        self._grid_row(box, 3, 2, "Hausbesuch:", "vo_hausbesuch")
-        self._grid_row(box, 4, 0, "Dringlichkeit:", "vo_dringlich")
-        self._grid_row(box, 4, 2, "Heilmittel-Bereich:", "vo_hmbereich")
-        self._grid_row(box, 5, 0, "Verordnungsbesonderh.:", "vo_besonderheiten")
-        self._grid_row(box, 5, 2, "Unfall / BVG:", "vo_unfall")
+        # -------------------------------------------------------------
+        # Canvas Container mit Scrollbars
+        # -------------------------------------------------------------
+        canvas_container = ttk.Frame(self)
+        canvas_container.pack(fill="both", expand=True, pady=(0, 8))
 
-        # Volle Breite: Freitexte, Diagnosen, Genehmigung, Ursprungsrechnung
-        self._grid_wide(box, 6, "Individuelle Leitsympt.:", "vo_ind_leitsym")
-        self._grid_wide(box, 7, "ICD-10 Diagnose(n):", "vo_diagnosen", mono=True)
-        self._grid_wide(box, 8, "Genehmigung (SKZ):", "vo_genehmigung", mono=True)
-        self._grid_wide(box, 9, "Ursprungsrechnung (URI):", "vo_uri", mono=True)
-        self._grid_wide(box, 10, "Freitext (TXT):", "vo_freitext")
+        self.canvas = tk.Canvas(canvas_container, bg="#1e1e1e", highlightthickness=0)
+        self.h_scroll = ttk.Scrollbar(canvas_container, orient="horizontal", command=self.canvas.xview)
+        self.v_scroll = ttk.Scrollbar(canvas_container, orient="vertical", command=self.canvas.yview)
 
-        # Rohfelder für Leistungsbereiche ohne ZHE (Hilfsmittel, HKP, ...)
-        self.lbl_vo_fremdsegment = ttk.Label(box, text="", font=_UI, wraplength=900, justify="left")
-        self._fremdsegment_sichtbar = False
+        self.canvas.configure(xscrollcommand=self.h_scroll.set, yscrollcommand=self.v_scroll.set)
 
-    def _build_positionen(self, root: ttk.Frame):
-        self.pos_frame = ttk.LabelFrame(root, text=" Verordnete Heilmittel / Behandlungsverlauf ", padding=10)
-        self.pos_frame.pack(fill="both", expand=True, pady=(0, 10))
+        self.v_scroll.pack(side="right", fill="y")
+        self.h_scroll.pack(side="bottom", fill="x")
+        self.canvas.pack(side="left", fill="both", expand=True)
 
-        bar = ttk.Frame(self.pos_frame)
-        bar.pack(fill="x", pady=(0, 6))
+        self.canvas.bind("<Configure>", self._on_canvas_configure)
 
-        self.lbl_behandlung = ttk.Label(bar, text="Behandlungszeitraum: —", font=_UI_B)
-        self.lbl_behandlung.pack(side="left")
+        # -------------------------------------------------------------
+        # Summen- & Info-Panel unten
+        # -------------------------------------------------------------
+        sum_frame = ttk.LabelFrame(self, text=" Stammdaten & Abrechnung ", padding=6)
+        sum_frame.pack(fill="x", pady=(0, 4))
 
-        ttk.Button(bar, text="➖ Termine zuklappen", command=self._collapse_positions).pack(side="right", padx=2)
-        ttk.Button(bar, text="➕ Einzeltermine anzeigen", command=self._expand_positions).pack(side="right", padx=2)
+        pad = {"padx": 6, "pady": 2}
 
-        cols = ("code", "zeitraum", "termine", "menge", "einzel", "gesamt", "zuzahlung")
-        self.pos_tree = ttk.Treeview(self.pos_frame, columns=cols, height=10, selectmode="browse")
+        # Zeile 0: Patient & Krankenkasse (API Contracts / Test Kompatibilität)
+        ttk.Label(sum_frame, text="Name:").grid(row=0, column=0, sticky="w", **pad)
+        self.lbl_name = ttk.Label(sum_frame, text="-", font=("Segoe UI", 9, "bold"))
+        self.lbl_name.grid(row=0, column=1, sticky="w", **pad)
 
-        self.pos_tree.heading("#0", text="Leistung")
-        self.pos_tree.heading("code", text="Positionsnr.")
-        self.pos_tree.heading("zeitraum", text="Zeitraum / Datum")
-        self.pos_tree.heading("termine", text="Termine")
-        self.pos_tree.heading("menge", text="Menge")
-        self.pos_tree.heading("einzel", text="Einzel €")
-        self.pos_tree.heading("gesamt", text="Gesamt €")
-        self.pos_tree.heading("zuzahlung", text="Zuzahlung €")
+        ttk.Label(sum_frame, text="Vers-Nr:").grid(row=0, column=2, sticky="w", **pad)
+        self.lbl_versnr = ttk.Label(sum_frame, text="-")
+        self.lbl_versnr.grid(row=0, column=3, sticky="w", **pad)
 
-        self.pos_tree.column("#0", width=300, anchor="w", stretch=True)
-        self.pos_tree.column("code", width=90, anchor="w", stretch=False)
-        self.pos_tree.column("zeitraum", width=180, anchor="center", stretch=False)
-        self.pos_tree.column("termine", width=70, anchor="e", stretch=False)
-        self.pos_tree.column("menge", width=70, anchor="e", stretch=False)
-        self.pos_tree.column("einzel", width=90, anchor="e", stretch=False)
-        self.pos_tree.column("gesamt", width=100, anchor="e", stretch=False)
-        self.pos_tree.column("zuzahlung", width=95, anchor="e", stretch=False)
+        ttk.Label(sum_frame, text="Geburtstag:").grid(row=0, column=4, sticky="w", **pad)
+        self.lbl_geb = ttk.Label(sum_frame, text="-")
+        self.lbl_geb.grid(row=0, column=5, sticky="w", **pad)
 
-        sb = ttk.Scrollbar(self.pos_frame, orient="vertical", command=self.pos_tree.yview)
-        self.pos_tree.configure(yscrollcommand=sb.set)
+        ttk.Label(sum_frame, text="IK:").grid(row=0, column=6, sticky="w", **pad)
+        self.lbl_ik = ttk.Label(sum_frame, text="-")
+        self.lbl_ik.grid(row=0, column=7, sticky="w", **pad)
 
-        self.pos_tree.pack(side="left", fill="both", expand=True)
-        sb.pack(side="right", fill="y")
+        # Zeile 1: Zuzahlungsstatus & Beträge
+        self.lbl_zuz_status = ttk.Label(sum_frame, text="-", font=("Segoe UI", 9))
+        self.lbl_zuz_status.grid(row=1, column=0, columnspan=2, sticky="w", **pad)
 
-    def _build_summen(self, root: ttk.Frame):
-        sums = ttk.LabelFrame(root, text=" Abrechnung & Zuzahlungs-Aufschlüsselung ", padding=10)
-        sums.pack(fill="x", pady=(0, 10))
-        for col in range(3):
-            sums.columnconfigure(col, weight=1)
+        self.lbl_brutto = ttk.Label(sum_frame, text="Brutto: 0,00 €", font=("Consolas", 9, "bold"))
+        self.lbl_brutto.grid(row=1, column=2, columnspan=2, sticky="w", **pad)
 
-        pad = {"padx": 8, "pady": 4}
-        self.lbl_brutto = ttk.Label(sums, text="Bruttobetrag: —", font=_MONO_B)
-        self.lbl_brutto.grid(row=0, column=0, sticky="w", **pad)
+        self.lbl_proz_zuz = ttk.Label(sum_frame, text="10%: 0,00 €", font=("Segoe UI", 9))
+        self.lbl_proz_zuz.grid(row=1, column=4, sticky="w", **pad)
 
-        self.lbl_proz_zuz = ttk.Label(sums, text="Prozentuale Zuzahlung: —", font=_MONO)
-        self.lbl_proz_zuz.grid(row=0, column=1, sticky="w", **pad)
+        self.lbl_pausch_zuz = ttk.Label(sum_frame, text="10€ Pausch: 10,00 €", font=("Segoe UI", 9))
+        self.lbl_pausch_zuz.grid(row=1, column=5, sticky="w", **pad)
 
-        self.lbl_pausch_zuz = ttk.Label(sums, text="Pauschale Zuzahlung: —", font=_MONO)
-        self.lbl_pausch_zuz.grid(row=0, column=2, sticky="w", **pad)
+        self.lbl_total_zuz = ttk.Label(
+            sum_frame, text="Zuzahlung: 0,00 €", font=("Consolas", 9, "bold"), foreground="#d9534f"
+        )
+        self.lbl_total_zuz.grid(row=1, column=6, sticky="w", **pad)
 
-        self.lbl_total_zuz = ttk.Label(sums, text="Gesamte Zuzahlung: —", font=_MONO_B, foreground="#d9534f")
-        self.lbl_total_zuz.grid(row=1, column=0, sticky="w", **pad)
+        self.lbl_netto = ttk.Label(
+            sum_frame, text="Kassenanteil: 0,00 €", font=("Consolas", 9, "bold"), foreground="#5cb85c"
+        )
+        self.lbl_netto.grid(row=1, column=7, sticky="w", **pad)
 
-        self.lbl_netto = ttk.Label(sums, text="Kassenanteil (Netto): —", font=_MONO_B, foreground="#5cb85c")
-        self.lbl_netto.grid(row=1, column=1, columnspan=2, sticky="w", **pad)
+        # Error notification banner inside Muster 13 form
+        self.err_banner = ttk.Label(
+            self, text="", font=("Segoe UI", 9, "bold"), background="#f8d7da", foreground="#721c24", padding=6
+        )
 
-    def _build_footer(self, root: ttk.Frame):
-        footer = ttk.Frame(root)
-        footer.pack(fill="x")
-
-        ttk.Button(footer, text="🔄 Codelisten neu laden", command=self._reload_codelisten).pack(side="left")
-
-        self.lbl_codelisten = ttk.Label(footer, text="", font=("Segoe UI", 8), foreground="#888888")
-        self.lbl_codelisten.pack(side="left", padx=10)
-        self._update_codelisten_hint()
-
-    # ------------------------------------------------------- Layout-Helfer
-
-    def _grid_row(self, parent, row: int, col: int, caption: str, key: str,
-                  mono: bool = False, bold: bool = False):
-        pad = {"padx": 8, "pady": 3}
-        ttk.Label(parent, text=caption, font=_UI).grid(row=row, column=col, sticky="w", **pad)
-        font = (_MONO_B if bold else _MONO) if mono else (_UI_B if bold else _UI)
-        lbl = ttk.Label(parent, text="—", font=font)
-        lbl.grid(row=row, column=col + 1, sticky="w", **pad)
-        self._register(key, lbl)
-
-    def _grid_wide(self, parent, row: int, caption: str, key: str, mono: bool = False):
-        pad = {"padx": 8, "pady": 3}
-        cap = ttk.Label(parent, text=caption, font=_UI)
-        cap.grid(row=row, column=0, sticky="nw", **pad)
-        lbl = ttk.Label(parent, text="—", font=_MONO if mono else _UI, wraplength=760, justify="left")
-        lbl.grid(row=row, column=1, columnspan=3, sticky="w", **pad)
-        self._register(key, lbl)
-        # Merken, um ganze Zeilen ausblenden zu können
-        self._detail_labels[f"{key}__caption"] = cap
-
-    def _register(self, key: str, lbl: ttk.Label):
-        """
-        Label unter seinem Schlüssel ablegen und zusätzlich als Attribut lbl_<key>
-        veröffentlichen (z. B. self.lbl_name) — so bleiben bestehende Zugriffe gültig.
-        """
-        self._detail_labels[key] = lbl
-        setattr(self, f"lbl_{key}", lbl)
-
-    def _set(self, key: str, value: str):
-        lbl = self._detail_labels.get(key)
-        if lbl is not None:
-            lbl.config(text=value if value else "—")
-
-    def _set_wide_visible(self, key: str, visible: bool):
-        """Blendet eine volle Zeile (Caption + Wert) ein oder aus."""
-        cap = self._detail_labels.get(f"{key}__caption")
-        lbl = self._detail_labels.get(key)
-        if cap is None or lbl is None:
-            return
-        if visible:
-            cap.grid()
-            lbl.grid()
-        else:
-            cap.grid_remove()
-            lbl.grid_remove()
-
-    # ------------------------------------------------------------- Theming
+    def _open_calibrator(self):
+        try:
+            from tools.calibrate_gui import Muster13CalibratorDialog
+            dlg = Muster13CalibratorDialog(self)
+            dlg.grab_set()
+        except Exception as err:
+            theme_manager.messagebox.showerror("Fehler beim Öffnen", f"Kalibrator konnte nicht geöffnet werden: {err}")
 
     def apply_theme(self, mode: Optional[str] = None):
         colors = theme_manager.get_theme_colors(mode)
         active_mode = mode or theme_manager.get_current_theme()
-
-        self.scroller.apply_theme(colors)
-
-        self.hinweis_box.config(
-            bg=colors["card_bg"], fg=colors["fg"], insertbackground=colors["fg"]
-        )
-        self.hinweis_box.tag_config("fehler", foreground=colors["log_error"], font=_UI_B)
-        self.hinweis_box.tag_config("warnung", foreground=colors["log_header"], font=_UI_B)
-        self.hinweis_box.tag_config("info", foreground=colors["fg_subdued"])
-
-        self.pos_tree.tag_configure("gruppe", font=_MONO_B)
-        self.pos_tree.tag_configure("termin", foreground=colors["fg_subdued"], font=("Consolas", 9))
-        self.pos_tree.tag_configure("summe", font=_MONO_B, background=colors["tree_heading_bg"])
-
-        self.lbl_codelisten.config(foreground=colors["fg_subdued"])
-
         if active_mode == "dark":
             self.lbl_beleg_nr.config(foreground=colors["log_header"])
             self.lbl_total_zuz.config(foreground=colors["log_error"])
             self.lbl_netto.config(foreground=colors["log_ok"])
+            self.err_banner.config(background="#5c1d24", foreground="#f8d7da")
+            self.canvas.config(bg="#1e1e1e")
         else:
             self.lbl_beleg_nr.config(foreground="#0275d8")
             self.lbl_total_zuz.config(foreground="#d9534f")
             self.lbl_netto.config(foreground="#5cb85c")
+            self.err_banner.config(background="#f8d7da", foreground="#721c24")
+            self.canvas.config(bg="#d0d0d0")
 
-    # ---------------------------------------------------------- Codelisten
-
-    def _update_codelisten_hint(self):
-        path = codelisten.source_path()
-        err = codelisten.last_error()
-        if err:
-            self.lbl_codelisten.config(text=f"Codelisten fehlerhaft: {err}")
-        elif path:
-            self.lbl_codelisten.config(text=f"Klartexte aus: {path}")
-        else:
-            self.lbl_codelisten.config(
-                text="Keine data/codelisten.json gefunden — Codes werden ohne Klartext angezeigt."
-            )
-
-    def _reload_codelisten(self):
-        codelisten.reload()
-        self._update_codelisten_hint()
-        err = codelisten.last_error()
-        if err:
-            messagebox.showwarning("Codelisten", f"Codelisten konnten nicht gelesen werden:\n{err}")
-            return
+        # Neu rendern
         if self.current_beleg:
-            # Klartexte im Beleg neu auflösen und Ansicht aktualisieren
-            zhe = self.current_beleg.get("verordnung") or {}
-            if not zhe.get("fehlt") and zhe.get("rohfelder"):
-                self.current_beleg["verordnung"] = vo.decode_zhe(zhe["rohfelder"])
-            self.current_beleg["positionsgruppen"] = vo.gruppiere_positionen(
-                self.current_beleg.get("positions", [])
-            )
-            self.load_beleg(self.current_beleg, self.validation_errors)
+            self._render_active_beleg()
 
-    # -------------------------------------------------------------- Laden
+    def _set_active_side(self, side: str):
+        if self.active_side != side:
+            self.active_side = side
+            self._render_active_beleg()
 
-    def load_beleg(self, beleg: Dict[str, Any], validation_errors: Optional[List[str]] = None):
-        """Befüllt das virtuelle Verordnungsblatt mit den Daten des ausgewählten Belegs."""
+    def _toggle_zoom(self):
+        if self.zoom_mode == "fit":
+            self.zoom_mode = "100"
+            self.btn_zoom.config(text="🔍 100% Zoom")
+        else:
+            self.zoom_mode = "fit"
+            self.btn_zoom.config(text="🔍 Fit Window")
+        self._update_canvas_display()
+
+    def _on_canvas_configure(self, event):
+        if self.zoom_mode == "fit" and self.current_rendered_image:
+            new_size = (event.width, event.height)
+            if getattr(self, "_last_canvas_size", None) != new_size:
+                self._last_canvas_size = new_size
+                self._update_canvas_display()
+
+    def load_beleg(self, beleg: Dict[str, Any], validation_errors: List[str] = None):
+        """
+        Befüllt das virtuelle Verordnungsblatt mit den Daten des ausgewählten Belegs.
+        """
         self.current_beleg = beleg
         self.validation_errors = validation_errors or []
 
         b_nr = str(beleg.get("belegnr", "-"))
         self.lbl_beleg_nr.config(text=f"Beleg-Nr. {b_nr}")
 
-        self._fill_versicherter(beleg)
-        self._fill_verordnung(beleg)
-        self._fill_positionen(beleg)
-        self._fill_summen(beleg)
-        self._fill_hinweise(beleg, b_nr)
+        # Stammdaten-Labels aktualisieren
+        nachname = beleg.get("nachname", "")
+        vorname = beleg.get("vorname", "")
+        full_name = f"{nachname}, {vorname}".strip(", ")
+        self.lbl_name.config(text=full_name or "-")
+        self.lbl_versnr.config(text=str(beleg.get("versichertennummer", "-")))
+        geb_raw = str(beleg.get("geburtstag", ""))
+        self.lbl_geb.config(text=format_date_german(geb_raw) if geb_raw else "-")
+        self.lbl_ik.config(text=str(beleg.get("ik", "-")))
 
-        self.scroller.scroll_to_top()
+        # Zuzahlungsstatus
+        zkz = str(beleg.get("zuzahlungskennzeichen", "2"))
+        zkz_labels = {
+            "0": "0 — Keine Zuzahlung",
+            "1": "1 — Zuzahlungsbefreit",
+            "2": "2 — Zuzahlungspflichtig",
+            "3": "3 — Zuzahlungspflichtig",
+            "4": "4 — Übergang zu befreit",
+            "5": "5 — Übergang zu pflichtig",
+        }
+        self.lbl_zuz_status.config(text=zkz_labels.get(zkz, f"Kennzeichen {zkz}"))
 
-    def _fill_versicherter(self, beleg: Dict[str, Any]):
-        name = f"{beleg.get('nachname', '')}, {beleg.get('vorname', '')}".strip(", ")
-        self._set("name", name)
-        self._set("versnr", str(beleg.get("versichertennummer", "")))
-        self._set("geb", vo.fmt_datum(beleg.get("geburtstag", "")))
-        self._set("versstatus", str(beleg.get("versichertenstatus", "")))
+        # Summen aktualisieren
+        brutto = float(beleg.get("brutto", 0.0))
+        proz_zuz = float(beleg.get("zuzahlung_proz", 0.0))
+        pausch_zuz = float(beleg.get("zuzahlung_pausch", 10.0))
+        tot_zuz = float(beleg.get("total_zuzahlung", 0.0))
+        netto = round(brutto - tot_zuz, 2)
 
-        # IKs und Rechnungsdaten stammen aus FKT/REC der Nachricht, nicht aus dem INV-Block.
-        self._set("ik", str(beleg.get("kostentraeger_ik", "")))
-        self._set("ik_kasse", str(beleg.get("krankenkasse_ik", "")))
+        self.lbl_brutto.config(text=f"Brutto: {brutto:.2f} €".replace(".", ","))
+        self.lbl_proz_zuz.config(text=f"10%: {proz_zuz:.2f} €".replace(".", ","))
+        self.lbl_pausch_zuz.config(text=f"10€ Pausch: {pausch_zuz:.2f} €".replace(".", ","))
+        self.lbl_total_zuz.config(text=f"Zuzahlung: {tot_zuz:.2f} €".replace(".", ","))
+        self.lbl_netto.config(text=f"Kassenanteil: {netto:.2f} €".replace(".", ","))
 
-        rg_nr = str(beleg.get("rechnungsnummer", ""))
-        rg_dat = vo.fmt_datum(beleg.get("rechnungsdatum", ""))
-        vk = str(beleg.get("verarbeitungskennzeichen", ""))
-        rechnung = " ".join(p for p in [
-            f"Nr. {rg_nr}" if rg_nr else "",
-            f"vom {rg_dat}" if rg_dat else "",
-            f"(VK {vk})" if vk else "",
-        ] if p)
-        self._set("rechnung", rechnung)
+        # Fehler-Banner falls Fehler auf diesen Beleg zutreffen
+        matching = [e for e in self.validation_errors if b_nr in e]
+        if matching:
+            trans = translate_error(matching[0])
+            self.err_banner.config(text=f"⚠️ {trans['title']} — {trans['action']}")
+            self.err_banner.pack(fill="x", pady=(4, 0))
+        else:
+            self.err_banner.pack_forget()
 
-        zhe = beleg.get("verordnung") or {}
-        self._set("zuz_status", zhe.get("zuzahlungskennzeichen_text")
-                  or codelisten.describe("zuzahlungskennzeichen", beleg.get("zuzahlungskennzeichen")))
+        # Bild-Overlay neu aufbauen & rendern
+        self._render_active_beleg()
 
-    def _fill_verordnung(self, beleg: Dict[str, Any]):
-        zhe: Dict[str, Any] = beleg.get("verordnung") or vo.leeres_zhe()
+    def _get_fonts(self):
+        """Monospace-Schriften für den Rezeptdruck."""
+        try:
+            font_regular = ImageFont.truetype("consola.ttf", 20)
+            font_bold = ImageFont.truetype("consolab.ttf", 21)
+            font_small = ImageFont.truetype("consola.ttf", 16)
+        except IOError:
+            try:
+                font_regular = ImageFont.truetype("arial.ttf", 18)
+                font_bold = ImageFont.truetype("arialbd.ttf", 19)
+                font_small = ImageFont.truetype("arial.ttf", 15)
+            except IOError:
+                font_regular = font_bold = font_small = ImageFont.load_default()
 
-        self._set("vo_datum", zhe.get("verordnungsdatum_text"))
-        self._set("vo_arzt", zhe.get("arzt_text"))
-        self._set("vo_art", zhe.get("verordnungsart_text"))
-        self._set("vo_diagnosegruppe", zhe.get("diagnosegruppe_text"))
-        self._set("vo_leitsym", zhe.get("leitsymptomatik_text"))
-        self._set("vo_frequenz", zhe.get("therapiefrequenz_text"))
-        self._set("vo_bericht", zhe.get("therapiebericht_text"))
-        self._set("vo_hausbesuch", zhe.get("hausbesuch_text"))
-        self._set("vo_dringlich", zhe.get("dringlich_text"))
-        self._set("vo_hmbereich", zhe.get("heilmittelbereich_text"))
-        self._set("vo_besonderheiten", zhe.get("verordnungsbesonderheiten_text"))
+        return font_regular, font_bold, font_small
 
-        unfall = zhe.get("unfallkennzeichen_text") or "—"
-        bvg = zhe.get("bvg_text") or "—"
-        self._set("vo_unfall", f"{unfall}  |  BVG: {bvg}")
-
-        # Optionale Zeilen nur zeigen, wenn Inhalt vorhanden ist
-        ind = zhe.get("ind_leitsymptomatik", "")
-        self._set("vo_ind_leitsym", ind)
-        self._set_wide_visible("vo_ind_leitsym", bool(ind))
-
-        diagnosen = beleg.get("diagnosen") or []
-        dia_text = "\n".join(
-            f"{d.get('code', '')}" + (f"  —  {d['text']}" if d.get("text") else "")
-            for d in diagnosen
-        )
-        self._set("vo_diagnosen", dia_text or "keine Diagnose im Beleg (DIA fehlt)")
-        self._set_wide_visible("vo_diagnosen", True)
-
-        skz = beleg.get("genehmigung") or []
-        skz_text = "\n".join(
-            f"{s.get('kennzeichen', '') or '—'}  vom {vo.fmt_datum(s.get('datum')) or '—'}"
-            f"  (Art: {codelisten.describe('genehmigungsart', s.get('art'))})"
-            for s in skz
-        )
-        self._set("vo_genehmigung", skz_text)
-        self._set_wide_visible("vo_genehmigung", bool(skz))
-
-        uri = beleg.get("ursprungsrechnung") or []
-        self._set("vo_uri", "\n".join(uri))
-        self._set_wide_visible("vo_uri", bool(uri))
-
-        txt = beleg.get("freitexte") or []
-        self._set("vo_freitext", "\n".join(txt))
-        self._set_wide_visible("vo_freitext", bool(txt))
-
-        # Leistungsbereiche ohne ZHE: Rohfelder des vorhandenen Z-Segments zeigen
-        seg_tag = beleg.get("verordnung_segment_tag", "")
-        felder = beleg.get("verordnung_felder") or []
-        if zhe.get("fehlt") and seg_tag and seg_tag != "ZHE" and felder:
-            text = f"Verordnungsdaten aus Segment {seg_tag}:\n" + "\n".join(
-                f"  • {row['name']}: {row['value']}" for row in felder
-            )
-            self.lbl_vo_fremdsegment.config(text=text)
-            self.lbl_vo_fremdsegment.grid(row=11, column=0, columnspan=4, sticky="w", padx=8, pady=(6, 3))
-            self._fremdsegment_sichtbar = True
-        elif self._fremdsegment_sichtbar:
-            self.lbl_vo_fremdsegment.grid_remove()
-            self._fremdsegment_sichtbar = False
-
-    def _fill_positionen(self, beleg: Dict[str, Any]):
-        for item in self.pos_tree.get_children():
-            self.pos_tree.delete(item)
-
-        uebersicht = beleg.get("behandlung") or vo.behandlungsuebersicht(beleg.get("positions", []))
-        self.lbl_behandlung.config(
-            text=f"Behandlungszeitraum: {uebersicht.get('zeitraum_text', '—')}   ·   "
-                 f"{uebersicht.get('anzahl_behandlungstage', 0)} Behandlungstage   ·   "
-                 f"{uebersicht.get('anzahl_positionen', 0)} Einzelpositionen"
-        )
-
-        gruppen = beleg.get("positionsgruppen")
-        if gruppen is None:
-            gruppen = vo.gruppiere_positionen(beleg.get("positions", []))
-
-        abr = str(beleg.get("abrechnungscode", ""))
-        summe_betrag = 0.0
-        summe_zuz = 0.0
-
-        for g_idx, g in enumerate(gruppen):
-            klartext = g.get("code_klartext") or f"ohne Klartext ({codelisten.KEIN_KLARTEXT})"
-            label = f"{g['tag']}  {klartext}"
-            if g.get("tarif_kz"):
-                label += f"   [{g.get('abr_code', '')}:{g['tarif_kz']}]"
-
-            parent = self.pos_tree.insert(
-                "", "end", iid=f"g{g_idx}", text=label, open=False, tags=("gruppe",),
-                values=(
-                    g["code"],
-                    g["zeitraum_text"],
-                    f"{g['anzahl_termine']}×",
-                    vo.fmt_menge(g["menge_gesamt"]),
-                    vo.fmt_betrag(g["einzelbetrag"]),
-                    vo.fmt_betrag(g["betrag_gesamt"]),
-                    vo.fmt_betrag(g["zuzahlung_gesamt"]),
-                ),
-            )
-            summe_betrag += g["betrag_gesamt"]
-            summe_zuz += g["zuzahlung_gesamt"]
-
-            for t_idx, t in enumerate(g.get("termine", [])):
-                self.pos_tree.insert(
-                    parent, "end", iid=f"g{g_idx}t{t_idx}",
-                    text=f"    Termin {t_idx + 1}", tags=("termin",),
-                    values=(
-                        t.get("code", ""),
-                        vo.fmt_datum(t.get("datum")) or "—",
-                        "",
-                        vo.fmt_menge(t.get("anzahl")),
-                        vo.fmt_betrag(t.get("einzelbetrag")),
-                        vo.fmt_betrag(t.get("gesamtbetrag")),
-                        vo.fmt_betrag(t.get("zuzahlung_gesamt", t.get("zuzahlung"))),
-                    ),
-                )
-
-        if gruppen:
-            self.pos_tree.insert(
-                "", "end", iid="summe", text="Summe der Positionen", tags=("summe",),
-                values=("", "", "", "", "", vo.fmt_betrag(summe_betrag), vo.fmt_betrag(summe_zuz)),
-            )
-
-    def _fill_summen(self, beleg: Dict[str, Any]):
-        brutto = float(beleg.get("brutto", 0.0) or 0.0)
-        proz = float(beleg.get("zuzahlung_proz", 0.0) or 0.0)
-        pausch = float(beleg.get("zuzahlung_pausch", 0.0) or 0.0)
-        total = float(beleg.get("total_zuzahlung", 0.0) or 0.0)
-        netto = round(brutto - total, 2)
-
-        self.lbl_brutto.config(text=f"Bruttobetrag: {vo.fmt_betrag(brutto)}")
-        self.lbl_proz_zuz.config(text=f"Prozentuale Zuzahlung: {vo.fmt_betrag(proz)}")
-        self.lbl_pausch_zuz.config(text=f"Pauschale Zuzahlung: {vo.fmt_betrag(pausch)}")
-        self.lbl_total_zuz.config(text=f"Gesamte Zuzahlung: {vo.fmt_betrag(total)}")
-        self.lbl_netto.config(text=f"Kassenanteil (Netto): {vo.fmt_betrag(netto)}")
-
-    def _fill_hinweise(self, beleg: Dict[str, Any], b_nr: str):
-        hinweise: List[Dict[str, str]] = list(beleg.get("verordnung_hinweise") or [])
-
-        # Validierungsfehler, die diese Belegnummer nennen, mit aufnehmen
-        for err in self.validation_errors:
-            if b_nr and b_nr in err:
-                trans = translate_error(err)
-                hinweise.append({
-                    "stufe": "fehler",
-                    "text": f"{trans['title']} — {trans['action']}",
-                })
-
-        if not hinweise:
-            self.hinweis_frame.pack_forget()
+    def _render_active_beleg(self):
+        if not self.current_beleg:
             return
 
-        hinweise.sort(key=lambda h: _STUFE_RANG.get(h.get("stufe", "info"), 3))
+        beleg = self.current_beleg
+        font_regular, font_bold, font_small = self._get_fonts()
 
-        self.hinweis_box.config(state="normal")
-        self.hinweis_box.delete("1.0", tk.END)
-        for h in hinweise:
-            stufe = h.get("stufe", "info")
-            icon = _STUFE_ICON.get(stufe, "•")
-            self.hinweis_box.insert(tk.END, f"{icon} {h.get('text', '')}\n", stufe)
-        self.hinweis_box.config(state="disabled", height=min(max(len(hinweise), 2), 8))
+        if self.active_side == "front":
+            img = self._render_front_side(beleg, font_regular, font_bold, font_small)
+        else:
+            img = self._render_back_side(beleg, font_regular, font_bold, font_small)
 
-        # direkt unter der Titelzeile, oberhalb der Versichertendaten einblenden
-        self.hinweis_frame.pack(fill="x", pady=(0, 10), before=self._versicherter_box)
+        self.current_rendered_image = img
+        self._update_canvas_display()
 
-    # ----------------------------------------------------------- Aktionen
+    def _load_calibrated_coords(self) -> Dict[str, tuple]:
+        """Lädt benutzerdefinierte Kalibrierungskoordinaten aus assets/muster13_coords.json."""
+        json_path = os.path.join(self.base_dir, "assets", "muster13_coords.json")
+        if os.path.exists(json_path):
+            try:
+                import json
+                with open(json_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    fields = data.get("fields", {})
+                    return {k: (v["abs_x"], v["abs_y"]) for k, v in fields.items()}
+            except Exception:
+                pass
+        return {}
 
-    def _expand_positions(self):
-        for item in self.pos_tree.get_children():
-            self.pos_tree.item(item, open=True)
+    def _render_front_side(
+        self, beleg: Dict[str, Any], font_reg, font_bold, font_small
+    ) -> Image.Image:
+        """Rendert die Vorderseite des Muster 13 Verordnungsblatts mit dunkler Tinte."""
+        if os.path.exists(self.path_front_asset):
+            base_img = Image.open(self.path_front_asset).convert("RGB")
+        else:
+            base_img = Image.new("RGB", (1280, 1280), color=(245, 245, 220))
 
-    def _collapse_positions(self):
-        for item in self.pos_tree.get_children():
-            self.pos_tree.item(item, open=False)
+        draw = ImageDraw.Draw(base_img)
+
+        # IMMER dunkle Kassenrezept-Tinte (Dunkelblau/Schwarz) — KEIN GELB!
+        ink_color = (5, 20, 90)       # Dunkelblaue Nadel- / Laserdrucker-Tinte
+        check_color = (180, 20, 20)   # Rote Abhakung
+
+        # Dynamisch geladene Mauskalibrierungs-Koordinaten (falls vorhanden)
+        c = self._load_calibrated_coords()
+
+        # 1. Krankenkasse / Kostenträger
+        ik_str = str(beleg.get("ik", ""))
+        # 1. Krankenkasse / Kostenträger
+        ik_str = str(beleg.get("ik", ""))
+        pos_kasse = c.get("krankenkasse", (249, 56))
+        draw.text(pos_kasse, f"IK: {ik_str}".strip() if ik_str else "Krankenkasse", fill=ink_color, font=font_reg)
+
+        # 2. Name des Versicherten
+        nachname = beleg.get("nachname", "")
+        vorname = beleg.get("vorname", "")
+        full_name = f"{nachname}, {vorname}".strip(", ")
+        pos_name = c.get("versicherter_name", (252, 116))
+        draw.text(pos_name, full_name or "-", fill=ink_color, font=font_bold)
+
+        # 3. Geburtsdatum (geb. am)
+        geb_raw = str(beleg.get("geburtstag", ""))
+        geb_fmt = format_date_german(geb_raw)
+        pos_geb = c.get("geb_datum", (588, 151))
+        draw.text(pos_geb, geb_fmt or "-", fill=ink_color, font=font_reg)
+
+        # 4. Kostenträgerkennung / Versicherten-Nr. / Status
+        pos_ik = c.get("ik", (248, 231))
+        draw.text(pos_ik, ik_str or "-", fill=ink_color, font=font_reg)
+        vers_nr = str(beleg.get("versichertennummer", ""))
+        pos_vnr = c.get("vers_nr", (419, 234))
+        draw.text(pos_vnr, vers_nr or "-", fill=ink_color, font=font_reg)
+        status = str(beleg.get("versichertenstatus", ""))
+        pos_status = c.get("status", (616, 234))
+        draw.text(pos_status, status or "-", fill=ink_color, font=font_reg)
+
+        # 5. BSNR / LANR / Verordnungsdatum
+        bsnr = str(beleg.get("bsnr", ""))
+        pos_bsnr = c.get("bsnr", (250, 285))
+        draw.text(pos_bsnr, bsnr or "-", fill=ink_color, font=font_reg)
+        lanr = str(beleg.get("lanr", ""))
+        pos_lanr = c.get("lanr", (420, 285))
+        draw.text(pos_lanr, lanr or "-", fill=ink_color, font=font_reg)
+        v_datum_raw = str(beleg.get("verordnungsdatum", ""))
+        v_datum_fmt = format_date_german(v_datum_raw)
+        pos_vdatum = c.get("verordnungsdatum", (588, 286))
+        draw.text(pos_vdatum, v_datum_fmt or "-", fill=ink_color, font=font_reg)
+
+        # 6. Checkboxen Zuzahlung / Unfallfolgen / BVG
+        zkz = str(beleg.get("zuzahlungskennzeichen", "2"))
+        if zkz in ["0", "1"]:
+            draw.text(c.get("zuz_frei", (205, 39)), "X", fill=check_color, font=font_bold)
+        else:
+            draw.text(c.get("zuz_pflicht", (206, 99)), "X", fill=check_color, font=font_bold)
+
+        if beleg.get("unfallfolgen"):
+            draw.text(c.get("unfallfolgen", (207, 158)), "X", fill=check_color, font=font_bold)
+        if beleg.get("bvg"):
+            draw.text(c.get("bvg", (207, 219)), "X", fill=check_color, font=font_bold)
+
+        # 7. Checkboxen Verordnungsart
+        v_art = str(beleg.get("verordnungsart", "1"))
+        if v_art == "1":
+            draw.text(c.get("v_art_erst", (752, 35)), "X", fill=check_color, font=font_bold)
+        elif v_art == "2":
+            draw.text(c.get("v_art_folge", (752, 65)), "X", fill=check_color, font=font_bold)
+
+        # 8. Checkboxen Heilmittelbereich
+        hm_bereich = str(beleg.get("heilmittelbereich", ""))
+        if "54001" in str(beleg.get("positions", [])) or hm_bereich == "2":
+            draw.text(c.get("hm_ergo", (753, 212)), "X", fill=check_color, font=font_bold)
+        elif "40101" in str(beleg.get("positions", [])) or hm_bereich == "3":
+            draw.text(c.get("hm_logo", (752, 175)), "X", fill=check_color, font=font_bold)
+        else:
+            draw.text(c.get("hm_physio", (752, 100)), "X", fill=check_color, font=font_bold)
+
+        # 9. Diagnosen & Leitsymptomatik
+        diag = str(beleg.get("diagnosegruppe", ""))
+        icd = str(beleg.get("icd10", ""))
+        leitsymp = str(beleg.get("leitsymptomatik", ""))
+
+        pos_diag_frei = c.get("diag_freitext", (416, 363))
+        draw.text(pos_diag_frei, f"{icd} {leitsymp}".strip(), fill=ink_color, font=font_reg)
+
+        pos_dgruppe = c.get("diag_gruppe", (339, 441))
+        pos_icd = c.get("icd10", (248, 357))
+
+        draw.text(pos_dgruppe, diag or "-", fill=ink_color, font=font_bold)
+        draw.text(pos_icd, icd or "-", fill=ink_color, font=font_reg)
+
+        # Leitsymptomatik Checkboxen a, b, c
+        ls_kombi = str(beleg.get("leitsymptomatik_kombi", "a")).lower()
+        if "a" in ls_kombi:
+            draw.text(c.get("leitsymp_a", (629, 443)), "X", fill=check_color, font=font_bold)
+        if "b" in ls_kombi:
+            draw.text(c.get("leitsymp_b", (691, 443)), "X", fill=check_color, font=font_bold)
+        if "c" in ls_kombi:
+            draw.text(c.get("leitsymp_c", (754, 442)), "X", fill=check_color, font=font_bold)
+
+        if leitsymp:
+            pos_lsymp_frei = c.get("leitsymp_freitext", (246, 499))
+            draw.text(pos_lsymp_frei, leitsymp[:48], fill=ink_color, font=font_reg)
+
+        # 10. Therapieoptionen (Therapiebericht, Hausbesuch, Therapiefrequenz, Therapieziele)
+        tb_req = beleg.get("therapiebericht", True)
+        if tb_req:
+            draw.text(c.get("therapiebericht", (247, 824)), "X", fill=check_color, font=font_bold)
+
+        hb_req = beleg.get("hausbesuch", False)
+        if hb_req:
+            draw.text(c.get("hausbesuch_ja", (569, 826)), "X", fill=check_color, font=font_bold)
+        else:
+            draw.text(c.get("hausbesuch_nein", (644, 824)), "X", fill=check_color, font=font_bold)
+
+        frequenz = str(beleg.get("therapiefrequenz", "1-2x wöchentlich"))
+        draw.text(c.get("therapiefrequenz", (836, 822)), frequenz, fill=ink_color, font=font_reg)
+
+        ziele = str(beleg.get("therapieziele", ""))
+        if ziele:
+            draw.text(c.get("therapieziele", (247, 947)), ziele[:45], fill=ink_color, font=font_reg)
+
+        # 11. Heilmittel Tabelle
+        positions = beleg.get("positions", [])
+        pos_hm1_lbl = c.get("hm_pos1_label", (246, 627))
+        pos_hm1_anz = c.get("hm_pos1_anzahl", (909, 627))
+
+        pos_hm2_lbl = c.get("hm_pos2_label", (247, 766))
+        pos_hm2_anz = c.get("hm_pos2_anzahl", (908, 767))
+
+        y_positions = [pos_hm1_lbl, pos_hm2_lbl]
+        anz_positions = [pos_hm1_anz, pos_hm2_anz]
+
+        for idx, pos in enumerate(positions[:2]):
+            code = str(pos.get("code", ""))
+            anzahl = pos.get("anzahl", 0.0)
+
+            code_labels = {
+                "20501": "Krankengymnastik (Einzelbehandlung)",
+                "29901": "Wärmetherapie / Fango",
+                "54001": "Motorisch-funktionelle Behandlung",
+                "40101": "Sprachtherapie (Einzelbehandlung 45 Min)",
+                "59702": "Ergotherapeutische Schienenbehandlung",
+            }
+            label = code_labels.get(code, f"Heilmittel Pos. {code}" if code else f"Behandlung ({pos.get('tag', 'EHE')})")
+
+            draw.text(y_positions[idx], label, fill=ink_color, font=font_bold)
+            draw.text(anz_positions[idx], f"{anzahl:g}", fill=ink_color, font=font_bold)
+
+        # 12. Fusszeile (IK des Leistungserbringers, Arztstempel & Unterschrift)
+        ik_le = str(beleg.get("ik_leistungserbringer", beleg.get("ik", "")))
+        draw.text(c.get("ik_leistungserbringer", (461, 1174)), ik_le, fill=ink_color, font=font_reg)
+
+        if "arztstempel" in c:
+            draw.text(c["arztstempel"], "Praxis Dr. med. Musterarzt\nFacharzt für Allgemeinmedizin", fill=(20, 20, 100), font=font_small)
+
+        if "arztunterschrift" in c:
+            draw.text(c["arztunterschrift"], "Dr. Musterarzt", fill=(10, 10, 80), font=font_reg)
+
+        return base_img
+
+    def _render_back_side(
+        self, beleg: Dict[str, Any], font_reg, font_bold, font_small
+    ) -> Image.Image:
+        """Rendert die Rückseite des Muster 13 Verordnungsblatts (Abrechnung & Bestätigung)."""
+        if os.path.exists(self.path_back_asset):
+            base_img = Image.open(self.path_back_asset).convert("RGB")
+        else:
+            base_img = Image.new("RGB", (1280, 1280), color=(245, 245, 220))
+
+        draw = ImageDraw.Draw(base_img)
+        ink_color = (5, 20, 90)
+
+        # Behandlungsbestätigungs-Tabelle (y = 203, 236, 269, 302, 334, 368...)
+        positions = beleg.get("positions", [])
+        nachname = beleg.get("nachname", "Versicherter")
+        vorname = beleg.get("vorname", "")
+        patient_label = f"{nachname}, {vorname}".strip(", ")
+
+        row_y_list = [203, 236, 269, 302, 334, 368, 400, 433, 466, 499, 532, 565, 598, 630, 664, 696]
+        row_idx = 0
+
+        for pos in positions:
+            datum_raw = str(pos.get("datum", ""))
+            datum_fmt = format_date_german(datum_raw)
+            code = str(pos.get("code", ""))
+            anzahl = int(pos.get("anzahl", 1))
+
+            for _ in range(min(anzahl, 6)):
+                if row_idx >= len(row_y_list):
+                    break
+                y_r = row_y_list[row_idx]
+                draw.text((270, y_r + 6), datum_fmt or "-", fill=ink_color, font=font_reg)
+                draw.text((390, y_r + 6), code or "-", fill=ink_color, font=font_reg)
+                draw.text((520, y_r + 6), patient_label[:22], fill=ink_color, font=font_small)
+                row_idx += 1
+
+        # Abrechnungstabelle unten (y=935, 968, 1001...)
+        y_abr = 935
+        for pos in positions[:5]:
+            code = str(pos.get("code", ""))
+            anz = f"{pos.get('anzahl', 0.0):g}"
+            einzel = f"{pos.get('einzelbetrag', 0.0):.2f}".replace(".", ",")
+            gesamt = f"{pos.get('gesamtbetrag', 0.0):.2f}".replace(".", ",")
+            zuz = f"{pos.get('zuzahlung', 0.0):.2f}".replace(".", ",")
+
+            draw.text((270, y_abr), code or "-", fill=ink_color, font=font_reg)
+            draw.text((480, y_abr), anz, fill=ink_color, font=font_reg)
+            draw.text((600, y_abr), einzel + " €", fill=ink_color, font=font_reg)
+            draw.text((750, y_abr), gesamt + " €", fill=ink_color, font=font_reg)
+            draw.text((900, y_abr), zuz + " €", fill=ink_color, font=font_reg)
+            y_abr += 33
+
+        # Summenblock unten (y=1185)
+        brutto = float(beleg.get("brutto", 0.0))
+        tot_zuz = float(beleg.get("total_zuzahlung", 0.0))
+        netto = round(brutto - tot_zuz, 2)
+
+        draw.text((300, 1185), f"{brutto:.2f} €".replace(".", ","), fill=ink_color, font=font_bold)
+        draw.text((600, 1185), f"{tot_zuz:.2f} €".replace(".", ","), fill=ink_color, font=font_bold)
+        draw.text((880, 1185), f"{netto:.2f} €".replace(".", ","), fill=ink_color, font=font_bold)
+
+        return base_img
+
+    def _update_canvas_display(self):
+        """Aktualisiert die Canvas-Anzeige unter Berücksichtigung des gewählten Zoom-Modus."""
+        if not self.current_rendered_image:
+            self.canvas.delete("all")
+            return
+
+        img = self.current_rendered_image
+
+        if self.zoom_mode == "fit":
+            # An Canvas-Fenstergröße anpassen
+            canvas_w = max(self.canvas.winfo_width(), 300)
+            canvas_h = max(self.canvas.winfo_height(), 300)
+
+            # Proportionale Skalierung
+            scale_w = canvas_w / img.width
+            scale_h = canvas_h / img.height
+            scale = min(scale_w, scale_h)
+
+            new_w = max(int(img.width * scale), 10)
+            new_h = max(int(img.height * scale), 10)
+
+            display_img = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+        else:
+            # 100% Zoom Originalgröße
+            display_img = img
+
+        self.photo_image = ImageTk.PhotoImage(display_img)
+
+        self.canvas.delete("all")
+        self.canvas.create_image(
+            display_img.width // 2 if self.zoom_mode == "fit" else 0,
+            display_img.height // 2 if self.zoom_mode == "fit" else 0,
+            image=self.photo_image,
+            anchor="center" if self.zoom_mode == "fit" else "nw",
+        )
+
+        self.canvas.config(scrollregion=(0, 0, display_img.width, display_img.height))
+
+        # Button Styling aktualisieren
+        if self.active_side == "front":
+            self.btn_side_front.state(["disabled"])
+            self.btn_side_back.state(["!disabled"])
+        else:
+            self.btn_side_front.state(["!disabled"])
+            self.btn_side_back.state(["disabled"])
