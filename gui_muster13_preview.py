@@ -23,6 +23,51 @@ _UI_B = ("Segoe UI", 9, "bold")
 _STUFE_ICON = {"fehler": "⛔", "warnung": "⚠️", "info": "ℹ️"}
 _STUFE_RANG = {"fehler": 0, "warnung": 1, "info": 2}
 
+# Standard-Fallback-Bounding-Boxen (abs_x, abs_y, abs_w, abs_h) für Muster 13 Verordnung
+DEFAULT_MUSTER13_BOXES: Dict[str, tuple] = {
+    "krankenkasse": (249, 56, 478, 43),
+    "versicherter_name": (252, 116, 334, 102),
+    "geb_datum": (588, 151, 137, 69),
+    "ik": (248, 231, 168, 39),
+    "vers_nr": (419, 234, 187, 35),
+    "status": (616, 234, 110, 36),
+    "bsnr": (250, 285, 163, 38),
+    "lanr": (420, 285, 163, 34),
+    "verordnungsdatum": (588, 286, 138, 35),
+    "zuz_frei": (205, 39, 42, 43),
+    "zuz_pflicht": (206, 99, 42, 40),
+    "unfallfolgen": (207, 158, 38, 46),
+    "bvg": (207, 219, 39, 43),
+    "v_art_erst": (752, 35, 30, 30),
+    "v_art_folge": (752, 65, 30, 30),
+    "hm_physio": (752, 100, 27, 31),
+    "hm_podo": (754, 138, 28, 31),
+    "hm_logo": (752, 175, 29, 31),
+    "hm_ergo": (753, 212, 29, 31),
+    "hm_ernaehrung": (752, 251, 30, 32),
+    "diag_freitext": (416, 363, 626, 73),
+    "diag_gruppe": (339, 441, 62, 33),
+    "icd10": (248, 357, 154, 80),
+    "leitsymp_code": (1011, 440, 32, 37),
+    "leitsymp_a": (629, 443, 28, 31),
+    "leitsymp_b": (691, 443, 31, 32),
+    "leitsymp_c": (754, 442, 27, 33),
+    "leitsymp_patientenindividuell": (1013, 444, 30, 31),
+    "leitsymp_freitext": (246, 499, 797, 76),
+    "therapiebericht": (247, 824, 32, 31),
+    "hausbesuch_ja": (569, 826, 29, 28),
+    "hausbesuch_nein": (644, 824, 33, 32),
+    "therapiefrequenz": (836, 822, 209, 34),
+    "therapieziele": (247, 947, 489, 213),
+    "hm_pos1_label": (246, 627, 657, 114),
+    "hm_pos1_anzahl": (909, 627, 130, 115),
+    "hm_pos2_label": (247, 766, 657, 39),
+    "hm_pos2_anzahl": (908, 767, 134, 39),
+    "ik_leistungserbringer": (461, 1174, 275, 38),
+    "arztstempel": (756, 1000, 284, 193),
+    "arztunterschrift": (789, 1063, 210, 74),
+}
+
 
 class ScrollableFrame(ttk.Frame):
     """Vertikal scrollbarer Container — das Verordnungsblatt ist höher als der Tab."""
@@ -374,7 +419,8 @@ class Muster13PreviewFrame(ttk.Frame):
         self._update_canvas_display()
 
     def _load_calibrated_coords(self) -> Dict[str, tuple]:
-        """Lädt benutzerdefinierte Kalibrierungskoordinaten aus assets/muster13_coords.json."""
+        """Lädt benutzerdefinierte Kalibrierungskoordinaten (abs_x, abs_y, abs_w, abs_h) aus assets/muster13_coords.json."""
+        coords = dict(DEFAULT_MUSTER13_BOXES)
         json_path = os.path.join(self.base_dir, "assets", "muster13_coords.json")
         if os.path.exists(json_path):
             try:
@@ -382,10 +428,122 @@ class Muster13PreviewFrame(ttk.Frame):
                 with open(json_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     fields = data.get("fields", {})
-                    return {k: (v["abs_x"], v["abs_y"]) for k, v in fields.items()}
+                    for k, v in fields.items():
+                        coords[k] = (
+                            int(v["abs_x"]),
+                            int(v["abs_y"]),
+                            int(v.get("abs_w", DEFAULT_MUSTER13_BOXES.get(k, (0, 0, 30, 30))[2])),
+                            int(v.get("abs_h", DEFAULT_MUSTER13_BOXES.get(k, (0, 0, 30, 30))[3])),
+                        )
             except Exception:
                 pass
-        return {}
+        return coords
+
+    @staticmethod
+    def _draw_checkbox(
+        draw: ImageDraw.ImageDraw,
+        box: tuple,
+        char: str = "X",
+        fill: tuple = (180, 20, 20),
+        font: Any = None,
+    ):
+        """
+        Platziert ein Kreuz [X] exakt horizontal und vertikal zentriert in der Checkbox-Box (x, y, w, h).
+        """
+        if len(box) >= 4:
+            x, y, w, h = box[0], box[1], box[2], box[3]
+        else:
+            x, y = box[0], box[1]
+            w, h = 30, 30
+
+        bb = draw.textbbox((0, 0), char, font=font)
+        tw = bb[2] - bb[0]
+        th = bb[3] - bb[1]
+
+        center_x = x + (w - tw) / 2.0 - bb[0]
+        center_y = y + (h - th) / 2.0 - bb[1]
+
+        draw.text((center_x, center_y), char, fill=fill, font=font)
+
+    @staticmethod
+    def _wrap_text_lines(draw: ImageDraw.ImageDraw, text: str, font: Any, max_width: int) -> List[str]:
+        """
+        Bricht Text anhand von bestehenden Newlines und der maximalen Pixelbreite (Word-Wrap) um.
+        """
+        lines = []
+        for raw_line in str(text).split("\n"):
+            raw_line = raw_line.strip()
+            if not raw_line:
+                lines.append("")
+                continue
+
+            words = raw_line.split(" ")
+            current_line = ""
+            for word in words:
+                candidate = f"{current_line} {word}".strip() if current_line else word
+                bbox = draw.textbbox((0, 0), candidate, font=font)
+                cand_w = bbox[2] - bbox[0]
+                if cand_w <= max_width:
+                    current_line = candidate
+                else:
+                    if current_line:
+                        lines.append(current_line)
+                        current_line = word
+                    else:
+                        lines.append(word)
+                        current_line = ""
+            if current_line:
+                lines.append(current_line)
+        return lines or [""]
+
+    @classmethod
+    def _draw_text_in_box(
+        cls,
+        draw: ImageDraw.ImageDraw,
+        box: tuple,
+        text: str,
+        font: Any,
+        fill: tuple = (5, 20, 90),
+        pad_x: int = 4,
+        align_h: str = "left",
+    ):
+        """
+        Rendert einzeiligen oder mehrzeiligen Text in einer Bounding-Box (x, y, w, h).
+        - Mehrzeilige Texte werden automatisch an max_width (w - 2 * pad_x) umbrochen.
+        - Der gesamte resultierende Textblock wird vertikal exakt in der Mitte der Box zentriert:
+          Die Mitte des Textblocks liegt auf der vertikalen Mitte des Feldes.
+        - Horizontal: leicht linksbündig mit pad_x (oder 'center' falls align_h == 'center').
+        """
+        if not text:
+            return
+
+        if len(box) >= 4:
+            x, y, w, h = box[0], box[1], box[2], box[3]
+        else:
+            x, y = box[0], box[1]
+            w, h = 200, 30
+
+        max_w = max(w - 2 * pad_x, 10)
+        lines = cls._wrap_text_lines(draw, text, font, max_w)
+
+        sample_bb = draw.textbbox((0, 0), "Ag123q", font=font)
+        line_h = max(sample_bb[3] - sample_bb[1], 12)
+        line_spacing = max(int(line_h * 1.25), line_h + 4)
+
+        n_lines = len(lines)
+        # Vertikaler Startpunkt: Mitte des Textblocks liegt genau auf der Mitte des Feldes
+        y_start = (y + h / 2.0) - ((n_lines - 1) * line_spacing / 2.0 + (sample_bb[1] + sample_bb[3]) / 2.0)
+
+        for i, line in enumerate(lines):
+            cur_y = y_start + i * line_spacing
+            if align_h == "center":
+                l_bb = draw.textbbox((0, 0), line, font=font)
+                lw = l_bb[2] - l_bb[0]
+                cur_x = x + (w - lw) / 2.0 - l_bb[0]
+            else:
+                cur_x = x + pad_x
+
+            draw.text((cur_x, cur_y), line, fill=fill, font=font)
 
     def _render_front_side(
         self, beleg: Dict[str, Any], font_reg, font_bold, font_small
@@ -407,129 +565,223 @@ class Muster13PreviewFrame(ttk.Frame):
 
         # 1. Krankenkasse / Kostenträger
         ik_str = str(beleg.get("ik", ""))
-        # 1. Krankenkasse / Kostenträger
-        ik_str = str(beleg.get("ik", ""))
-        pos_kasse = c.get("krankenkasse", (249, 56))
-        draw.text(pos_kasse, f"IK: {ik_str}".strip() if ik_str else "Krankenkasse", fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw,
+            c.get("krankenkasse", DEFAULT_MUSTER13_BOXES["krankenkasse"]),
+            f"IK: {ik_str}".strip() if ik_str else "Krankenkasse",
+            font=font_reg,
+            fill=ink_color,
+        )
 
         # 2. Name des Versicherten
         nachname = beleg.get("nachname", "")
         vorname = beleg.get("vorname", "")
         full_name = f"{nachname}, {vorname}".strip(", ")
-        pos_name = c.get("versicherter_name", (252, 116))
-        draw.text(pos_name, full_name or "-", fill=ink_color, font=font_bold)
+        self._draw_text_in_box(
+            draw,
+            c.get("versicherter_name", DEFAULT_MUSTER13_BOXES["versicherter_name"]),
+            full_name or "-",
+            font=font_bold,
+            fill=ink_color,
+        )
 
         # 3. Geburtsdatum (geb. am)
         geb_raw = str(beleg.get("geburtstag", ""))
         geb_fmt = format_date_german(geb_raw)
-        pos_geb = c.get("geb_datum", (588, 151))
-        draw.text(pos_geb, geb_fmt or "-", fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw,
+            c.get("geb_datum", DEFAULT_MUSTER13_BOXES["geb_datum"]),
+            geb_fmt or "-",
+            font=font_reg,
+            fill=ink_color,
+        )
 
         # 4. Kostenträgerkennung / Versicherten-Nr. / Status
-        pos_ik = c.get("ik", (248, 231))
-        draw.text(pos_ik, ik_str or "-", fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw, c.get("ik", DEFAULT_MUSTER13_BOXES["ik"]), ik_str or "-", font=font_reg, fill=ink_color
+        )
         vers_nr = str(beleg.get("versichertennummer", ""))
-        pos_vnr = c.get("vers_nr", (419, 234))
-        draw.text(pos_vnr, vers_nr or "-", fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw, c.get("vers_nr", DEFAULT_MUSTER13_BOXES["vers_nr"]), vers_nr or "-", font=font_reg, fill=ink_color
+        )
         status = str(beleg.get("versichertenstatus", ""))
-        pos_status = c.get("status", (616, 234))
-        draw.text(pos_status, status or "-", fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw, c.get("status", DEFAULT_MUSTER13_BOXES["status"]), status or "-", font=font_reg, fill=ink_color
+        )
 
         # 5. BSNR / LANR / Verordnungsdatum
         bsnr = str(beleg.get("bsnr", ""))
-        pos_bsnr = c.get("bsnr", (250, 285))
-        draw.text(pos_bsnr, bsnr or "-", fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw, c.get("bsnr", DEFAULT_MUSTER13_BOXES["bsnr"]), bsnr or "-", font=font_reg, fill=ink_color
+        )
         lanr = str(beleg.get("lanr", ""))
-        pos_lanr = c.get("lanr", (420, 285))
-        draw.text(pos_lanr, lanr or "-", fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw, c.get("lanr", DEFAULT_MUSTER13_BOXES["lanr"]), lanr or "-", font=font_reg, fill=ink_color
+        )
         v_datum_raw = str(beleg.get("verordnungsdatum", ""))
         v_datum_fmt = format_date_german(v_datum_raw)
-        pos_vdatum = c.get("verordnungsdatum", (588, 286))
-        draw.text(pos_vdatum, v_datum_fmt or "-", fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw,
+            c.get("verordnungsdatum", DEFAULT_MUSTER13_BOXES["verordnungsdatum"]),
+            v_datum_fmt or "-",
+            font=font_reg,
+            fill=ink_color,
+        )
 
         # 6. Checkboxen Zuzahlung / Unfallfolgen / BVG
         zkz = str(beleg.get("zuzahlungskennzeichen", "2"))
         if zkz in ["0", "1"]:
-            draw.text(c.get("zuz_frei", (205, 39)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("zuz_frei", DEFAULT_MUSTER13_BOXES["zuz_frei"]), "X", fill=check_color, font=font_bold
+            )
         else:
-            draw.text(c.get("zuz_pflicht", (206, 99)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("zuz_pflicht", DEFAULT_MUSTER13_BOXES["zuz_pflicht"]), "X", fill=check_color, font=font_bold
+            )
 
         if beleg.get("unfallfolgen"):
-            draw.text(c.get("unfallfolgen", (207, 158)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("unfallfolgen", DEFAULT_MUSTER13_BOXES["unfallfolgen"]), "X", fill=check_color, font=font_bold
+            )
         if beleg.get("bvg"):
-            draw.text(c.get("bvg", (207, 219)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("bvg", DEFAULT_MUSTER13_BOXES["bvg"]), "X", fill=check_color, font=font_bold
+            )
 
         # 7. Checkboxen Verordnungsart
         v_art = str(beleg.get("verordnungsart", "1"))
         if v_art == "1":
-            draw.text(c.get("v_art_erst", (752, 35)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("v_art_erst", DEFAULT_MUSTER13_BOXES["v_art_erst"]), "X", fill=check_color, font=font_bold
+            )
         elif v_art == "2":
-            draw.text(c.get("v_art_folge", (752, 65)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("v_art_folge", DEFAULT_MUSTER13_BOXES["v_art_folge"]), "X", fill=check_color, font=font_bold
+            )
 
         # 8. Checkboxen Heilmittelbereich
         hm_bereich = str(beleg.get("heilmittelbereich", ""))
         if "54001" in str(beleg.get("positions", [])) or hm_bereich == "2":
-            draw.text(c.get("hm_ergo", (753, 212)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("hm_ergo", DEFAULT_MUSTER13_BOXES["hm_ergo"]), "X", fill=check_color, font=font_bold
+            )
         elif "40101" in str(beleg.get("positions", [])) or hm_bereich == "3":
-            draw.text(c.get("hm_logo", (752, 175)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("hm_logo", DEFAULT_MUSTER13_BOXES["hm_logo"]), "X", fill=check_color, font=font_bold
+            )
         else:
-            draw.text(c.get("hm_physio", (752, 100)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("hm_physio", DEFAULT_MUSTER13_BOXES["hm_physio"]), "X", fill=check_color, font=font_bold
+            )
 
         # 9. Diagnosen & Leitsymptomatik
         diag = str(beleg.get("diagnosegruppe", ""))
         icd = str(beleg.get("icd10", ""))
         leitsymp = str(beleg.get("leitsymptomatik", ""))
 
-        pos_diag_frei = c.get("diag_freitext", (416, 363))
-        draw.text(pos_diag_frei, f"{icd} {leitsymp}".strip(), fill=ink_color, font=font_reg)
-
-        pos_dgruppe = c.get("diag_gruppe", (339, 441))
-        pos_icd = c.get("icd10", (248, 357))
-
-        draw.text(pos_dgruppe, diag or "-", fill=ink_color, font=font_bold)
-        draw.text(pos_icd, icd or "-", fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw,
+            c.get("diag_freitext", DEFAULT_MUSTER13_BOXES["diag_freitext"]),
+            f"{icd} {leitsymp}".strip(),
+            font=font_reg,
+            fill=ink_color,
+        )
+        self._draw_text_in_box(
+            draw,
+            c.get("diag_gruppe", DEFAULT_MUSTER13_BOXES["diag_gruppe"]),
+            diag or "-",
+            font=font_bold,
+            fill=ink_color,
+            align_h="center",
+        )
+        self._draw_text_in_box(
+            draw, c.get("icd10", DEFAULT_MUSTER13_BOXES["icd10"]), icd or "-", font=font_reg, fill=ink_color
+        )
 
         # Leitsymptomatik Checkboxen a, b, c
         ls_kombi = str(beleg.get("leitsymptomatik_kombi", "a")).lower()
         if "a" in ls_kombi:
-            draw.text(c.get("leitsymp_a", (629, 443)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("leitsymp_a", DEFAULT_MUSTER13_BOXES["leitsymp_a"]), "X", fill=check_color, font=font_bold
+            )
         if "b" in ls_kombi:
-            draw.text(c.get("leitsymp_b", (691, 443)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("leitsymp_b", DEFAULT_MUSTER13_BOXES["leitsymp_b"]), "X", fill=check_color, font=font_bold
+            )
         if "c" in ls_kombi:
-            draw.text(c.get("leitsymp_c", (754, 442)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw, c.get("leitsymp_c", DEFAULT_MUSTER13_BOXES["leitsymp_c"]), "X", fill=check_color, font=font_bold
+            )
 
         if leitsymp:
-            pos_lsymp_frei = c.get("leitsymp_freitext", (246, 499))
-            draw.text(pos_lsymp_frei, leitsymp[:48], fill=ink_color, font=font_reg)
+            self._draw_text_in_box(
+                draw,
+                c.get("leitsymp_freitext", DEFAULT_MUSTER13_BOXES["leitsymp_freitext"]),
+                leitsymp,
+                font=font_reg,
+                fill=ink_color,
+            )
 
         # 10. Therapieoptionen (Therapiebericht, Hausbesuch, Therapiefrequenz, Therapieziele)
         tb_req = beleg.get("therapiebericht", True)
         if tb_req:
-            draw.text(c.get("therapiebericht", (247, 824)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw,
+                c.get("therapiebericht", DEFAULT_MUSTER13_BOXES["therapiebericht"]),
+                "X",
+                fill=check_color,
+                font=font_bold,
+            )
 
         hb_req = beleg.get("hausbesuch", False)
         if hb_req:
-            draw.text(c.get("hausbesuch_ja", (569, 826)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw,
+                c.get("hausbesuch_ja", DEFAULT_MUSTER13_BOXES["hausbesuch_ja"]),
+                "X",
+                fill=check_color,
+                font=font_bold,
+            )
         else:
-            draw.text(c.get("hausbesuch_nein", (644, 824)), "X", fill=check_color, font=font_bold)
+            self._draw_checkbox(
+                draw,
+                c.get("hausbesuch_nein", DEFAULT_MUSTER13_BOXES["hausbesuch_nein"]),
+                "X",
+                fill=check_color,
+                font=font_bold,
+            )
 
         frequenz = str(beleg.get("therapiefrequenz", "1-2x wöchentlich"))
-        draw.text(c.get("therapiefrequenz", (836, 822)), frequenz, fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw,
+            c.get("therapiefrequenz", DEFAULT_MUSTER13_BOXES["therapiefrequenz"]),
+            frequenz,
+            font=font_reg,
+            fill=ink_color,
+        )
 
         ziele = str(beleg.get("therapieziele", ""))
         if ziele:
-            draw.text(c.get("therapieziele", (247, 947)), ziele[:45], fill=ink_color, font=font_reg)
+            self._draw_text_in_box(
+                draw,
+                c.get("therapieziele", DEFAULT_MUSTER13_BOXES["therapieziele"]),
+                ziele,
+                font=font_reg,
+                fill=ink_color,
+            )
 
         # 11. Heilmittel Tabelle
         positions = beleg.get("positions", [])
-        pos_hm1_lbl = c.get("hm_pos1_label", (246, 627))
-        pos_hm1_anz = c.get("hm_pos1_anzahl", (909, 627))
-
-        pos_hm2_lbl = c.get("hm_pos2_label", (247, 766))
-        pos_hm2_anz = c.get("hm_pos2_anzahl", (908, 767))
-
-        y_positions = [pos_hm1_lbl, pos_hm2_lbl]
-        anz_positions = [pos_hm1_anz, pos_hm2_anz]
+        hm_boxes = [
+            (
+                c.get("hm_pos1_label", DEFAULT_MUSTER13_BOXES["hm_pos1_label"]),
+                c.get("hm_pos1_anzahl", DEFAULT_MUSTER13_BOXES["hm_pos1_anzahl"]),
+            ),
+            (
+                c.get("hm_pos2_label", DEFAULT_MUSTER13_BOXES["hm_pos2_label"]),
+                c.get("hm_pos2_anzahl", DEFAULT_MUSTER13_BOXES["hm_pos2_anzahl"]),
+            ),
+        ]
 
         for idx, pos in enumerate(positions[:2]):
             code = str(pos.get("code", ""))
@@ -544,18 +796,37 @@ class Muster13PreviewFrame(ttk.Frame):
             }
             label = code_labels.get(code, f"Heilmittel Pos. {code}" if code else f"Behandlung ({pos.get('tag', 'EHE')})")
 
-            draw.text(y_positions[idx], label, fill=ink_color, font=font_bold)
-            draw.text(anz_positions[idx], f"{anzahl:g}", fill=ink_color, font=font_bold)
+            lbl_box, anz_box = hm_boxes[idx]
+            self._draw_text_in_box(draw, lbl_box, label, font=font_bold, fill=ink_color)
+            self._draw_text_in_box(draw, anz_box, f"{anzahl:g}", font=font_bold, fill=ink_color, align_h="center")
 
         # 12. Fusszeile (IK des Leistungserbringers, Arztstempel & Unterschrift)
         ik_le = str(beleg.get("ik_leistungserbringer", beleg.get("ik", "")))
-        draw.text(c.get("ik_leistungserbringer", (461, 1174)), ik_le, fill=ink_color, font=font_reg)
+        self._draw_text_in_box(
+            draw,
+            c.get("ik_leistungserbringer", DEFAULT_MUSTER13_BOXES["ik_leistungserbringer"]),
+            ik_le,
+            font=font_reg,
+            fill=ink_color,
+        )
 
         if "arztstempel" in c:
-            draw.text(c["arztstempel"], "Praxis Dr. med. Musterarzt\nFacharzt für Allgemeinmedizin", fill=(20, 20, 100), font=font_small)
+            self._draw_text_in_box(
+                draw,
+                c["arztstempel"],
+                "Praxis Dr. med. Musterarzt\nFacharzt für Allgemeinmedizin",
+                font=font_small,
+                fill=(20, 20, 100),
+            )
 
         if "arztunterschrift" in c:
-            draw.text(c["arztunterschrift"], "Dr. Musterarzt", fill=(10, 10, 80), font=font_reg)
+            self._draw_text_in_box(
+                draw,
+                c["arztunterschrift"],
+                "Dr. Musterarzt",
+                font=font_reg,
+                fill=(10, 10, 80),
+            )
 
         return base_img
 
@@ -578,6 +849,7 @@ class Muster13PreviewFrame(ttk.Frame):
         patient_label = f"{nachname}, {vorname}".strip(", ")
 
         row_y_list = [203, 236, 269, 302, 334, 368, 400, 433, 466, 499, 532, 565, 598, 630, 664, 696]
+        row_height = 32
         row_idx = 0
 
         for pos in positions:
@@ -590,13 +862,20 @@ class Muster13PreviewFrame(ttk.Frame):
                 if row_idx >= len(row_y_list):
                     break
                 y_r = row_y_list[row_idx]
-                draw.text((270, y_r + 6), datum_fmt or "-", fill=ink_color, font=font_reg)
-                draw.text((390, y_r + 6), code or "-", fill=ink_color, font=font_reg)
-                draw.text((520, y_r + 6), patient_label[:22], fill=ink_color, font=font_small)
+                self._draw_text_in_box(
+                    draw, (270, y_r, 110, row_height), datum_fmt or "-", font=font_reg, fill=ink_color
+                )
+                self._draw_text_in_box(
+                    draw, (390, y_r, 120, row_height), code or "-", font=font_reg, fill=ink_color
+                )
+                self._draw_text_in_box(
+                    draw, (520, y_r, 450, row_height), patient_label[:22], font=font_small, fill=ink_color
+                )
                 row_idx += 1
 
         # Abrechnungstabelle unten (y=935, 968, 1001...)
         y_abr = 935
+        row_h_abr = 33
         for pos in positions[:5]:
             code = str(pos.get("code", ""))
             anz = f"{pos.get('anzahl', 0.0):g}"
@@ -604,21 +883,38 @@ class Muster13PreviewFrame(ttk.Frame):
             gesamt = f"{pos.get('gesamtbetrag', 0.0):.2f}".replace(".", ",")
             zuz = f"{pos.get('zuzahlung', 0.0):.2f}".replace(".", ",")
 
-            draw.text((270, y_abr), code or "-", fill=ink_color, font=font_reg)
-            draw.text((480, y_abr), anz, fill=ink_color, font=font_reg)
-            draw.text((600, y_abr), einzel + " €", fill=ink_color, font=font_reg)
-            draw.text((750, y_abr), gesamt + " €", fill=ink_color, font=font_reg)
-            draw.text((900, y_abr), zuz + " €", fill=ink_color, font=font_reg)
-            y_abr += 33
+            self._draw_text_in_box(
+                draw, (270, y_abr, 200, row_h_abr), code or "-", font=font_reg, fill=ink_color
+            )
+            self._draw_text_in_box(
+                draw, (480, y_abr, 110, row_h_abr), anz, font=font_reg, fill=ink_color
+            )
+            self._draw_text_in_box(
+                draw, (600, y_abr, 140, row_h_abr), einzel + " €", font=font_reg, fill=ink_color
+            )
+            self._draw_text_in_box(
+                draw, (750, y_abr, 140, row_h_abr), gesamt + " €", font=font_reg, fill=ink_color
+            )
+            self._draw_text_in_box(
+                draw, (900, y_abr, 140, row_h_abr), zuz + " €", font=font_reg, fill=ink_color
+            )
+            y_abr += row_h_abr
 
         # Summenblock unten (y=1185)
         brutto = float(beleg.get("brutto", 0.0))
         tot_zuz = float(beleg.get("total_zuzahlung", 0.0))
         netto = round(brutto - tot_zuz, 2)
+        sum_h = 40
 
-        draw.text((300, 1185), f"{brutto:.2f} €".replace(".", ","), fill=ink_color, font=font_bold)
-        draw.text((600, 1185), f"{tot_zuz:.2f} €".replace(".", ","), fill=ink_color, font=font_bold)
-        draw.text((880, 1185), f"{netto:.2f} €".replace(".", ","), fill=ink_color, font=font_bold)
+        self._draw_text_in_box(
+            draw, (300, 1185, 250, sum_h), f"{brutto:.2f} €".replace(".", ","), font=font_bold, fill=ink_color
+        )
+        self._draw_text_in_box(
+            draw, (600, 1185, 250, sum_h), f"{tot_zuz:.2f} €".replace(".", ","), font=font_bold, fill=ink_color
+        )
+        self._draw_text_in_box(
+            draw, (880, 1185, 250, sum_h), f"{netto:.2f} €".replace(".", ","), font=font_bold, fill=ink_color
+        )
 
         return base_img
 
