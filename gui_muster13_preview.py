@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 from PIL import Image, ImageDraw, ImageFont, ImageTk
 
 import codelisten
+import kostentraeger
 import theme_manager
 from support_helper import translate_error
 from tools.generate_correction import format_date_german
@@ -45,9 +46,14 @@ DEFAULT_MUSTER13_BOXES: Dict[str, tuple] = {
     "hm_logo": (752, 175, 29, 31),
     "hm_ergo": (753, 212, 29, 31),
     "hm_ernaehrung": (752, 251, 30, 32),
-    "diag_freitext": (416, 363, 626, 73),
+    # Diagnosen: Zeile 1 und Zeile 2
+    "diag_freitext": (416, 363, 626, 38),
+    "diag_freitext_row1": (416, 363, 626, 38),
+    "diag_freitext_row2": (416, 401, 626, 38),
     "diag_gruppe": (339, 441, 62, 33),
-    "icd10": (248, 357, 154, 80),
+    "icd10": (248, 357, 154, 39),
+    "icd10_row1": (248, 357, 154, 39),
+    "icd10_row2": (248, 396, 154, 39),
     "leitsymp_code": (1011, 440, 32, 37),
     "leitsymp_a": (629, 443, 28, 31),
     "leitsymp_b": (691, 443, 31, 32),
@@ -59,8 +65,16 @@ DEFAULT_MUSTER13_BOXES: Dict[str, tuple] = {
     "hausbesuch_nein": (644, 824, 33, 32),
     "therapiefrequenz": (836, 822, 209, 34),
     "therapieziele": (247, 947, 489, 213),
-    "hm_pos1_label": (246, 627, 657, 114),
-    "hm_pos1_anzahl": (909, 627, 130, 115),
+    # Vorrangiges Heilmittel: 3 Zeilen
+    "hm_pos1_label": (246, 627, 657, 38),
+    "hm_pos1_anzahl": (909, 627, 130, 38),
+    "hm_pos1_row1_label": (246, 627, 657, 38),
+    "hm_pos1_row1_anzahl": (909, 627, 130, 38),
+    "hm_pos1_row2_label": (246, 665, 657, 38),
+    "hm_pos1_row2_anzahl": (909, 665, 130, 38),
+    "hm_pos1_row3_label": (246, 703, 657, 38),
+    "hm_pos1_row3_anzahl": (909, 703, 130, 38),
+    # Ergänzendes Heilmittel
     "hm_pos2_label": (247, 766, 657, 39),
     "hm_pos2_anzahl": (908, 767, 134, 39),
     "ik_leistungserbringer": (461, 1174, 275, 38),
@@ -155,6 +169,7 @@ class Muster13PreviewFrame(ttk.Frame):
         # Interner Zustand
         self.active_side: str = "front"  # "front" oder "back"
         self.zoom_mode: str = "fit"      # "fit" (An Fenster anpassen) oder "100" (Original 1280x1280)
+        self.zoom_factor: float = 1.0
         self.current_rendered_image: Optional[Image.Image] = None
         self.photo_image: Optional[ImageTk.PhotoImage] = None
 
@@ -198,6 +213,12 @@ class Muster13PreviewFrame(ttk.Frame):
         )
         self.btn_side_back.pack(side="left", padx=2)
 
+        # Export Button
+        self.btn_export = ttk.Button(
+            toolbar, text="💾 Exportieren...", command=self.export_prescription
+        )
+        self.btn_export.pack(side="right", padx=5)
+
         # Zoom Toggle Button
         self.btn_zoom = ttk.Button(
             toolbar, text="🔍 Fit Window", command=self._toggle_zoom
@@ -227,6 +248,20 @@ class Muster13PreviewFrame(ttk.Frame):
         self.canvas.pack(side="left", fill="both", expand=True)
 
         self.canvas.bind("<Configure>", self._on_canvas_configure)
+
+        # Maus-Interaktionen für Scrollen, Zoomen & Panning
+        self.canvas.bind("<Enter>", lambda e: self.canvas.focus_set())
+        self.canvas.bind("<MouseWheel>", self._on_mousewheel)
+        self.canvas.bind("<Control-MouseWheel>", self._on_ctrl_mousewheel)
+        self.canvas.bind("<Alt-MouseWheel>", self._on_alt_mousewheel)
+        self.canvas.bind("<Shift-MouseWheel>", self._on_alt_mousewheel)
+        self.canvas.bind("<Button-4>", self._on_mousewheel)
+        self.canvas.bind("<Button-5>", self._on_mousewheel)
+
+        self.canvas.bind("<Alt-ButtonPress-1>", self._on_pan_start)
+        self.canvas.bind("<Alt-B1-Motion>", self._on_pan_move)
+        self.canvas.bind("<ButtonPress-2>", self._on_pan_start)
+        self.canvas.bind("<B2-Motion>", self._on_pan_move)
 
         # -------------------------------------------------------------
         # Summen- & Info-Panel unten
@@ -314,12 +349,58 @@ class Muster13PreviewFrame(ttk.Frame):
             self.active_side = side
             self._render_active_beleg()
 
+    def _on_pan_start(self, event):
+        self.canvas.scan_mark(event.x, event.y)
+
+    def _on_pan_move(self, event):
+        self.canvas.scan_dragto(event.x, event.y, gain=1)
+
+    def _on_mousewheel(self, event):
+        state = getattr(event, "state", 0)
+        # Control-Taste gehalten -> Zoom
+        if state & 0x0004:
+            return self._on_ctrl_mousewheel(event)
+        # Alt- oder Shift-Taste gehalten -> Horizontaler Bildlauf
+        if (state & 0x20000) or (state & 0x0008) or (state & 0x0001):
+            return self._on_alt_mousewheel(event)
+
+        # Vertikaler Bildlauf
+        delta = getattr(event, "delta", 0)
+        if getattr(event, "num", None) == 4:
+            schritte = -1
+        elif getattr(event, "num", None) == 5:
+            schritte = 1
+        else:
+            schritte = -1 if delta > 0 else 1
+        self.canvas.yview_scroll(schritte, "units")
+
+    def _on_alt_mousewheel(self, event):
+        delta = getattr(event, "delta", 0)
+        schritte = -1 if delta > 0 else 1
+        self.canvas.xview_scroll(schritte, "units")
+
+    def _on_ctrl_mousewheel(self, event):
+        delta = getattr(event, "delta", 0)
+        if delta > 0 or getattr(event, "num", None) == 4:
+            self._zoom_by(1.15)
+        else:
+            self._zoom_by(1.0 / 1.15)
+
+    def _zoom_by(self, factor: float):
+        self.zoom_mode = "custom"
+        self.zoom_factor = max(0.2, min(self.zoom_factor * factor, 4.0))
+        pct = int(self.zoom_factor * 100)
+        self.btn_zoom.config(text=f"🔍 {pct}%")
+        self._update_canvas_display()
+
     def _toggle_zoom(self):
         if self.zoom_mode == "fit":
             self.zoom_mode = "100"
+            self.zoom_factor = 1.0
             self.btn_zoom.config(text="🔍 100% Zoom")
         else:
             self.zoom_mode = "fit"
+            self.zoom_factor = 1.0
             self.btn_zoom.config(text="🔍 Fit Window")
         self._update_canvas_display()
 
@@ -418,6 +499,16 @@ class Muster13PreviewFrame(ttk.Frame):
         self.current_rendered_image = img
         self._update_canvas_display()
 
+    def _get_krankenkasse_name(self, beleg: Dict[str, Any]) -> str:
+        """Ermittelt den Klarnamen der Krankenkasse / des Kostenträgers anhand der IK."""
+        for key in ("krankenkasse_name", "name_krankenkasse", "kassenname"):
+            val = str(beleg.get(key, "")).strip()
+            if val:
+                return val
+
+        ik = str(beleg.get("krankenkasse_ik") or beleg.get("kostentraeger_ik") or beleg.get("ik") or "").strip()
+        return kostentraeger.get_name_or_fallback(ik)
+
     def _load_calibrated_coords(self) -> Dict[str, tuple]:
         """Lädt benutzerdefinierte Kalibrierungskoordinaten (abs_x, abs_y, abs_w, abs_h) aus assets/muster13_coords.json."""
         coords = dict(DEFAULT_MUSTER13_BOXES)
@@ -429,12 +520,35 @@ class Muster13PreviewFrame(ttk.Frame):
                     data = json.load(f)
                     fields = data.get("fields", {})
                     for k, v in fields.items():
-                        coords[k] = (
-                            int(v["abs_x"]),
-                            int(v["abs_y"]),
-                            int(v.get("abs_w", DEFAULT_MUSTER13_BOXES.get(k, (0, 0, 30, 30))[2])),
-                            int(v.get("abs_h", DEFAULT_MUSTER13_BOXES.get(k, (0, 0, 30, 30))[3])),
-                        )
+                        x = int(v["abs_x"])
+                        y = int(v["abs_y"])
+                        w = int(v.get("abs_w", DEFAULT_MUSTER13_BOXES.get(k, (0, 0, 30, 30))[2]))
+                        h = int(v.get("abs_h", DEFAULT_MUSTER13_BOXES.get(k, (0, 0, 30, 30))[3]))
+
+                        if k == "hm_pos1_label":
+                            row_h = (h // 3) if h > 50 else h
+                            coords["hm_pos1_label"] = (x, y, w, row_h)
+                            coords["hm_pos1_row1_label"] = (x, y, w, row_h)
+                            coords["hm_pos1_row2_label"] = (x, y + row_h, w, row_h)
+                            coords["hm_pos1_row3_label"] = (x, y + 2 * row_h, w, row_h)
+                        elif k == "hm_pos1_anzahl":
+                            row_h = (h // 3) if h > 50 else h
+                            coords["hm_pos1_anzahl"] = (x, y, w, row_h)
+                            coords["hm_pos1_row1_anzahl"] = (x, y, w, row_h)
+                            coords["hm_pos1_row2_anzahl"] = (x, y + row_h, w, row_h)
+                            coords["hm_pos1_row3_anzahl"] = (x, y + 2 * row_h, w, row_h)
+                        elif k == "icd10":
+                            row_h = (h // 2) if h > 50 else h
+                            coords["icd10"] = (x, y, w, row_h)
+                            coords["icd10_row1"] = (x, y, w, row_h)
+                            coords["icd10_row2"] = (x, y + row_h, w, row_h)
+                        elif k == "diag_freitext":
+                            row_h = (h // 2) if h > 50 else h
+                            coords["diag_freitext"] = (x, y, w, row_h)
+                            coords["diag_freitext_row1"] = (x, y, w, row_h)
+                            coords["diag_freitext_row2"] = (x, y + row_h, w, row_h)
+                        else:
+                            coords[k] = (x, y, w, h)
             except Exception:
                 pass
         return coords
@@ -564,11 +678,11 @@ class Muster13PreviewFrame(ttk.Frame):
         c = self._load_calibrated_coords()
 
         # 1. Krankenkasse / Kostenträger
-        ik_str = str(beleg.get("ik", ""))
+        kassen_name = self._get_krankenkasse_name(beleg)
         self._draw_text_in_box(
             draw,
             c.get("krankenkasse", DEFAULT_MUSTER13_BOXES["krankenkasse"]),
-            f"IK: {ik_str}".strip() if ik_str else "Krankenkasse",
+            kassen_name,
             font=font_reg,
             fill=ink_color,
         )
@@ -597,6 +711,7 @@ class Muster13PreviewFrame(ttk.Frame):
         )
 
         # 4. Kostenträgerkennung / Versicherten-Nr. / Status
+        ik_str = str(beleg.get("kostentraeger_ik") or beleg.get("krankenkasse_ik") or beleg.get("ik", ""))
         self._draw_text_in_box(
             draw, c.get("ik", DEFAULT_MUSTER13_BOXES["ik"]), ik_str or "-", font=font_reg, fill=ink_color
         )
@@ -679,10 +794,13 @@ class Muster13PreviewFrame(ttk.Frame):
         icd = str(beleg.get("icd10", ""))
         leitsymp = str(beleg.get("leitsymptomatik", ""))
 
+        # Diagnose im ersten Feld der Tabelle zentriert
+        diag_text = f"{icd} {leitsymp}".strip() if icd or leitsymp else ""
+        box_diag = c.get("diag_freitext_row1", c.get("diag_freitext", DEFAULT_MUSTER13_BOXES["diag_freitext_row1"]))
         self._draw_text_in_box(
             draw,
-            c.get("diag_freitext", DEFAULT_MUSTER13_BOXES["diag_freitext"]),
-            f"{icd} {leitsymp}".strip(),
+            box_diag,
+            diag_text,
             font=font_reg,
             fill=ink_color,
         )
@@ -694,8 +812,13 @@ class Muster13PreviewFrame(ttk.Frame):
             fill=ink_color,
             align_h="center",
         )
+        box_icd = c.get("icd10_row1", c.get("icd10", DEFAULT_MUSTER13_BOXES["icd10_row1"]))
         self._draw_text_in_box(
-            draw, c.get("icd10", DEFAULT_MUSTER13_BOXES["icd10"]), icd or "-", font=font_reg, fill=ink_color
+            draw,
+            box_icd,
+            icd or "-",
+            font=font_reg,
+            fill=ink_color,
         )
 
         # Leitsymptomatik Checkboxen a, b, c
@@ -771,37 +894,61 @@ class Muster13PreviewFrame(ttk.Frame):
             )
 
         # 11. Heilmittel Tabelle
+        # Aufteilung in Vorrangige Heilmittel (Zeilen 1 bis 3) und Ergänzende Heilmittel
         positions = beleg.get("positions", [])
-        hm_boxes = [
-            (
-                c.get("hm_pos1_label", DEFAULT_MUSTER13_BOXES["hm_pos1_label"]),
-                c.get("hm_pos1_anzahl", DEFAULT_MUSTER13_BOXES["hm_pos1_anzahl"]),
-            ),
-            (
-                c.get("hm_pos2_label", DEFAULT_MUSTER13_BOXES["hm_pos2_label"]),
-                c.get("hm_pos2_anzahl", DEFAULT_MUSTER13_BOXES["hm_pos2_anzahl"]),
-            ),
+        ergaenzend_codes = {"29901", "29701", "29801", "29802", "29803"}
+
+        vorrangig_pos = []
+        ergaenzend_pos = []
+        for p in positions:
+            p_code = str(p.get("code", "")).strip()
+            if p_code in ergaenzend_codes:
+                ergaenzend_pos.append(p)
+            else:
+                vorrangig_pos.append(p)
+
+        if not vorrangig_pos and ergaenzend_pos:
+            vorrangig_pos.append(ergaenzend_pos.pop(0))
+
+        code_labels = {
+            "20501": "Krankengymnastik (Einzelbehandlung)",
+            "29901": "Wärmetherapie / Fango",
+            "54001": "Motorisch-funktionelle Behandlung",
+            "40101": "Sprachtherapie (Einzelbehandlung 45 Min)",
+            "59702": "Ergotherapeutische Schienenbehandlung",
+        }
+
+        # 1. Vorrangige Heilmittel in Zeile 1, Zeile 2, Zeile 3
+        vorrangig_rows = [
+            (c.get("hm_pos1_row1_label", DEFAULT_MUSTER13_BOXES["hm_pos1_row1_label"]),
+             c.get("hm_pos1_row1_anzahl", DEFAULT_MUSTER13_BOXES["hm_pos1_row1_anzahl"])),
+            (c.get("hm_pos1_row2_label", DEFAULT_MUSTER13_BOXES["hm_pos1_row2_label"]),
+             c.get("hm_pos1_row2_anzahl", DEFAULT_MUSTER13_BOXES["hm_pos1_row2_anzahl"])),
+            (c.get("hm_pos1_row3_label", DEFAULT_MUSTER13_BOXES["hm_pos1_row3_label"]),
+             c.get("hm_pos1_row3_anzahl", DEFAULT_MUSTER13_BOXES["hm_pos1_row3_anzahl"])),
         ]
 
-        for idx, pos in enumerate(positions[:2]):
+        for idx, pos in enumerate(vorrangig_pos[:3]):
             code = str(pos.get("code", ""))
             anzahl = pos.get("anzahl", 0.0)
-
-            code_labels = {
-                "20501": "Krankengymnastik (Einzelbehandlung)",
-                "29901": "Wärmetherapie / Fango",
-                "54001": "Motorisch-funktionelle Behandlung",
-                "40101": "Sprachtherapie (Einzelbehandlung 45 Min)",
-                "59702": "Ergotherapeutische Schienenbehandlung",
-            }
             label = code_labels.get(code, f"Heilmittel Pos. {code}" if code else f"Behandlung ({pos.get('tag', 'EHE')})")
-
-            lbl_box, anz_box = hm_boxes[idx]
+            lbl_box, anz_box = vorrangig_rows[idx]
             self._draw_text_in_box(draw, lbl_box, label, font=font_bold, fill=ink_color)
             self._draw_text_in_box(draw, anz_box, f"{anzahl:g}", font=font_bold, fill=ink_color, align_h="center")
 
+        # 2. Ergänzendes Heilmittel (falls vorhanden)
+        if ergaenzend_pos:
+            pos_erg = ergaenzend_pos[0]
+            code_erg = str(pos_erg.get("code", ""))
+            anz_erg = pos_erg.get("anzahl", 0.0)
+            label_erg = code_labels.get(code_erg, f"Heilmittel Pos. {code_erg}" if code_erg else "Ergänzendes Heilmittel")
+            lbl_erg_box = c.get("hm_pos2_label", DEFAULT_MUSTER13_BOXES["hm_pos2_label"])
+            anz_erg_box = c.get("hm_pos2_anzahl", DEFAULT_MUSTER13_BOXES["hm_pos2_anzahl"])
+            self._draw_text_in_box(draw, lbl_erg_box, label_erg, font=font_bold, fill=ink_color)
+            self._draw_text_in_box(draw, anz_erg_box, f"{anz_erg:g}", font=font_bold, fill=ink_color, align_h="center")
+
         # 12. Fusszeile (IK des Leistungserbringers, Arztstempel & Unterschrift)
-        ik_le = str(beleg.get("ik_leistungserbringer", beleg.get("ik", "")))
+        ik_le = str(beleg.get("leistungserbringer_ik") or beleg.get("ik_leistungserbringer", beleg.get("ik", "")))
         self._draw_text_in_box(
             draw,
             c.get("ik_leistungserbringer", DEFAULT_MUSTER13_BOXES["ik_leistungserbringer"]),
@@ -926,35 +1073,35 @@ class Muster13PreviewFrame(ttk.Frame):
 
         img = self.current_rendered_image
 
-        if self.zoom_mode == "fit":
-            # An Canvas-Fenstergröße anpassen
-            canvas_w = max(self.canvas.winfo_width(), 300)
-            canvas_h = max(self.canvas.winfo_height(), 300)
+        canvas_w = max(self.canvas.winfo_width(), 300)
+        canvas_h = max(self.canvas.winfo_height(), 300)
 
-            # Proportionale Skalierung
+        if self.zoom_mode == "fit":
             scale_w = canvas_w / img.width
             scale_h = canvas_h / img.height
             scale = min(scale_w, scale_h)
-
-            new_w = max(int(img.width * scale), 10)
-            new_h = max(int(img.height * scale), 10)
-
-            display_img = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+        elif self.zoom_mode == "100":
+            scale = 1.0
         else:
-            # 100% Zoom Originalgröße
-            display_img = img
+            # Custom Zoom (Strg + Mausrad)
+            scale_w = canvas_w / img.width
+            scale_h = canvas_h / img.height
+            base_scale = min(scale_w, scale_h)
+            scale = base_scale * self.zoom_factor
 
+        new_w = max(int(img.width * scale), 20)
+        new_h = max(int(img.height * scale), 20)
+
+        display_img = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
         self.photo_image = ImageTk.PhotoImage(display_img)
 
         self.canvas.delete("all")
-        self.canvas.create_image(
-            display_img.width // 2 if self.zoom_mode == "fit" else 0,
-            display_img.height // 2 if self.zoom_mode == "fit" else 0,
-            image=self.photo_image,
-            anchor="center" if self.zoom_mode == "fit" else "nw",
-        )
 
-        self.canvas.config(scrollregion=(0, 0, display_img.width, display_img.height))
+        pos_x = max(0, (canvas_w - new_w) // 2) if new_w < canvas_w else 0
+        pos_y = max(0, (canvas_h - new_h) // 2) if new_h < canvas_h else 0
+
+        self.canvas.create_image(pos_x, pos_y, image=self.photo_image, anchor="nw")
+        self.canvas.config(scrollregion=(0, 0, max(new_w, canvas_w), max(new_h, canvas_h)))
 
         # Button Styling aktualisieren
         if self.active_side == "front":
@@ -963,3 +1110,67 @@ class Muster13PreviewFrame(ttk.Frame):
         else:
             self.btn_side_front.state(["!disabled"])
             self.btn_side_back.state(["disabled"])
+
+    def export_prescription(self, target_path: Optional[str] = None) -> Optional[str]:
+        """
+        Exportiert das Verordnungsblatt als mehrseitiges PDF oder Bild (PNG/JPEG).
+        """
+        if not self.current_beleg:
+            messagebox.showwarning(
+                "Kein Beleg gewählt",
+                "Bitte wähle zuerst einen Beleg aus, um die Verordnung zu exportieren.",
+            )
+            return None
+
+        belegnr = str(self.current_beleg.get("belegnr", "Unbekannt"))
+
+        if not target_path:
+            from tkinter import filedialog
+            init_file = f"Muster13_Beleg_{belegnr}.pdf"
+            filetypes = [
+                ("PDF-Dokument (*.pdf)", "*.pdf"),
+                ("PNG-Bild (*.png)", "*.png"),
+                ("JPEG-Bild (*.jpg)", "*.jpg"),
+                ("Alle Dateien (*.*)", "*.*"),
+            ]
+            target_path = filedialog.asksaveasfilename(
+                title="Verordnung exportieren",
+                initialfile=init_file,
+                defaultextension=".pdf",
+                filetypes=filetypes,
+            )
+            if not target_path:
+                return None
+
+        try:
+            font_regular, font_bold, font_small = self._get_fonts()
+            img_front = self._render_front_side(self.current_beleg, font_regular, font_bold, font_small).convert("RGB")
+            img_back = self._render_back_side(self.current_beleg, font_regular, font_bold, font_small).convert("RGB")
+
+            lower_path = target_path.lower()
+            if lower_path.endswith(".pdf"):
+                img_front.save(
+                    target_path, "PDF", resolution=150.0, save_all=True, append_images=[img_back]
+                )
+            elif lower_path.endswith(".png") or lower_path.endswith(".jpg") or lower_path.endswith(".jpeg"):
+                base, ext = os.path.splitext(target_path)
+                front_path = f"{base}_vorderseite{ext}"
+                back_path = f"{base}_rueckseite{ext}"
+                img_front.save(front_path)
+                img_back.save(back_path)
+                target_path = f"{front_path}, {back_path}"
+            else:
+                target_path = f"{target_path}.pdf"
+                img_front.save(
+                    target_path, "PDF", resolution=150.0, save_all=True, append_images=[img_back]
+                )
+
+            messagebox.showinfo(
+                "Export erfolgreich",
+                f"Die Verordnung zu Beleg-Nr. {belegnr} wurde erfolgreich exportiert:\n{target_path}",
+            )
+            return target_path
+        except Exception as err:
+            messagebox.showerror("Export-Fehler", f"Fehler beim Exportieren der Verordnung:\n{err}")
+            return None
+

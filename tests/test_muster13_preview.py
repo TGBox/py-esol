@@ -1,3 +1,5 @@
+import os
+from unittest.mock import patch
 import tkinter as tk
 import pytest
 from gui_muster13_preview import Muster13PreviewFrame
@@ -175,4 +177,149 @@ def test_muster13_draw_text_in_box_centering():
     # Block center should be around 60
     block_center_y = (y0 + y1) / 2.0 + (sample_bb[1] + sample_bb[3]) / 2.0
     assert abs(block_center_y - 60.0) < 1.0
+
+
+def test_muster13_krankenkasse_name_resolution(tk_root):
+    frame = Muster13PreviewFrame(tk_root)
+
+    # 1. Direct name in beleg
+    beleg1 = {"krankenkasse_name": "Meine Betriebskrankenkasse"}
+    assert frame._get_krankenkasse_name(beleg1) == "Meine Betriebskrankenkasse"
+
+    # 2. Known IK for TK
+    beleg2 = {"kostentraeger_ik": "101777502"}
+    assert frame._get_krankenkasse_name(beleg2) == "Techniker Krankenkasse (TK)"
+
+    # 3. Known IK for AOK Baden-Württemberg via 'ik'
+    beleg3 = {"ik": "104212505"}
+    assert frame._get_krankenkasse_name(beleg3) == "AOK Baden-Württemberg"
+
+    # 4. Unknown IK fallback
+    beleg4 = {"ik": "999888777"}
+    assert frame._get_krankenkasse_name(beleg4) == "Krankenkasse (IK 999888777)"
+
+
+def test_muster13_heilmittel_rows_and_diagnose_rendering(tk_root):
+    frame = Muster13PreviewFrame(tk_root)
+    beleg = {
+        "belegnr": "1001",
+        "kostentraeger_ik": "101777502",
+        "nachname": "Mustermann",
+        "vorname": "Max",
+        "diagnosegruppe": "WS2a",
+        "icd10": "M54.5",
+        "leitsymptomatik": "Chronische Lumbalgie",
+        "positions": [
+            {"code": "20501", "tag": "EHE", "anzahl": 6.0, "einzelbetrag": 30.0},
+            {"code": "29901", "tag": "EHE", "anzahl": 6.0, "einzelbetrag": 10.0},
+        ],
+    }
+
+    # Intercept _draw_text_in_box calls
+    boxes_drawn = {}
+    orig_draw = frame._draw_text_in_box
+
+    def intercept_draw(draw, box, text, *args, **kwargs):
+        boxes_drawn[box] = text
+        return orig_draw(draw, box, text, *args, **kwargs)
+
+    frame._draw_text_in_box = intercept_draw
+
+    font_reg, font_bold, font_small = frame._get_fonts()
+    coords = frame._load_calibrated_coords()
+    frame._render_front_side(beleg, font_reg, font_bold, font_small)
+
+    # 1. Heilmittel Zeile 1 muss gefüllt sein mit Krankengymnastik
+    row1_box = coords["hm_pos1_row1_label"]
+    assert row1_box in boxes_drawn
+    assert "Krankengymnastik" in boxes_drawn[row1_box]
+
+    # Heilmittel Zeile 2 und 3 dürfen NICHT für vorrangiges Heilmittel belegt sein
+    row2_box = coords["hm_pos1_row2_label"]
+    row3_box = coords["hm_pos1_row3_label"]
+    assert row2_box not in boxes_drawn
+    assert row3_box not in boxes_drawn
+
+    # 2. Ergänzendes Heilmittel (29901) muss in hm_pos2_label stehen
+    erg_box = coords["hm_pos2_label"]
+    assert erg_box in boxes_drawn
+    assert "Wärmetherapie" in boxes_drawn[erg_box]
+
+    # 3. Diagnose und ICD-10 müssen in Zeile 1 liegen
+    diag_box = coords["diag_freitext_row1"]
+    assert diag_box in boxes_drawn
+    assert "Chronische Lumbalgie" in boxes_drawn[diag_box]
+
+    icd_box = coords["icd10_row1"]
+    assert icd_box in boxes_drawn
+    assert "M54.5" in boxes_drawn[icd_box]
+
+
+def test_muster13_mouse_controls_and_zoom(tk_root):
+    frame = Muster13PreviewFrame(tk_root)
+    beleg = {"belegnr": "2002", "positions": []}
+    frame.load_beleg(beleg)
+
+    # Initial zoom factor
+    assert frame.zoom_factor == 1.0
+    assert frame.zoom_mode == "fit"
+
+    # Zoom by factor
+    frame._zoom_by(1.2)
+    assert frame.zoom_factor == 1.2
+    assert frame.zoom_mode == "custom"
+
+    frame._zoom_by(0.8)
+    assert abs(frame.zoom_factor - 0.96) < 1e-4
+
+    # Mouse wheel events
+    class DummyEvent:
+        def __init__(self, delta, x=100, y=100):
+            self.delta = delta
+            self.x = x
+            self.y = y
+
+    frame._on_mousewheel(DummyEvent(-120))
+    frame._on_alt_mousewheel(DummyEvent(-120))
+    frame._on_ctrl_mousewheel(DummyEvent(120))
+    assert frame.zoom_factor > 0.96
+
+    # Pan drag (canvas scan_mark and scan_dragto)
+    frame._on_pan_start(DummyEvent(0, x=50, y=50))
+    frame._on_pan_move(DummyEvent(0, x=30, y=20))
+
+
+def test_muster13_export_prescription(tk_root, tmp_path):
+    frame = Muster13PreviewFrame(tk_root)
+    beleg = {
+        "belegnr": "3003",
+        "kostentraeger_ik": "101777502",
+        "nachname": "Export",
+        "vorname": "Test",
+        "positions": [
+            {"code": "20501", "anzahl": 6.0, "einzelbetrag": 30.0}
+        ],
+    }
+    frame.load_beleg(beleg)
+
+    with patch("gui_muster13_preview.messagebox.showinfo"):
+        # 1. Export as PDF
+        pdf_target = str(tmp_path / "test_prescription.pdf")
+        res_pdf = frame.export_prescription(target_path=pdf_target)
+        assert res_pdf == pdf_target
+        assert os.path.exists(pdf_target)
+        assert os.path.getsize(pdf_target) > 1000
+
+        # 2. Export as PNG
+        png_target = str(tmp_path / "test_prescription.png")
+        res_png = frame.export_prescription(target_path=png_target)
+        assert res_png is not None
+        front_png = str(tmp_path / "test_prescription_vorderseite.png")
+        back_png = str(tmp_path / "test_prescription_rueckseite.png")
+        assert os.path.exists(front_png)
+        assert os.path.exists(back_png)
+        assert os.path.getsize(front_png) > 1000
+        assert os.path.getsize(back_png) > 1000
+
+
 

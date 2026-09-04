@@ -22,7 +22,7 @@ a = Analysis(
     # Editierbare Klartext-Tabellen für die Verordnungs-Anzeige mitliefern.
     # Zur Laufzeit wird zuerst neben der EXE (data/codelisten.json) gesucht,
     # damit Bezeichnungen ohne Neu-Build gepflegt werden können.
-    datas=[('data/codelisten.json', 'data')],
+    datas=[('data/codelisten.json', 'data'), ('data/kostentraeger.json', 'data')],
     # Alle Imports im Projekt sind statisch, PyInstaller findet sie selbst.
     # reportlab (Begleitzettel-PDF) wird über pyinstaller-hooks-contrib erfasst.
     hiddenimports=[],
