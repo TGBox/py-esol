@@ -136,3 +136,27 @@ OFFEN dazu:
   diesen einen Fall — wichtig für den CI-Lauf.
 * **GitHub Actions:** .github/workflows/tests.yml führt die Suite bei jedem Push auf
   windows-latest mit uv aus (Python 3.14 aus uv.lock).
+
+
+**8. Standalone-EXE und automatischer Build** [ERLEDIGT]
+
+* py-esol.spec ist die maßgebliche Build-Spezifikation (data/codelisten.json wird
+  mitgeliefert, UPX aus wegen Virenscanner-Fehlalarmen, pytest/PyInstaller aus dem
+  Bundle ausgeschlossen). main.spec, pyesol.spec und ESOL-Validator.spec sind
+  Altlasten und können gelöscht werden.
+* .gitignore: Ausnahme !py-esol.spec ergänzt — vorher war die Spec durch *.spec
+  ignoriert und damit nicht im Repo, der CI-Build wäre sofort gescheitert.
+* Workflow-Job "exe": baut nur auf main und nur nach grünen Tests, validiert danach
+  tests/fixtures/valid_esol_smoke mit der fertigen EXE (Rauchtest: fehlt ein Modul im
+  Bundle, fällt es dort auf) und hängt sie als Artefakt "py-esol-exe" an.
+* hole-exe.cmd: holt die EXE des letzten erfolgreichen main-Laufs per gh CLI nach dist\.
+  GitHub Actions kann nicht in den lokalen Projektordner schreiben — daher Abholung.
+* tests/fixtures/valid_esol_smoke + tests/test_smoke_fixture.py: kleinster vollständig
+  gültiger ESOL-Vorgang, warnungsfrei. Deckt eine Lücke — die übrigen Tests prüfen fast
+  nur, dass Fehler erkannt werden.
+
+OFFEN dazu:
+* Code-Signing-Zertifikat, damit SmartScreen bei den Mitarbeitern nicht warnt.
+* Optional: GitHub Release bei Version-Tag für dauerhafte Download-Links.
+* Optional: Build-Version (Commit-SHA) im Fenstertitel anzeigen, damit man bei
+  Rückfragen weiß, welchen Stand ein Mitarbeiter hat.

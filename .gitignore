@@ -31,6 +31,9 @@ MANIFEST
 #   before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+# Ausnahme: die Build-Spezifikation dieses Projekts MUSS ins Repo, sonst kann
+# der CI-Build (.github/workflows/tests.yml) keine EXE erzeugen.
+!py-esol.spec
 
 # Installer logs
 pip-log.txt

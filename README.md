@@ -187,7 +187,7 @@ python -m pytest
 Output:
 
 ```bash
-============================= 78 passed ==============================
+============================= 82 passed ==============================
 ```
 
 Die Testsuite darf keine modalen Dialoge öffnen — eine `autouse`-Fixture in
@@ -237,6 +237,72 @@ py-esol/
 │   └── generate_correction.py    # Generator für VKZ 02, 03, 04, 10
 └── tests/                       # Pytest Test-Suite
 ```
+
+---
+
+## 📦 Standalone-EXE erzeugen & weitergeben
+
+Die EXE braucht auf dem Zielrechner **kein Python und keine IDE** — eine einzelne
+Datei, Doppelklick, fertig.
+
+### Lokal bauen
+
+```bash
+uv sync
+uv run pyinstaller py-esol.spec --noconfirm --clean
+```
+
+Ergebnis: `dist/py-esol.exe` (~21 MB). Maßgeblich ist **`py-esol.spec`** — die
+übrigen `.spec`-Dateien (`main.spec`, `pyesol.spec`, `ESOL-Validator.spec`) sind
+Altlasten ohne die nötigen `datas`-Einträge und können gelöscht werden.
+
+### Automatisch bei jedem Push auf `main`
+
+`.github/workflows/tests.yml` enthält dafür den Job **`exe`**. Er läuft nur auf
+`main` und nur, wenn die Tests grün sind — es soll nie eine EXE herausgehen, die
+eine kaputte Testsuite hinter sich hat. Nach dem Build validiert der Workflow
+`tests/fixtures/valid_esol_smoke` mit der frisch gebauten EXE. Fehlt ein Modul im
+Bundle, fällt es dort auf und nicht erst beim Mitarbeiter.
+
+GitHub Actions läuft in der Cloud und kann **nicht** in den lokalen Projektordner
+schreiben. Die EXE hängt als Artefakt am Lauf und wird abgeholt:
+
+```bat
+hole-exe.cmd
+```
+
+Das Skript sucht den letzten erfolgreichen `main`-Lauf und lädt die EXE nach
+`dist\py-esol.exe`. Voraussetzung ist die GitHub CLI, einmalig eingerichtet:
+
+```bash
+winget install --id GitHub.cli
+gh auth login
+```
+
+Ohne CLI geht es auch im Browser: *Repo → Actions → letzter CI-Lauf auf `main` →
+Artifacts → `py-esol-exe`*.
+
+### Weitergabe an Mitarbeiter
+
+* **SmartScreen:** Beim ersten Start warnt Windows bei nicht signierten
+  Programmen („Der Computer wurde geschützt"). *Weitere Informationen →
+  Trotzdem ausführen*. Das verschwindet erst mit einem Code-Signing-Zertifikat.
+* **Startzeit:** Eine One-File-EXE entpackt sich bei jedem Start in ein
+  Temp-Verzeichnis — die ersten paar Sekunden tut sich nichts. Das ist normal.
+* **Klartexte anpassen:** Wer `data/codelisten.json` **neben** die EXE legt, hat
+  Vorrang vor der eingebauten Fassung. So lassen sich Bezeichnungen beim Kunden
+  pflegen, ohne neu zu bauen.
+* **Artefakte verfallen nach 90 Tagen.** Für dauerhafte Links an Dritte ist ein
+  GitHub Release die bessere Wahl.
+
+### Warum die EXE die Werkzeuge findet
+
+Die GUI startet Validierung, Konvertierung, `.auf`- und Korrektur-Generierung als
+eigenen Prozess über `[sys.executable, <skriptpfad>, ...]`. Im gefrorenen Zustand
+ist `sys.executable` die EXE selbst; der Dispatcher am Ende von `main.py` wertet
+`sys.argv[1]` aus und ruft das passende **eingebettete** Modul auf. Die
+`.py`-Dateien müssen deshalb nicht mitgeliefert werden — der Pfad dient nur als
+Wegweiser. Wer diesen Dispatcher umbaut, macht die EXE unbrauchbar.
 
 ---
 
