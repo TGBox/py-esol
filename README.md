@@ -19,6 +19,10 @@ Es unterstützt Leistungserbringer im Heilmittelbereich (Physiotherapie, Ergothe
   * **VKZ 04 (Korrekturrechnung)**: Neuberechnung/Korrektur abgesetzter Rechnungsbelege.
   * **VKZ 10 (Wiederaufnahme Blankoverordnung § 125a SGB V)**: Abrechnung nach Unterbrechung bei Blankoverordnungen.
   * **Interaktive Belegauswahl**: Gezielte Auswahl einzelner Belege per Checkbox-Dialog in der GUI mit automatischer Neuberechnung aller `GES`-Gesamtsummen.
+  * **Bearbeitbare Vorschau**: Im Tab *Vorschau & EDIFACT-Diff* steht rechts die
+    vollständige Korrekturdatei — und die lässt sich direkt dort von Hand
+    nachbearbeiten. Vor dem Speichern läuft die bearbeitete Fassung durch die
+    4-stufige Validierung; Fehler verhindern das Speichern.
 * **📄 Auftragsdatei-Generator (`.auf`)**:
   * Automatische Erstellung von EDIFACT-Begleitdateien (`50000001...`) für die physikalische Datenübertragung.
 * **🔄 UTF-8 ➔ ISO-8859-15 Konverter**:
@@ -91,6 +95,33 @@ Oder Verwenden der vorkompilierten Binärdatei `dist/pyesol.exe`.
   Arzt-, Diagnose- und Leitsymptomatik-Daten sowie gruppiertem Behandlungsverlauf.
 * **Tab `📊 Beleg-Dashboard & Rezept-Baum`**: Belegtabelle mit Fehlerstatus und darunter der
   Klartext-Baum der gesamten Datei.
+
+### Vorschau von Hand nachbearbeiten
+
+Im Korrektur-Editor zeigt der Tab **`🔍 Vorschau & EDIFACT-Diff`** links das Original
+und rechts die neue Fassung. Über den Schalter oben wählt man den Umfang:
+
+| Anzeige | Rechte Seite | Bearbeitbar |
+|---|---|---|
+| **Ganze Datei** (Standard) | die vollständige Korrekturdatei mit allen ausgewählten Belegen — genau das, was gespeichert wird | **ja** |
+| **Nur dieser Beleg** | nur der aktive Beleg, zum Vergleich mit links | nein |
+
+Sobald rechts getippt wird, gilt diese Fassung als maßgeblich: der Rahmen wechselt
+auf *HANDBEARBEITET* und die Statuszeile warnt, dass spätere Änderungen an
+Stammdaten oder Positionen darin **nicht** enthalten sind. `🔄 Neu generieren`
+verwirft die Handarbeit nach Rückfrage.
+
+Beim Generieren wird die bearbeitete Fassung geprüft, bevor sie geschrieben wird:
+
+* **Fehler** verhindern das Speichern. Die häufigste Ursache nach Handarbeit sind
+  abgeleitete Werte, die nicht mehr passen — der Segmentzähler im `UNT`, die Summen
+  im `GES` oder die Nachrichtenzahl im `UNZ`. Der Hinweistext nennt das ausdrücklich.
+* **Warnungen** werden angezeigt und lassen sich per Rückfrage durchlassen.
+* **Zeichen außerhalb von ISO-8859-15** werden mit Zeile und Spalte gemeldet.
+  Typische Ursache: Text aus Word oder Outlook eingefügt (typografische
+  Anführungszeichen, Gedankenstriche).
+
+`✓ Bearbeitete Fassung prüfen` führt dieselbe Prüfung aus, ohne zu speichern.
 
 ### Klartexte pflegen
 
@@ -187,7 +218,7 @@ python -m pytest
 Output:
 
 ```bash
-============================= 82 passed ==============================
+============================= 99 passed ==============================
 ```
 
 Die Testsuite darf keine modalen Dialoge öffnen — eine `autouse`-Fixture in

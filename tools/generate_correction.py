@@ -966,8 +966,16 @@ def generate_correction_file(
     zuzahlungskennzeichen: Optional[str] = None,
     out_dir: Optional[Path] = None,
     beleg_modifications: Optional[Dict[str, Any]] = None,
+    content_override: Optional[str] = None,
 ) -> Path:
-    """Reads an ESOL file and generates the corrected/demanded ESOL output file."""
+    """
+    Reads an ESOL file and generates the corrected/demanded ESOL output file.
+
+    content_override: Wird dieser Text übergeben, so wird er unverändert
+    geschrieben statt neu generiert. Das braucht der Korrektur-Editor, wenn der
+    Anwender die Vorschau von Hand nachbearbeitet hat — die Namens- und
+    Ablagelogik bleibt dadurch an einer Stelle.
+    """
     if not input_path.is_file():
         raise FileNotFoundError(f"Datei nicht gefunden: {input_path}")
 
@@ -989,18 +997,40 @@ def generate_correction_file(
             output_filename = f"{input_path.name}_VK{target_vk}"
         output_path = input_path.with_name(output_filename)
 
-    content = read_esol_file_text(input_path)
-    new_content = generate_correction_esol(
-        raw_content=content,
-        target_vk=target_vk,
-        selected_belegnr_list=selected_belegnr_list,
-        new_rec_nr=new_rec_nr,
-        new_rec_date=new_rec_date,
-        zuzahlungskennzeichen=zuzahlungskennzeichen,
-        beleg_modifications=beleg_modifications,
-    )
+    if content_override is not None:
+        new_content = content_override
+    else:
+        content = read_esol_file_text(input_path)
+        new_content = generate_correction_esol(
+            raw_content=content,
+            target_vk=target_vk,
+            selected_belegnr_list=selected_belegnr_list,
+            new_rec_nr=new_rec_nr,
+            new_rec_date=new_rec_date,
+            zuzahlungskennzeichen=zuzahlungskennzeichen,
+            beleg_modifications=beleg_modifications,
+        )
     output_path.write_text(new_content, encoding="iso-8859-15")
     return output_path
+
+
+def pruefe_iso_8859_15(text: str) -> List[Tuple[int, int, str]]:
+    """
+    Findet Zeichen, die sich nicht in ISO-8859-15 schreiben lassen.
+    Rückgabe: Liste aus (Zeile, Spalte, Zeichen) — jeweils 1-basiert.
+
+    Wird gebraucht, bevor eine von Hand bearbeitete Fassung gespeichert wird:
+    Text aus Word oder Outlook bringt oft typografische Anführungszeichen oder
+    Gedankenstriche mit, die ISO-8859-15 nicht kennt.
+    """
+    treffer: List[Tuple[int, int, str]] = []
+    for zeilen_nr, zeile in enumerate(text.splitlines(), start=1):
+        for spalte, zeichen in enumerate(zeile, start=1):
+            try:
+                zeichen.encode("iso-8859-15")
+            except UnicodeEncodeError:
+                treffer.append((zeilen_nr, spalte, zeichen))
+    return treffer
 
 
 def main() -> None:

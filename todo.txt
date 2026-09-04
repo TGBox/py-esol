@@ -160,3 +160,29 @@ OFFEN dazu:
 * Optional: GitHub Release bei Version-Tag für dauerhafte Download-Links.
 * Optional: Build-Version (Commit-SHA) im Fenstertitel anzeigen, damit man bei
   Rückfragen weiß, welchen Stand ein Mitarbeiter hat.
+
+
+**9. Bearbeitbare Vorschau im Korrektur-Editor** [ERLEDIGT]
+
+* Der Tab "Vorschau & EDIFACT-Diff" hat einen Umfangs-Schalter: "Ganze Datei"
+  (Standard, bearbeitbar, entspricht genau dem was gespeichert wird) und
+  "Nur dieser Beleg" (nur Vergleich, nur lesbar). Vorher zeigte die rechte Seite
+  immer nur den aktiven Beleg, gespeichert wurde aber die Datei mit allen Belegen -
+  und die Vorschau wurde beim Generieren komplett verworfen.
+* Handbearbeitung wird erkannt (Rahmen "HANDBEARBEITET", warnende Statuszeile) und
+  ueberlebt einen Neuaufbau der Vorschau, damit Arbeit nicht stillschweigend
+  verloren geht. "Neu generieren" verwirft sie nach Rueckfrage.
+* Vor dem Speichern laeuft die bearbeitete Fassung durch die 4-stufige Validierung.
+  Fehler blockieren, Warnungen darf man durchlassen. Zusaetzlich wird geprueft, ob
+  sich alle Zeichen in ISO-8859-15 schreiben lassen (Word/Outlook-Zeichen) - mit
+  Zeile und Spalte im Fehlertext.
+* Neuer Button "Bearbeitete Fassung pruefen" prueft ohne zu speichern.
+* generate_correction_file hat einen Parameter content_override, damit die
+  Namens- und Ablagelogik fuer den Dateinamen an einer Stelle bleibt.
+* Neue Hilfsfunktion pruefe_iso_8859_15 in tools/generate_correction.py.
+* 17 neue Tests in tests/test_diff_edit.py.
+
+OFFEN dazu:
+* UNT/UNZ-Zaehler nach Handarbeit optional automatisch nachziehen (bewusst nicht
+  gemacht - erst mal soll der Fehler sichtbar sein).
+* Syntaxhervorhebung der Segment-Tags in der Vorschau waere hilfreich.
