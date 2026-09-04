@@ -419,6 +419,14 @@ def test_muster13_back_side_fitted_table_rendering(tk_root):
         fitted_calls.append((box, text))
         return orig_fitted(target_img, box, text, *args, **kwargs)
 
+    drawn_text_boxes = []
+    orig_draw_box = frame._draw_text_in_box
+
+    def intercept_text(draw, box, text, *args, **kwargs):
+        drawn_text_boxes.append((box, text))
+        return orig_draw_box(draw, box, text, *args, **kwargs)
+
+    frame._draw_text_in_box = intercept_text
     frame._draw_fitted_text = intercept_fitted
     font_reg, font_bold, font_small = frame._get_fonts()
     img_back = frame._render_back_side(beleg, font_reg, font_bold, font_small)
@@ -430,6 +438,13 @@ def test_muster13_back_side_fitted_table_rendering(tk_root):
         assert box[0] == 379  # Col 2 x-coord
         assert box[2] == 327  # Col 2 width
         assert "Krankengymnastik" in text
+
+    # Check Datum boxes in column 1: must be within x=264..378
+    date_entries = [b for b in drawn_text_boxes if "2025" in str(b[1])]
+    assert len(date_entries) >= 2
+    for box, text in date_entries:
+        assert box[0] >= 264, f"Datum box starts to the left of the column divider line (264): {box}"
+        assert box[0] + box[2] <= 378, f"Datum box exceeds column right divider line (378): {box}"
 
 
 

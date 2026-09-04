@@ -1180,12 +1180,12 @@ class Muster13PreviewFrame(ttk.Frame):
                 else:
                     cur_date = datum_base or format_date_german(str(beleg.get("verordnungsdatum", "")))
 
-                # 1. Datum zentriert
+                # 1. Datum zentriert in Spalte 1 (x=264..378)
                 self._draw_text_in_box(
                     draw,
-                    (235, y_r, 143, row_height),
+                    (265, y_r, 112, row_height),
                     cur_date or "-",
-                    font=font_reg,
+                    font=font_small,
                     fill=ink_color,
                     align_h="center",
                 )
