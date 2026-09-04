@@ -90,3 +90,29 @@ Empfohlene Testfälle & Randfälle
 
 * **Kopierfunktion für Tickets:** Button *„Support-Bericht kopieren“*, der alle relevanten Falldaten (IKs, Belegnummer, aufgetretene Fehler, Ursache) in strukturierter Textform für das Ticketsystem in die Zwischenablage legt.
 * **HTML/PDF-Export:** Schneller Export einer lesbaren Prüf- und Abrechnungsübersicht für die Praxis.
+
+**6. Vollständige Verordnungs-Anzeige (ZHE / DIA / SKZ / URI)** [ERLEDIGT]
+
+* **Alle 17 ZHE-Felder im Verordnungsblatt:** Verordnungsdatum, BSNR/LANR des verordnenden
+  Arztes, Verordnungsart, Diagnosegruppe, Leitsymptomatik, Therapiefrequenz, Therapiebericht,
+  Hausbesuch, Dringlichkeit, Verordnungsbesonderheiten, Unfall/BVG, Heilmittel-Bereich
+  (vorher wurde nur das Zuzahlungskennzeichen angezeigt).
+* **Leitsymptomatik dekodiert:** 4-stelliges Feld wird in die gesetzten Stellen a/b/c/X
+  aufgelöst, 9999 als patientenindividuelle Leitsymptomatik erkannt.
+* **ICD-10-Diagnosen, Genehmigung (SKZ) und Ursprungsrechnung (URI)** werden angezeigt;
+  Zeilen ohne Inhalt bleiben ausgeblendet.
+* **Behandlungsverlauf gruppiert:** gleiche Leistung = eine Zeile mit Anzahl Termine,
+  Zeitraum von–bis und Summen; Einzeltermine aufklappbar.
+* **Plausibilitätshinweise am Beleg:** Behandlung vor Verordnungsdatum, Verordnungsdatum in
+  der Zukunft, Verordnung älter als ein Jahr, fehlende Pflichtfelder, fehlendes DIA,
+  Zuzahlungskennzeichen vs. berechneter Zuzahlung, fehlende individuelle Leitsymptomatik.
+* **Rezept-Baum umgebaut:** Nachricht -> Verordnung/Beleg -> Verordnungsdaten / Diagnosen /
+  Leistungen / Belegsumme; Feldnamen kommen aus der SchemaRegistry, Filter greift über den
+  gesamten Baum.
+* **Editierbare Klartext-Tabellen:** data/codelisten.json; nicht hinterlegte Codes werden als
+  "kein Klartext hinterlegt" markiert statt geraten.
+
+OFFEN dazu:
+* Bezeichnungen in data/codelisten.json nachtragen (Verordnungsart 01-20/99, Diagnosegruppen,
+  Therapiefrequenz, Heilmittel-Bereich 1-5, Positionsnummern je Abrechnungscode).
+* Optional: Verordnungsdatum / Diagnosegruppe als Spalte + Filter im Beleg-Dashboard.

@@ -63,8 +63,8 @@ def test_vk02_granular_position_and_price_edit(tmp_path: Path):
     # Check FKT changed to VK 02
     assert "FKT+02+" in content
 
-    # Check URI segment inserted
-    assert "URI+123456789+51:1+20260122+1'" in content
+    # Check URI segment inserted (Belegnummer unverändert aus dem Original)
+    assert "URI+123456789+51:1+20260122+00001'" in content
 
     # Check modified EHE segment: 2 * 120.00 = 240.00 total brutto, 2 * 12.00 = 24.00 total co-payment
     assert "EHE+26:00501+59702+2,00+120,00+20260115+12,00'" in content

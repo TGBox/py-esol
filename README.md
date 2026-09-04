@@ -23,6 +23,23 @@ Es unterstützt Leistungserbringer im Heilmittelbereich (Physiotherapie, Ergothe
   * Automatische Erstellung von EDIFACT-Begleitdateien (`50000001...`) für die physikalische Datenübertragung.
 * **🔄 UTF-8 ➔ ISO-8859-15 Konverter**:
   * Stapelkonvertierung fehlerhaft kodierter Dateien in den geforderten ISO-8859-15 EDIFACT-Standard.
+* **📋 Verordnungs-Ansicht (Support & Hotline)**:
+  * **Virtuelles Muster 13/18**: Eigene Box „Verordnung / verordnender Arzt" mit Verordnungsdatum,
+    BSNR/LANR, Verordnungsart, Diagnosegruppe, dekodierter Leitsymptomatik (Stellen a/b/c/X),
+    Therapiefrequenz, Therapiebericht, Hausbesuch, Dringlichkeit, Verordnungsbesonderheiten,
+    ICD-10-Diagnosen (`DIA`), Genehmigung (`SKZ`) und Ursprungsrechnung (`URI`) — alle
+    17 `ZHE`-Felder statt bisher nur dem Zuzahlungskennzeichen.
+  * **Behandlungsverlauf statt Positionsflut**: Gleiche Leistungen werden zu Leistungsgruppen
+    zusammengefasst (Anzahl Termine, Zeitraum von–bis, Summen); die Einzeltermine bleiben
+    aufklappbar. Aus 54 `EHE`-Zeilen werden 4 lesbare Gruppen.
+  * **Plausibilitätshinweise**: Behandlung vor Verordnungsdatum, fehlende Pflichtfelder,
+    fehlendes `DIA`, Zuzahlungs-Widersprüche, fehlende individuelle Leitsymptomatik.
+  * **Rezept-Baum**: `UNB → Nachricht → Verordnung/Beleg → Verordnungsdaten / Diagnosen /
+    Leistungen / Belegsumme`, jedes Feld mit Namen aus der `SchemaRegistry`; Filter durchsucht
+    den gesamten Baum inklusive Unterknoten.
+  * **Editierbare Klartexte**: `data/codelisten.json` (Verordnungsart, Diagnosegruppe,
+    Positionsnummern, …). Codes ohne Eintrag werden ausdrücklich als
+    *„kein Klartext hinterlegt"* angezeigt — es wird nie ein Text geraten.
 * **🖥️ Grafische Benutzeroberfläche (Tkinter GUI)**:
   * Moderne Desktop-Oberfläche zur einfachen Bedienung ohne Kommandozeilenkenntnisse.
 
@@ -70,6 +87,31 @@ Oder Verwenden der vorkompilierten Binärdatei `dist/pyesol.exe`.
 * **`🔄 UTF-8 ➔ ISO`**: Konvertiert ausgewählte Dateien zu ISO-8859-15.
 * **`📄 .auf erstellen`**: Erstellt passende `.auf`-Auftragsdateien.
 * **`🛠️ Korrektur / Zuzahlung`**: Öffnet den interaktiven Konfigurator zur Belegauswahl und VKZ-Generierung (02, 03, 04, 10).
+* **Tab `📜 Virtuelles Verordnungsblatt`**: Verordnung im Muster-13/18-Layout inklusive
+  Arzt-, Diagnose- und Leitsymptomatik-Daten sowie gruppiertem Behandlungsverlauf.
+* **Tab `📊 Beleg-Dashboard & Rezept-Baum`**: Belegtabelle mit Fehlerstatus und darunter der
+  Klartext-Baum der gesamten Datei.
+
+### Klartexte pflegen
+
+Bezeichnungen zu Verordnungsart, Diagnosegruppe, Therapiefrequenz, Heilmittel-Bereich und
+Abrechnungspositionsnummern stehen in `data/codelisten.json`. Leere Einträge (`""`) sind
+absichtlich leer und erscheinen in der GUI als *„kein Klartext hinterlegt"*, damit in der
+Hotline kein geratener Text genannt wird. Nach dem Nachtragen genügt der Button
+**`🔄 Codelisten neu laden`** im Verordnungsblatt — kein Neustart nötig.
+
+Positionsnummern dürfen nach Abrechnungscode gestaffelt werden:
+
+```json
+"positionsnummern": {
+  "*":  { "59702": "Allgemeine Position" },
+  "26": { "54103": "Ergotherapeutische Einzelbehandlung" }
+}
+```
+
+Im gebauten `.exe` wird zuerst `data/codelisten.json` **neben der EXE** gesucht, danach die
+gebündelte Datei. Mit der Umgebungsvariablen `PY_ESOL_CODELISTEN` lässt sich ein beliebiger
+Pfad erzwingen.
 
 ---
 
@@ -121,7 +163,7 @@ python tools/convert_utf8_to_iso.py path/to/ESOL_FILE
 
 ## 🧪 Tests ausführen
 
-Das Projekt verfügt über ein umfassendes `pytest`-Testpaket mit 44 Unit-Tests:
+Das Projekt verfügt über ein umfassendes `pytest`-Testpaket:
 
 ```bash
 python -m pytest
@@ -130,7 +172,7 @@ python -m pytest
 Output:
 
 ```bash
-============================= 44 passed in 0.19s ==============================
+============================= 90 passed ==============================
 ```
 
 ---
@@ -140,9 +182,17 @@ Output:
 ```txt
 py-esol/
 ├── esol_validator.py             # Hauptklasse EsolValidator
+├── verordnung.py                 # Verordnungs-Auswertung (ZHE/DIA/SKZ, Positionsgruppen)
+├── codelisten.py                 # Loader für die editierbaren Klartext-Tabellen
+├── data/
+│   └── codelisten.json           # Editierbare Klartexte (Verordnungsart, Positionsnummern, …)
 ├── validate.py                   # CLI-Validator für Einzeldateien
 ├── batch_validate.py             # CLI-Batch-Validator für Ordner
-├── main.py                        # Hauptfenster der Tkinter GUI
+├── main.py                       # Hauptfenster der Tkinter GUI
+├── gui_muster13_preview.py       # Virtuelles Verordnungsblatt (Muster 13/18)
+├── gui_recipe_tree.py            # Klartext-Rezept-Baum
+├── gui_beleg_dashboard.py        # Beleg-Dashboard mit KPI-Kacheln
+├── support_helper.py             # Fehlerübersetzung, Ticket-/HTML-Bericht, Baumaufbau
 ├── gui_correction_dialog.py      # Interaktiver Korrektur- & Belegauswahl-Dialog
 ├── pyesol.spec                   # PyInstaller Build-Spezifikation
 ├── parser/

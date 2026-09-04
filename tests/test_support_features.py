@@ -82,10 +82,81 @@ def test_support_helper_tree_nodes():
     nodes = parse_esol_tree_nodes(raw_esol)
     assert len(nodes) > 0
 
-    inv_node = next((n for n in nodes if n["tag"] == "INV"), None)
+    # INV-Blöcke hängen unterhalb ihres Nachrichtenknotens (UNH) -> rekursiv suchen
+    inv_node = _find_node(nodes, "INV")
     assert inv_node is not None
     assert "00001" in inv_node["details"]
-    assert len(inv_node["children"]) == 3  # NAD, EHE, BES
+
+    # NAD, Leistungen (gruppierte EHE), BES
+    child_tags = [c["tag"] for c in inv_node["children"]]
+    assert child_tags == ["NAD", "LEISTUNGEN", "BES"]
+
+    # Alle Knoten-IDs müssen eindeutig sein (Treeview-iids)
+    ids = []
+    _collect_ids(nodes, ids)
+    assert len(ids) == len(set(ids))
+
+
+def _find_node(nodes, tag):
+    """Sucht den ersten Knoten mit dem angegebenen Tag rekursiv."""
+    for n in nodes:
+        if n.get("tag") == tag:
+            return n
+        found = _find_node(n.get("children") or [], tag)
+        if found:
+            return found
+    return None
+
+
+def _collect_ids(nodes, out):
+    for n in nodes:
+        out.append(n["id"])
+        _collect_ids(n.get("children") or [], out)
+
+
+def test_tree_nodes_verordnungsdaten_klartext():
+    """ZHE muss als aufklappbarer Klartext-Knoten mit Verordnungsdaten erscheinen."""
+    raw_esol = "\n".join([
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++123456789+101777502+101777502'",
+        "REC+51:0+20260122+1'",
+        "INV+A123456789+31000+1+00001'",
+        "NAD+Muster+Max+19900101'",
+        "EHE+26:00501+54103+1,00+75,91+20260115+0,00'",
+        "EHE+26:00501+54103+1,00+75,91+20260122+0,00'",
+        "ZHE+242325300+963752734+20260110+3+EN1+03+++++1++1100++0+1+3'",
+        "DIA+F91.9+Störung des Sozialverhaltens'",
+        "BES+151,82+10,00+0,00+10,00'",
+        "UNT+000010+00002'",
+    ])
+
+    nodes = parse_esol_tree_nodes(raw_esol)
+    inv = _find_node(nodes, "INV")
+    assert inv is not None
+
+    zhe = _find_node([inv], "ZHE")
+    assert zhe is not None
+    assert "10.01.2026" in zhe["details"]
+    assert "242325300" in zhe["details"]
+
+    felder = {c["label"]: c["details"] for c in zhe["children"]}
+    assert felder["Verordnungsdatum"] == "10.01.2026"
+    assert felder["Betriebsstättennummer (BSNR)"] == "242325300"
+    assert felder["Lebenslange Arztnummer (LANR)"] == "963752734"
+    assert felder["Leitsymptomatik"].startswith("1100 — a, b")
+    assert "Therapiebericht verordnet" in felder["Therapiebericht"]
+
+    # Diagnosen mit Text
+    dia = _find_node([inv], "DIA")
+    assert dia is not None
+    assert "F91.9" in dia["details"]
+
+    # Gleiche Leistung an zwei Terminen -> eine Gruppe mit zwei Terminen
+    leist = _find_node([inv], "LEISTUNGEN")
+    assert leist is not None
+    assert len(leist["children"]) == 1
+    assert leist["children"][0]["details"].startswith("2×")
+    assert len(leist["children"][0]["children"]) == 2
 
 
 def test_gui_support_components():
