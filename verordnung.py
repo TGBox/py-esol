@@ -4,7 +4,8 @@ Verordnungs-Auswertung — bereitet die in einer ESOL-Datei enthaltenen Verordnu
 
 Kernpunkte:
   * ZHE wird vollständig ausgewertet (17 Felder statt bisher nur dem Zuzahlungskennzeichen).
-  * Klartexte kommen ausschließlich aus data/codelisten.json — es wird nichts geraten.
+  * Klartexte kommen aus data/codelisten.json (eigene Pflege, Vorrang) und
+    data/heilmittelpreise.json (GKV-Stammdatei) — es wird nichts geraten.
   * Feldnamen für beliebige Segmente kommen aus der vorhandenen SchemaRegistry,
     damit der Rezept-Baum jedes Segment benennen kann, ohne dass hier eine
     zweite Feldliste gepflegt werden muss.
@@ -332,13 +333,21 @@ def gruppiere_positionen(positions: List[Dict[str, Any]]) -> List[Dict[str, Any]
         key = (tag, abr, tarif, code, f"{einzel:.2f}")
         if key not in gruppen:
             reihenfolge.append(key)
+            info = codelisten.position_info(code, abr)
             gruppen[key] = {
                 "tag": tag,
                 "abr_code": abr,
                 "tarif_kz": tarif,
                 "code": code,
                 "code_text": codelisten.describe_position(code, abr),
-                "code_klartext": codelisten.lookup_position(code, abr),
+                "code_klartext": info.get("bezeichnung", ""),
+                # Herkunft und Rechtsgrundlage: 'codelisten' = eigene Pflege,
+                # 'hmp' = GKV-Heilmittelpreisstammdatei. grundlage unterscheidet
+                # Regelversorgung (§ 125) von Blankoversorgung (§ 125a) und ist
+                # damit eine Gegenprobe zur Verordnungsart im ZHE.
+                "code_quelle": info.get("quelle", ""),
+                "code_grundlage": info.get("grundlage", ""),
+                "code_bereich": info.get("bereich", ""),
                 "einzelbetrag": einzel,
                 "termine": [],
                 "anzahl_termine": 0,
@@ -380,6 +389,90 @@ def gruppiere_positionen(positions: List[Dict[str, Any]]) -> List[Dict[str, Any]
     # Sortierung: nach erstem Behandlungsdatum, dann nach Positionsnummer
     ergebnis.sort(key=lambda g: (g["datum_von"] or "99999999", g["code"]))
     return ergebnis
+
+
+def grundlage_text(grundlage: str) -> str:
+    """'125' / '125a' -> anzeigefertiger Paragrafenhinweis."""
+    if grundlage == "125a":
+        return "§ 125a (Blankoversorgung)"
+    if grundlage == "125":
+        return "§ 125 (Regelversorgung)"
+    return ""
+
+
+def grundlage_zusatz(bezeichnung: str, grundlage: str) -> str:
+    """
+    Paragrafenhinweis nur, wenn er etwas beiträgt.
+
+    Die Bezeichnungen der § 125a-Positionen tragen den Paragrafen schon im Text
+    ("... zum Vertrag nach § 125a SGB V"). Bei den § 125-Positionen fehlt er —
+    dort ist der Hinweis die einzige Stelle, an der Regel- von Blankoversorgung
+    zu unterscheiden ist.
+    """
+    if not grundlage:
+        return ""
+    # Leerzeichen vereinheitlichen: die Quelldatei setzt teils ein geschütztes
+    # Leerzeichen hinter das Paragrafenzeichen.
+    text = " ".join((bezeichnung or "").replace("\u00a0", " ").split())
+    if f"§ {grundlage}" in text or f"§{grundlage}" in text:
+        return ""
+    return grundlage_text(grundlage)
+
+
+def leistungserbringergruppe(abr_code: Any, tarif_kz: Any) -> Dict[str, str]:
+    """
+    Zerlegt die Leistungserbringergruppe in ihre Bestandteile und schlägt die
+    Klartexte nach.
+
+    Aufbau nach Anlage 3 zu TP 5, Abschnitt 8.1.5 — insgesamt 7 Stellen:
+      1.-2. Stelle  Abrechnungscode          (z. B. 26 = Ergotherapeut)
+      3.-7. Stelle  Tarifkennzeichen, davon
+                    1.-2. Stelle  Tarifbereich  (z. B. 00 = bundeseinheitlich)
+                    3.-5. Stelle  Sondertarif
+
+    Zum Sondertarif sind in codelisten.json bewusst nur die Schlüssel
+    hinterlegt, die in Anlage 3 einzeln benannt sind. Die 3.-5. Stelle ist dort
+    überwiegend in Bereichen definiert; für einen Wert wie '501' wird daher
+    NICHTS geraten — die Anzeige nennt dann nur die Ziffern.
+
+    Rückgabe (alle Werte anzeigefertig, leere Bestandteile bleiben ''):
+      abr_code, abr_text, tarif_kz, tarifbereich, tarifbereich_text,
+      sondertarif, sondertarif_text, text
+    """
+    abr = _as_text(abr_code)
+    tarif = _as_text(tarif_kz)
+
+    bereich = tarif[:2] if len(tarif) >= 2 else ""
+    sonder = tarif[2:5] if len(tarif) >= 3 else ""
+
+    abr_text = codelisten.lookup("abrechnungscode", abr)
+    bereich_text = codelisten.lookup("tarifbereich", bereich)
+    sonder_text = codelisten.lookup("sondertarif", sonder)
+
+    teile = []
+    if abr:
+        teile.append(f"{abr} — {abr_text}" if abr_text else f"{abr} ({codelisten.KEIN_KLARTEXT})")
+    if bereich:
+        teile.append(
+            f"Tarifbereich {bereich} — {bereich_text}" if bereich_text
+            else f"Tarifbereich {bereich}"
+        )
+    if sonder:
+        teile.append(
+            f"Sondertarif {sonder} — {sonder_text}" if sonder_text
+            else f"Sondertarif {sonder}"
+        )
+
+    return {
+        "abr_code": abr,
+        "abr_text": abr_text,
+        "tarif_kz": tarif,
+        "tarifbereich": bereich,
+        "tarifbereich_text": bereich_text,
+        "sondertarif": sonder,
+        "sondertarif_text": sonder_text,
+        "text": "   ·   ".join(teile),
+    }
 
 
 def zeitraum_text(von: str, bis: str) -> str:

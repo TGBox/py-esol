@@ -357,7 +357,7 @@ def _segment_summary(tag: str, fields: List[Any], msg_type: str = "") -> str:
         ] if p)
     if tag == "FKT":
         return " | ".join(p for p in [
-            f"VK {g(0)}" if g(0) else "",
+            f"VK {codelisten.describe('verarbeitungskennzeichen', g(0))}" if g(0) else "",
             f"IK Leistungserbringer: {g(2)}" if g(2) else "",
             f"IK Kostenträger: {g(3)}" if g(3) else "",
             f"IK Krankenkasse: {g(4)}" if g(4) else "",
@@ -369,7 +369,7 @@ def _segment_summary(tag: str, fields: List[Any], msg_type: str = "") -> str:
         ] if p)
     if tag == "GES":
         return " | ".join(p for p in [
-            f"Status: {g(0)}" if g(0) else "",
+            f"Status: {codelisten.describe('summenstatus', g(0))}" if g(0) else "",
             f"Brutto: {vo.fmt_betrag(g(1))}" if g(1) else "",
             f"Rechnungsbetrag: {vo.fmt_betrag(g(2))}" if g(2) else "",
             f"Zuzahlung: {vo.fmt_betrag(g(3))}" if g(3) else "",
@@ -466,19 +466,34 @@ def _leistungen_node(ids: _IdGen, positions: List[Dict[str, Any]],
     gruppen = vo.gruppiere_positionen(positions)
     uebersicht = vo.behandlungsuebersicht(positions)
 
+    # Leistungserbringergruppe (Abrechnungscode + Tarifkennzeichen) im Klartext.
+    # Das Tarifkennzeichen hängt an den Positionen, nicht am Beleg.
+    tarif_kz = next((str(g.get("tarif_kz") or "") for g in gruppen if g.get("tarif_kz")), "")
+    code = abrechnungscode or next(
+        (str(g.get("abr_code") or "") for g in gruppen if g.get("abr_code")), ""
+    )
+    leg = vo.leistungserbringergruppe(code, tarif_kz)
+
+    detail = (
+        f"{uebersicht['zeitraum_text']} | {uebersicht['anzahl_behandlungstage']} Behandlungstage "
+        f"| {uebersicht['anzahl_positionen']} Einzelpositionen"
+    )
+    if leg["text"]:
+        detail += f" | Leistungserbringergruppe: {leg['text']}"
+
     root = _node(
         ids, "LEISTUNGEN",
         f"Leistungen / Behandlungsverlauf ({len(gruppen)} Leistungsarten)",
-        f"{uebersicht['zeitraum_text']} | {uebersicht['anzahl_behandlungstage']} Behandlungstage "
-        f"| {uebersicht['anzahl_positionen']} Einzelpositionen",
+        detail,
         prefix="l",
     )
 
     for g in gruppen:
         klartext = g.get("code_klartext") or codelisten.KEIN_KLARTEXT
+        grundlage = vo.grundlage_zusatz(klartext, g.get("code_grundlage", ""))
         g_node = _node(
             ids, g["tag"],
-            f"{g['tag']} {g['code']} — {klartext}",
+            f"{g['tag']} {g['code']} — {klartext}" + (f"  [{grundlage}]" if grundlage else ""),
             f"{g['anzahl_termine']}× | {g['zeitraum_text']} | Einzel {vo.fmt_betrag(g['einzelbetrag'])} "
             f"| Gesamt {vo.fmt_betrag(g['betrag_gesamt'])} | Zuzahlung {vo.fmt_betrag(g['zuzahlung_gesamt'])}",
             prefix="lg",

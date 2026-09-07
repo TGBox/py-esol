@@ -286,7 +286,13 @@ def test_codelisten_position_nach_abrechnungscode(tmp_path, monkeypatch):
         }
     }), encoding="utf-8")
 
+    # Auch die HMP-Quelle leeren — sonst greift der Rückfall auf die
+    # GKV-Stammdatei und 54103 löst dort über X4103 auf.
+    leere_hmp = tmp_path / "heilmittelpreise.json"
+    leere_hmp.write_text(json.dumps({"positionen": {}}), encoding="utf-8")
+
     monkeypatch.setenv("PY_ESOL_CODELISTEN", str(eigene))
+    monkeypatch.setenv("PY_ESOL_HEILMITTELPREISE", str(leere_hmp))
     codelisten.reload()
     try:
         assert codelisten.lookup_position("54103", "26") == "Ergo-Einzelbehandlung"
@@ -297,6 +303,7 @@ def test_codelisten_position_nach_abrechnungscode(tmp_path, monkeypatch):
         )
     finally:
         monkeypatch.delenv("PY_ESOL_CODELISTEN", raising=False)
+        monkeypatch.delenv("PY_ESOL_HEILMITTELPREISE", raising=False)
         codelisten.reload()
 
 
@@ -348,3 +355,131 @@ def test_verordnung_textzeilen(beleg):
     assert "BSNR 273806900" in text
     assert "G30.1" in text
     assert "Behandlungszeitraum" in text
+
+
+# ------------------------------------------------- Schlüssel aus Anlage 3 TP 5
+
+def test_zuzahlungskennzeichen_entspricht_anlage_3():
+    """
+    Die Klartexte müssen wörtlich Abschnitt 8.1.3 der Anlage 3 zu TP 5
+    entsprechen. Zuvor stand hier eine falsche Auslegung ("Zuzahlung
+    entrichtet" / "nicht entrichtet") — genau das darf in der Hotline nicht
+    passieren, deshalb ist die Zuordnung ab jetzt festgenagelt.
+    """
+    assert codelisten.lookup("zuzahlungskennzeichen", "0") == "Keine gesetzliche Zuzahlung"
+    assert codelisten.lookup("zuzahlungskennzeichen", "1") == "Zuzahlungsbefreit"
+    assert codelisten.lookup("zuzahlungskennzeichen", "2") == (
+        "Keine Zuzahlung trotz schriftlicher Zahlungsaufforderung"
+    )
+    assert codelisten.lookup("zuzahlungskennzeichen", "3") == "Zuzahlungspflichtig"
+    assert codelisten.lookup("zuzahlungskennzeichen", "4").startswith(
+        "Übergang zuzahlungspflichtig zu zuzahlungsfrei"
+    )
+    assert codelisten.lookup("zuzahlungskennzeichen", "5").startswith(
+        "Übergang zuzahlungsfrei zu zuzahlungspflichtig"
+    )
+
+
+def test_zuzahlungskennzeichen_kennt_nur_0_bis_5():
+    """Die Anlage besetzt genau 0-5. Erfundene Schlüssel dürfen nicht auftauchen."""
+    tabelle = codelisten.load().get("zuzahlungskennzeichen", {})
+    assert sorted(tabelle) == ["0", "1", "2", "3", "4", "5"]
+
+
+def test_unfall_und_bvg_nur_besetzte_schluessel():
+    # 8.1.2 besetzt 1-3 (kein 0), 8.1.2.1 nur die 6.
+    assert sorted(codelisten.load().get("unfallkennzeichen", {})) == ["1", "2", "3"]
+    assert sorted(codelisten.load().get("bvg_sonstiges_ser", {})) == ["6"]
+    assert codelisten.lookup("unfallkennzeichen", "1").startswith("Arbeitsunfall")
+    assert codelisten.lookup("bvg_sonstiges_ser", "6") == "BVG/SER"
+
+
+def test_verarbeitungskennzeichen_klartext():
+    assert codelisten.lookup("verarbeitungskennzeichen", "01") == "Abrechnung ohne Besonderheiten"
+    assert codelisten.lookup("verarbeitungskennzeichen", "02") == "Nachforderung"
+    assert codelisten.lookup("verarbeitungskennzeichen", "03") == "Zuzahlungsforderung"
+    assert codelisten.lookup("verarbeitungskennzeichen", "04") == "Korrekturrechnung"
+    assert codelisten.lookup("verarbeitungskennzeichen", "10") == "Wiederaufnahme"
+
+
+def test_summenstatus_und_rechnungsart():
+    assert codelisten.lookup("summenstatus", "00") == "Gesamtsumme aller Status"
+    assert codelisten.lookup("summenstatus", "51") == "Rentner"
+    assert codelisten.lookup("rechnungsart", "1").startswith("Abrechnung von Leistungserbringer")
+
+
+def test_abrechnungscode_heilmittelbereich():
+    assert codelisten.lookup("abrechnungscode", "22") == "Krankengymnast / Physiotherapeut"
+    assert codelisten.lookup("abrechnungscode", "26") == "Ergotherapeut"
+    assert codelisten.lookup("abrechnungscode", "71") == "Podologen"
+    # Hilfsmittel-Codes sind in dieser Fassung bewusst nicht hinterlegt
+    assert codelisten.lookup("abrechnungscode", "11") == ""
+
+
+def test_diagnosegruppen_aller_fuenf_bereiche():
+    tabelle = codelisten.load().get("diagnosegruppe", {})
+    for code in ("WS", "EX", "SO5", "SB3", "EN1", "PS4", "ST1", "SP6", "RE2", "DF", "QF", "EE2"):
+        assert tabelle.get(code), f"Diagnosegruppe {code} fehlt"
+    assert codelisten.lookup("diagnosegruppe", "EN1").startswith("Ergotherapie")
+    assert codelisten.lookup("diagnosegruppe", "SP4").startswith("Sprachtherapie")
+    assert codelisten.lookup("diagnosegruppe", "DF").startswith("Podologie")
+
+
+def test_offene_listen_bleiben_leer():
+    """
+    Verordnungsart, Verordnungsbesonderheiten, Heilmittelbereich,
+    Therapiefrequenz und Genehmigungsart sind noch nicht belegt. Der Test hält
+    fest, dass dort NICHTS geraten wurde — er schlägt an, sobald jemand die
+    Listen füllt, und ist dann bewusst zu streichen.
+    """
+    daten = codelisten.load()
+    for liste in ("verordnungsart", "verordnungsbesonderheiten",
+                  "heilmittelbereich", "therapiefrequenz"):
+        werte = [v for v in daten.get(liste, {}).values() if str(v).strip()]
+        assert werte == [], f"{liste} enthält jetzt Klartexte — Test anpassen"
+    assert daten.get("genehmigungsart") == {}
+
+
+def test_unbekannter_code_zeigt_kein_klartext():
+    # Der Kern der Absprache: nie raten.
+    assert codelisten.describe("verordnungsart", "04") == f"04 ({codelisten.KEIN_KLARTEXT})"
+    assert codelisten.describe("diagnosegruppe", "XX9") == f"XX9 ({codelisten.KEIN_KLARTEXT})"
+
+
+# ------------------------------------------------- Leistungserbringergruppe
+
+def test_leistungserbringergruppe_zerlegt_7_stellen():
+    leg = vo.leistungserbringergruppe("26", "00501")
+    assert leg["abr_code"] == "26"
+    assert leg["abr_text"] == "Ergotherapeut"
+    assert leg["tarifbereich"] == "00"
+    assert leg["tarifbereich_text"].startswith("Bundeseinheitlicher Tarif")
+    assert leg["sondertarif"] == "501"
+    # 501 ist in der erfassten Fassung der Anlage nicht benannt -> nichts raten
+    assert leg["sondertarif_text"] == ""
+    assert "Ergotherapeut" in leg["text"]
+    assert "Sondertarif 501" in leg["text"]
+
+
+def test_leistungserbringergruppe_kostenvoranschlag():
+    leg = vo.leistungserbringergruppe("22", "00099")
+    assert leg["sondertarif"] == "099"
+    assert "Kostenvoranschlag" in leg["sondertarif_text"]
+
+
+def test_leistungserbringergruppe_unbekannter_abrechnungscode():
+    leg = vo.leistungserbringergruppe("11", "00000")
+    assert leg["abr_text"] == ""
+    assert codelisten.KEIN_KLARTEXT in leg["text"]
+
+
+def test_leistungserbringergruppe_leer():
+    leg = vo.leistungserbringergruppe("", "")
+    assert leg["text"] == ""
+    assert leg["tarifbereich"] == "" and leg["sondertarif"] == ""
+
+
+def test_leistungserbringergruppe_teilweise():
+    # Nur Abrechnungscode, kein Tarifkennzeichen
+    leg = vo.leistungserbringergruppe("26", "")
+    assert leg["text"] == "26 — Ergotherapeut"

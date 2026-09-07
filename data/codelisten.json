@@ -1,30 +1,51 @@
 {
   "_hinweis": [
-    "Editierbare Klartext-Tabellen für die Verordnungs-Anzeige (ZHE / DIA / SKZ / EHE).",
+    "Editierbare Klartext-Tabellen für die Verordnungs-Anzeige (ZHE / DIA / SKZ / EHE / INV).",
     "Diese Datei wird zur Laufzeit gelesen. Änderungen wirken nach einem Neustart der Anwendung —",
     "im laufenden Betrieb genügt der Button 'Codelisten neu laden' im Verordnungsblatt.",
     "",
     "WICHTIG: Leere Bezeichnungen ('') sind ABSICHTLICH leer. Sie werden in der GUI als",
     "'kein Klartext hinterlegt' angezeigt, damit in der Hotline niemals ein geratener",
-    "Text genannt wird. Bitte aus dem jeweils gültigen Katalog / der Technischen Anlage 1",
-    "bzw. dem bundeseinheitlichen Positionsnummernverzeichnis nachtragen.",
+    "Text genannt wird. Bitte aus dem jeweils gültigen Katalog nachtragen.",
     "",
     "Struktur: jede Liste ist ein Objekt { \"<code>\": \"<Klartext>\" }.",
     "Bei 'positionsnummern' darf zusätzlich nach Abrechnungscode gestaffelt werden:",
     "  \"positionsnummern\": { \"*\": {...allgemein...}, \"26\": {...nur Abrechnungscode 26...} }"
   ],
 
+  "_quellen": {
+    "zuzahlungskennzeichen": "Anlage 3 zu TP 5, Version 21 (19.09.2025), Abschnitt 8.1.3 Zuzahlung",
+    "unfallkennzeichen": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.2 Unfall/Sonstiges",
+    "bvg_sonstiges_ser": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.2.1 BVG/SER — nur der Schlüsselwert 6 ist besetzt. Hinweis der Anlage: ab 01.07.2024 werden die Verordnungsmuster der KBV sukzessive von 'BVG' auf 'SER' umgestellt, der Wert 6 kann daher beides bedeuten.",
+    "rechnungsart": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.4 Rechnungsart",
+    "abrechnungscode": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.5.1 Abrechnungscode",
+    "tarifbereich": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.5.2 Tarifkennzeichen, 1.-2. Stelle",
+    "sondertarif": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.5.2 Tarifkennzeichen, 3.-5. Stelle. Dort in Bereichen definiert: 000-090 und A00-A90 = ohne Besonderheiten, 091-098 und A91-A98 = nicht besetzt, 099 = Kostenvoranschlag, U00-ZZZ = nicht besetzt. Eintragen lohnt sich nur für Werte, die in den Dateien wirklich vorkommen — der in unseren Daten häufige Wert 501 fällt in keinen dieser Bereiche und ist in der erfassten Fassung nicht benannt.",
+    "summenstatus": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.6 Summenstatus",
+    "verarbeitungskennzeichen": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.7 Verarbeitungskennzeichen",
+    "diagnosegruppe": "Heilmittel-Richtlinie / Heilmittelkatalog, Zusammenstellung Daniel Rosch 2026-09-07",
+    "therapiebericht": "Muster 13 (KBV) — Ja/Nein-Feld, kein Schlüsselverzeichnis",
+    "hausbesuch": "Muster 13 (KBV) — Ja/Nein-Feld, kein Schlüsselverzeichnis",
+    "dringlicher_behandlungsbedarf": "Muster 13 (KBV) — Ja/Nein-Feld, kein Schlüsselverzeichnis",
+    "positionsnummern": "Bezeichnungen kommen aus data/heilmittelpreise.json (GKV-Heilmittelpreisstammdatei). Diese Liste ist nur für eigene Ergänzungen und hat Vorrang.",
+    "_offen": [
+      "verordnungsart, verordnungsbesonderheiten: in Anlage 3 zu TP 5 auf den Seiten 27/28",
+      "  (Abschnitte 8.1.11 / 8.1.12) definiert — noch nicht erfasst.",
+      "genehmigungsart: Anlage 3 zu TP 5, Seiten 35/36 — noch nicht erfasst.",
+      "heilmittelbereich (ZHE, 16. Feld) und therapiefrequenz (17. Feld) stehen NICHT in",
+      "  Anlage 3. Quelle ist die Technische Anlage 1 bzw. die Heilmittel-Richtlinie.",
+      "  Auch der Wertebereich ist noch unbestätigt — die Schlüssel 1-5 bzw. 0-9 unten sind",
+      "  nur Platzhalter zum Eintragen, kein belegter Wertebereich."
+    ]
+  },
+
   "zuzahlungskennzeichen": {
     "0": "Keine gesetzliche Zuzahlung",
     "1": "Zuzahlungsbefreit",
-    "2": "Zuzahlungspflichtig — Zuzahlung nicht entrichtet",
-    "3": "Zuzahlungspflichtig — Zuzahlung entrichtet",
-    "4": "Übergang zuzahlungspflichtig → befreit",
-    "5": "Übergang befreit → zuzahlungspflichtig",
-    "6": "",
-    "7": "",
-    "8": "",
-    "9": ""
+    "2": "Keine Zuzahlung trotz schriftlicher Zahlungsaufforderung",
+    "3": "Zuzahlungspflichtig",
+    "4": "Übergang zuzahlungspflichtig zu zuzahlungsfrei (nach Ausstellung der Verordnung bzw. während der Inanspruchnahme, z. B. Belastungsgrenze erreicht)",
+    "5": "Übergang zuzahlungsfrei zu zuzahlungspflichtig (z. B. Jahreswechsel)"
   },
 
   "verordnungsart": {
@@ -59,17 +80,13 @@
   },
 
   "unfallkennzeichen": {
-    "0": "",
-    "1": "",
-    "2": "",
-    "3": ""
+    "1": "Arbeitsunfall / Wegeunfall / Berufskrankheit",
+    "2": "Sonstige Unfallfolgen",
+    "3": "Sonstiges (BVFG, BEG, HHG, OEG, IfSG, SVG)"
   },
 
   "bvg_sonstiges_ser": {
-    "0": "",
-    "1": "",
-    "2": "",
-    "3": ""
+    "6": "BVG/SER"
   },
 
   "therapiebericht": {
@@ -109,42 +126,119 @@
   },
 
   "diagnosegruppe": {
-    "EN1": "",
-    "EN2": "",
-    "EN3": "",
-    "PS1": "",
-    "PS2": "",
-    "PS3": "",
-    "PS4": "",
-    "SB1": "",
-    "SB2": ""
+    "WS": "Physiotherapie — Wirbelsäulenerkrankungen",
+    "EX": "Physiotherapie — Erkrankungen der Extremitäten (Arme/Beine) und des Beckens",
+    "CS": "Physiotherapie — Chronisches Schmerzsyndrom",
+    "LY": "Physiotherapie — Lymphabflussstörungen (Lymphödeme)",
+    "ZN": "Physiotherapie — Erkrankungen des zentralen Nervensystems (z. B. nach Schlaganfall)",
+    "GE": "Physiotherapie — Erkrankungen des Nervensystems im Kindesalter / Entwicklungsstörungen",
+    "AT": "Physiotherapie — Erkrankungen der Atmungsorgane (z. B. Asthma, COPD)",
+    "PN": "Physiotherapie — Erkrankungen des peripheren Nervensystems",
+    "SO1": "Physiotherapie — Fehlbildungen / Erkrankungen der Haut (z. B. schwere Verbrennungsnarben)",
+    "SO2": "Physiotherapie — Erkrankungen des Beckenbodens (z. B. Inkontinenz)",
+    "SO3": "Physiotherapie — Schwere Erkrankungen der Sinnesorgane (z. B. Tinnitus, Schwindel)",
+    "SO4": "Physiotherapie — Krebserkrankungen / Stadien nach onkologischer Akuttherapie",
+    "SO5": "Physiotherapie — Palliativmedizinische Versorgung",
+
+    "SB1": "Ergotherapie — Erkrankungen des Stütz- und Bewegungssystems (z. B. orthopädische Leiden, Rheuma)",
+    "SB2": "Ergotherapie — Rückenmarkserkrankungen / Querschnittsyndrome",
+    "SB3": "Ergotherapie — Amputationen / Fehlbildungen",
+    "EN1": "Ergotherapie — ZNS-Erkrankungen oder Entwicklungsstörungen bis zum 18. Lebensjahr",
+    "EN2": "Ergotherapie — ZNS-Erkrankungen nach Abschluss der Gehirnreifung (Erwachsene, z. B. Parkinson, Demenz)",
+    "EN3": "Ergotherapie — Schädigungen des peripheren Nervensystems",
+    "PS1": "Ergotherapie — Psychische Störungen im Kindes- und Jugendalter",
+    "PS2": "Ergotherapie — Neurotische, Belastungs- und somatoforme Störungen (Erwachsene)",
+    "PS3": "Ergotherapie — Psychotische und affektive Störungen sowie Abhängigkeitserkrankungen (Erwachsene)",
+    "PS4": "Ergotherapie — Organische psychische Störungen im Erwachsenenalter",
+
+    "ST1": "Sprachtherapie — Stimmstörungen (organisch bedingt)",
+    "ST2": "Sprachtherapie — Stimmstörungen (funktionell bedingt)",
+    "ST3": "Sprachtherapie — Stimmstörungen (psychogen bedingt)",
+    "ST4": "Sprachtherapie — Stimmstörungen bei Rhinophonie (Näseln)",
+    "SP1": "Sprachtherapie — Sprachstörungen vor Abschluss der Sprachentwicklung (z. B. Sprachentwicklungsverzögerung)",
+    "SP2": "Sprachtherapie — Sprachstörungen nach Abschluss der Sprachentwicklung (z. B. Aphasie nach Schlaganfall)",
+    "SP3": "Sprachtherapie — Sprechstörungen (z. B. Dysarthrie, Sprechapraxie)",
+    "SP4": "Sprachtherapie — Störungen des Redeflusses (z. B. Stottern, Poltern)",
+    "SP5": "Sprachtherapie — Störungen der auditiven Wahrnehmung",
+    "SP6": "Sprachtherapie — Cochlea-Implantat-Versorgung / hochgradige Schwerhörigkeit",
+    "SC": "Sprachtherapie — Schluckstörungen (Dysphagie)",
+    "SF": "Sprachtherapie — Orofaziale Störungen (myofunktionelle Therapie, z. B. Fehlfunktionen der Zunge)",
+    "RE1": "Sprachtherapie — Lese-Rechtschreibstörungen bei isolierten Entwicklungsstörungen",
+    "RE2": "Sprachtherapie — Kombinierte Störungen schulischer Fertigkeiten",
+
+    "DF": "Podologie — Diabetisches Fußsyndrom (Schädigungen durch Diabetes mellitus)",
+    "NF": "Podologie — Neurogenes Fußsyndrom (Gefühls- oder Durchblutungsstörungen ohne Diabetes)",
+    "QF": "Podologie — Querschnittsyndrom mit Fußschädigungen",
+
+    "EE1": "Ernährungstherapie — Seltene Stoffwechselerkrankungen oder Mukoviszidose",
+    "EE2": "Ernährungstherapie — Extreme Fehl- und Mangelernährung (z. B. bei schweren chronischen Erkrankungen oder Tumorpatienten)"
+  },
+
+  "verarbeitungskennzeichen": {
+    "01": "Abrechnung ohne Besonderheiten",
+    "02": "Nachforderung",
+    "03": "Zuzahlungsforderung",
+    "04": "Korrekturrechnung",
+    "10": "Wiederaufnahme"
+  },
+
+  "rechnungsart": {
+    "0": "Derzeit nicht belegt",
+    "1": "Abrechnung von Leistungserbringer und Zahlung an IK Leistungserbringer",
+    "2": "Abrechnung über Abrechnungsstelle (ohne Inkassovollmacht) und Zahlung an IK Leistungserbringer",
+    "3": "Abrechnung über Abrechnungsstelle (mit Inkassovollmacht) und Zahlung an IK Abrechnungsstelle"
+  },
+
+  "summenstatus": {
+    "00": "Gesamtsumme aller Status",
+    "11": "Mitglieder",
+    "31": "Angehörige",
+    "51": "Rentner",
+    "99": "Nicht zuzuordnende Status"
   },
 
   "abrechnungscode": {
-    "26": ""
+    "21": "Masseur / Medizinischer Badebetrieb",
+    "22": "Krankengymnast / Physiotherapeut",
+    "23": "Logopäde / Atem-, Sprech- und Stimmlehrer / staatlich anerkannter Sprachtherapeut",
+    "24": "Sprachheilpädagoge / Dipl. Pädagoge",
+    "25": "Sonstiger Sprachtherapeut",
+    "26": "Ergotherapeut",
+    "27": "Krankenhaus",
+    "28": "Kurbetrieb",
+    "29": "Sonstige therapeutische Heilperson",
+    "50": "Hebamme / Entbindungspfleger",
+    "60": "Betriebshilfe",
+    "71": "Podologen",
+    "72": "Medizinische Fußpfleger",
+    "73": "Ernährungstherapie bei seltenen angeborenen Stoffwechselerkrankungen",
+    "74": "Ernährungstherapie bei Mukoviszidose",
+    "B1": "Modellvorhaben nach § 64d SGB V"
+  },
+
+  "tarifbereich": {
+    "00": "Bundeseinheitlicher Tarif (gültig für Ost und West)",
+    "50": "Bundesvertrag",
+    "90": "Sonstiger länderübergreifender Tarif",
+    "91": "Vertrag auf Kassenebene",
+    "92": "Vertrag auf Kassenebene",
+    "93": "Vertrag auf Kassenebene",
+    "94": "Vertrag auf Kassenebene",
+    "95": "Vertrag auf Kassenebene",
+    "96": "Vertrag auf Kassenebene",
+    "97": "Vertrag auf Kassenebene",
+    "98": "Vertrag auf Kassenebene",
+    "99": "Vertrag auf Kassenebene"
+  },
+
+  "sondertarif": {
+    "000": "Ohne Besonderheiten",
+    "099": "Leistung ohne preisliche Regelung, Abrechnung nach genehmigtem Kostenvoranschlag"
   },
 
   "positionsnummern": {
     "*": {},
-    "26": {
-      "54002": "",
-      "54003": "",
-      "54102": "",
-      "54103": "",
-      "54104": "",
-      "54105": "",
-      "54142": "",
-      "54144": "",
-      "54145": "",
-      "54251": "",
-      "54503": "",
-      "59702": "",
-      "59741": "",
-      "59952": "",
-      "59953": "",
-      "59973": "",
-      "59974": ""
-    }
+    "26": {}
   },
 
   "genehmigungsart": {

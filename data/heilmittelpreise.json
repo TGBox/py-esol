@@ -1,0 +1,1413 @@
+{
+  "_hinweis": [
+    "Automatisch erzeugt aus der Heilmittelpreisstammdatei des GKV-Spitzenverbands.",
+    "NICHT von Hand bearbeiten — beim nächsten Import wird die Datei überschrieben.",
+    "Eigene Bezeichnungen gehören nach data/codelisten.json; die haben Vorrang.",
+    "",
+    "Erzeugt mit: python tools/import_hmp.py <HMP-XML>",
+    "",
+    "Höchstpreise sind bewusst NICHT enthalten: die Quelle ist laut ihrem",
+    "Haftungsausschluss nicht zu Abrechnungszwecken bestimmt.",
+    "",
+    "Codes mit 'X' an erster Stelle sind Positionen nach § 125 (Regelversorgung);",
+    "in der Abrechnung steht dort die Stelle des Heilmittelbereichs (X4103 -> 54103).",
+    "Die Auflösung passiert beim Nachschlagen in codelisten.py."
+  ],
+  "_quelle": {
+    "datei": "HMP Stand 01.07.2026.xml",
+    "hmp_version": "3.0",
+    "schema_version": "3.2",
+    "hmp_gueltig_ab": "2024-01-01",
+    "anzahl_positionen": 229,
+    "heilmittelbereiche": {
+      "Ergotherapie": 73,
+      "Ernährungstherapie": 27,
+      "Physiotherapie": 92,
+      "Podologie": 18,
+      "Stimm-, Sprech-Sprach- und Schlucktherapie": 19
+    },
+    "gueltigkeitsstaende": {
+      "2026-01-01": 92,
+      "2026-06-01": 27,
+      "2026-07-01": 110
+    }
+  },
+  "positionen": {
+    "20522": {
+      "bezeichnung": "Physiotheraeputische Diagnostik (PD) zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20523": {
+      "bezeichnung": "Bedarfsdiagnostik (BD) zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20524": {
+      "bezeichnung": "Versorgungsbezogene Pauschale je Blankoverordnung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20525": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20526": {
+      "bezeichnung": "Klassische Massagetherapie (KMT) zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20527": {
+      "bezeichnung": "Bindegewebsmassage (BGM) zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20528": {
+      "bezeichnung": "Segment-, Periost-, Colonmassage zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20529": {
+      "bezeichnung": "Übungsbehandlung: Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20530": {
+      "bezeichnung": "Übungsbehandlung im Bewegungsbad: Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20531": {
+      "bezeichnung": "Chirogymnastik (Funktionelle Wirbelsäulengymnastik): Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20532": {
+      "bezeichnung": "Übungsbehandlung: Gruppenbehandlung (2 - 5 Patienten) zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20533": {
+      "bezeichnung": "Übungsbehandlung im Bewegungsbad: Gruppenbehandlung mit 2-3 Patienten zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20534": {
+      "bezeichnung": "Übungsbehandlung im Bewegungsbad: Gruppenbehandlung mit 4-5 Patienten zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20535": {
+      "bezeichnung": "Allgemeine Krankengymnastik (KG) (auch auf neurophysiologische Grundlage): Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20536": {
+      "bezeichnung": "Allgemeine Krankengymnastik (KG) (auch auf neurophysiologische Grundlage): Einzelbehandlung als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20537": {
+      "bezeichnung": "Gerätegestütze Krankengymnastik (KG-Gerät): Parallele Einzelbehandlung bis zu 3 Patienten zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20538": {
+      "bezeichnung": "Allgemeine Krankengymnastik (KG) (auch auf neurophysiologische Grundlage): Gruppenbehandlung (2-5 Patienten) zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20539": {
+      "bezeichnung": "Allgemeine Krankengymnastik (KG) (auch auf neurophysiologische Grundlage): Gruppenbehandlung (2-5 Patienten) als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20540": {
+      "bezeichnung": "Krankengymnastik im Bewegungsbad: Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20541": {
+      "bezeichnung": "Krankengymnastik im Bewegungsbad: Gruppenbehandlung (2-3 Patienten) zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20542": {
+      "bezeichnung": "Krankengymnastik im Bewegungsbad: Gruppenbehandlung (4-5 Patienten) zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20543": {
+      "bezeichnung": "Manuelle Therapie: Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20544": {
+      "bezeichnung": "Manuelle Therapie: Einzelbehandlung als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20545": {
+      "bezeichnung": "Elektrotherapie: Einzelbehandlungzum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20546": {
+      "bezeichnung": "Hydroelektrisches Teilbad (Zwei-/Vierzellenbad): Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20547": {
+      "bezeichnung": "Hydroelektrisches Vollbad (z.B. Stangerbad): Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20548": {
+      "bezeichnung": "Warmpackung (einzelner oder mehrerer Körperteile): Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20549": {
+      "bezeichnung": "Wärmetherapie mittels Heißluft: Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20550": {
+      "bezeichnung": "Heiße Rolle: Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20551": {
+      "bezeichnung": "Ultraschall-Wärmetherapie: Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20552": {
+      "bezeichnung": "Kältetherapie bei einem oder mehreren Körperteil(en): Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20553": {
+      "bezeichnung": "Übermittlungsgebühr für Mitteilung/Bericht an die Ärztin oder den Arzt zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20554": {
+      "bezeichnung": "Hausbesuch inklusive Wegegeld (Einsatzpauschale) zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20555": {
+      "bezeichnung": "Hausbesuch in einer sozialen Einrichtung/Gemeinschaft inclusive Wegegeld (Einsatzpauschale) zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20556": {
+      "bezeichnung": "Hausbesuch in Kurzzeit-, Verhinderungs- und Tagespflege zum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "20557": {
+      "bezeichnung": "Physiotherapeutischer Bericht auf schriftliche Anforderung der zuständigen gesetzlichen Krankenkassen oder der behandelnden Ärztin oder des behandelnden Arztes sowie des Medizinischen Dienstes der Krankenkassenzum Vertrag nach § 125a SGB V",
+      "bereich": "Physiotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-01-01"
+    },
+    "54003": {
+      "bezeichnung": "Analyse des ergotherapeutischen Bedarfs zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54142": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54144": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54145": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Einzelbehandlung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54147": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54149": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54152": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54162": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Einzelbehandlung als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54164": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Einzelbehandlung als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54165": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Einzelbehandlung als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54167": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54169": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54172": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54245": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54247": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54248": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54249": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54251": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten) zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54252": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54265": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54267": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54268": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54269": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54271": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54272": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54341": {
+      "bezeichnung": "Thermische Anwendung (Wärme oder Kälte) zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54445": {
+      "bezeichnung": "Ergotherapeutische temporäre Schiene: Herstellung, Anpassung und Korrektur temporärer Schienen ohne Kostenvoranschlag bis 400,00 € zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54446": {
+      "bezeichnung": "Ergotherapeutische temporäre Schiene: Herstellung, Anpassung und Korrektur temporärer Schienen nach Kostenvoranschlag ab 400,01 € zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "54503": {
+      "bezeichnung": "Versorgungsbezogene Pauschale je Blankoverordnung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "59741": {
+      "bezeichnung": "Übermittlungsgebühr für Mitteilung/Bericht an die Verordnende oder den Verordnenden zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "59972": {
+      "bezeichnung": "Mehraufwand für die Beratung zur Integration in das häusliche und soziale Umfeld zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "59973": {
+      "bezeichnung": "Hausbesuch inclusive Wegegeld (Einsatzpauschale) zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "59974": {
+      "bezeichnung": "Hausbesuch in einer sozialen Einrichtung/Gemeinschaft inclusive Wegegeld (Einsatzpauschale) zum Vertrag nach § 125a SGB V",
+      "bereich": "Ergotherapie",
+      "grundlage": "125a",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X0102": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0106": {
+      "bezeichnung": "Klassische Massagetherapie (KMT)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0107": {
+      "bezeichnung": "Bindegewebsmassage (BGM)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0108": {
+      "bezeichnung": "Segment-, Periost-, Colonmassage",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0201": {
+      "bezeichnung": "Manuelle Lymphdrainage MLD - 45 Minuten (Großbehandlung)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0202": {
+      "bezeichnung": "Manuelle Lymphdrainage MLD - 60 Minuten (Ganzbehandlung)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0204": {
+      "bezeichnung": "Kompressionsbandagierung einer Extremität",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0205": {
+      "bezeichnung": "Manuelle Lymphdrainage MLD - 30 Minuten (Teilbehandlung)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0301": {
+      "bezeichnung": "Übungsbehandlung: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0305": {
+      "bezeichnung": "Übungsbehandlung im Bewegungsbad: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0306": {
+      "bezeichnung": "Chirogymnastik (Funktionelle Wirbelsäulengymnastik): Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0401": {
+      "bezeichnung": "Übungsbehandlung: Gruppenbehandlung (2 - 5 Patienten)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0402": {
+      "bezeichnung": "Übungsbehandlung im Bewegungsbad: Gruppenbehandlung mit 2 - 3 Patienten",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0405": {
+      "bezeichnung": "Übungsbehandlung im Bewegungsbad: Gruppenbehandlung mit 4 - 5 Patienten",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0501": {
+      "bezeichnung": "Allgemeine Krankengymnastik (KG) (auch auf neurophysiologischer Grundlage): Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0507": {
+      "bezeichnung": "Gerätegestütze Krankengymnastik (KG-Gerät): Parallele Einzelbehandlung bis zu 3 Patienten",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0521": {
+      "bezeichnung": "Allgemeine Krankengymnastik (KG) (auch auf neurophysiologischer Grundlage): Einzelbehandlung als telemedizinische Leistung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0601": {
+      "bezeichnung": "Allgemeine Krankengymnastik (KG) (auch auf neurophysiologischer Grundlage): Gruppenbehandlung (2 - 5 Patienten)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0621": {
+      "bezeichnung": "Allgemeine Krankengymnastik (KG) (auch auf neurophysiologischer Grundlage): Gruppenbehandlung (2 - 5 Patienten) als telemedizinische Leistung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0702": {
+      "bezeichnung": "Krankengymnastik zur Behandlung schwerer Erkrankungen der Atmungsorgane (insbesondere bei Mukoviszidose oder vergleichbar schweren bei Lungenerkrankungen) - KG-Muko: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0708": {
+      "bezeichnung": "Krankengymnastik zur Behandlung von zentralen Bewegungsstörungen bis zur Vollendung des 18. Lebensjahres nach Bobath als Einzelbehandlung (KG-ZNS-Kinder nach Bobath)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0709": {
+      "bezeichnung": "Krankengymnastik zur Behandlung von zentralen Bewegungsstörungen bis zur Vollendung des 18. Lebensjahres nach Vojta als Einzelbehandlung (KG-ZNS-Kinder nach Vojta)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0710": {
+      "bezeichnung": "Krankengymnastik zur Behandlung von zentralen Bewegungsstörungen nach Vollendung des 18. Lebensjahres nach Bobath als Einzelbehandlung (KG-ZNS nach Bobath)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0711": {
+      "bezeichnung": "Krankengymnastik zur Behandlung von zentralen Bewegungsstörungen nach Vollendung des 18. Lebensjahres nach Vojta als Einzelbehandlung (KG-ZNS nach Vojta)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0712": {
+      "bezeichnung": "Krankengymnastik zur Behandlung von zentralen Bewegungsstörungen nach Vollendung des 18. Lebensjahres nach PNF als Einzelbehandlung (KG-ZNS PNF)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0720": {
+      "bezeichnung": "Krankengymnastik zur Behandlung von zentralen Bewegungsstörungen nach Vollendung des 18. Lebensjahres nach Bobath als Einzelbehandlung (KG-ZNS nach Bobath) als telemedizinische Leistung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0722": {
+      "bezeichnung": "Krankengymnastik zur Behandlung schwerer Erkrankungen der Atmungsorgane (insbesondere bei Mukoviszidose oder vergleichbar schweren bei Lungenerkrankungen) - KG-Muko: Einzelbehandlung als telemedizinische Leistung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0728": {
+      "bezeichnung": "Krankengymnastik zur Behandlung von zentralen Bewegungsstörungen bis zur Vollendung des 18. Lebensjahres nach Bobath als Einzelbehandlung (KG-ZNS-Kinder nach Bobath) als telemedizinische Leistung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0805": {
+      "bezeichnung": "Krankengymnastik in der Gruppe bei cerebral bedingten Schädigungen für Kinder bis zur Vollendung des 14.Lebensjahres (2 - 4 Kinder)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X0902": {
+      "bezeichnung": "Krankengymnastik im Bewegungsbad: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1004": {
+      "bezeichnung": "Krankengymnastik im Bewegungsbad: Gruppenbehandlung mit 2 - 3 Patienten",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1005": {
+      "bezeichnung": "Krankengymnastik im Bewegungsbad: Gruppenbehandlung mit 4 - 5 Patienten",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1104": {
+      "bezeichnung": "Traktionsbehandlung mit Gerät",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1201": {
+      "bezeichnung": "Manuelle Therapie: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1221": {
+      "bezeichnung": "Manuelle Therapie: Einzelbehandlung als telemedizinische Leistung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1302": {
+      "bezeichnung": "Elektrotherapie: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1303": {
+      "bezeichnung": "Elektrostimulation bei Paresen: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1310": {
+      "bezeichnung": "Hydroelektrisches Teilbad (Zwei-/Vierzellenbad): Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1312": {
+      "bezeichnung": "Hydroelektrisches Vollbad (z.B. Stangerbad): Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1501": {
+      "bezeichnung": "Warmpackung (einzelner oder mehrerer Körperteile): Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1517": {
+      "bezeichnung": "Wärmetherapie mittels Heißluft: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1530": {
+      "bezeichnung": "Heiße Rolle: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1531": {
+      "bezeichnung": "Ultraschall-Wärmetherapie: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1532": {
+      "bezeichnung": "Bäder (Voll-oder Teilbäder) mit Peloiden: Vollbad",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1533": {
+      "bezeichnung": "Bäder (Voll-oder Teilbäder) mit Peloiden: Teilbad",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1534": {
+      "bezeichnung": "Kältetherapie bei einem oder mehreren Körperteil(en): Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1714": {
+      "bezeichnung": "Kohlensäurebad: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1732": {
+      "bezeichnung": "Kohlensäuregasbad (CO2-Trockenbad) als Voll-, Dreiviertel- oder Halbbad: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1733": {
+      "bezeichnung": "Kohlensäuregasbad (CO2-Trockenbad) als Teilbad: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1801": {
+      "bezeichnung": "Inhalationstherapie: Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X1906": {
+      "bezeichnung": "Physiotherapeutischer Bericht auf schriftliche Anforderung der zuständigen gesetzlichen Krankenkasse oder der behandelnden Ärztin oder des behandelnden Arztes sowie des Medizinischen Dienstes der Krankenkassen",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X2001": {
+      "bezeichnung": "Standardisierte Kombination von Maßnahmen der Physiotherapie (Standardisierte Heilmittelkombination gem. §§ 12 Abs. 5 und 25 HeilM-RL): D1 Einzelbehandlung",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X3010": {
+      "bezeichnung": "Erstdiagnostik",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3011": {
+      "bezeichnung": "Bedarfsdiagnostik",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3102": {
+      "bezeichnung": "Einzelbehandlung (30 Minuten Therapiezeit mit dem Patienten)",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3103": {
+      "bezeichnung": "Einzelbehandlung (45 Minuten Therapiezeit mit dem Patienten)",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3104": {
+      "bezeichnung": "Einzelbehandlung (60 Minuten Therapiezeit mit dem Patienten)",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3122": {
+      "bezeichnung": "Einzel-Therapie (telemedizinische Leistungserbringung), Regelbehandlungszeit: 30 Min",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3123": {
+      "bezeichnung": "Einzel-Therapie (telemedizinische Leistungserbringung), Regelbehandlungszeit: 45 Min",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3124": {
+      "bezeichnung": "Einzel-Therapie (telemedizinische Leistungserbringung), Regelbehandlungszeit: 60 Min",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3220": {
+      "bezeichnung": "Gruppenbehandlung mit 2 Patienten (45 Minuten Therapiezeit mit den Patienten), je Teilnehmer",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3222": {
+      "bezeichnung": "Gruppenbehandlung mit 3 - 5 Patienten (45 Minuten Therapiezeit mit den Patienten), je Teilnehmer",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3223": {
+      "bezeichnung": "Gruppenbehandlung mit 2 Patienten (90 Minuten Therapiezeit mit den Patienten), je Teilnehmer",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3224": {
+      "bezeichnung": "Gruppenbehandlung mit 3 - 5 Patienten (90 Minuten Therapiezeit mit den Patienten), je Teilnehmer",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3240": {
+      "bezeichnung": "Gruppen-Therapie 2 Patientinnen und/oder Patienten, je Patientin oder Patient (telemedizinische Leistungserbringung), Regelbehandlungszeit: 45 Minuten",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3242": {
+      "bezeichnung": "Gruppen-Therapie 3-5 Patientinnen und/oder Patienten, je Patientin oder Patient (telemedizinische Leistungserbringung), Regelbehandlungszeit: 45 Minuten",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3243": {
+      "bezeichnung": "Gruppen-Therapie 2 Patientinnen und/oder Patienten, je Patientin oder Patient (telemedizinische Leistungserbringung), Regelbehandlungszeit: 90 Minuten",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3244": {
+      "bezeichnung": "Gruppen-Therapie 3-5 Patientinnen und/oder Patienten, je Patientin oder Patient (telemedizinische Leistungserbringung), Regelbehandlungszeit: 90 Minuten",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3302": {
+      "bezeichnung": "Bericht des Leistungserbringers an die verordnende Ärztin oder den verordnenden Arzt",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X3303": {
+      "bezeichnung": "Bericht auf besondere Anforderung",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4002": {
+      "bezeichnung": "Analyse des ergotherapeutischen Bedarfs",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4102": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Einzelbehandlung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4103": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Einzelbehandlung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4104": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Einzelbehandlung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4105": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Einzelbehandlung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4107": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4108": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4109": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4112": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4122": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Einzelbehandlung als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4123": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Einzelbehandlung als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4124": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Einzelbehandlung als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4125": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Einzelbehandlung als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4127": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4128": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4129": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4132": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4205": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4206": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4207": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4208": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4209": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4210": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Gruppenbehandlung (3 - 6 Patienten)",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4211": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten)",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4212": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4225": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4226": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4227": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4228": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4229": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4230": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4231": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4232": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4301": {
+      "bezeichnung": "Thermische Anwendung (Wärme oder Kälte)",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4405": {
+      "bezeichnung": "Ergotherapeutische temporäre Schiene: Herstellung, Anpassung und Korrektur temporärer Schienen ohne Kostenvoranschlag bis 400,00 €",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X4406": {
+      "bezeichnung": "Ergotherapeutische temporäre Schiene: Herstellung, Anpassung und Korrektur temporärer Schienen nach Kostenvoranschlag ab 400,01 €",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X5001": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese (30 Minuten Einheit)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5002": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese (15 Minuten Einheit)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5003": {
+      "bezeichnung": "Einzelbehandlung (30 Minuten Einheit)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5004": {
+      "bezeichnung": "Einzelbehandlung (15 Minuten Einheit)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5005": {
+      "bezeichnung": "Einzelbehandlung im häuslichen oder sozialen Umfeld (bis zu 4x je Jahr sind bis zu 4x 30 Minuten je Verordnung abrechnungsfähig)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5006": {
+      "bezeichnung": "Gruppenbehandlung (30 Minuten Einheit)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5007": {
+      "bezeichnung": "Gruppenbehandlung (15 Minuten Einheit)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5008": {
+      "bezeichnung": "Berechnung und Auswertung von Ernährungsprotokollen und Entwicklung entsprechender individueller Empfehlungen",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5009": {
+      "bezeichnung": "Notwendige Abstimmung der Therapie mit einer dritten Partei",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5021": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese per Video, RLZ 60 Minuten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5022": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese per Video, RLZ 30 Minuten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5023": {
+      "bezeichnung": "Ernährungstherapeutische Intervention -Einzelbehandlung per Video, RLZ 60 Minuten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5024": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung per Video, RLZ 30 Minuten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5025": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung im häuslichen o. sozialen Umfeld per Video",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5026": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Gruppenbehandlung per Video, RLZ 60 Minuten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5027": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Gruppenbehandlung per Video, RLZ 30 Minuten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5031": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese als telefonische Beratung, RLZ 60 Minuten, max. 30 Minuten mit Patienten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5032": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese als telefonische Beratung, RLZ 30 Minuten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5033": {
+      "bezeichnung": "Ernährungstherapeutische Intervention -Einzelbehandlung als telefonische Beratung, RLZ 60 Minuten, max. 30 Minuten mit Patienten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5034": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung als telefonische Beratung, RLZ 30 Minuten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5035": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung im häuslichen o. sozialen Umfeld als telefonische Beratung, RLZ 60 Minuten, max. 30 Minuten mit Patienten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5036": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Gruppenbehandlung als telefonische Beratung RLZ 60 Minuten, max. 30 Minuten mit Patienten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X5037": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Gruppenbehandlung als telefonische Beratung, RLZ 30 Minuten",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X8010": {
+      "bezeichnung": "Podologische Behandlung (klein)",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8020": {
+      "bezeichnung": "Podologische Behandlung (groß)",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8030": {
+      "bezeichnung": "Podologische Befundung",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8040": {
+      "bezeichnung": "Eingangsbefundung",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8100": {
+      "bezeichnung": "Nagelspangenbehandlung: Erstbefundung groß",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8110": {
+      "bezeichnung": "Nagelspangenbehandlung: Erstbefundung klein",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8210": {
+      "bezeichnung": "Nagelspangenbehandlung nach Ross Fraser: Anpassung einer einteiligen unilateralen und bilateralen Nagelkorrekturspange, z. B. nach Ross Fraser",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8220": {
+      "bezeichnung": "Nagelspangenbehandlung nach Ross Fraser: Fertigung einer einteiligen unilateralen und bilateralen Nagelkorrekturspange, z. B. nach Ross Fraser",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8230": {
+      "bezeichnung": "Nagelspangenbehandlung nach Ross Fraser: Nachregulierung der einteiligen unilateralen und bilateralen Nagelkorrekturspange, z. B. nach Ross Fraser",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8300": {
+      "bezeichnung": "Nagelspangenbehandlung mehrteilig bilateral: Vorbereitung des Nagels, Anpassung und Aufsetzen einer mehrteiligen bilateralen Nagelkorrekturspange",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8400": {
+      "bezeichnung": "Nagelspangenbehandlung einteilige Kunststoff- oder Metall-Nagelkorrekturspange: Vorbereitung des Nagels, Anpassung und Aufsetzen einer einteiligen Kunststoff- oder Metall-Nagelkorrekturspange",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8510": {
+      "bezeichnung": "Nagelspangenbehandlung weitere Leistungen: Indikationsspezifische Kontrolle auf Sitz- und Passgenauigkeit",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8520": {
+      "bezeichnung": "Nagelspangenbehandlung weitere Leistungen: Behandlungsabschluss / Entfernung der Nagelkorrekturspange",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8530": {
+      "bezeichnung": "Nagelspangenbehandlung weitere Leistungen: Therapiebericht UI 2",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8610": {
+      "bezeichnung": "Nagelspangenbehandlung",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X8620": {
+      "bezeichnung": "Nagelspangenbehandlung: Aufschlag für besonderen Aufwand",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X9701": {
+      "bezeichnung": "Übermittlungsgebühr für Mitteilung/Bericht an die Ärztin oder den Arzt",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X9702": {
+      "bezeichnung": "Übermittlungsgebühr für Mitteilung/Bericht an die Verordnende oder den Verordnenden",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X9901": {
+      "bezeichnung": "Hausbesuch",
+      "bereich": "Stimm-, Sprech-Sprach- und Schlucktherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X9922": {
+      "bezeichnung": "Hausbesuch in Kurzzeit-, Verhinderungs- und Tagespflege",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X9932": {
+      "bezeichnung": "Mehraufwand für die Beratung zur Integration in das häusliche und soziale Umfeld",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X9933": {
+      "bezeichnung": "Hausbesuch, ärztlich verordnet, inkl. Wegegeld",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X9934": {
+      "bezeichnung": "Hausbesuch in soz. Einrichtung inkl. Wegegeld",
+      "bereich": "Podologie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X9937": {
+      "bezeichnung": "Hausbesuch (Ernährungstherapie)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X9941": {
+      "bezeichnung": "Wegegeld je Kilometer (Ernährungstherapie)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X9942": {
+      "bezeichnung": "Hausbesuch im Rahmen der Einzelbehandlung im häuslichen oder sozialen Umfeld (Ernährungstherapie)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X9943": {
+      "bezeichnung": "Wegegeld je Kilometer im Rahmen der Einzelbehandlung im häuslichen oder sozialen Umfeld (Ernährungstherapie)",
+      "bereich": "Ernährungstherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-06-01"
+    },
+    "X9950": {
+      "bezeichnung": "Hausbesuch inclusive Wegegeld (Einsatzpauschale)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X9951": {
+      "bezeichnung": "Hausbesuch in einer sozialen Einrichtung/Gemeinschaft inclusive Wegegeld (Einsatzpauschale)",
+      "bereich": "Physiotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-01-01"
+    },
+    "X9952": {
+      "bezeichnung": "Hausbesuch inclusive Wegegeld (Einsatzpauschale)",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    },
+    "X9953": {
+      "bezeichnung": "Hausbesuch in einer sozialen Einrichtung/Gemeinschaft inclusive Wegegeld (Einsatzpauschale)",
+      "bereich": "Ergotherapie",
+      "grundlage": "125",
+      "gueltig_ab": "2026-07-01"
+    }
+  },
+  "_uebersprungen": 0,
+  "_doppelte_codes": []
+}

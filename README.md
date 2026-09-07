@@ -41,9 +41,13 @@ Es unterstützt Leistungserbringer im Heilmittelbereich (Physiotherapie, Ergothe
   * **Rezept-Baum**: `UNB → Nachricht → Verordnung/Beleg → Verordnungsdaten / Diagnosen /
     Leistungen / Belegsumme`, jedes Feld mit Namen aus der `SchemaRegistry`; Filter durchsucht
     den gesamten Baum inklusive Unterknoten.
-  * **Editierbare Klartexte**: `data/codelisten.json` (Verordnungsart, Diagnosegruppe,
-    Positionsnummern, …). Codes ohne Eintrag werden ausdrücklich als
-    *„kein Klartext hinterlegt"* angezeigt — es wird nie ein Text geraten.
+  * **Klartexte aus zwei Quellen**: `data/codelisten.json` (von Hand gepflegt, Vorrang)
+    und `data/heilmittelpreise.json` aus der **Heilmittelpreisstammdatei des
+    GKV-Spitzenverbands** (§ 125 / § 125a SGB V). Damit tragen alle
+    Abrechnungspositionsnummern amtliche Bezeichnungen statt nur Nummern; zusätzlich
+    wird **Regelversorgung (§ 125) von Blankoversorgung (§ 125a)** unterschieden.
+    Codes ohne Eintrag werden ausdrücklich als *„kein Klartext hinterlegt"* angezeigt
+    — es wird nie ein Text geraten.
 * **🖥️ Grafische Benutzeroberfläche (Tkinter GUI)**:
   * Moderne Desktop-Oberfläche zur einfachen Bedienung ohne Kommandozeilenkenntnisse.
 
@@ -130,6 +134,37 @@ Abrechnungspositionsnummern stehen in `data/codelisten.json`. Leere Einträge (`
 absichtlich leer und erscheinen in der GUI als *„kein Klartext hinterlegt"*, damit in der
 Hotline kein geratener Text genannt wird. Nach dem Nachtragen genügt der Button
 **`🔄 Codelisten neu laden`** im Verordnungsblatt — kein Neustart nötig.
+
+### Heilmittelpreisstammdatei einlesen
+
+Die Bezeichnungen der Abrechnungspositionsnummern kommen aus der XML-Stammdatei des
+GKV-Spitzenverbands. Bei einem neuen Stand (mehrmals jährlich):
+
+```bash
+python tools/import_hmp.py "HMP Stand 01.07.2026.xml"
+```
+
+Das schreibt `data/heilmittelpreise.json` — **nicht von Hand bearbeiten**, die Datei wird
+beim nächsten Import überschrieben. Eigene Bezeichnungen gehören nach `codelisten.json`,
+die haben Vorrang. Danach im Programm `🔄 Codelisten neu laden`; die Fußzeile im
+Verordnungsblatt zeigt den geladenen Stand.
+
+**Die maskierte erste Stelle:** Positionen nach § 125 (Regelversorgung) führt die
+Stammdatei mit `X` an erster Stelle, abgerechnet werden sie mit der Stelle des
+Heilmittelbereichs. Beim Nachschlagen wird deshalb zusätzlich `X` + Rest probiert:
+
+| Abrechnung | Stammdatei | Bezeichnung |
+|---|---|---|
+| `54103` (Tarif 00501) | `X4103` | Sensomotorisch-perzeptive Behandlung: Einzelbehandlung |
+| `54145` (Tarif 00502) | `54145` | Psychisch-funktionelle Behandlung … § 125a SGB V |
+
+Ohne diese Auflösung bleiben genau die häufigsten Positionen ohne Klartext — in den
+Testdaten 8 von 17.
+
+**Höchstpreise werden bewusst nicht übernommen.** Der Haftungsausschluss der Stammdatei
+sagt ausdrücklich, sie sei *„nicht zu Abrechnungszwecken bestimmt"*; maßgeblich sind die
+Vergütungsvereinbarungen. In einem Werkzeug, das Abrechnungsdateien prüft, würde ein
+Höchstpreis neben einem abgerechneten Betrag zwangsläufig als Soll-Ist-Vergleich gelesen.
 
 Positionsnummern dürfen nach Abrechnungscode gestaffelt werden:
 
@@ -218,7 +253,7 @@ python -m pytest
 Output:
 
 ```bash
-============================= 99 passed ==============================
+============================= 122 passed ==============================
 ```
 
 Die Testsuite darf keine modalen Dialoge öffnen — eine `autouse`-Fixture in
@@ -244,7 +279,8 @@ py-esol/
 ├── verordnung.py                 # Verordnungs-Auswertung (ZHE/DIA/SKZ, Positionsgruppen)
 ├── codelisten.py                 # Loader für die editierbaren Klartext-Tabellen
 ├── data/
-│   └── codelisten.json           # Editierbare Klartexte (Verordnungsart, Positionsnummern, …)
+│   ├── codelisten.json           # Editierbare Klartexte (Verordnungsart, Diagnosegruppe, …)
+│   └── heilmittelpreise.json     # Positionsbezeichnungen, erzeugt aus der GKV-Stammdatei
 ├── validate.py                   # CLI-Validator für Einzeldateien
 ├── batch_validate.py             # CLI-Batch-Validator für Ordner
 ├── main.py                       # Hauptfenster der Tkinter GUI
@@ -264,6 +300,7 @@ py-esol/
 │   └── level4/                   # Sammelgruppen 1-6 (Physio, Ergo, Logo, Podologie)
 ├── tools/
 │   ├── convert_utf8_to_iso.py    # UTF-8 -> ISO-8859-15 Konverter
+│   ├── import_hmp.py             # Import der GKV-Heilmittelpreisstammdatei (XML)
 │   ├── generate_auf.py           # Generierung von .auf Auftragsdateien
 │   └── generate_correction.py    # Generator für VKZ 02, 03, 04, 10
 └── tests/                       # Pytest Test-Suite

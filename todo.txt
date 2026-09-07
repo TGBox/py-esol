@@ -186,3 +186,35 @@ OFFEN dazu:
 * UNT/UNZ-Zaehler nach Handarbeit optional automatisch nachziehen (bewusst nicht
   gemacht - erst mal soll der Fehler sichtbar sein).
 * Syntaxhervorhebung der Segment-Tags in der Vorschau waere hilfreich.
+
+
+**10. Heilmittelpreisstammdatei des GKV-Spitzenverbands eingebunden** [ERLEDIGT]
+
+* tools/import_hmp.py liest die HMP-XML (HMPRoot/HMP) und erzeugt
+  data/heilmittelpreise.json: 229 Positionsbezeichnungen ueber 5 Heilmittelbereiche.
+* Die maskierte erste Stelle ist aufgeloest: Positionen nach § 125 stehen in der
+  Stammdatei als X4103, abgerechnet werden sie als 54103. codelisten.py probiert
+  beim Nachschlagen zusaetzlich 'X' + Rest. Belegt an den Testdaten: alle 8 vorher
+  nicht gefundenen Codes loesen so auf, Abdeckung 17 von 17.
+* Rangfolge: codelisten.json (eigene Pflege) vor heilmittelpreise.json (GKV).
+  position_info() gibt die Herkunft mit zurueck.
+* Regelversorgung (§ 125) und Blankoversorgung (§ 125a) werden aus den Bemerkungen
+  abgeleitet und in Verordnungsblatt und Rezept-Baum angezeigt - aber nur, wenn der
+  Paragraf nicht schon in der Bezeichnung steht. Das ist zugleich eine Gegenprobe
+  zur Verordnungsart im ZHE.
+* Hoechstpreise bewusst NICHT uebernommen: die Quelle ist laut Haftungsausschluss
+  nicht zu Abrechnungszwecken bestimmt.
+* Datenhygiene: die Quelle setzt zwischen '§' und der Zahl ein geschuetztes
+  Leerzeichen (25 von 229 Bezeichnungen) und verwendet Gedankenstriche, die sich
+  nicht in ISO-8859-15 speichern lassen. Beides wird beim Import normalisiert -
+  sonst findet die Volltextsuche "§ 125a" nicht und der Berichtsexport bricht ab.
+* py-esol.spec liefert heilmittelpreise.json mit; zur Laufzeit wird zuerst neben
+  der EXE gesucht, ein neuer GKV-Stand geht also ohne Neu-Build.
+* 23 neue Tests in tests/test_import_hmp.py.
+
+OFFEN dazu:
+* Verordnungsart, Diagnosegruppe, Therapiefrequenz und Heilmittel-Bereich in
+  codelisten.json sind weiter leer - die stehen nicht in der HMP-Stammdatei,
+  sondern in der Technischen Anlage 1 bzw. der Heilmittel-Richtlinie.
+* Die HMP-XML selbst liegt nicht im Repo. Falls Nachvollziehbarkeit gewuenscht ist,
+  koennte sie unter data/quellen/ mitgecheckt werden.

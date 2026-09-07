@@ -208,7 +208,11 @@ class Muster13PreviewFrame(ttk.Frame):
         bar = ttk.Frame(self.pos_frame)
         bar.pack(fill="x", pady=(0, 6))
 
-        self.lbl_behandlung = ttk.Label(bar, text="Behandlungszeitraum: —", font=_UI_B)
+        # justify: die zweite Zeile (Leistungserbringergruppe) soll linksbündig
+        # unter der ersten stehen, nicht zentriert.
+        self.lbl_behandlung = ttk.Label(
+            bar, text="Behandlungszeitraum: —", font=_UI_B, justify="left"
+        )
         self.lbl_behandlung.pack(side="left")
 
         ttk.Button(bar, text="➖ Termine zuklappen", command=self._collapse_positions).pack(side="right", padx=2)
@@ -353,16 +357,25 @@ class Muster13PreviewFrame(ttk.Frame):
     # ---------------------------------------------------------- Codelisten
 
     def _update_codelisten_hint(self):
-        path = codelisten.source_path()
         err = codelisten.last_error()
         if err:
             self.lbl_codelisten.config(text=f"Codelisten fehlerhaft: {err}")
-        elif path:
-            self.lbl_codelisten.config(text=f"Klartexte aus: {path}")
+            return
+
+        zeilen = []
+        pfad = codelisten.source_path()
+        if pfad:
+            zeilen.append(f"Eigene Klartexte: {pfad.name}")
         else:
-            self.lbl_codelisten.config(
-                text="Keine data/codelisten.json gefunden — Codes werden ohne Klartext angezeigt."
-            )
+            zeilen.append("Keine codelisten.json gefunden")
+
+        if codelisten.hmp_source_path():
+            zeilen.append(codelisten.hmp_beschreibung())
+        else:
+            zeilen.append("Keine Heilmittelpreis-Bezeichnungen "
+                          "(tools/import_hmp.py ausführen)")
+
+        self.lbl_codelisten.config(text="   ·   ".join(zeilen))
 
     def _reload_codelisten(self):
         codelisten.reload()
@@ -412,11 +425,14 @@ class Muster13PreviewFrame(ttk.Frame):
 
         rg_nr = str(beleg.get("rechnungsnummer", ""))
         rg_dat = vo.fmt_datum(beleg.get("rechnungsdatum", ""))
+        # Das Verarbeitungskennzeichen mit Klartext zeigen: in der Hotline ist
+        # "VK 03 — Zuzahlungsforderung" die Information, "VK 03" nur eine Zahl.
         vk = str(beleg.get("verarbeitungskennzeichen", ""))
+        vk_text = codelisten.describe("verarbeitungskennzeichen", vk, leer_text="")
         rechnung = " ".join(p for p in [
             f"Nr. {rg_nr}" if rg_nr else "",
             f"vom {rg_dat}" if rg_dat else "",
-            f"(VK {vk})" if vk else "",
+            f"(VK {vk_text})" if vk_text else "",
         ] if p)
         self._set("rechnung", rechnung)
 
@@ -492,23 +508,38 @@ class Muster13PreviewFrame(ttk.Frame):
             self.pos_tree.delete(item)
 
         uebersicht = beleg.get("behandlung") or vo.behandlungsuebersicht(beleg.get("positions", []))
-        self.lbl_behandlung.config(
-            text=f"Behandlungszeitraum: {uebersicht.get('zeitraum_text', '—')}   ·   "
-                 f"{uebersicht.get('anzahl_behandlungstage', 0)} Behandlungstage   ·   "
-                 f"{uebersicht.get('anzahl_positionen', 0)} Einzelpositionen"
-        )
 
         gruppen = beleg.get("positionsgruppen")
         if gruppen is None:
             gruppen = vo.gruppiere_positionen(beleg.get("positions", []))
 
         abr = str(beleg.get("abrechnungscode", ""))
+
+        # Leistungserbringergruppe im Klartext über die Positionsliste schreiben.
+        # Das Tarifkennzeichen steht nur an den Positionen, nicht am Beleg —
+        # deshalb aus der ersten Gruppe holen, die eines mitbringt.
+        tarif_kz = next((str(g.get("tarif_kz") or "") for g in gruppen if g.get("tarif_kz")), "")
+        if not abr:
+            abr = next((str(g.get("abr_code") or "") for g in gruppen if g.get("abr_code")), "")
+        leg = vo.leistungserbringergruppe(abr, tarif_kz)
+
+        zeilen = [
+            f"Behandlungszeitraum: {uebersicht.get('zeitraum_text', '—')}   ·   "
+            f"{uebersicht.get('anzahl_behandlungstage', 0)} Behandlungstage   ·   "
+            f"{uebersicht.get('anzahl_positionen', 0)} Einzelpositionen"
+        ]
+        if leg["text"]:
+            zeilen.append(f"Leistungserbringergruppe: {leg['text']}")
+        self.lbl_behandlung.config(text="\n".join(zeilen))
         summe_betrag = 0.0
         summe_zuz = 0.0
 
         for g_idx, g in enumerate(gruppen):
             klartext = g.get("code_klartext") or f"ohne Klartext ({codelisten.KEIN_KLARTEXT})"
             label = f"{g['tag']}  {klartext}"
+            grundlage = vo.grundlage_zusatz(klartext, g.get("code_grundlage", ""))
+            if grundlage:
+                label += f"   [{grundlage}]"
             if g.get("tarif_kz"):
                 label += f"   [{g.get('abr_code', '')}:{g['tarif_kz']}]"
 
