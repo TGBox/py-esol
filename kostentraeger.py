@@ -57,8 +57,27 @@ def load(force: bool = False) -> Dict[str, str]:
                 data = json.load(fh)
             if not isinstance(data, dict):
                 continue
-            # Hinweis-Schlüssel filtern
-            _cache = {str(k).strip(): str(v).strip() for k, v in data.items() if not str(k).startswith("_")}
+            # Unterstützt sowohl die neue Struktur mit "traeger": {ik: {name: ...}}
+            # als auch flache {ik: name} Dictionaries.
+            mapping: Dict[str, str] = {}
+            if "traeger" in data and isinstance(data["traeger"], dict):
+                for k, v in data["traeger"].items():
+                    if isinstance(v, dict):
+                        name = v.get("name") or v.get("kurzname") or ""
+                        mapping[str(k).strip()] = str(name).strip()
+                    elif isinstance(v, str):
+                        mapping[str(k).strip()] = v.strip()
+            else:
+                for k, v in data.items():
+                    if str(k).startswith("_"):
+                        continue
+                    if isinstance(v, dict):
+                        name = v.get("name") or v.get("kurzname") or ""
+                        mapping[str(k).strip()] = str(name).strip()
+                    elif isinstance(v, str):
+                        mapping[str(k).strip()] = v.strip()
+
+            _cache = mapping
             _loaded_from = path
             return _cache
         except Exception:

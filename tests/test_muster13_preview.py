@@ -188,11 +188,11 @@ def test_muster13_krankenkasse_name_resolution(tk_root):
 
     # 2. Known IK for TK
     beleg2 = {"kostentraeger_ik": "101777502"}
-    assert frame._get_krankenkasse_name(beleg2) == "Techniker Krankenkasse (TK)"
+    assert frame._get_krankenkasse_name(beleg2) == "TECHNIKER KRANKENKASSE"
 
-    # 3. Known IK for AOK Baden-Württemberg via 'ik'
+    # 3. Known IK for AOK via 'ik'
     beleg3 = {"ik": "104212505"}
-    assert frame._get_krankenkasse_name(beleg3) == "AOK Baden-Württemberg"
+    assert frame._get_krankenkasse_name(beleg3) == "AOK Rheinland/Hamburg"
 
     # 4. Unknown IK fallback
     beleg4 = {"ik": "999888777"}

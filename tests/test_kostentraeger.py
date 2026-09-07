@@ -15,19 +15,19 @@ def test_kostentraeger_load():
 
 def test_kostentraeger_lookup():
     # TK
-    assert kostentraeger.lookup("101777502") == "Techniker Krankenkasse (TK)"
-    # AOK Baden-Württemberg
-    assert kostentraeger.lookup("104212505") == "AOK Baden-Württemberg"
+    assert kostentraeger.lookup("101777502") == "TECHNIKER KRANKENKASSE"
+    # AOK Rheinland/Hamburg
+    assert kostentraeger.lookup("104212505") == "AOK Rheinland/Hamburg"
     # Fallback/default for unknown or empty
-    assert kostentraeger.lookup("999999999") == ""
-    assert kostentraeger.lookup("999999999", default="Unbekannt") == "Unbekannt"
+    assert kostentraeger.lookup("000000001") == ""
+    assert kostentraeger.lookup("000000001", default="Unbekannt") == "Unbekannt"
     assert kostentraeger.lookup(None) == ""
     assert kostentraeger.lookup("") == ""
 
 
 def test_kostentraeger_get_name_or_fallback():
-    assert kostentraeger.get_name_or_fallback("101777502") == "Techniker Krankenkasse (TK)"
-    assert kostentraeger.get_name_or_fallback("104212505") == "AOK Baden-Württemberg"
+    assert kostentraeger.get_name_or_fallback("101777502") == "TECHNIKER KRANKENKASSE"
+    assert kostentraeger.get_name_or_fallback("104212505") == "AOK Rheinland/Hamburg"
     assert kostentraeger.get_name_or_fallback("987654321") == "Krankenkasse (IK 987654321)"
     assert kostentraeger.get_name_or_fallback("") == "Krankenkasse"
     assert kostentraeger.get_name_or_fallback(None) == "Krankenkasse"
