@@ -139,9 +139,9 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
     # mitgegeben, damit im Verordnungsblatt Kostenträger und Rechnung sichtbar sind.
     ctx: Dict[str, str] = {}
 
-    global_ik = ""
     for raw_seg in raw_segments:
         tag, fields = parse_segment_fields(raw_seg)
+
         if tag == "UNH":
             msg_type = ""
             if len(fields) > 1:
@@ -167,12 +167,6 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 ctx["rechnungsnummer"] = str(rec0)
             ctx["rechnungsdatum"] = str(fields[1]) if len(fields) > 1 and fields[1] else ""
 
-        elif tag in ["UNB", "URI"] and fields:
-            if tag == "UNB" and len(fields) > 2 and fields[2]:
-                global_ik = str(fields[2])
-            elif tag == "URI" and len(fields) > 0 and fields[0]:
-                global_ik = str(fields[0])
-
         if tag == "INV":
             if in_inv and current_beleg:
                 belege.append(_finalize_beleg(current_beleg))
@@ -189,14 +183,6 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 "nachname": "",
                 "vorname": "",
                 "geburtstag": "",
-                "ik": global_ik,
-                "bsnr": "",
-                "lanr": "",
-                "verordnungsdatum": "",
-                "verordnungsart": "",
-                "diagnosegruppe": "",
-                "icd10": "",
-                "leitsymptomatik": "",
                 "tarifkennzeichen": "",
                 "abrechnungscode": "",
                 "zuzahlungskennzeichen": "2",
@@ -240,27 +226,14 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
                 current_beleg["verordnung_segment_tag"] = tag
                 current_beleg["verordnung_felder"] = verordnung_mod.segment_field_rows(tag, fields)
 
-                if len(fields) > 0 and fields[0]:
-                    current_beleg["bsnr"] = str(fields[0])
-                if len(fields) > 1 and fields[1]:
-                    current_beleg["lanr"] = str(fields[1])
-                if len(fields) > 2 and fields[2]:
-                    current_beleg["verordnungsdatum"] = str(fields[2])
-                if len(fields) > 3 and fields[3]:
-                    current_beleg["zuzahlungskennzeichen"] = str(fields[3])
-                if len(fields) > 4 and fields[4]:
-                    current_beleg["diagnosegruppe"] = str(fields[4])
-                if len(fields) > 5 and fields[5]:
-                    current_beleg["verordnungsart"] = str(fields[5])
-                if len(fields) > 12 and fields[12]:
-                    current_beleg["leitsymptomatik"] = str(fields[12])
-
                 if tag == "ZHE":
                     current_beleg["verordnung"] = verordnung_mod.decode_zhe(fields)
+                    if len(fields) > 3 and fields[3]:
+                        current_beleg["zuzahlungskennzeichen"] = str(fields[3])
+                    if len(fields) > 4 and fields[4]:
+                        current_beleg["diagnosegruppe"] = str(fields[4])
 
             elif tag == "DIA":
-                if len(fields) > 0 and fields[0]:
-                    current_beleg["icd10"] = str(fields[0])
                 dia_code = str(fields[0]) if len(fields) > 0 and fields[0] else ""
                 dia_text = str(fields[1]) if len(fields) > 1 and fields[1] else ""
                 if dia_code or dia_text:
@@ -411,10 +384,30 @@ def generate_correction_esol(
     new_rec_date: Optional[str] = None,
     zuzahlungskennzeichen: Optional[str] = None,
     beleg_modifications: Optional[Dict[str, Any]] = None,
+    brutto_nullen: bool = True,
 ) -> str:
     """
     Generates a new ESOL content string with target VKZ (02, 03, 04) from original raw ESOL content.
     Optionally filters output to include only specified Belegnummern and applies beleg_modifications.
+
+    brutto_nullen (nur bei VKZ 03): steuert das 2. GES-Feld, den
+    Gesamtbruttobetrag.
+
+      True  — bisheriges Verhalten: 0,00. Die abgerechneten Leistungen gehen
+              damit in keine Summe der Forderung ein.
+      False — der echte Bruttobetrag steht dort. Die Summe der
+              Leistungspositionen bleibt also sichtbar.
+
+    Die Positionen selbst (EHE/ENF) und das GZF-Segment sind in beiden Fällen
+    identisch; BES wird immer durch GZF ersetzt. Andere Varianten wurden
+    verworfen, weil sie die Zahlen zerstören: BES neben GZF lässt die Zuzahlung
+    doppelt zählen (Regel 1.3.13.6), BES statt GZF verstößt gegen 1.3.12.1.
+
+    Zu beachten: mit False meldet die eigene Prüfung Regel 1.3.13.5 ("Bei VK 03
+    muss Gesamtbruttobetrag 0,00 sein", rules/level3/ges_content_rule.py). Der
+    Standard bleibt deshalb True — an der Kommandozeile und am Stapellauf aus
+    der GUI ändert sich nichts. Der Korrektur-Editor setzt False und bietet das
+    Nullen als ausdrückliche Aktion mit Warnhinweis an.
     """
     tokenizer = SegmentTokenizer()
     raw_segments = tokenizer.tokenize_segments(raw_content)
@@ -627,8 +620,12 @@ def generate_correction_esol(
     def make_ges_segment(st_code: str, st_b: float, st_z: float) -> str:
         st_rechn = round(st_b - st_z, 2)
         if target_vk == "03":
+            # Rechnungsbetrag ist bei einer Zuzahlungsforderung die Zuzahlung.
+            # Das 2. Feld ist der Gesamtbruttobetrag: 0,00 nimmt die
+            # abgerechneten Leistungen aus der Forderung heraus, der echte
+            # Betrag lässt sie stehen (siehe brutto_nullen).
             f1 = ContentHelper.format_decimal(st_z)
-            f2 = "0,00"
+            f2 = "0,00" if brutto_nullen else ContentHelper.format_decimal(st_b)
             f3 = ContentHelper.format_decimal(st_z)
         else:
             f1 = ContentHelper.format_decimal(st_rechn)
@@ -912,6 +909,14 @@ def generate_correction_esol(
                         if inv_tag == "INV":
                             new_raw_segments.append(build_segment_string("URI", uri_fields))
 
+                    # BES wird auch dann durch GZF ersetzt, wenn die
+                    # Bruttobeträge stehen bleiben sollen. Beide Segmente
+                    # nebeneinander zu schreiben wäre naheliegend, führt aber
+                    # dazu, dass die Zuzahlung doppelt gezählt wird (Regel
+                    # 1.3.13.6 meldet dann die doppelte Summe); BES ohne GZF
+                    # verstößt gegen 1.3.12.1, das GZF bei VK 03 verlangt. Der
+                    # Bruttobetrag bleibt deshalb allein über das GES-Segment
+                    # sichtbar — siehe make_ges_segment.
                     new_raw_segments.append(build_segment_string("GZF", gzf_fields))
                     in_inv_block = False
                     inv_block_segments = []
@@ -994,6 +999,7 @@ def generate_correction_file(
     out_dir: Optional[Path] = None,
     beleg_modifications: Optional[Dict[str, Any]] = None,
     content_override: Optional[str] = None,
+    brutto_nullen: bool = True,
 ) -> Path:
     """
     Reads an ESOL file and generates the corrected/demanded ESOL output file.
@@ -1002,6 +1008,9 @@ def generate_correction_file(
     geschrieben statt neu generiert. Das braucht der Korrektur-Editor, wenn der
     Anwender die Vorschau von Hand nachbearbeitet hat — die Namens- und
     Ablagelogik bleibt dadurch an einer Stelle.
+
+    brutto_nullen: siehe generate_correction_esol. Standard True, damit sich an
+    der Kommandozeile nichts ändert.
     """
     if not input_path.is_file():
         raise FileNotFoundError(f"Datei nicht gefunden: {input_path}")
@@ -1036,6 +1045,7 @@ def generate_correction_file(
             new_rec_date=new_rec_date,
             zuzahlungskennzeichen=zuzahlungskennzeichen,
             beleg_modifications=beleg_modifications,
+            brutto_nullen=brutto_nullen,
         )
     output_path.write_text(new_content, encoding="iso-8859-15")
     return output_path

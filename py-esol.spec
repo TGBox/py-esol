@@ -41,9 +41,26 @@ a = Analysis(
         # KBV-Stammdateien (tools/import_kbv_stammdaten.py)
         ('data/diagnosegruppen.json', 'data'),
         ('data/verordnungsbedarf.json', 'data'),
+
+        # Vorlagen des virtuellen Verordnungsblatts. OHNE DIESE DREI DATEIEN
+        # zeigt das Muster-13-Fenster in der EXE eine leere Seite: der Renderer
+        # in gui_muster13_preview.py prüft mit os.path.exists() und weicht bei
+        # fehlender Vorlage auf eine leere Fläche aus (Image.new). Die Daten
+        # landen dann an den richtigen Stellen, aber ohne Formular darunter.
+        # Der Fehler fällt nur in der gepackten EXE auf, weil aus dem
+        # Projektbaum heraus assets/ immer gefunden wird.
+        ('assets/Muster13_1280x1280.jpg', 'assets'),      # Vorderseite
+        ('assets/Muster13_2_1280x1280.jpg', 'assets'),    # Rückseite
+        ('assets/muster13_coords.json', 'assets'),        # Feldkoordinaten
+        # Bewusst NICHT mitgeliefert, weil zur Laufzeit nicht gelesen:
+        #   muster13_feld_nummerierung.jpg, muster13_grid_overlay.jpg
+        #     — Kalibrierhilfen für die Koordinatenpflege
+        #   BegleitzettelBsp.pdf
+        #     — Referenzmuster, nur im Kommentar von generate_begleitzettel.py
     ],
     # Alle Imports im Projekt sind statisch, PyInstaller findet sie selbst.
-    # reportlab (Begleitzettel-PDF) wird über pyinstaller-hooks-contrib erfasst.
+    # reportlab (Begleitzettel-PDF) und Pillow (Muster-13-Renderer) werden über
+    # pyinstaller-hooks-contrib erfasst.
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

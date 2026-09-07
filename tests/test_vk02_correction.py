@@ -391,3 +391,182 @@ def test_dialog_rec_nr_and_german_date_moved_to_second_dialog(tmp_path: Path):
 
 
 
+
+
+# ------------------------------------------- VKZ 03: Bruttobetrag als Schalter
+
+def _vk03_quelle() -> str:
+    """Ein Beleg mit echter Zuzahlung — sonst ist am Brutto nichts zu sehen."""
+    return "\n".join([
+        "UNB+UNOC:3+123456789+661430035+20260323:1040+00118+B+SL030179S03+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++123456789+101777502+101777502+123456789'",
+        "REC+51:0+20260122+1'",
+        "GES+00+845,20+950,10+104,90'",
+        "GES+11+845,20+950,10+104,90'",
+        "NAM+Ergo Praxis+++info@ergo.de'",
+        "UNT+000007+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++123456789+101777502+101777502'",
+        "REC+51:0+20260122+1'",
+        "INV+A123456789+11000+1+00001'",
+        "NAD+Muster+Max+19900101'",
+        "ZHE+243203100+565059558+20260116+3+PS3+03+++++1++1000++0+1+3'",
+        "EHE+26:00501+54105+10,00+94,89+20260122+9,49'",
+        "EHE+26:00501+59702+1,00+1,20+20260116+0,00'",
+        "DIA+F98.9'",
+        "BES+950,10+104,90+94,90+10,00'",
+        "UNT+000012+00002'",
+        "UNZ+000002+00118'",
+    ])
+
+
+def _segmente(text: str, tag: str) -> list:
+    return [s for s in text.replace("\r\n", "\n").split("\n") if s.startswith(tag + "+")]
+
+
+def test_vk03_standard_nullt_die_bruttobetraege(tmp_path: Path):
+    """
+    Der Standard von generate_correction_esol bleibt das Nullen — daran hängt
+    die Kommandozeile und der Stapellauf aus der GUI.
+    """
+    neu = generate_correction_esol(_vk03_quelle(), target_vk="03")
+
+    for ges in _segmente(neu, "GES"):
+        felder = ges.rstrip("'").split("+")
+        assert felder[3] == "0,00", f"Gesamtbruttobetrag nicht genullt: {ges}"
+
+    # BES ist durch GZF ersetzt, das Bruttofeld also verschwunden
+    assert _segmente(neu, "BES") == []
+    assert _segmente(neu, "GZF") == ["GZF+104,90+94,90+10,00'"]
+
+
+def test_vk03_ohne_nullen_behaelt_den_bruttobetrag(tmp_path: Path):
+    """
+    Mit brutto_nullen=False bleibt die Summe der Leistungspositionen im
+    GES-Segment sichtbar. Am Rechnungsbetrag und an GZF ändert sich nichts.
+    """
+    neu = generate_correction_esol(_vk03_quelle(), target_vk="03", brutto_nullen=False)
+
+    for ges in _segmente(neu, "GES"):
+        felder = ges.rstrip("'").split("+")
+        assert felder[3] == "950,10", f"Gesamtbruttobetrag fehlt: {ges}"
+        # Rechnungsbetrag bleibt die Zuzahlung — daran ändert der Schalter nichts
+        assert felder[2] == "104,90"
+
+    assert _segmente(neu, "GZF") == ["GZF+104,90+94,90+10,00'"]
+
+
+def test_vk03_bes_wird_immer_durch_gzf_ersetzt(tmp_path: Path):
+    """
+    BES bleibt in keinem der beiden Fälle stehen. Beide naheliegenden
+    Alternativen zerstören die Zahlen und sind deshalb ausgeschlossen:
+
+      BES neben GZF  -> Zuzahlung wird doppelt gezählt (Regel 1.3.13.6)
+      BES statt GZF  -> GZF fehlt, das bei VK 03 verlangt ist (Regel 1.3.12.1)
+    """
+    for nullen in (True, False):
+        neu = generate_correction_esol(_vk03_quelle(), target_vk="03", brutto_nullen=nullen)
+        assert _segmente(neu, "BES") == [], f"brutto_nullen={nullen}"
+        assert len(_segmente(neu, "GZF")) == 1, f"brutto_nullen={nullen}"
+
+
+def test_vk03_ohne_nullen_verletzt_genau_eine_regel(tmp_path: Path):
+    """
+    Der Schalter weicht bewusst von Regel 1.3.13.5 ab. Er darf aber keine
+    weitere Regel verletzen — insbesondere müssen die Zuzahlungssummen
+    weiterhin aufgehen (1.3.13.6).
+    """
+    neu = generate_correction_esol(_vk03_quelle(), target_vk="03", brutto_nullen=False)
+
+    validator = EsolValidator()
+    validator.register_default_rules()
+    ergebnis = validator.validate_string(neu)
+
+    meldungen = [str(e) for e in ergebnis.get_errors()]
+    assert meldungen, "ohne Nullen muss 1.3.13.5 anschlagen"
+    for meldung in meldungen:
+        assert "1.3.13.5" in meldung, f"unerwartete Regelverletzung: {meldung}"
+
+
+def test_vk03_positionen_bleiben_in_beiden_faellen_unveraendert(tmp_path: Path):
+    """
+    Der Schalter betrifft nur die Summen. Die EHE-Zeilen selbst behalten ihre
+    Einzelbeträge — die nullt weiterhin nur der Button 'Preise nullen'.
+    """
+    erwartet = [
+        "EHE+26:00501+54105+10,00+94,89+20260122+9,49'",
+        "EHE+26:00501+59702+1,00+1,20+20260116+0,00'",
+    ]
+    for nullen in (True, False):
+        neu = generate_correction_esol(_vk03_quelle(), target_vk="03", brutto_nullen=nullen)
+        assert _segmente(neu, "EHE") == erwartet, f"brutto_nullen={nullen}"
+
+
+def test_vk03_segmentzaehler_stimmt_in_beiden_faellen(tmp_path: Path):
+    """
+    Ohne Nullen kommt BES hinzu — der UNT-Zähler der Nachricht muss das
+    mitzählen, sonst weist das Abrechnungszentrum die Datei ab.
+    """
+    for nullen in (True, False):
+        neu = generate_correction_esol(_vk03_quelle(), target_vk="03", brutto_nullen=nullen)
+        zeilen = [z for z in neu.replace("\r\n", "\n").split("\n") if z.strip()]
+
+        # Segmente der zweiten Nachricht: von ihrem UNH bis zu ihrem UNT
+        start = next(i for i, z in enumerate(zeilen) if z.startswith("UNH+00002"))
+        ende = next(i for i, z in enumerate(zeilen) if i > start and z.startswith("UNT+"))
+        tatsaechlich = ende - start + 1
+
+        gezaehlt = int(zeilen[ende].rstrip("'").split("+")[1])
+        assert gezaehlt == tatsaechlich, (
+            f"brutto_nullen={nullen}: UNT sagt {gezaehlt}, gezählt {tatsaechlich}"
+        )
+
+    # Der Schalter ändert nur einen Feldwert, kein Segment kommt hinzu oder
+    # fällt weg — die Segmentzähler müssen also identisch sein.
+    mit = generate_correction_esol(_vk03_quelle(), target_vk="03", brutto_nullen=True)
+    ohne = generate_correction_esol(_vk03_quelle(), target_vk="03", brutto_nullen=False)
+    assert _segmente(mit, "UNT") == _segmente(ohne, "UNT")
+    assert _segmente(mit, "UNZ") == _segmente(ohne, "UNZ")
+
+
+def test_vk03_standardfassung_ist_gueltig(tmp_path: Path):
+    """
+    Die Fassung mit genullten Beträgen muss die vollständige Prüfung bestehen —
+    das ist die, die die Kommandozeile erzeugt.
+    """
+    neu = generate_correction_esol(_vk03_quelle(), target_vk="03", brutto_nullen=True)
+    validator = EsolValidator()
+    validator.register_default_rules()
+    ergebnis = validator.validate_string(neu)
+    assert ergebnis.is_valid(), [str(e) for e in ergebnis.get_errors()]
+
+
+def test_vk03_schalter_wirkt_auch_ueber_generate_correction_file(tmp_path: Path):
+    quelle = tmp_path / "ESOL_VK03"
+    quelle.write_text(_vk03_quelle(), encoding="iso-8859-15")
+
+    mit = generate_correction_file(
+        input_path=quelle, output_path=tmp_path / "mit", target_vk="03"
+    ).read_text(encoding="iso-8859-15")
+    ohne = generate_correction_file(
+        input_path=quelle, output_path=tmp_path / "ohne", target_vk="03",
+        brutto_nullen=False,
+    ).read_text(encoding="iso-8859-15")
+
+    def ges_brutto(text: str) -> set:
+        return {s.rstrip("'").split("+")[3] for s in _segmente(text, "GES")}
+
+    assert ges_brutto(mit) == {"0,00"}
+    assert ges_brutto(ohne) == {"950,10"}
+
+
+def test_andere_vkz_bleiben_vom_schalter_unberuehrt(tmp_path: Path):
+    """
+    brutto_nullen ist ausdrücklich nur für VKZ 03 gedacht. Bei 02, 04 und 10
+    darf der Parameter nichts verändern.
+    """
+    for vk in ("02", "04", "10"):
+        a = generate_correction_esol(_vk03_quelle(), target_vk=vk, brutto_nullen=True)
+        b = generate_correction_esol(_vk03_quelle(), target_vk=vk, brutto_nullen=False)
+        assert a == b, f"VKZ {vk} reagiert auf brutto_nullen"

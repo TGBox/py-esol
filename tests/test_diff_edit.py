@@ -215,6 +215,16 @@ def test_ohne_handarbeit_wird_regulaer_generiert(editor):
 
 
 def test_generieren_schreibt_die_handfassung(editor, tmp_path: Path):
+    """
+    Der Editor öffnet bei VKZ 03 mit erhaltenen Bruttobeträgen. Für diesen Test
+    wird das Nullen eingeschaltet, weil nur diese Fassung die vollständige
+    Prüfung besteht — die Abweichung hat ihren eigenen Test unten.
+    """
+    editor.brutto_nullen = True
+    editor._update_brutto_schalter()
+    editor.manual_content = None
+    editor._update_diff_preview()
+
     original = editor.txt_mod.get("1.0", "end-1c")
     _tippe(editor, original.replace("Physio Praxis", "Praxis Neu"))
 
@@ -232,6 +242,100 @@ def test_generieren_schreibt_die_handfassung(editor, tmp_path: Path):
     validator = EsolValidator()
     validator.register_default_rules()
     assert validator.validate_string(inhalt).is_valid()
+
+
+# ----------------------------------- VKZ 03: Bruttobetrag stehen lassen
+
+def test_editor_oeffnet_ohne_genullte_bruttobetraege(editor):
+    """
+    Die Vorgabe des Editors: nicht nullen. Genau darum ging es bei der
+    Umstellung — die Beträge der Leistungspositionen sollen nicht schon beim
+    Öffnen aus den Summen verschwinden.
+    """
+    assert editor.target_vk == "03"
+    assert editor.brutto_nullen is False
+
+    vorschau = editor.txt_mod.get("1.0", "end-1c")
+    ges = [z for z in vorschau.split("\n") if z.startswith("GES+")]
+    assert ges
+    for zeile in ges:
+        assert zeile.rstrip("'").split("+")[3] != "0,00", zeile
+
+
+def test_schalter_nullt_die_bruttobetraege_und_aktualisiert_die_vorschau(editor):
+    editor._toggle_brutto_nullen()
+
+    assert editor.brutto_nullen is True
+    vorschau = editor.txt_mod.get("1.0", "end-1c")
+    for zeile in [z for z in vorschau.split("\n") if z.startswith("GES+")]:
+        assert zeile.rstrip("'").split("+")[3] == "0,00", zeile
+
+    # Und zurück
+    editor._toggle_brutto_nullen()
+    assert editor.brutto_nullen is False
+    vorschau = editor.txt_mod.get("1.0", "end-1c")
+    for zeile in [z for z in vorschau.split("\n") if z.startswith("GES+")]:
+        assert zeile.rstrip("'").split("+")[3] != "0,00", zeile
+
+
+def test_schalter_verwirft_die_handarbeit(editor):
+    """
+    Die Handfassung bezieht sich auf den alten Zustand. Bleibt sie stehen,
+    würde der Schalter wirkungslos aussehen.
+    """
+    original = editor.txt_mod.get("1.0", "end-1c")
+    _tippe(editor, original.replace("Physio Praxis", "Praxis Neu"))
+    assert editor.manual_content is not None
+
+    editor._toggle_brutto_nullen()
+    assert editor.manual_content is None
+
+
+def test_erwartete_regelverletzung_blockiert_das_speichern_nicht(editor):
+    """
+    Ohne Nullen meldet die Prüfung zwangsläufig 1.3.13.5. Als Fehler gewertet
+    wäre der Schalter unbenutzbar — also gehört die Meldung zu den Warnungen,
+    und alles andere bleibt Fehler.
+    """
+    original = editor.txt_mod.get("1.0", "end-1c")
+    _tippe(editor, original.replace("Physio Praxis", "Praxis Neu"))
+
+    fehler, warnungen, _ = editor._pruefe_manuelle_fassung(editor.manual_content)
+
+    assert fehler == [], fehler
+    assert any("1.3.13.5" in w for w in warnungen)
+    assert any("erwartet" in w for w in warnungen)
+    assert isinstance(editor._pruefe_und_bestaetige_handarbeit(), str)
+
+
+def test_mit_nullen_bleibt_1_3_13_5_ein_fehler(editor):
+    """
+    Die Ausnahme gilt nur, solange der Schalter aus ist. Steht das Nullen an
+    und meldet die Prüfung die Regel trotzdem, ist das ein echter Fehler.
+    """
+    editor.brutto_nullen = True
+    kaputt = editor.txt_mod.get("1.0", "end-1c").replace("GES+00+20,00+0,00", "GES+00+20,00+100,00")
+
+    fehler, _, _ = editor._pruefe_manuelle_fassung(kaputt)
+    assert any("1.3.13.5" in f for f in fehler)
+
+
+def test_warnhinweis_vor_dem_speichern_ohne_nullen(editor, dialog_protokoll):
+    """
+    Ohne Nullen muss vor dem Speichern gefragt werden — und die Frage muss die
+    Regelnummer nennen, damit klar ist, wovon abgewichen wird.
+    """
+    assert editor._bestaetige_brutto_ohne_nullen(ist_handarbeit=False) is True
+    assert dialog_protokoll.wurde_aufgerufen("askokcancel")
+
+    texte = " ".join(str(a) for eintrag in dialog_protokoll for a in eintrag[1])
+    assert "1.3.13.5" in texte
+
+
+def test_kein_warnhinweis_wenn_genullt_wird(editor, dialog_protokoll):
+    editor.brutto_nullen = True
+    assert editor._bestaetige_brutto_ohne_nullen(ist_handarbeit=False) is True
+    assert not dialog_protokoll.wurde_aufgerufen("askokcancel")
 
 
 def test_generieren_schreibt_nichts_bei_ungueltiger_handfassung(editor, tmp_path: Path,

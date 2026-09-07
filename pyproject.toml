@@ -8,4 +8,9 @@ dependencies = [
     "pyinstaller>=6.22.2",
     "pytest>=9.1.1",
     "reportlab>=5.0.1",
+    # Pillow zeichnet das virtuelle Verordnungsblatt (gui_muster13_preview.py).
+    # Bisher kam es nur als Abhängigkeit von reportlab mit — das ist kein
+    # Zustand, auf den man sich verlassen sollte: fällt es dort weg, bricht das
+    # Muster-13-Fenster beim Import weg.
+    "pillow>=10.0.0",
 ]

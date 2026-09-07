@@ -26,6 +26,18 @@ from tools.generate_correction import (
 )
 
 # Human-readable labels for each supported VKZ
+# Die Regel des eigenen Validators, die bei VKZ 03 zwangsläufig anschlägt, wenn
+# der Bruttobetrag stehen bleibt:
+#
+#   1.3.13.5  Bei VK 03 muss der Gesamtbruttobetrag 0,00 sein
+#
+# Sie steht in rules/level3/ges_content_rule.py und trägt eine Nummer aus dem
+# Regelkatalog — ist also keine Auslegung, die hier jemand einmal
+# hineingeschrieben hat. Wer das Nullen abschaltet, weicht bewusst davon ab;
+# die Regel wird dann als Warnung gezeigt statt als Fehler, damit der Schalter
+# überhaupt benutzbar ist. Alle anderen Regeln blockieren weiter.
+_BRUTTO_REGELN = ("1.3.13.5",)
+
 _VKZ_LABELS: Dict[str, str] = {
     "02": "Nachforderung (VKZ 02)",
     "03": "Zuzahlungsforderung (VKZ 03)",
@@ -225,6 +237,13 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         # belegnr -> {"tarifkennzeichen": str, "zuzahlungskennzeichen": str, "positions": list}
         self.modifications: Dict[str, Dict[str, Any]] = {}
 
+        # Nullt die Bruttobeträge der Zuzahlungsforderung (nur VKZ 03).
+        # Bewusst False: die Beträge der Leistungspositionen sollen nicht schon
+        # beim Öffnen aus den Summen verschwinden. Der Schalter im Fensterkopf
+        # macht daraus eine sichtbare Entscheidung. An der Kommandozeile bleibt
+        # der Standard True, dort ändert sich nichts.
+        self.brutto_nullen: bool = False
+
         # Von Hand bearbeitete Fassung der vollständigen Korrekturdatei.
         # Ist sie gesetzt, wird SIE gespeichert und nicht neu generiert.
         self.manual_content: Optional[str] = None
@@ -251,6 +270,12 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             font=("Consolas", 12, "bold"),
         ).pack(anchor="w")
         ttk.Label(header, text=f"Quelldatei: {self.file_path.name}  |  Typ: {vkz_label}", font=("Consolas", 9)).pack(anchor="w")
+
+        # Der Bruttobetrag wird bei VKZ 03 nicht mehr von allein aus der
+        # Forderung genommen — das ist eine ausdrückliche Entscheidung und
+        # bekommt deshalb einen eigenen Schalter direkt im Kopf des Fensters.
+        if self.target_vk == "03":
+            self._setup_brutto_schalter(header)
 
         # Main PanedWindow (Master-Detail Split)
         main_paned = ttk.PanedWindow(self, orient="horizontal")
@@ -328,6 +353,100 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             command=self._generate_correction,
         )
         btn_generate.pack(side="right", padx=5)
+
+    # ------------------------------------------------ Bruttobetrag bei VKZ 03
+
+    def _setup_brutto_schalter(self, parent):
+        """
+        Schalter für den Bruttobetrag der Zuzahlungsforderung.
+
+        Bis hierher wurde bei VKZ 03 immer das 2. GES-Feld auf 0,00 gesetzt —
+        die abgerechneten Leistungen fielen damit aus jeder Summe der Forderung
+        heraus. Das passiert jetzt nur noch auf ausdrücklichen Knopfdruck; der
+        Standard lässt den Betrag stehen.
+        """
+        zeile = ttk.Frame(parent)
+        zeile.pack(fill="x", pady=(8, 0))
+
+        self.btn_brutto = ttk.Button(zeile, command=self._toggle_brutto_nullen)
+        self.btn_brutto.pack(side="left")
+
+        self.lbl_brutto_status = ttk.Label(zeile, font=("Consolas", 9))
+        self.lbl_brutto_status.pack(side="left", padx=10)
+
+        self._update_brutto_schalter()
+
+    def _update_brutto_schalter(self):
+        """Beschriftung und Statuszeile an den aktuellen Zustand anpassen."""
+        if not hasattr(self, "btn_brutto"):
+            return
+        if self.brutto_nullen:
+            self.btn_brutto.config(text="↩ Bruttobetrag wieder eintragen")
+            self.lbl_brutto_status.config(
+                text="Gesamtbruttobetrag wird GENULLT (GES, 2. Feld = 0,00) — so verlangt es Regel 1.3.13.5."
+            )
+        else:
+            self.btn_brutto.config(text="Bruttobetrag nullen (Regel 1.3.13.5)")
+            self.lbl_brutto_status.config(
+                text="Gesamtbruttobetrag bleibt erhalten (GES, 2. Feld). Die eigene Prüfung meldet das "
+                     "als Fehler 1.3.13.5."
+            )
+
+    def _toggle_brutto_nullen(self):
+        """
+        Schaltet das Nullen der Bruttobeträge um. Beim Einschalten wird gefragt,
+        beim Ausschalten nicht — zurück in den Standardzustand darf man immer.
+        """
+        if not self.brutto_nullen:
+            if not messagebox.askyesno(
+                "Bruttobetrag nullen",
+                "Den Gesamtbruttobetrag der Zuzahlungsforderung auf 0,00 setzen?\n\n"
+                "Wirkung in der erzeugten Datei: GES, 2. Feld → 0,00.\n\n"
+                "Die Leistungspositionen selbst (EHE/ENF) bleiben unverändert, gehen aber "
+                "in keine Summe der Forderung mehr ein.\n\n"
+                "Das ist der Zustand, den Regel 1.3.13.5 verlangt — eine Zuzahlungsforderung "
+                "ist demnach keine erneute Abrechnung der Leistungen.",
+            ):
+                return
+
+        self.brutto_nullen = not self.brutto_nullen
+        self._update_brutto_schalter()
+
+        # Die Vorschau zeigt den Unterschied sofort — die Handarbeit-Fassung
+        # wird dabei verworfen, weil sie sich auf den alten Zustand bezog.
+        self.manual_content = None
+        self._update_diff_preview()
+
+    def _bestaetige_brutto_ohne_nullen(self, ist_handarbeit: bool) -> bool:
+        """
+        Warnt vor dem Speichern, wenn die Bruttobeträge stehen bleiben.
+
+        Bis zur Umstellung wurden sie bei VKZ 03 immer genullt, mit Verweis auf
+        § 43c SGB V. Ob das so verlangt ist, ist offen — deshalb wird die
+        Entscheidung nicht stillschweigend getroffen, sondern hier benannt.
+        Rückgabe False bedeutet: nicht speichern.
+        """
+        if self.target_vk != "03" or self.brutto_nullen:
+            return True
+
+        # Bei einer von Hand bearbeiteten Fassung zählt, was im Textfeld steht —
+        # der Schalter hat darauf keinen Einfluss mehr.
+        if ist_handarbeit:
+            return True
+
+        return bool(messagebox.askokcancel(
+            "Bruttobetrag bleibt stehen",
+            "Diese Zuzahlungsforderung wird MIT dem Gesamtbruttobetrag erzeugt "
+            "(GES, 2. Feld).\n\n"
+            "Achtung: die Prüfung dieses Programms weist das als Fehler aus —\n"
+            "  1.3.13.5  Bei VK 03 muss der Gesamtbruttobetrag 0,00 sein\n\n"
+            "Die Regel trägt eine Nummer aus dem Regelkatalog. Die Datei wird "
+            "also gespeichert, gilt aber nach eigener Prüfung als ungültig und "
+            "kann vom Abrechnungszentrum abgewiesen werden.\n\n"
+            "Der Button im Fensterkopf schaltet das Nullen wieder ein.\n\n"
+            "Trotzdem so speichern?",
+            icon="warning",
+        ))
 
     def _on_tab_changed(self, event):
         selected_tab = self.notebook.select()
@@ -888,6 +1007,7 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             new_rec_date=self.get_current_rec_date_iso(),
             zuzahlungskennzeichen=self.zuzahlungskennzeichen,
             beleg_modifications=self.modifications,
+            brutto_nullen=self.brutto_nullen,
         )
 
     def _original_text(self, nur_aktiver_beleg: bool) -> str:
@@ -1026,6 +1146,20 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         except Exception as e:
             fehler.append(f"Die Datei konnte nicht geprüft werden: {e}")
 
+        # Bleiben die Bruttobeträge bewusst stehen, schlagen genau zwei Regeln
+        # zwangsläufig an. Sie werden zu Warnungen umgehängt, sonst wäre der
+        # Schalter unbenutzbar — blockiert wird weiter alles andere.
+        if self.target_vk == "03" and not self.brutto_nullen:
+            erwartet = []
+            rest = []
+            for eintrag in fehler:
+                if any(regel in eintrag for regel in _BRUTTO_REGELN):
+                    erwartet.append(f"{eintrag}  [erwartet, weil die Bruttobeträge stehen bleiben]")
+                else:
+                    rest.append(eintrag)
+            fehler = rest
+            warnungen = erwartet + warnungen
+
         return fehler, warnungen, encoding_probleme
 
     def _validate_manual_content(self):
@@ -1141,6 +1275,9 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         if content_override is False:
             return
 
+        if not self._bestaetige_brutto_ohne_nullen(bool(content_override)):
+            return
+
         try:
             res_path = generate_correction_file(
                 input_path=self.file_path,
@@ -1153,6 +1290,7 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
                 out_dir=Path(self.output_dir) if self.output_dir else None,
                 beleg_modifications=self.modifications,
                 content_override=content_override or None,
+                brutto_nullen=self.brutto_nullen,
             )
 
             hinweis = "\n\n(Von Hand bearbeitete Fassung)" if content_override else ""
