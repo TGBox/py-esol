@@ -4,12 +4,33 @@ import tkinter as tk
 import pytest
 from gui_muster13_preview import Muster13PreviewFrame
 
-@pytest.fixture
-def tk_root():
-    root = tk.Tk()
-    root.withdraw()
+@pytest.fixture(scope="module")
+def _shared_tk_root():
+    try:
+        root = tk.Tk()
+        root.withdraw()
+    except Exception as e:
+        pytest.skip(f"Tkinter not available: {e}")
     yield root
-    root.destroy()
+    try:
+        root.destroy()
+    except Exception:
+        pass
+
+
+@pytest.fixture
+def tk_root(_shared_tk_root):
+    for child in _shared_tk_root.winfo_children():
+        try:
+            child.destroy()
+        except Exception:
+            pass
+    yield _shared_tk_root
+    for child in _shared_tk_root.winfo_children():
+        try:
+            child.destroy()
+        except Exception:
+            pass
 
 def test_muster13_preview_frame_initialization(tk_root):
     frame = Muster13PreviewFrame(tk_root)
