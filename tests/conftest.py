@@ -78,6 +78,25 @@ def pytest_configure(config):
     )
 
 
+# ---------------------------------------------------------------------------
+# Codelisten-Cache zwischen den Tests leeren
+#
+# codelisten.py hält die geladenen JSON-Dateien im Speicher. Ein Test, der per
+# PY_ESOL_*-Umgebungsvariable auf eine Datei unter tmp_path umlenkt, füllt
+# damit den Cache. monkeypatch räumt die Variable danach auf, den Cache aber
+# nicht — der nächste Test bekäme dann Daten aus einem inzwischen gelöschten
+# Verzeichnis zu sehen. Genau solche Fehler treten je nach Reihenfolge auf und
+# sind schwer zu finden, deshalb wird hier vor und nach jedem Test neu geladen.
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(autouse=True)
+def frische_codelisten():
+    import codelisten
+    codelisten.reload()
+    yield
+    codelisten.reload()
+
+
 @pytest.fixture(autouse=True)
 def dialog_protokoll(request, monkeypatch):
     """

@@ -187,12 +187,34 @@ def generate_html_report(file_name: str, validation_errors: List[str], belege_su
             )
             hint_html = f'<tr class="hinweis-row"><td colspan="9"><ul class="hinweise">{items}</ul></td></tr>'
 
+        # Zusatzzeile: Kostenträger im Klartext und, falls hinterlegt, der
+        # Verordnungsbedarf der Diagnosen. Beides steht nicht im Beleg, sondern
+        # kommt aus den Nachschlagetabellen.
+        kontext: List[str] = []
+        ktr = str(b.get("kostentraeger_ik") or "").strip()
+        if ktr:
+            kontext.append("Kostenträger: " + html.escape(codelisten.describe_ik(ktr)))
+        for d in (b.get("diagnosen") or []):
+            bedarf = codelisten.verordnungsbedarf(d.get("code"))
+            if bedarf["text"]:
+                kontext.append(
+                    html.escape(f"{d.get('code', '')}: {bedarf['text']}")
+                )
+        kontext_html = ""
+        if kontext:
+            kontext_html = (
+                f'<tr class="sub"><td></td><td colspan="8">'
+                + " &nbsp;·&nbsp; ".join(kontext)
+                + "</td></tr>"
+            )
+
         table_rows += (
             f"<tr><td>{b_nr}</td><td>{name}</td><td>{vo_datum}</td><td>{vo_art}</td>"
             f"<td>{vo_grp}</td><td>{dia}</td><td class=\"nowrap\">{arzt}</td>"
             f"<td class=\"num\">{brutto}</td><td class=\"num\">{zuz}</td></tr>"
             f"<tr class=\"sub\"><td></td><td colspan=\"8\">Behandlung: {zeitraum} "
             f"({tage} Behandlungstage)</td></tr>"
+            f"{kontext_html}"
             f"{hint_html}"
         )
 
@@ -350,8 +372,8 @@ def _segment_summary(tag: str, fields: List[Any], msg_type: str = "") -> str:
 
     if tag == "UNB":
         return " | ".join(p for p in [
-            f"Absender: {g(1)}" if g(1) else "",
-            f"Empfänger: {g(2)}" if g(2) else "",
+            f"Absender: {codelisten.describe_ik(g(1))}" if g(1) else "",
+            f"Empfänger: {codelisten.describe_ik(g(2))}" if g(2) else "",
             f"Erstellt: {g(3)}" if g(3) else "",
             f"Datenaustauschreferenz: {g(4)}" if g(4) else "",
         ] if p)
@@ -359,8 +381,10 @@ def _segment_summary(tag: str, fields: List[Any], msg_type: str = "") -> str:
         return " | ".join(p for p in [
             f"VK {codelisten.describe('verarbeitungskennzeichen', g(0))}" if g(0) else "",
             f"IK Leistungserbringer: {g(2)}" if g(2) else "",
-            f"IK Kostenträger: {g(3)}" if g(3) else "",
-            f"IK Krankenkasse: {g(4)}" if g(4) else "",
+            f"Kostenträger: {codelisten.describe_ik(g(3))}" if g(3) else "",
+            # Die Krankenkasse nur nennen, wenn sie vom Kostenträger abweicht —
+            # in den meisten Dateien steht dort dasselbe IK.
+            f"Krankenkasse: {codelisten.describe_ik(g(4))}" if g(4) and g(4) != g(3) else "",
         ] if p)
     if tag == "REC":
         return " | ".join(p for p in [
@@ -382,7 +406,13 @@ def _segment_summary(tag: str, fields: List[Any], msg_type: str = "") -> str:
         return " | ".join(p for p in [name, f"geb. {geb}" if geb else ""] if p)
     if tag == "DIA":
         code, text = g(0), g(1)
-        return f"{code}  —  {text}" if text else code
+        zusammenfassung = f"{code}  —  {text}" if text else code
+        # Verordnungsbedarf aus der KBV-Stammdatei Heilmittelanlagen: erklärt,
+        # ob der Code in Anlage 2 oder 3 steht.
+        bedarf = codelisten.verordnungsbedarf(code)
+        if bedarf["text"]:
+            zusammenfassung += f"  |  {bedarf['text']}"
+        return zusammenfassung
     if tag == "SKZ":
         return " | ".join(p for p in [
             f"Kennzeichen: {g(0)}" if g(0) else "",
@@ -610,6 +640,7 @@ def parse_esol_tree_nodes(raw_content: str) -> List[Dict[str, Any]]:
             msg_node = None
             n = _node(ids, tag, _SEGMENT_LABEL_MAP[tag], _segment_summary(tag, fields), raw)
             n["children"] = _field_children(ids, tag, fields, raw)
+            n["children"].extend(_zusatz_children(ids, tag, fields))
             tree.append(n)
             continue
 
@@ -723,7 +754,59 @@ def _build_simple_node(ids: _IdGen, tag: str, fields: List[Any], raw: str,
         raw,
     )
     node["children"] = _field_children(ids, tag, fields, raw, msg_type)
+    node["children"].extend(_zusatz_children(ids, tag, fields))
     return node
+
+
+def _zusatz_children(ids: _IdGen, tag: str, fields: List[Any]) -> List[Dict[str, Any]]:
+    """
+    Zusätzliche Kinderknoten aus den Nachschlagetabellen — nicht Felder des
+    Segments, sondern das, was zu ihnen bekannt ist:
+
+      DIA  Verordnungsbedarf des ICD-Codes (Anlage 2 / Anlage 3)
+      FKT  Auskunft zu den drei Institutionskennzeichen
+      UNB  Auskunft zu Absender und Empfänger
+
+    Ist nichts hinterlegt, bleibt die Liste leer — es wird nichts erfunden.
+    """
+    def g(i: int) -> str:
+        if len(fields) <= i or fields[i] in (None, ""):
+            return ""
+        return ":".join(str(x) for x in fields[i]) if isinstance(fields[i], list) else str(fields[i])
+
+    kinder: List[Dict[str, Any]] = []
+
+    if tag == "DIA":
+        zeilen = codelisten.verordnungsbedarf_zeilen(g(0))
+        if zeilen:
+            knoten = _node(ids, tag, "Verordnungsbedarf", zeilen[0], "", prefix="vb")
+            for zeile in zeilen[1:]:
+                knoten["children"].append(_node(ids, tag, zeile, "", "", prefix="vb"))
+            kinder.append(knoten)
+        return kinder
+
+    if tag in ("FKT", "UNB"):
+        # FKT: Rechnungssteller/Leistungserbringer, Kostenträger, Krankenkasse.
+        # UNB: Absender und Empfänger.
+        felder = ((2, "IK Leistungserbringer"), (3, "IK Kostenträger"),
+                  (4, "IK Krankenkasse")) if tag == "FKT" else \
+                 ((1, "Absender"), (2, "Empfänger"))
+        gesehen: List[str] = []
+        for index, beschriftung in felder:
+            ik = g(index).strip()
+            if not ik or ik in gesehen:
+                continue
+            gesehen.append(ik)
+            zeilen = codelisten.ik_zeilen(ik)
+            if not zeilen:
+                continue
+            knoten = _node(ids, tag, beschriftung, zeilen[0], "", prefix="ik")
+            for zeile in zeilen[1:]:
+                knoten["children"].append(_node(ids, tag, zeile, "", "", prefix="ik"))
+            kinder.append(knoten)
+        return kinder
+
+    return kinder
 
 
 def _position_from_fields(tag: str, fields: List[Any]) -> Dict[str, Any]:

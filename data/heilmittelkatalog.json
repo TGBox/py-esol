@@ -1,0 +1,5044 @@
+{
+  "_hinweis": [
+    "Automatisch erzeugt aus den Positionsverzeichnissen in quellen/.",
+    "NICHT von Hand bearbeiten — beim nächsten Import wird die Datei überschrieben.",
+    "Eigene Bezeichnungen gehören nach data/codelisten.json unter",
+    "'positionsnummern'; die haben Vorrang.",
+    "",
+    "Erzeugt mit: python tools/import_heilmittelkatalog.py",
+    "",
+    "PREISE SIND BEWUSST NICHT ENTHALTEN. Maßgeblich für die Abrechnung sind",
+    "die Vergütungsvereinbarungen, nicht diese Listen; ein Listenpreis neben",
+    "einem abgerechneten Betrag würde als Soll-Ist-Vergleich gelesen.",
+    "",
+    "Dies ist die dritte Fallback-Ebene hinter codelisten.json und der",
+    "GKV-Heilmittelpreisstammdatei. Sie deckt vor allem ab, was dort fehlt:",
+    "Kurort- und Bäderleistungen (X6xxx/X7xxx), BG/UV-Positionen und das",
+    "Gebührenverzeichnis für Heilpraktiker.",
+    "",
+    "'leistungsgruppen' schlüsselt die 2. und 3. Stelle eines X-Codes auf",
+    "(X4102 -> Gruppe 41). Die Bezeichnungen stammen unverändert aus der",
+    "Quelldatei, in der einige Wörter durch Zeilenumbrüche getrennt sind."
+  ],
+  "_quelle": {
+    "gelesen": {
+      "heilmittelpreise.csv": 112,
+      "codes.csv": 681,
+      "bgleistungen.csv": 50,
+      "bgleistungen_alt.csv": 50,
+      "heilmittelleistungen_heilpraktiker.csv": 147,
+      "codesgroups.csv": 55
+    },
+    "fehlende_dateien": [],
+    "anzahl_positionen": 928,
+    "nach_quelle": {
+      "bg": 100,
+      "heilmittelkatalog": 575,
+      "heilmittelpreise": 106,
+      "heilpraktiker": 147
+    },
+    "anzahl_leistungsgruppen": 55
+  },
+  "positionen": {
+    "1": {
+      "bezeichnung": "Für die eingehende, das gewöhnliche Maß übersteigende Untersuchung",
+      "bereich": "HP Diverse Leistung",
+      "quelle": "heilpraktiker"
+    },
+    "10.1": {
+      "bezeichnung": "für jede angefangene Stunde bei Tag",
+      "bereich": "HP Nebengebühren für Hausbesuche",
+      "quelle": "heilpraktiker"
+    },
+    "10.2": {
+      "bezeichnung": "für jede angefangene Stunde bei NachtDas Wegegeld wird ersetzt bei einer Entfernung von 2 bis 25 Kilometern:",
+      "bereich": "HP Nebengebühren für Hausbesuche",
+      "quelle": "heilpraktiker"
+    },
+    "10.3": {
+      "bezeichnung": "durch Erstattung der Auslagen für öffentliche Verkehrsmittel",
+      "bereich": "HP Nebengebühren für Hausbesuche",
+      "quelle": "heilpraktiker"
+    },
+    "10.4": {
+      "bezeichnung": "durch besondere Vereinbarung mit dem Patienten, wie Gestellung eines Transportmittels. Hierbei besteht nur Anspruch auf Vergütung der Zeitversäumnis. Bei Benutzung des eigenen Fahrzeuges für den zurückgelegten Kilometer",
+      "bereich": "HP Nebengebühren für Hausbesuche",
+      "quelle": "heilpraktiker"
+    },
+    "10.5": {
+      "bezeichnung": "bei Tag",
+      "bereich": "HP Nebengebühren für Hausbesuche",
+      "quelle": "heilpraktiker"
+    },
+    "10.6": {
+      "bezeichnung": "bei Nacht",
+      "bereich": "HP Nebengebühren für Hausbesuche",
+      "quelle": "heilpraktiker"
+    },
+    "10.7": {
+      "bezeichnung": "Handelt es sich um einen Fernbesuch von über 25 km Entfernung zwischen Praxis- und Besuchsort, so können pro Kilometer an Reisekosten in Anrechnung gebracht werden",
+      "bereich": "HP Nebengebühren für Hausbesuche",
+      "quelle": "heilpraktiker"
+    },
+    "10.8": {
+      "bezeichnung": "Handelt es sich bei einem Krankenbesuch um eine Reise, welche länger als sechs Stunden dauert, so kann der Heilpraktiker anstelle des Wegegeldes die tatsächlich entstandenen Reisekosten in Anrechnung bringen und außerdem für den Zeitaufwand pro Stunde Reisezeit berechnen. Der Patient ist hiervon vorher in Kenntnis zu setzen.",
+      "bereich": "HP Nebengebühren für Hausbesuche",
+      "quelle": "heilpraktiker"
+    },
+    "11.1": {
+      "bezeichnung": "Kurze Krankheitsbescheinigung oder Brief im Interesse des Patienten",
+      "bereich": "HP Schriftliche Auslassungen und Krankheitsbesch.",
+      "quelle": "heilpraktiker"
+    },
+    "11.1-G": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei motorisch-funktionellen Störungen, Gruppe",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "11.1.": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei motorisch-funktionellen Störungen",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "11.2": {
+      "bezeichnung": "Ausführlicher Krankheitsbericht oder Gutachten (DIN A4 engzeilig maschinengeschrieben)",
+      "bereich": "HP Schriftliche Auslassungen und Krankheitsbesch.",
+      "quelle": "heilpraktiker"
+    },
+    "11.2-G": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei sensomotorischen/perzeptiven Störungen, Gruppe",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "11.2.": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei sensomotorischen/perzeptiven Störungen",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "11.3": {
+      "bezeichnung": "Individuell angefertigter schriftlicher Diätplan bei Ernährungs- und Stoffwechselstörungen",
+      "bereich": "HP Schriftliche Auslassungen und Krankheitsbesch.",
+      "quelle": "heilpraktiker"
+    },
+    "11.3-G": {
+      "bezeichnung": "Ergotherapeutisches Hirnleistungstraining/ Neuropsychologisch orientierte Behandlung, Gruppe",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "11.3.": {
+      "bezeichnung": "Ergotherapeutisches Hirnleistungstraining/ Neuropsychologisch orientierte Behandlung",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "11.4-G": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei psychisch-funktionellen Störungen,Gruppe",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "11.4.": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei psychisch-funktionellen Störungen",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "11.5.": {
+      "bezeichnung": "Arbeitstherapie/betriebliches Arbeitstraining Nur in Absprache mit dem UV-Träger",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "11.6.": {
+      "bezeichnung": "Beratung zur Integration in das berufliche und soziale Umfeld (außerhalb der ergotherapeutischen Praxis)",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "12.1": {
+      "bezeichnung": "Harnuntersuchungen qualitativ mittels bis zu Verwendung eines Mehrfachreagenzträgers (Teststreifen) durch visuellen Farbvergleich",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.1.": {
+      "bezeichnung": "Ergotherapeutische Funktionsanalyse(keine Berechnung nach Zeitintervall)",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "12.10": {
+      "bezeichnung": "Differenzierung des gefärbten Blutausstriches",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.11": {
+      "bezeichnung": "Zählung der Leuko- und Erythrozyten",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.12": {
+      "bezeichnung": "Blutkörperchen-Senkungsgeschwindigkeit (BKS) einschließlich Blutentnahme",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.13": {
+      "bezeichnung": "Einfache mikroskopische und/oder chemische Untersuchungen von Körperflüssigkeiten und Ausscheidungen auch mit einfachen oder schwierigen Färbeverfahren sowie Dunkelfeld, pro Untersuchung",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.14": {
+      "bezeichnung": "Aufwendige Chemogramme von Körperflüssigkeiten und Ausscheidungen je nach Umfang (z.B. Enzymdiagnostik, Nieren- chemie, Blutserumchemie, Stuhlchemie, Elektrolyse, Elektrophorese, Fermentchemie, pro Einzeluntersuchung)",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.15": {
+      "bezeichnung": "Kristallographie, Photometrie, pro Einzeluntersuchung",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.2": {
+      "bezeichnung": "Harnuntersuchung quantitativ (es ist anzugeben, auf welchen Stoff untersucht wurde, z.B. Zucker usw.)",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.2.": {
+      "bezeichnung": "Thermische Anwendung,Kälte/Wärme(keine Berechnung nach Zeitintervall)",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "12.3.": {
+      "bezeichnung": "Ergotherapeutische Schiene",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "12.4": {
+      "bezeichnung": "Harnuntersuchung, nur sediment",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.4.": {
+      "bezeichnung": "ausführlicher Bericht auf Anforderung des UV-Trägers",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "12.5": {
+      "bezeichnung": "Carzinochrom-Reaktion (CCR)",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.5.": {
+      "bezeichnung": "Ärztlich verordneter Hausbesuch bei einem Patienten (je Besuch)",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "12.6.": {
+      "bezeichnung": "Wegegeld je km bei ärztlichverordnetem Hausbesuch",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "12.7": {
+      "bezeichnung": "Blutstatus (nicht neben Ziff. 12.9, 12.10, 12.11)",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.8": {
+      "bezeichnung": "Blutzuckerbestimmung",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "12.9": {
+      "bezeichnung": "Hämoglobinbestimmung",
+      "bereich": "HP Chemisch-physikalische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "13.1": {
+      "bezeichnung": "Sonstige Untersuchungen unter Zuhilfenahme spezieller Apparaturen oder Färbeverfahren besonders schwieriger Art, z.B. ph-Messungen im strömenden Blut oder Untersuchungen nach v. Bremer, Enderlein usw.",
+      "bereich": "HP Sonstige Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "14.1": {
+      "bezeichnung": "Binokulare mikroskopische Untersuchung des Augenvordergrundes",
+      "bereich": "HP Spezielle Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "14.10": {
+      "bezeichnung": "Ultraschall-Gefäßdoppler-Untersuchung zu peripheren Venendruck- und/oder Strömungsmessung",
+      "bereich": "HP Spezielle Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "14.2": {
+      "bezeichnung": "Binokulare Spiegelung des Augenhintergrundes",
+      "bereich": "HP Spezielle Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "14.3": {
+      "bezeichnung": "Grundumsatzbestimmung nach Read",
+      "bereich": "HP Spezielle Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "14.4": {
+      "bezeichnung": "Grundumsatzbestimmung mit Hilfe der Atemgasuntersuchung",
+      "bereich": "HP Spezielle Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "14.5": {
+      "bezeichnung": "Prüfung der Lungenkapazität (Spirometrische Untersuchung)",
+      "bereich": "HP Spezielle Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "14.6": {
+      "bezeichnung": "Elektrokardiogramm mit mindestens 9 Ableitungen",
+      "bereich": "HP Spezielle Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "14.7": {
+      "bezeichnung": "Elektrokardiogramm mit Standardableitungen, Goldbergerableitungen, Nehbsche Ableitungen, Brustwandableitungen",
+      "bereich": "HP Spezielle Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "14.8": {
+      "bezeichnung": "Oszillogramm-Methoden",
+      "bereich": "HP Spezielle Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "14.9": {
+      "bezeichnung": "Spezielle Herz-Kreislauf-Untersuchungen (Schellong)",
+      "bereich": "HP Spezielle Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "15.1": {
+      "bezeichnung": "Photoaufnahmen zu diagnostischen Zwecken, Aufnahmen schwarz/weiß (pro Augenpaar)",
+      "bereich": "HP Photoaufnahmen",
+      "quelle": "heilpraktiker"
+    },
+    "15.2": {
+      "bezeichnung": "Vergrößerungen sowie Farbaufnahmen werden zum handelsüblichen Preis berechnet",
+      "bereich": "HP Photoaufnahmen",
+      "quelle": "heilpraktiker"
+    },
+    "16.1": {
+      "bezeichnung": "Elektro Neural-Diagnostik",
+      "bereich": "HP Bioenergetische Verfahren",
+      "quelle": "heilpraktiker"
+    },
+    "16.2": {
+      "bezeichnung": "Segmentdiagnostik, Maximaldiagnostik u.a.",
+      "bereich": "HP Bioenergetische Verfahren",
+      "quelle": "heilpraktiker"
+    },
+    "16.3": {
+      "bezeichnung": "Bioelektrische Funktionsdiagnostik",
+      "bereich": "HP Bioenergetische Verfahren",
+      "quelle": "heilpraktiker"
+    },
+    "16.4": {
+      "bezeichnung": "Hautwiderstandsmessungen",
+      "bereich": "HP Bioenergetische Verfahren",
+      "quelle": "heilpraktiker"
+    },
+    "17.1": {
+      "bezeichnung": "Neurologische Untersuchung",
+      "bereich": "HP Neurologische Untersuchungen",
+      "quelle": "heilpraktiker"
+    },
+    "18.1": {
+      "bezeichnung": "Einfache heilmagnetische Spezialbehandlungen, soweit sie nicht das gewöhnliche Maß einer Behandlung in zeitlicher Hinsicht überschreiten",
+      "bereich": "HP Heilmagnetische Behandlungen",
+      "quelle": "heilpraktiker"
+    },
+    "18.2": {
+      "bezeichnung": "Heilmagnetische Spezialbehandlungen, soweit sie in zeitlicher Hinsicht das gewöhnliche Maß überschreiten",
+      "bereich": "HP Heilmagnetische Behandlungen",
+      "quelle": "heilpraktiker"
+    },
+    "19.1": {
+      "bezeichnung": "Psychotherapie von halbstündiger Dauer",
+      "bereich": "HP Psychotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "19.2": {
+      "bezeichnung": "Psychotherapie von 50 bis 90 Minuten Dauer",
+      "bereich": "HP Psychotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "19.3": {
+      "bezeichnung": "Ausstellung eines psychodiagnostischen Befundes",
+      "bereich": "HP Psychotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "19.4": {
+      "bezeichnung": "Psychotherapeutisches Gutachten je zweizeiliger Schreibmaschinenseite",
+      "bereich": "HP Psychotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "19.5": {
+      "bezeichnung": "Psychologische Exploration mit eingehender Beratung",
+      "bereich": "HP Psychotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "19.6": {
+      "bezeichnung": "Anwendung und Auswertung von Testverfahren (TAT, TUA, Rorschach usw.)",
+      "bereich": "HP Psychotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "19.7": {
+      "bezeichnung": "Behandlung von Störungen der Sprechorgane je Sitzung",
+      "bereich": "HP Psychotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "19.8": {
+      "bezeichnung": "Behandlung einer Einzelperson durch Hypnose",
+      "bereich": "HP Psychotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "2": {
+      "bezeichnung": "Durchführung des vollständigen Krankenexamens mit Repertorisation nach den Regeln der klassischen Homöopathie",
+      "bereich": "HP Diverse Leistung",
+      "quelle": "heilpraktiker"
+    },
+    "20.1": {
+      "bezeichnung": "Atemtherapeutische Behandlungsverfahren",
+      "bereich": "HP Atemtherapie, Massagen",
+      "quelle": "heilpraktiker"
+    },
+    "20.2": {
+      "bezeichnung": "Nervenpunktmassage nach Cornelius, Aurelius u.a. Spezialnervenmassage",
+      "bereich": "HP Atemtherapie, Massagen",
+      "quelle": "heilpraktiker"
+    },
+    "20.3": {
+      "bezeichnung": "Bindegewebsmassage",
+      "bereich": "HP Atemtherapie, Massagen",
+      "quelle": "heilpraktiker"
+    },
+    "20.4": {
+      "bezeichnung": "Teilmassage (Massage einzelner Körperteile)",
+      "bereich": "HP Atemtherapie, Massagen",
+      "quelle": "heilpraktiker"
+    },
+    "20.5": {
+      "bezeichnung": "Großmassage",
+      "bereich": "HP Atemtherapie, Massagen",
+      "quelle": "heilpraktiker"
+    },
+    "20.6": {
+      "bezeichnung": "Sondermassagen - Unterwasserdruckstrahlmassage - Lymphdrainage - Schrägbettbehandlung u.a",
+      "bereich": "HP Atemtherapie, Massagen",
+      "quelle": "heilpraktiker"
+    },
+    "20.7": {
+      "bezeichnung": "Behandlung mit physikalischen oder medico-mechanischen Apparaten",
+      "bereich": "HP Atemtherapie, Massagen",
+      "quelle": "heilpraktiker"
+    },
+    "20.8": {
+      "bezeichnung": "Einreibungen zu therapeutischen Zwecken in die Haut",
+      "bereich": "HP Atemtherapie, Massagen",
+      "quelle": "heilpraktiker"
+    },
+    "21.1": {
+      "bezeichnung": "Akupunktur einschließlich Pulsdiagnose",
+      "bereich": "HP Akupunktur",
+      "quelle": "heilpraktiker"
+    },
+    "21.2": {
+      "bezeichnung": "Moxibustionen, Elektroakupunktur, Injektionen und Quaddelungen in Akupunkturpunkte",
+      "bereich": "HP Akupunktur",
+      "quelle": "heilpraktiker"
+    },
+    "22.1": {
+      "bezeichnung": "Inhalationen, soweit sie vom Heilpraktiker mit den verschiedenen Apparaturen in der Sprechstunde ausgeführt werden",
+      "bereich": "HP Inhalationen",
+      "quelle": "heilpraktiker"
+    },
+    "23.1": {
+      "bezeichnung": "Anwendung von Aerosolen mit Kompressor, Preßluft- bzw. Sauerstoffapparaten",
+      "bereich": "HP Aerosole",
+      "quelle": "heilpraktiker"
+    },
+    "24.1": {
+      "bezeichnung": "Eigenblutinjektion einschl. Blutentnahme und Reinjektion",
+      "bereich": "HP Eigenblut, Eigenharn",
+      "quelle": "heilpraktiker"
+    },
+    "24.2": {
+      "bezeichnung": "Eigenharninjektion",
+      "bereich": "HP Eigenblut, Eigenharn",
+      "quelle": "heilpraktiker"
+    },
+    "25.1": {
+      "bezeichnung": "Injektion, subkutan",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "25.10": {
+      "bezeichnung": "Gasgemischinjektionen, intraarteriell",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "25.11": {
+      "bezeichnung": "HOT-Behandlung (Hämatogene Oxidationstherapie)",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "25.2": {
+      "bezeichnung": "Injektion, intramuskulär",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "25.3": {
+      "bezeichnung": "Injektion, intravenös, intraarteriell",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "25.4": {
+      "bezeichnung": "intrakutane Reiztherapie (Quaddelbehandlung), pro Sitzung",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "25.5": {
+      "bezeichnung": "Injektion, intraartikulär",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "25.6": {
+      "bezeichnung": "Neural- oder segmentgezielte Injektionen nach Hunecke",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "25.7": {
+      "bezeichnung": "Infusion",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "25.8": {
+      "bezeichnung": "Dauertropfinfusion",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "25.9": {
+      "bezeichnung": "Gasgemischinjektionen (z.B. Ozon oder Sauerstoff), intramuskulär",
+      "bereich": "HP Injektionen, Infusionen",
+      "quelle": "heilpraktiker"
+    },
+    "26.1": {
+      "bezeichnung": "Blutentnahme",
+      "bereich": "HP Blutentnahmen",
+      "quelle": "heilpraktiker"
+    },
+    "26.2": {
+      "bezeichnung": "Aderlaß",
+      "bereich": "HP Blutentnahmen",
+      "quelle": "heilpraktiker"
+    },
+    "27.1": {
+      "bezeichnung": "Setzen von Blutegeln, ggf. einschließl. Verband",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.10": {
+      "bezeichnung": "Anwendung von Pustulantien",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.11": {
+      "bezeichnung": "Baunscheidtieren",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.12": {
+      "bezeichnung": "Biersche Stauung",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.2": {
+      "bezeichnung": "Skarifikation der Haut",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.3": {
+      "bezeichnung": "Setzen von Schröpfköpfen, unblutig",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.4": {
+      "bezeichnung": "Setzen von Schröpfköpfen, blutig",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.5": {
+      "bezeichnung": "Schröpfkopfmassage einschließl. Gleitmittel",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.6": {
+      "bezeichnung": "Anwendung großer Saugapparate für ganze Extremitäten",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.7": {
+      "bezeichnung": "Setzen von Fontanellen",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.8": {
+      "bezeichnung": "Setzen von Cantharidenblasen",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "27.9": {
+      "bezeichnung": "Reinjektion des Blaseninhaltes (aus Ziffer 27.8)",
+      "bereich": "HP Hautableitungsverfahren, Hautreizverfahren",
+      "quelle": "heilpraktiker"
+    },
+    "28.1": {
+      "bezeichnung": "Behandlung mittels paravertebraler Infiltration, einmalig bzw. medikamentöse Infiltrationsbehandlung im Bereich einer Körperregion",
+      "bereich": "HP Infiltrationen",
+      "quelle": "heilpraktiker"
+    },
+    "28.2": {
+      "bezeichnung": "Behandlung mittels paravertebraler Infiltration, mehrmalig bzw. medikamentöse Infiltrationsbehandlung im Bereich mehrerer Körperregionen",
+      "bereich": "HP Infiltrationen",
+      "quelle": "heilpraktiker"
+    },
+    "29.1": {
+      "bezeichnung": "Roedersches Behandlungs- und Mandelabsaugverfahren",
+      "bereich": "HP Roedersches Verfahren",
+      "quelle": "heilpraktiker"
+    },
+    "3": {
+      "bezeichnung": "Kurze Information, auch per Telefon, oder Ausstellung einer Wiederholungsverordnung, als einzige Leistung pro Inanspruchnahme des Heilpraktikers",
+      "bereich": "HP Diverse Leistung",
+      "quelle": "heilpraktiker"
+    },
+    "30.1": {
+      "bezeichnung": "Spülung des Ohres",
+      "bereich": "HP Sonstiges",
+      "quelle": "heilpraktiker"
+    },
+    "30.2": {
+      "bezeichnung": "Anwendung der Beutelbegasung für ganze Extremitäten mit Ozon oder Sauerstoff",
+      "bereich": "HP Sonstiges",
+      "quelle": "heilpraktiker"
+    },
+    "31.1": {
+      "bezeichnung": "Eröffnung eines oberflächlichen Abszesses",
+      "bereich": "HP Abszesse u.a.",
+      "quelle": "heilpraktiker"
+    },
+    "31.2": {
+      "bezeichnung": "Entfernung von Aknepusteln pro Sitzung",
+      "bereich": "HP Abszesse u.a.",
+      "quelle": "heilpraktiker"
+    },
+    "32.1": {
+      "bezeichnung": "bei einer kleinen Wunde",
+      "bereich": "HP Versorgung einer frischen Wunde",
+      "quelle": "heilpraktiker"
+    },
+    "32.2": {
+      "bezeichnung": "bei einer größeren und verunreinigten Wunde",
+      "bereich": "HP Versorgung einer frischen Wunde",
+      "quelle": "heilpraktiker"
+    },
+    "33.1": {
+      "bezeichnung": "Verbände, jedesmal",
+      "bereich": "HP Verbände (außer zur Wundbehandlung)",
+      "quelle": "heilpraktiker"
+    },
+    "33.2": {
+      "bezeichnung": "elastische Stütz-, Tape- und Pflasterverbände",
+      "bereich": "HP Verbände (außer zur Wundbehandlung)",
+      "quelle": "heilpraktiker"
+    },
+    "33.3": {
+      "bezeichnung": "Kompressions- oder Zinkleimverband",
+      "bereich": "HP Verbände (außer zur Wundbehandlung)",
+      "quelle": "heilpraktiker"
+    },
+    "34.1": {
+      "bezeichnung": "Chiropraktische Behandlung",
+      "bereich": "HP Gelenk- und Wirbelsäulenbehandlung",
+      "quelle": "heilpraktiker"
+    },
+    "34.2": {
+      "bezeichnung": "Gezielter chiropraktischer Eingriff an der Wirbelsäule",
+      "bereich": "HP Gelenk- und Wirbelsäulenbehandlung",
+      "quelle": "heilpraktiker"
+    },
+    "35.1": {
+      "bezeichnung": "des Unterkiefers",
+      "bereich": "HP Osteopathische Behandlung",
+      "quelle": "heilpraktiker"
+    },
+    "35.2": {
+      "bezeichnung": "des Schultergelenkes",
+      "bereich": "HP Osteopathische Behandlung",
+      "quelle": "heilpraktiker"
+    },
+    "35.3": {
+      "bezeichnung": "der Handgelenke, der Oberschenkel, der Unterschenkel, der Vorderarme und der Fußgelenke",
+      "bereich": "HP Osteopathische Behandlung",
+      "quelle": "heilpraktiker"
+    },
+    "35.4": {
+      "bezeichnung": "der Schlüsselbeine und der Kniegelenke",
+      "bereich": "HP Osteopathische Behandlung",
+      "quelle": "heilpraktiker"
+    },
+    "35.5": {
+      "bezeichnung": "der Daumen",
+      "bereich": "HP Osteopathische Behandlung",
+      "quelle": "heilpraktiker"
+    },
+    "35.6": {
+      "bezeichnung": "der Finger und Zehen",
+      "bereich": "HP Osteopathische Behandlung",
+      "quelle": "heilpraktiker"
+    },
+    "36.1": {
+      "bezeichnung": "Leitung eines ansteigenden Vollbades",
+      "bereich": "HP Hydro- und Elektrotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "36.2": {
+      "bezeichnung": "Leitung eines ansteigenden Teilbades",
+      "bereich": "HP Hydro- und Elektrotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "36.3": {
+      "bezeichnung": "Spezialdarmbad (subaquales Darmbad)",
+      "bereich": "HP Hydro- und Elektrotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "36.4": {
+      "bezeichnung": "Kneippsche Güsse",
+      "bereich": "HP Hydro- und Elektrotherapie",
+      "quelle": "heilpraktiker"
+    },
+    "37.1": {
+      "bezeichnung": "Teilheißluftbad, z.B. Kopf oder Arm",
+      "bereich": "HP Elektrische Bäder- und Heißluftbäder",
+      "quelle": "heilpraktiker"
+    },
+    "37.2": {
+      "bezeichnung": "Ganzheißluftbad, z.B. Rumpf oder Beine",
+      "bereich": "HP Elektrische Bäder- und Heißluftbäder",
+      "quelle": "heilpraktiker"
+    },
+    "37.3": {
+      "bezeichnung": "Heißluftbad im geschlossenen Kasten",
+      "bereich": "HP Elektrische Bäder- und Heißluftbäder",
+      "quelle": "heilpraktiker"
+    },
+    "37.4": {
+      "bezeichnung": "Elektrisches Vierzellenbad",
+      "bereich": "HP Elektrische Bäder- und Heißluftbäder",
+      "quelle": "heilpraktiker"
+    },
+    "37.5": {
+      "bezeichnung": "Elektrisches Vollbad (Stangerbad)",
+      "bereich": "HP Elektrische Bäder- und Heißluftbäder",
+      "quelle": "heilpraktiker"
+    },
+    "38.1": {
+      "bezeichnung": "Fangopackungen",
+      "bereich": "HP Spezialpackungen",
+      "quelle": "heilpraktiker"
+    },
+    "38.2": {
+      "bezeichnung": "Paraffinpackungen, örtliche",
+      "bereich": "HP Spezialpackungen",
+      "quelle": "heilpraktiker"
+    },
+    "38.3": {
+      "bezeichnung": "Paraffinganzpackungen",
+      "bereich": "HP Spezialpackungen",
+      "quelle": "heilpraktiker"
+    },
+    "38.4": {
+      "bezeichnung": "Kneippsche Wickel- und Ganzpackungen, Prießnitz- und Schlenzpackungen",
+      "bereich": "HP Spezialpackungen",
+      "quelle": "heilpraktiker"
+    },
+    "39.1": {
+      "bezeichnung": "Einfache oder örtliche Lichtbestrahlungen",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.10": {
+      "bezeichnung": "Magnetfeldtherapie mit besonderen Spezialapparaten",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.11": {
+      "bezeichnung": "Elektromechanische und elektrothermische Behandlung (je nach Aufwand und Dauer)",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.12": {
+      "bezeichnung": "Niederfrequente Reizstromtherapie, z.B. Jono Modulator",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.13": {
+      "bezeichnung": "Ultraschall-Behandlung",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.2": {
+      "bezeichnung": "Ganzbestrahlungen",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.4": {
+      "bezeichnung": "Faradisation, Galvanisation und verwandte Verfahren (Schwellstromgeräte)",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.5": {
+      "bezeichnung": "Anwendung der Influenzmaschine",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.6": {
+      "bezeichnung": "Anwendung von Heizsonnen (Infrarot)",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.7": {
+      "bezeichnung": "Verschorfung mit heißer Luft und heißen Dämpfen",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.8": {
+      "bezeichnung": "Behandlung mit hochgespannten Strömen, Hochfrequenzströmen in Verbindung mit verschiedenen Apparaten",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "39.9": {
+      "bezeichnung": "Langwellenbehandlung (Diathermie), Kurzwellen- und Mikrowellenbehandlung",
+      "bereich": "HP Elektro-physikalische Heilmethoden",
+      "quelle": "heilpraktiker"
+    },
+    "4": {
+      "bezeichnung": "Eingehende Beratung, die das gewöhnliche Maß übersteigt, von mindestens 10 Minuten Dauer, gegebenenfalls einschließlich einer Untersuchung",
+      "bereich": "HP Diverse Leistung",
+      "quelle": "heilpraktiker"
+    },
+    "5": {
+      "bezeichnung": "Beratung, auch mittels Fernsprecher, gegebenenfalls einschließlich einer kurzen Untersuchung",
+      "bereich": "HP Diverse Leistung",
+      "quelle": "heilpraktiker"
+    },
+    "6": {
+      "bezeichnung": "Für die gleichen Leistungen wie unter 5, jedoch außerhalb der normalen Sprechstundenzeit.",
+      "bereich": "HP Diverse Leistung",
+      "quelle": "heilpraktiker"
+    },
+    "7": {
+      "bezeichnung": "Für die gleichen Leistungen wie unter 5, jedoch bei Nacht, zwischen 20 und 7 Uhr",
+      "bereich": "HP Diverse Leistung",
+      "quelle": "heilpraktiker"
+    },
+    "8": {
+      "bezeichnung": "Für die gleichen Leistungen wie unter 5, jedoch sonn- und feiertags",
+      "bereich": "HP Diverse Leistung",
+      "quelle": "heilpraktiker"
+    },
+    "8101": {
+      "bezeichnung": "KG, auch auf neurophysiologischer Grundlage",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8102": {
+      "bezeichnung": "KG bei zentralen Bewegungsstörungen (Kinderbehandlung)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8103": {
+      "bezeichnung": "KG bei zentr. Bewegungsstörungen (Erwachsenenbeh.)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8104": {
+      "bezeichnung": "KG in der Gruppe, ab 3 Teilnehmern, je Teilnehmer",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8105": {
+      "bezeichnung": "KG im Bewegungsbad",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8106": {
+      "bezeichnung": "KG im Bewegungsbad in der Gruppe, je Teilnehmer",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8107": {
+      "bezeichnung": "Manuelle Therapie",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8201": {
+      "bezeichnung": "Wärmeanwendung bei einem oder mehreren Körperabschnitten (alle Wärmestrahler)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8202": {
+      "bezeichnung": "Heiße Rolle bei einem oder mehreren Körperabschnitten.",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8203": {
+      "bezeichnung": "Packungen oder Teilbäder mit Paraffinen",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8204": {
+      "bezeichnung": "Warmpackung mit natürlichen Peloiden. Teilpackung, ein Körperabschnitt, auch Fangokneten",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8205": {
+      "bezeichnung": "Warmpackung mit natürlichen Peloiden. Doppelpackung, zwei Körperabschnitte.",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8206": {
+      "bezeichnung": "Kälteanwendung bei einem Körperabschnitt oder mehreren Körperabschnitten (Kompresse, Eisbeutel, Peloide, Eisteilbad)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8207": {
+      "bezeichnung": "Apparative Kälteanwendung (Kaltgas, Kaltluft)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8301": {
+      "bezeichnung": "Reizstrom",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8302": {
+      "bezeichnung": "Elektrogymnastik, (je Muskel-/Nerv-Einheit)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8303": {
+      "bezeichnung": "Ultraschall",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8304": {
+      "bezeichnung": "Jontophorese",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8401": {
+      "bezeichnung": "Massage, auch Spezialmassagen (Bindegewebs-, Reflexzonen-, Segment-, Periost- Bürsten- und Colonmassage)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8402": {
+      "bezeichnung": "Lymphdrainage, Teilbehandlung",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8403": {
+      "bezeichnung": "Lymphdrainage Ganzbehandlung",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8403a": {
+      "bezeichnung": "Kompressionsbandagierung",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8405": {
+      "bezeichnung": "Hand-, Fußbad mit Zusatz",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8407": {
+      "bezeichnung": "Kohlensäurebad",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8409": {
+      "bezeichnung": "Hydroelektrisches Vollbad (z.B. Stangerbad)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8410": {
+      "bezeichnung": "Hydroelektrisches Teilbad (Zwei-/Vierzellenbad)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8412": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage einschl. Nachruhe",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8413": {
+      "bezeichnung": "Chirogymnastik",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8414": {
+      "bezeichnung": "Extensionsbehandlung (unabhängig vom Zeitaufwand)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8501": {
+      "bezeichnung": "Einzelinhalation",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8502": {
+      "bezeichnung": "Rauminhalation, je Teilnehmer",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8601": {
+      "bezeichnung": "Ruhe, keine Berechnung nach Zeitintervallen",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8602": {
+      "bezeichnung": "Hausbesuch",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "8603": {
+      "bezeichnung": "Wegegebühr bei ärztlich verordnetem Hausbesuch je km",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9.1": {
+      "bezeichnung": "bei Tag",
+      "bereich": "HP Hausbesuch, einschließlich Beratung",
+      "quelle": "heilpraktiker"
+    },
+    "9.2": {
+      "bezeichnung": "in dringenden Fällen (Eilbesuch, sofort ausgeführt)",
+      "bereich": "HP Hausbesuch, einschließlich Beratung",
+      "quelle": "heilpraktiker"
+    },
+    "9.3": {
+      "bezeichnung": "bei Nacht und an Sonn- und Feiertagen",
+      "bereich": "HP Hausbesuch, einschließlich Beratung",
+      "quelle": "heilpraktiker"
+    },
+    "9101": {
+      "bezeichnung": "KG, auch auf neurophysiologischer Grundlage",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9102": {
+      "bezeichnung": "KG bei zentralen Bewegungsstörungen (Kinderbehandlung)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9103": {
+      "bezeichnung": "KG bei zentr. Bewegungsstörungen (Erwachsenenbeh.)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9104": {
+      "bezeichnung": "KG in der Gruppe",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9105": {
+      "bezeichnung": "KG im Bewegungsbad",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9106": {
+      "bezeichnung": "KG im Bewegungsbad in der Gruppe",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9107": {
+      "bezeichnung": "Manuelle Therapie",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9201": {
+      "bezeichnung": "Wärmeanwendung",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9202": {
+      "bezeichnung": "Heiße Rolle",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9203": {
+      "bezeichnung": "Packungen oder Teilbäder mit Paraffinen",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9204": {
+      "bezeichnung": "Fango mit natürlichen Peloiden, ein Körperabschnitt",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9205": {
+      "bezeichnung": "Fango mit natürlichen Peloiden, Doppelpackung, zwei Körperabschnitte",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9206": {
+      "bezeichnung": "Kälteanwendung",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9207": {
+      "bezeichnung": "Apparative Kälteanwendung (Kaltgas, Kaltluft)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9301": {
+      "bezeichnung": "Reizstrom",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9302": {
+      "bezeichnung": "Elektrogymnastik, (je Muskel-/Nerv-Einheit)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9303": {
+      "bezeichnung": "Ultraschall",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9304": {
+      "bezeichnung": "Jontophorese",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9401": {
+      "bezeichnung": "Massage, auch Spezialmassagen (Bindegewebs-, Reflexzonen-, Segment-, Periost- Bürsten- und Colonmassage)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9402": {
+      "bezeichnung": "Lymphdrainage, Teilbehandlung",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9403": {
+      "bezeichnung": "Lymphdrainage Ganzbehandlung",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9403a": {
+      "bezeichnung": "Kompressionsbandagierung",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9405": {
+      "bezeichnung": "Hand-, Fußbad mit Zusatz",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9407": {
+      "bezeichnung": "Kohlensäurebad",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9409": {
+      "bezeichnung": "Hydroelektrisches Vollbad (z.B. Stangerbad)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9410": {
+      "bezeichnung": "Hydroelektrisches Teilbad (Zwei-/Vierzellenbad)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9412": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage einschl. Nachruhe",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9413": {
+      "bezeichnung": "Chirogymnastik",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9414": {
+      "bezeichnung": "Extensionsbehandlung (unabhängig vom Zeitaufwand)",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9501": {
+      "bezeichnung": "Einzelinhalation",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9502": {
+      "bezeichnung": "Rauminhalation, je Teilnehmer",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9601": {
+      "bezeichnung": "Ruhe, keine Berechnung nach Zeitintervallen",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9602": {
+      "bezeichnung": "Hausbesuch",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9603": {
+      "bezeichnung": "Wegegebühr bei ärztlich verordnetem Hausbesuch je km",
+      "bereich": "BG-Leistung Physio",
+      "quelle": "bg"
+    },
+    "9651": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei motorisch-funktionellen Störungen",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9651 G": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei motorisch-funktionellen Störungen, Gruppe",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9652": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei sensomotorischen/perzeptiven Störungen",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9652 G": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei sensomotorischen/perzeptiven Störungen, Gruppe",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9653": {
+      "bezeichnung": "Ergotherapeutisches Hirnleistungstraining/ Neuropsychologisch orientierte Behandlung",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9653 G": {
+      "bezeichnung": "Ergotherapeutisches Hirnleistungstraining/ Neuropsychologisch orientierte Behandlung, Gruppe",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9654": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei psychisch-funktionellen Störungen",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9654 G": {
+      "bezeichnung": "Ergotherapeutische Behandlung bei psychisch-funktionellen Störungen,Gruppe",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9655": {
+      "bezeichnung": "Arbeitstherapie/betriebliches ArbeitstrainingNur in Absprache mit dem UV-Träger",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9656": {
+      "bezeichnung": "Beratung zur Integration in das berufliche und soziale Umfeld (außerhalb der ergotherapeutischen Praxis)",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9657": {
+      "bezeichnung": "Ergotherapeutische Funktionsanalyse(keine Berechnung nach Zeitintervall)",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9658": {
+      "bezeichnung": "Thermische Anwendung,Kälte/Wärme(keine Berechnung nach Zeitintervall)",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9659": {
+      "bezeichnung": "Ergotherapeutische Schiene",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9660": {
+      "bezeichnung": "ausführlicher Bericht auf Anforderung des UV-Trägers",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9661": {
+      "bezeichnung": "Ärztlich verordneter Hausbesuch bei einem Patienten (je Besuch)",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "9662": {
+      "bezeichnung": "Wegegeld je km bei ärztlichverordnetem Hausbesuch",
+      "bereich": "BG-Leistung Ergo",
+      "quelle": "bg"
+    },
+    "X0101": {
+      "bezeichnung": "Massage (Teil-/Großmassage) auch Spezialmassagen (Bindegewebs-, Reflexzonen-, Segment-, Periost-, Bürsten- und Colonmassagen)",
+      "gruppe": "01",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0102": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "01"
+    },
+    "X0103": {
+      "bezeichnung": "Spezialmassagen (Bindegewebs,- Reflexzonen-, Segment-, Periost-,Bürsten- und Colonmassagen)",
+      "gruppe": "01",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0104": {
+      "bezeichnung": "Teilmassage",
+      "gruppe": "01",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0105": {
+      "bezeichnung": "Spezialmassage",
+      "gruppe": "01",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0106": {
+      "bezeichnung": "Klassische Massagetherapie (KMT)",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "01"
+    },
+    "X0107": {
+      "bezeichnung": "Bindegewebsmassage (BGM)",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "01"
+    },
+    "X0108": {
+      "bezeichnung": "Segment-, Periost-, Colonmassage",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "01"
+    },
+    "X0201": {
+      "bezeichnung": "Manuelle Lymphdrainage MLD -45 Minuten (Großbehandlung)",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "02"
+    },
+    "X0202": {
+      "bezeichnung": "Manuelle Lymphdrainage MLD -60 Minuten (Ganzbehandlung)",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "02"
+    },
+    "X0203": {
+      "bezeichnung": "Ganzbehandlung mit komplexer Bewegungstherapie",
+      "gruppe": "02",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0204": {
+      "bezeichnung": "Kompressionsbandagierung einer Extremität",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "02"
+    },
+    "X0205": {
+      "bezeichnung": "Manuelle Lymphdrainage MLD -30 Minuten (Teilbehandlung)",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "02"
+    },
+    "X0301": {
+      "bezeichnung": "Übungsbehandlung: Einzelbehandlung",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "03"
+    },
+    "X0302": {
+      "bezeichnung": "Atemgymnastik",
+      "gruppe": "03",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0303": {
+      "bezeichnung": "Atem- und Kreislaufgymnastik",
+      "gruppe": "03",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0304": {
+      "bezeichnung": "Atemgymnastik mit Massage",
+      "gruppe": "03",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0305": {
+      "bezeichnung": "Übungsbehandlung im Bewegungsbad: Einzelbehandlung",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "03"
+    },
+    "X0306": {
+      "bezeichnung": "Chirogymnastik",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "03"
+    },
+    "X0307": {
+      "bezeichnung": "Bewegungsübungen im Schlingentisch",
+      "gruppe": "03",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0308": {
+      "bezeichnung": "Übungsbehandlung einschl. begleit. Kältetherapie",
+      "gruppe": "03",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0401": {
+      "bezeichnung": "Übungsbehandlung: Gruppenbehandlung (2 - 5 Patienten)",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "04"
+    },
+    "X0402": {
+      "bezeichnung": "ÜB im Bewegungsbad: Gruppenbehandlung mit 2-3 Patienten",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "04"
+    },
+    "X0403": {
+      "bezeichnung": "Bewegungsbad bis 5 Pers.",
+      "gruppe": "04",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0404": {
+      "bezeichnung": "Bewegungsbad bis 7 Pers.",
+      "gruppe": "04",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0405": {
+      "bezeichnung": "ÜB im Bewegungsbad: Gruppenbehandlung mit 4-5 Patienten",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "04"
+    },
+    "X0501": {
+      "bezeichnung": "Krankengymnastik: Einzelbehandlung",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "05"
+    },
+    "X0502": {
+      "bezeichnung": "KG, auch Atemgymnastik einschl. erforderlicher Massage",
+      "gruppe": "05",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0503": {
+      "bezeichnung": "KG, auch Atemgymnastik, auch auf neurophysiologischer Grundlage einschl. erforderl Massagen",
+      "gruppe": "05",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0504": {
+      "bezeichnung": "Krankengymnastische Behandlung mit Eisanwendung einschl. erforderl. Massagen",
+      "gruppe": "05",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0505": {
+      "bezeichnung": "Krankengymnastik (Kinder)",
+      "gruppe": "05",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0506": {
+      "bezeichnung": "Krankengymnastische Behandlung mit Reizstrom",
+      "gruppe": "05",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0507": {
+      "bezeichnung": "KGG: Parallele Einzelbehandlung bis zu 3 Patienten",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "05"
+    },
+    "X0521": {
+      "bezeichnung": "Allgemeine Krankengymnastik (KG) (auch auf neurophysiologischer Grundlage): Einzelbehandlung als telemedizinische Leistung (Regelbehandlungszeit 15 bis 25 Minuten)",
+      "gruppe": "05",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0601": {
+      "bezeichnung": "Krankengymnastik: Gruppenbehandlung (2 - 5 Patienten)",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "06"
+    },
+    "X0602": {
+      "bezeichnung": "KG auf neurphysiol. Grundlage",
+      "gruppe": "06",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0603": {
+      "bezeichnung": "KG Gruppe, 3-5 Pers.",
+      "gruppe": "06",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0604": {
+      "bezeichnung": "KG bis 4 Pers.",
+      "gruppe": "06",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0605": {
+      "bezeichnung": "KG bis 6 Pers.",
+      "gruppe": "06",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0606": {
+      "bezeichnung": "KG, auch orthopädisches Turnen",
+      "gruppe": "06",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0607": {
+      "bezeichnung": "Krankengymnastik (Kinder)",
+      "gruppe": "06",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0621": {
+      "bezeichnung": "Allgemeine Krankengymnastik (KG) (auch auf neurophysiologischer Grundlage): Gruppenbehandlung (2 - 5 Patienten) als telemedizinische Leistung (Regelbehandlungszeit 20 bis 30 Minuten)",
+      "gruppe": "06",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0701": {
+      "bezeichnung": "KG auf neurophysiol. Grdl., auch Athemth. bei cystischer Fibrose (Mucoviscidose)",
+      "gruppe": "07",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0702": {
+      "bezeichnung": "KG zur Behandlung schwerer Erkrankungen der Atmungsorgane",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "07"
+    },
+    "X0703": {
+      "bezeichnung": "KG bei zentralen Bewegungsstörungen (Kinderbehandlung)",
+      "gruppe": "07",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0704": {
+      "bezeichnung": "KG bei zentralen Bewegungsstörungen (Erwachsenenhandlung)",
+      "gruppe": "07",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0705": {
+      "bezeichnung": "Systematische sensomotorische Entwicklungs- u. Übungsbehandlung",
+      "gruppe": "07",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0706": {
+      "bezeichnung": "Systematische sensomotorische Behandlung",
+      "gruppe": "07",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0707": {
+      "bezeichnung": "Funktionelle Entwicklungstherapie",
+      "gruppe": "07",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0708": {
+      "bezeichnung": "KG-ZNS-Kinder nach Bobath",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "07"
+    },
+    "X0709": {
+      "bezeichnung": "KG-ZNS-Kinder nach Vojta",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "07"
+    },
+    "X0710": {
+      "bezeichnung": "KG-ZNS nach Bobath",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "07"
+    },
+    "X0711": {
+      "bezeichnung": "KG-ZNS nach Vojta",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "07"
+    },
+    "X0712": {
+      "bezeichnung": "KG-ZNS PNF",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "07"
+    },
+    "X0720": {
+      "bezeichnung": "Krankengymnastik zur Behandlung von zentralen Bewegungsstörungen nach Vollendung des 18. Lebensjahres nach Bobath als Einzelbehandlung (KG-ZNS nach Bobath) als telemedizinische Leistung (Regelbehandlungszeit 25 bis 35 Minuten)",
+      "gruppe": "07",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0722": {
+      "bezeichnung": "Krankengymnastik zur Behandlung schwerer Erkrankungen der Atmungsorgane (insbesondere bei Mukoviszidose oder bei Lungenerkrankungen, die der Mukoviszidose vergleichbare pulmonale Schädigungen aufweisen) - KG-Muko: Einzelbehandlung als telemedizinische Leistung (Regelbehandlungszeit 60 Minuten)",
+      "gruppe": "07",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0728": {
+      "bezeichnung": "Krankengymnastik zur Behandlung von zentralen Bewegungsstörungen bis zur Vollendung des 18. Lebensjahres nach Bobath als Einzelbehandlung (KG-ZNS- Kinder nach Bobath) als telemedizinische Leistung (Regelbehandlungszeit 30 bis 45 Minuten)",
+      "gruppe": "07",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0801": {
+      "bezeichnung": "KG bei Mucoviszidose und schweren Bronchialerkrankungen",
+      "gruppe": "08",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0802": {
+      "bezeichnung": "KG, auch Atemtherapie bei Mucoviscidose",
+      "gruppe": "08",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0803": {
+      "bezeichnung": "KG, auch Atemtherapie bei Mucoviscidose 2- 5 Personen",
+      "gruppe": "08",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0804": {
+      "bezeichnung": "KG auf neurophys. Grdl., auch Atem-therapie bei cystischer Fibrose (Mucoviscidose)",
+      "gruppe": "08",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0805": {
+      "bezeichnung": "KG in der Gruppe bei zerebral bed. Funktionsstörungen",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "08"
+    },
+    "X0806": {
+      "bezeichnung": "KG bei Minimale Cerebrale Dysfunktion (MCD)/Psychomotorik",
+      "gruppe": "08",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0807": {
+      "bezeichnung": "KG bei MCD/Psychomotorik 2-4 Kinder",
+      "gruppe": "08",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0808": {
+      "bezeichnung": "KG bei MCD/Psychomotorik 3-5Kinder",
+      "gruppe": "08",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0809": {
+      "bezeichnung": "KG bei MCD/Psychomotorik bis 6 Personen",
+      "gruppe": "08",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0810": {
+      "bezeichnung": "KG in der Gruppe für Erwachsene und Kinder auf neurophysiologischer und funktionell vegetativer Grundlage (3 - 5 Personen)",
+      "gruppe": "08",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0811": {
+      "bezeichnung": "Behandlung von sensomotorischen Wahrnehmungsstörungen (Kinder)",
+      "gruppe": "08",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0901": {
+      "bezeichnung": "KG im Bewegungsbad",
+      "gruppe": "09",
+      "quelle": "heilmittelkatalog"
+    },
+    "X0902": {
+      "bezeichnung": "Krankengymnastik im Bewegungsbad: Einzelbehandlung",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "09"
+    },
+    "X1001": {
+      "bezeichnung": "KG im Bewegungsbad 2-5 Personen",
+      "gruppe": "10",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1002": {
+      "bezeichnung": "KG im Bewegungsbad 2-6 Personen",
+      "gruppe": "10",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1003": {
+      "bezeichnung": "KG im Bewegungsbad bis 3 Personen",
+      "gruppe": "10",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1004": {
+      "bezeichnung": "KG im Bewegungsbad: Gruppenbehandlung mit 2-3 Patienten",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "10"
+    },
+    "X1005": {
+      "bezeichnung": "KG im Bewegungsbad: Gruppenbehandlung mit 4-5 Patienten",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "10"
+    },
+    "X1101": {
+      "bezeichnung": "Einfaches Gerät (Glissonschl.)",
+      "gruppe": "11",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1102": {
+      "bezeichnung": "Großes Gerät (Schrägbrett)",
+      "gruppe": "11",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1103": {
+      "bezeichnung": "Extensionsbehandlung im Schlingentisch",
+      "gruppe": "11",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1104": {
+      "bezeichnung": "Traktionsbehandlung mit Gerät",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "11"
+    },
+    "X1201": {
+      "bezeichnung": "Manuelle Therapie",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "12"
+    },
+    "X1202": {
+      "bezeichnung": "Manuelle Therapie für Extremitäten",
+      "gruppe": "12",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1203": {
+      "bezeichnung": "Manuelle Therapie für Wirbelsäule",
+      "gruppe": "12",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1204": {
+      "bezeichnung": "Cyriax",
+      "gruppe": "12",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1221": {
+      "bezeichnung": "Manuelle Therapie: Einzelbehandlung als telemedizinische Leistung (Regelbehandlungszeit 15 bis 25 Minuten)",
+      "gruppe": "12",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1301": {
+      "bezeichnung": "Befunderhebung",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1302": {
+      "bezeichnung": "Elektrotherapie",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "13"
+    },
+    "X1303": {
+      "bezeichnung": "Elektrostimulation",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "13"
+    },
+    "X1304": {
+      "bezeichnung": "Reizstrombehandlung",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1305": {
+      "bezeichnung": "Ultraschall",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1306": {
+      "bezeichnung": "Ultraschall-Reizstrom- Kombinationsbehandlung",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1307": {
+      "bezeichnung": "Kurzwelle-Diatherm - einstellig",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1308": {
+      "bezeichnung": "Kurzwelle-Diatherm - mehrstellig",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1309": {
+      "bezeichnung": "Elektrogymnastik",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1310": {
+      "bezeichnung": "Hydroelektrisches Teilbad",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "13"
+    },
+    "X1311": {
+      "bezeichnung": "Vierzellenbad mit Ruhe",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1312": {
+      "bezeichnung": "Hydroelektrisches Vollbad",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "13"
+    },
+    "X1313": {
+      "bezeichnung": "Iontophorese",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1314": {
+      "bezeichnung": "Hydroelektrisches Vollbad in Verbindung mit Unterwasserdruckstrahlmassage",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1315": {
+      "bezeichnung": "Hydroelektrisches Vollbad mit Ruhe",
+      "gruppe": "13",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1401": {
+      "bezeichnung": "Höhensonne",
+      "gruppe": "14",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1402": {
+      "bezeichnung": "Farblicht (z. B. Sollux, Vitalus, Hexamikron)",
+      "gruppe": "14",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1403": {
+      "bezeichnung": "Quarzlampendruckbestrahlung eines Feldes",
+      "gruppe": "14",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1404": {
+      "bezeichnung": "Quarzlampendruckbestrahlung mehrerer Felder",
+      "gruppe": "14",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1501": {
+      "bezeichnung": "Warmpackung",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "15"
+    },
+    "X1502": {
+      "bezeichnung": "Warmpackungen ohne Nachruhe",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1503": {
+      "bezeichnung": "Warmp. m. natürlichen Peloiden",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1504": {
+      "bezeichnung": "Warmp. m. natürlichen Peloiden (Teilpackung)",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1505": {
+      "bezeichnung": "Warmp. m. natürlichen Peloiden (Doppellpackung)",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1506": {
+      "bezeichnung": "Parapack-Packungen",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1507": {
+      "bezeichnung": "Parapack-Teil- u. Halbpackung",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1508": {
+      "bezeichnung": "Warmp. mit Natur-Moor/-Fango",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1509": {
+      "bezeichnung": "Naturmoor-Teilbad (Moorschlamm)",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1510": {
+      "bezeichnung": "Naturmoor-Halbbad (Moorschlamm)",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1511": {
+      "bezeichnung": "Naturmoor-Vollbad (Moorschlamm)",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1512": {
+      "bezeichnung": "Moorextrakt-, Moorlauge-, Moorsalicylbad",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1513": {
+      "bezeichnung": "Moorextraktsitzbad mit Ruhepackung",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1514": {
+      "bezeichnung": "Moorjodbad",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1515": {
+      "bezeichnung": "Moorschwefelbad",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1516": {
+      "bezeichnung": "Fertigpackungen bzw. Kompressen",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1517": {
+      "bezeichnung": "Wärmetherapie mittels Heißluft",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "15"
+    },
+    "X1518": {
+      "bezeichnung": "Lichtbügel",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1519": {
+      "bezeichnung": "feuchte Umschläge bei Heißluft",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1520": {
+      "bezeichnung": "Warmkompressen",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1521": {
+      "bezeichnung": "Heublumensack",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1522": {
+      "bezeichnung": "Eisbehandlung",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1523": {
+      "bezeichnung": "Eisteilbad",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1524": {
+      "bezeichnung": "Eisganzbad",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1525": {
+      "bezeichnung": "Kaltpackungen",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1526": {
+      "bezeichnung": "Trockenpackung",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1527": {
+      "bezeichnung": "Kaltluft-/Kaltgastherapie je großes Gelenk",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1528": {
+      "bezeichnung": "Heißluftraumbad",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1529": {
+      "bezeichnung": "Naturmoor-Dreiviertelbad",
+      "gruppe": "15",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1530": {
+      "bezeichnung": "Heiße Rolle",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "15"
+    },
+    "X1531": {
+      "bezeichnung": "Ultraschall Wärme",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "15"
+    },
+    "X1532": {
+      "bezeichnung": "Vollbad",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "15"
+    },
+    "X1533": {
+      "bezeichnung": "Teilbad",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "15"
+    },
+    "X1534": {
+      "bezeichnung": "Kältetherapie",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "15"
+    },
+    "X1601": {
+      "bezeichnung": "Teilbad",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1602": {
+      "bezeichnung": "Sitzbad",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1603": {
+      "bezeichnung": "Wechsel-Teilbad",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1604": {
+      "bezeichnung": "Wechsel-Vollbad",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1605": {
+      "bezeichnung": "An- und absteigendes Teilbad",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1606": {
+      "bezeichnung": "An- und absteigendes Vollbad",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1607": {
+      "bezeichnung": "Überwärmungsbad",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1608": {
+      "bezeichnung": "Dampfdusche",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1609": {
+      "bezeichnung": "Dampfdusche mit temp. Brause und Fußwanne mit warmen Wasser",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1610": {
+      "bezeichnung": "Wechseldusche",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1611": {
+      "bezeichnung": "Teilguß, Teilblitzguß",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1612": {
+      "bezeichnung": "Vollguß, Vollblitzguß",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1613": {
+      "bezeichnung": "Wechselteilguß",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1614": {
+      "bezeichnung": "Wechselvollguß",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1615": {
+      "bezeichnung": "Güsse (einschl. vorangegangenem warmen Fußbad)",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1616": {
+      "bezeichnung": "Wassertreten",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1617": {
+      "bezeichnung": "Wassertreten in Gruppen",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1618": {
+      "bezeichnung": "Abklatschung, Abreibung",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1619": {
+      "bezeichnung": "Schwitzpackungen",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1620": {
+      "bezeichnung": "Wickel, Kompressen, Auflagen",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1621": {
+      "bezeichnung": "Kalte Güsse",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1622": {
+      "bezeichnung": "Wechselgüsse",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1623": {
+      "bezeichnung": "Kalte Blitzgüsse",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1624": {
+      "bezeichnung": "Wechsel-Blitzgüsse",
+      "gruppe": "16",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1701": {
+      "bezeichnung": "Teilbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1702": {
+      "bezeichnung": "Hauffsche Teilbäder",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1703": {
+      "bezeichnung": "Sitzbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1704": {
+      "bezeichnung": "Halbbad mit Zusatz",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1705": {
+      "bezeichnung": "Vollbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1706": {
+      "bezeichnung": "Med. Bad ohne Zusatz",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1707": {
+      "bezeichnung": "Med. Vollbad mit Zusatz ohne Ruhe",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1708": {
+      "bezeichnung": "Med. Vollbad mit Zusatz und Ruhe",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1709": {
+      "bezeichnung": "Bürstenmassagebad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1710": {
+      "bezeichnung": "Gashaltiges Bad ohne Zusatz",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1711": {
+      "bezeichnung": "Gashaltiges Bad mit Zusatz",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1712": {
+      "bezeichnung": "Gashaltiges Bad mit Zusatz und Ruhe",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1713": {
+      "bezeichnung": "Kohlensäuregasbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1714": {
+      "bezeichnung": "Kohlesäurebad",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "17"
+    },
+    "X1715": {
+      "bezeichnung": "Kohlensäurebad (2 kg natürliche Sole)",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1716": {
+      "bezeichnung": "Kohlensäure-Stahlbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1717": {
+      "bezeichnung": "Lohtanninbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1718": {
+      "bezeichnung": "Sauerstoffbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1719": {
+      "bezeichnung": "Schwefelbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1720": {
+      "bezeichnung": "Zusätze",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1721": {
+      "bezeichnung": "Subaquales Darmbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1722": {
+      "bezeichnung": "Darmbad mit Ruhe",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1723": {
+      "bezeichnung": "Darmbad (Gymnacolon, Widrig u.ä.)",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1724": {
+      "bezeichnung": "Jod-Thermalsole-Wannenbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1725": {
+      "bezeichnung": "Jod-, Jodschwefelbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1726": {
+      "bezeichnung": "Kleiebad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1727": {
+      "bezeichnung": "Sodabad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1728": {
+      "bezeichnung": "Solbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1729": {
+      "bezeichnung": "Sitzbad mit Solezusatz",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1730": {
+      "bezeichnung": "Teerbad",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1731": {
+      "bezeichnung": "Vollbad mit Peloiden (z. B. Fango, Schlick oder Moor)",
+      "gruppe": "17",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1732": {
+      "bezeichnung": "Kohlesäuregasbad Vollbad",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "17"
+    },
+    "X1733": {
+      "bezeichnung": "Kohlesäuregasbad Teilbad",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "17"
+    },
+    "X1801": {
+      "bezeichnung": "Inhalationstherapie",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "18"
+    },
+    "X1802": {
+      "bezeichnung": "Rauminhalation",
+      "gruppe": "18",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1803": {
+      "bezeichnung": "Einzelbehandlung mit Medikamentenzusatz",
+      "gruppe": "18",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1901": {
+      "bezeichnung": "Unterweisung zur Geburtsvorbereitung",
+      "gruppe": "19",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1902": {
+      "bezeichnung": "Schröpfen",
+      "gruppe": "19",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1903": {
+      "bezeichnung": "Nachruhe",
+      "gruppe": "19",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1904": {
+      "bezeichnung": "Wochenbettgymnastik bei Unterweisung in der Gruppe",
+      "gruppe": "19",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1905": {
+      "bezeichnung": "Abschlag",
+      "gruppe": "19",
+      "quelle": "heilmittelkatalog"
+    },
+    "X1906": {
+      "bezeichnung": "Physiotherapeutischer Bericht auf besondere schriftliche Anforderung",
+      "gruppe": "19",
+      "quelle": "heilmittelkatalog"
+    },
+    "X2001": {
+      "bezeichnung": "D1 Standardisierte Heilmittelkombination",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "20"
+    },
+    "X2002": {
+      "bezeichnung": "D2",
+      "gruppe": "20",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3001": {
+      "bezeichnung": "Erstuntersuchungsgespräch",
+      "gruppe": "30",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3002": {
+      "bezeichnung": "Logop. Erstuntersuchung",
+      "gruppe": "30",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3003": {
+      "bezeichnung": "Logop. Status/Erstuntersuchung/ Befunderhebung",
+      "gruppe": "30",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3004": {
+      "bezeichnung": "Logop. Status/Erstuntersuchung bei Aphasie/Dysarthrie",
+      "gruppe": "30",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3005": {
+      "bezeichnung": "besprechen des logop. Status/ Befunderhebung",
+      "gruppe": "30",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3006": {
+      "bezeichnung": "standardisierte Verfahren zur Erhebung des logop. Status",
+      "gruppe": "30",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3007": {
+      "bezeichnung": "Testauswertung",
+      "gruppe": "30",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3008": {
+      "bezeichnung": "Logop. Befunderhebung/logop. Status bei unklarer Genese",
+      "gruppe": "30",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3009": {
+      "bezeichnung": "Kurzer logop. Status",
+      "gruppe": "30",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3010": {
+      "bezeichnung": "Erstdiagnostik",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "30"
+    },
+    "X3011": {
+      "bezeichnung": "Bedarfsdiagnostik",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "30"
+    },
+    "X3101": {
+      "bezeichnung": "15 Minuten (Therapiezeit am Patienten)",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3102": {
+      "bezeichnung": "Einzel-Therapie, Regelbehandlungszeit: 30 Min",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "31"
+    },
+    "X3103": {
+      "bezeichnung": "Einzel-Therapie, Regelbehandlungszeit: 45 Min",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "31"
+    },
+    "X3104": {
+      "bezeichnung": "Einzel-Therapie, Regelbehandlungszeit: 60 Min",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "31"
+    },
+    "X3105": {
+      "bezeichnung": "mindestens 40 Minuten (Therapiezeit am Patienten)",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3106": {
+      "bezeichnung": "mindestens 55 Minuten (Therapiezeit am Patienten)",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3107": {
+      "bezeichnung": "mindestens 70 Minuten (Therapiezeit am Patienten)",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3108": {
+      "bezeichnung": "45 Minuten",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3109": {
+      "bezeichnung": "30 Minuten",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3110": {
+      "bezeichnung": "elektromechanische Vibrationsmassage",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3111": {
+      "bezeichnung": "60 Minuten",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3112": {
+      "bezeichnung": "mindestens 25 Minuten (Therapiezeit am Patienten)",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3113": {
+      "bezeichnung": "Elektrobehandlung",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3122": {
+      "bezeichnung": "Einzeltherapie (telemedizinische Leistungserbringung) Regelbehandlungszeit: 30 Minuten",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3123": {
+      "bezeichnung": "Einzeltherapie (telemedizinische Leistungserbringung) Regelbehandlungszeit: 45 Minuten",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3124": {
+      "bezeichnung": "Einzeltherapie (telemedizinische Leistungserbringung) Regelbehandlungszeit: 60 Minuten",
+      "gruppe": "31",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3201": {
+      "bezeichnung": "je Teilnehmer",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3202": {
+      "bezeichnung": "maximal 3 Teilnehmer, je Teilnehmer",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3203": {
+      "bezeichnung": "maximal 4 Teilnehmer, je Teilnehmer",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3204": {
+      "bezeichnung": "maximal 5 Teilnehmer, je Teilnehmer",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3205": {
+      "bezeichnung": "maximal 6 Teilnehmer, je Teilnehmer",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3206": {
+      "bezeichnung": "für Stotterer, je Teilnehmer",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3207": {
+      "bezeichnung": "Kinder, je Teilnehmer",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3208": {
+      "bezeichnung": "Erwachsene, je Teilnehmer",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3209": {
+      "bezeichnung": "Kinder, 2er Gruppe, mindestens 60 Minuten, je Gruppe",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3210": {
+      "bezeichnung": "Kinder, 3er Gruppe, mindestens 60 Minuten, je Gruppe",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3211": {
+      "bezeichnung": "Kinder, 4er Gruppe, mindestens 60 Minuten, je Gruppe",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3212": {
+      "bezeichnung": "Erwachsene, 2er Gruppe, mindestens 90 Minuten, je Gruppe",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3213": {
+      "bezeichnung": "Erwachsene, 3er Gruppe, mindestens 90 Minuten, je Gruppe",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3214": {
+      "bezeichnung": "Erwachsene, 4er Gruppe, mindestens 90 Minuten, je Gruppe",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3215": {
+      "bezeichnung": "je Teilnehmer bei Stimmstörungen",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3216": {
+      "bezeichnung": "je Teilnehmer bei Sprech- u./o. Stimm- störungen",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3217": {
+      "bezeichnung": "je Teilnehmer bei Stimmstörungen, mindestens 60 Minuten",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3218": {
+      "bezeichnung": "je Teilnehmer bei Sprech- u./o. Sprach- störungen, mindestens 60 Minuten",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3219": {
+      "bezeichnung": "30 Minuten Therapiezeit am Patienten (2 Teilnehmer), je Teilnehmer",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3220": {
+      "bezeichnung": "Gruppen-Therapie 2 Patientinnen und/oder Patienten, je Patientin oder Patient Regelbehandlungszeit: 45 Minuten",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "32"
+    },
+    "X3221": {
+      "bezeichnung": "60 Minuten Therapiezeit am Patienten (2 Teilnehmer), je Teilnehmer",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3222": {
+      "bezeichnung": "Gruppen-Therapie 3-5 Patientinnen und/oder Patienten, je Patientin oder Patient Regelbehandlungszeit: 45 Minuten",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "32"
+    },
+    "X3223": {
+      "bezeichnung": "Gruppen-Therapie 2 Patientinnen und/oder Patienten, je Patientin oder Patient Regelbehandlungszeit: 90 Minuten",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "32"
+    },
+    "X3224": {
+      "bezeichnung": "Gruppen-Therapie 3 - 5 Patientinnen und/oder Patienten, je Patientin oder Patient Regelbehandlungszeit: 90 Minuten",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "32"
+    },
+    "X3240": {
+      "bezeichnung": "Gruppen-Therapie 2 Patientinnen und/oder Patienten, je Patientin oder Patient (telemedizinische Leistungserbringung) Regelbehandlungszeit: 45 Minuten",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3242": {
+      "bezeichnung": "Gruppen-Therapie 3-5 Patientinnen und/oder Patienten, je Patientin oder Patient (telemedizinische Leistungserbringung) Regelbehandlungszeit: 45 Minuten",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3243": {
+      "bezeichnung": "Gruppen-Therapie 2 Patientinnen und/oder Patienten, je Patientin oder Patient (telemedizinische Leistungserbringung) Regelbehandlungszeit: 90 Minuten",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3244": {
+      "bezeichnung": "Gruppen-Therapie 3-5 Patientinnen und/oder Patienten, je Patientin oder Patient (telemedizinische Leistungserbringung) Regelbehandlungszeit: 90 Minuten",
+      "gruppe": "32",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3301": {
+      "bezeichnung": "auf Anforderung der Krankenkasse",
+      "gruppe": "33",
+      "quelle": "heilmittelkatalog"
+    },
+    "X3302": {
+      "bezeichnung": "Bericht des Leistungserbringers an die verordnende Ärztin oder den verordnenden Arzt",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "33"
+    },
+    "X3303": {
+      "bezeichnung": "Bericht auf besondere Anforderung",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "33"
+    },
+    "X3401": {
+      "bezeichnung": "Logop. Beratung u./o. logop. Anleitung der Bezugsperson",
+      "gruppe": "34",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4001": {
+      "bezeichnung": "Befunderhebung",
+      "gruppe": "40",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4002": {
+      "bezeichnung": "Analyse des ergotherapeutischen Bedarfs",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "40"
+    },
+    "X4101": {
+      "bezeichnung": "Einzelbehandlung (45 Minuten)",
+      "gruppe": "41",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4102": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Einzelbehandlung",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "41"
+    },
+    "X4103": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Einzelbehandlung",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "41"
+    },
+    "X4104": {
+      "bezeichnung": "Ergotherapeutisches Hirnleistungstraining: Einzelbehandlung",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "41"
+    },
+    "X4105": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Einzelbehandlung",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "41"
+    },
+    "X4106": {
+      "bezeichnung": "Einzelbehandlung (60 Minuten)",
+      "gruppe": "41",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4107": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "41"
+    },
+    "X4108": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "41"
+    },
+    "X4109": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "41"
+    },
+    "X4110": {
+      "bezeichnung": "Bei psychisch-funktionellen Störungen (soweit verordnete zusammenhängende Einheiten als Belastungserprobung abgegeben werden)",
+      "gruppe": "41",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4111": {
+      "bezeichnung": "Beratung zur Integration in das häusliche und soziale Umfeld",
+      "gruppe": "41",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4112": {
+      "bezeichnung": "Ergotherapeutisches Hirnleistungstraining: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "41"
+    },
+    "X4201": {
+      "bezeichnung": "60 Minuten, je Teilnehmer",
+      "gruppe": "42",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4202": {
+      "bezeichnung": "3-5 Patienten, 45 Minuten, je Teilnehmer",
+      "gruppe": "42",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4203": {
+      "bezeichnung": "bei psychischen Stör., 90 Minuten, je Teilnehmer",
+      "gruppe": "42",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4204": {
+      "bezeichnung": "5-6 Patienten, 60 Minuten, je Teilnehmer",
+      "gruppe": "42",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4205": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Parallelbehandlung bei verordneter Position X4102 oder X4209 und gleichzeitiger Anwesenheit von zwei Patienten",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "42"
+    },
+    "X4206": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Parallelbehandlung bei verordneter Position X4103 oder X4210 und gleichzeitiger Anwesenheit von zwei Patienten",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "42"
+    },
+    "X4207": {
+      "bezeichnung": "Ergoth. Hirnleistungstraining: Parallelbehandlung bei verordneter Position X4104 oder X4211 und gleichzeitiger Anwesenheit von zwei Patienten",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "42"
+    },
+    "X4208": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Parallelbehandlung bei verordneter Position X4105 oder X4212 und gleichzeitiger Anwesenheit von zwei Patienten",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "42"
+    },
+    "X4209": {
+      "bezeichnung": "Motorisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "42"
+    },
+    "X4210": {
+      "bezeichnung": "Sensomotorisch-perzeptive Behandlung: Gruppenbehandlung (3 - 6 Patienten)",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "42"
+    },
+    "X4211": {
+      "bezeichnung": "Ergotherapeutisches Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten)",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "42"
+    },
+    "X4212": {
+      "bezeichnung": "Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "42"
+    },
+    "X4213": {
+      "bezeichnung": "Bei psychisch-funktionellen Störungen (soweit verordnete zusammenhängende Einheiten als Belastungserprobung abgegeben werden)",
+      "gruppe": "42",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4301": {
+      "bezeichnung": "Thermische Anwendung (Wärme oder Kälte)",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "43"
+    },
+    "X4401": {
+      "bezeichnung": "Schiene, postoperativ",
+      "gruppe": "44",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4402": {
+      "bezeichnung": "Schiene, temporär",
+      "gruppe": "44",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4403": {
+      "bezeichnung": "Anfertigung/Anpassung",
+      "gruppe": "44",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4404": {
+      "bezeichnung": "Materialkosten",
+      "gruppe": "44",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4405": {
+      "bezeichnung": "Ergotherapeutische temporäre Schiene: Herstellung, Anpassung und Korrektur temporärer Schienen ohne Kostenvoranschlag bis 200,00 €",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "44"
+    },
+    "X4406": {
+      "bezeichnung": "Ergotherapeutische temporäre Schiene: Herstellung, Anpassung und Korrektur temporärer Schienen nach Kostenvoranschlag ab 200,01 €",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "44"
+    },
+    "X4501": {
+      "bezeichnung": "Anfertigung v. Hilfsmitteln/Adaptionen je Minute",
+      "gruppe": "45",
+      "quelle": "heilmittelkatalog"
+    },
+    "X4502": {
+      "bezeichnung": "Materialkosten",
+      "gruppe": "45",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5001": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese 60 Minuten",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "50"
+    },
+    "X5002": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese 30 Minuten",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "50"
+    },
+    "X5003": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung 60 Minuten",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "50"
+    },
+    "X5004": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung 30 Minuten",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "50"
+    },
+    "X5005": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung im häuslichen oder sozialen Umfeld",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "50"
+    },
+    "X5006": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Gruppenbehandlung 60 Minuten",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "50"
+    },
+    "X5007": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Gruppenbehandlung 30 Minuten",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "50"
+    },
+    "X5008": {
+      "bezeichnung": "Berechnung und Auswertung von Ernährungsprotokollen und Entwicklung entsprechender individueller Empfehlungen",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "50"
+    },
+    "X5009": {
+      "bezeichnung": "Notwendige Abstimmung der Therapie mit einer dritten Partei",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "50"
+    },
+    "X5021": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese per Videoübertragung gemäß § 7a Abs. 6 (Regelleistungszeit 60 Minuten, davon mind. 30 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5022": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese per Videoübertragung gemäß § 7a Abs. 6 (Regelleistungszeit 30 Minuten, davon mind. 15 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5023": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung per Videoübertragung gemäß § 7a Abs. 6 (Regelleistungszeit 60 Minuten, davon mind. 30 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5024": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung per Videoübertragung gemäß § 7a Abs. 6 (Regelleistungszeit 30 Minuten, davon mind. 15 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5025": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung im häuslichen o. sozialen Umfeld per Videoübertragung gemäß § 7a Abs. 6 (Regelleistungszeit 60 Minuten, davon mind. 30 Minuten mit dem Patienten",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5026": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Gruppenbehandlung per Videoübertragung gemäß § 7a Abs. 6 (Regelleistungszeit 60 Minuten, davon mind. 30 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5027": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Gruppenbehandlung per Videoübertragung gemäß § 7a Abs. 6 (Regelleistungszeit 30 Minuten, davon mind. 15 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5031": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese als telefonische Beratung gemäß § 7a Abs. 6 (Regelleistungszeit 60 Minuten, davon einmalig max. 30 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5032": {
+      "bezeichnung": "Ernährungstherapeutische Anamnese als telefonische Beratung gemäß § 7a Abs. 6 (Regelleistungszeit 30 Minuten, davon einmalig mind. 15 Minuten bis max. 30 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5033": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung als telefonische Beratung gemäß § 7a Abs. 6 (Regelleistungszeit 60 Minuten, davon einmalig max. 30 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5034": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung als telefonische Beratung gemäß § 7a Abs. 6 (Regelleistungszeit 30 Minuten, davon einmalig mind. 15 Minuten und max. 30 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5035": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Einzelbehandlung im häuslichen o. sozialen Umfeld als telefonische Beratung gemäß § 7a Abs. 6 (Regelleistungszeit 60 Minuten, davon einmalig max. 30 Minuten mit dem Patienten",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5036": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Gruppenbehandlung als telefonische Beratung gemäß § 7a Abs. 6 (Regelleistungszeit 60 Minuten, davon einmalig max. 30 Minuten mit dem Patienten) als telefonische Beratung",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X5037": {
+      "bezeichnung": "Ernährungstherapeutische Intervention - Gruppenbehandlung als telefonische Beratung gemäß § 7a Abs. 6 (Regelleistungszeit 30 Minuten, davon einmalig mind. 15 Minuten und max. 30 Minuten mit dem Patienten)",
+      "gruppe": "50",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6001": {
+      "bezeichnung": "Kurmassage/Ganzmassage",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6002": {
+      "bezeichnung": "Stäbchenmassage",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6003": {
+      "bezeichnung": "Obstipationsmassage",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6004": {
+      "bezeichnung": "Thorax-Klopfmassage",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6005": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage in Heilwasser",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6006": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage in Heilwasser mit Ruhe",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6007": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage einschließlich hydroelek. Vollbad mit Ruhe",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6008": {
+      "bezeichnung": "Teilmassage",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6009": {
+      "bezeichnung": "Bindegewebs-/Periostmassage",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6010": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage in Heilwasser mit Bewegungsbad",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6011": {
+      "bezeichnung": "Teilmassage mit Bewegungsübungen",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6012": {
+      "bezeichnung": "Bürstenmassage inkl. Zutaten bzw. Seifenabreibung",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6013": {
+      "bezeichnung": "Saugwellenmassage/Saugstiefel",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6014": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage (weniger als 600 l Wannenfassungsvermögen)",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6015": {
+      "bezeichnung": "Syncardialmassage",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6016": {
+      "bezeichnung": "Großmassage",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6017": {
+      "bezeichnung": "Colonmassage",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6018": {
+      "bezeichnung": "Unterwasserdruckstrahlmassage mit Gymnastik und Ruhe",
+      "gruppe": "60",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6101": {
+      "bezeichnung": "Lymphdrainage G. Migräne",
+      "gruppe": "61",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6102": {
+      "bezeichnung": "Teilbehandlung",
+      "gruppe": "61",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6201": {
+      "bezeichnung": "Bewegungstherapie in Heilwasser (auch Meerwasser) im Bewegungsbad",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6202": {
+      "bezeichnung": "Bewegungstherapie in Heilwasser (auch Meerwasser) in speziellen Therapiebecken",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6203": {
+      "bezeichnung": "Heilgymnastik",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6204": {
+      "bezeichnung": "Chirogymnastik",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6205": {
+      "bezeichnung": "Orthopädisches Turnen mit Massage",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6206": {
+      "bezeichnung": "Bewegungstherapie in Heilwasser (auch Meerwasser) mit Extension",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6207": {
+      "bezeichnung": "Bewegungstherapie in Heilwasser (auch Meerwasser) auf neurophysiologischer Grundlage",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6208": {
+      "bezeichnung": "Bewegungstherapie in Heilwasser (auch Meerwasser) einschl. Trockengymnastik",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6209": {
+      "bezeichnung": "Naturmoor-Bewegungsbad",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6210": {
+      "bezeichnung": "Atemgymnastik",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6211": {
+      "bezeichnung": "Krankengymnastik und Massage mit Eisbehandlung",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6212": {
+      "bezeichnung": "Bewegungstherapie mit Massage",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6213": {
+      "bezeichnung": "Einzelgymnastik",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6214": {
+      "bezeichnung": "Bewegungsübungen im 32 Grad warmen Meerwasser",
+      "gruppe": "62",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6301": {
+      "bezeichnung": "Atemgymnastik/Atementspannungsgymnastik",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6302": {
+      "bezeichnung": "Bewegungstherapie in Heilwasser (auch Meerwasser) bis 3 Personen",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6303": {
+      "bezeichnung": "Bewegungstherapie in Heilwasser (auch Meerwasser) 4-9 Personen",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6304": {
+      "bezeichnung": "Bewegungstherapie in Heilwasser (auch Meerwasser) 10-20 Personen",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6305": {
+      "bezeichnung": "Heilgymnastik 3-8 Personen",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6306": {
+      "bezeichnung": "Atemgymnastik bis 5 Personen",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6307": {
+      "bezeichnung": "Bewegungsübungen im Thermalbewegungsbad",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6308": {
+      "bezeichnung": "Bewegungsübungen im Thermalbad",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6309": {
+      "bezeichnung": "Bewegungstherapie 10-20 Personen",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6310": {
+      "bezeichnung": "Körpertraining einschl. Schwimmen in Heilwasser (auch Meerwasser)",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6311": {
+      "bezeichnung": "Ergometertraining einschl. Schwimmen in Heilwasser (auch Meerwasser)",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6312": {
+      "bezeichnung": "Ergometertraining",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6313": {
+      "bezeichnung": "Kombinierte Gymnastik (trocken/Heilwasser)",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6314": {
+      "bezeichnung": "Krankengymnastik im Bewegungsbad Meerwasser",
+      "gruppe": "63",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6401": {
+      "bezeichnung": "Perl'sche Anwendung",
+      "gruppe": "64",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6402": {
+      "bezeichnung": "Unterwasserextension",
+      "gruppe": "64",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6403": {
+      "bezeichnung": "Kuhlmann Extirator",
+      "gruppe": "64",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6404": {
+      "bezeichnung": "Unterwasserextension mit Unterwassermassage",
+      "gruppe": "64",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6405": {
+      "bezeichnung": "Unterwasserextension mit Stangerbad",
+      "gruppe": "64",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6406": {
+      "bezeichnung": "Unterwasserextension mit Ruhe",
+      "gruppe": "64",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6501": {
+      "bezeichnung": "Elektrogymnastik",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6502": {
+      "bezeichnung": "Mikrowelle",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6503": {
+      "bezeichnung": "niederfrequente Ströme",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6504": {
+      "bezeichnung": "hochfrequente Ströme",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6505": {
+      "bezeichnung": "Schwellstrom",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6506": {
+      "bezeichnung": "hydroelektrisches Vollbad mit Heilwasser",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6507": {
+      "bezeichnung": "hydroelektrisches Vollbad mit Heilwasser einschl. Ruhe",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6508": {
+      "bezeichnung": "hydroelektrisches Teilbad mit Heilwasser",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6509": {
+      "bezeichnung": "Reizstrom",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6510": {
+      "bezeichnung": "Interferenzstrom",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6511": {
+      "bezeichnung": "Iontophorese der Augen mit Heilwasser",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6512": {
+      "bezeichnung": "Iontophorese",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6513": {
+      "bezeichnung": "hydroelektrisches Vollbad mit Massage",
+      "gruppe": "65",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6601": {
+      "bezeichnung": "Moorkrabbel-Bad",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6602": {
+      "bezeichnung": "Moortreten",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6603": {
+      "bezeichnung": "Kneten mit natürlichen Peloiden/Sand",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6604": {
+      "bezeichnung": "Packungen mit natürlichen Peloiden",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6605": {
+      "bezeichnung": "Packungen mit Naturschlick, Einmalpackung",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6606": {
+      "bezeichnung": "Wärmeanwendung bei einem oder mehreren Körperteilen (Heißluft, Infrarot, Sollux)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6607": {
+      "bezeichnung": "Kryotherapie in Kombination mit anderen Leistungen",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6608": {
+      "bezeichnung": "Große Wickel mit und ohne Zusatz (Kurz-, Unter- und Ganzwickel, Schal, Unter- und Oberaufschläger, Spanischer Mantel)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6609": {
+      "bezeichnung": "Mittlere Wickel einzeln, mit und ohne Zusatz (Waden-, Bein-, Lenden- und Brustwickel oder Auflagen)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6610": {
+      "bezeichnung": "Kleine Wickel einzeln, auch Herzkompressen",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6611": {
+      "bezeichnung": "Schrothkurpackung",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6612": {
+      "bezeichnung": "Lehmpflaster groß",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6613": {
+      "bezeichnung": "Kaltlufttherapie",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6614": {
+      "bezeichnung": "Eisbehandlung bei einem oder mehreren Körperteilen (auch in Kombination mit anderen Leistungen)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6615": {
+      "bezeichnung": "Sole-Eispackung/Eishandtuch",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6616": {
+      "bezeichnung": "Kräuterdämpfe",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6617": {
+      "bezeichnung": "Sandbad",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6618": {
+      "bezeichnung": "Naturfango-Normalpackung mit Thermalwannenbad",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6619": {
+      "bezeichnung": "Warmpackungen mit natürlichen Peloiden (Ganzpackungen)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6620": {
+      "bezeichnung": "Warmpackungen mit natürlichen Peloiden (Großpackungen)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6621": {
+      "bezeichnung": "Warmpackungen mit natürlichen Peloiden und Massage",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6622": {
+      "bezeichnung": "Sandwärmebank",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6623": {
+      "bezeichnung": "Naturmoor-Packung mit Zusatz",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6624": {
+      "bezeichnung": "Heublumensack (Großanwendung)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6625": {
+      "bezeichnung": "Moorsitzbad",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6626": {
+      "bezeichnung": "Moor-Handbad",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6627": {
+      "bezeichnung": "Naturmoor-Packung 50 Grad Celsius",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6628": {
+      "bezeichnung": "Naturmoor-Packung 25 Grad Celsius",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6629": {
+      "bezeichnung": "Naturmoor-Packung 30 Grad Celsius",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6630": {
+      "bezeichnung": "Heißluft mit Massage",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6631": {
+      "bezeichnung": "Fango mit Massage",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6632": {
+      "bezeichnung": "Heißluft",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6633": {
+      "bezeichnung": "Teilbad (natürlichen Peloiden)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6634": {
+      "bezeichnung": "Halbbad (natürlichen Peloiden)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6635": {
+      "bezeichnung": "Vollbad (natürlichen Peloiden)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6636": {
+      "bezeichnung": "Warmpackung Kreide (Großbehandlung)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6637": {
+      "bezeichnung": "Warmpackung Kreide (Teilbehandlung)",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6638": {
+      "bezeichnung": "Kreidebad",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6639": {
+      "bezeichnung": "Kaltpackung Kreide",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6640": {
+      "bezeichnung": "Kreide-Kaltkompresse",
+      "gruppe": "66",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6701": {
+      "bezeichnung": "große Therapie",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6702": {
+      "bezeichnung": "kleine Therapie",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6703": {
+      "bezeichnung": "Kneipp´sche Voll-, Dreiviertel- und Halbbäder mit Zusatz",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6704": {
+      "bezeichnung": "Arm- oder Fußbad im Wechsel",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6705": {
+      "bezeichnung": "Arm- oder Fußbad im Wechsel mit Zusatz",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6706": {
+      "bezeichnung": "Ansteigendes Sitz- oder Halbbad",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6707": {
+      "bezeichnung": "Waschungen",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6708": {
+      "bezeichnung": "Sitzbad mit Zusatz",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6709": {
+      "bezeichnung": "Bürstenmassagebad mit Zusatz",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6710": {
+      "bezeichnung": "Wechselteilblitz",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6711": {
+      "bezeichnung": "Wechselvollblitz",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6712": {
+      "bezeichnung": "Schottische Wechseldusche",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6713": {
+      "bezeichnung": "Trockenbürsten",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6714": {
+      "bezeichnung": "Blitzgußbad",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6715": {
+      "bezeichnung": "Ansteigendes Arm- oder Fußbad",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6716": {
+      "bezeichnung": "Ansteigendes Arm- oder Fußbad mit Zusatz",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6717": {
+      "bezeichnung": "Arm- oder Fußbad, kalt",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6718": {
+      "bezeichnung": "Arm- oder Fußbad, warm",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6719": {
+      "bezeichnung": "Kneipp-Tretbad (Wassertreten)",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6720": {
+      "bezeichnung": "Kneipp-Behandlung",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6721": {
+      "bezeichnung": "Dampfkastenbad",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6722": {
+      "bezeichnung": "Saunabad",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6723": {
+      "bezeichnung": "Teildampfbad",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6724": {
+      "bezeichnung": "Sole-Hydrotherapie (einzeln)",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6725": {
+      "bezeichnung": "Sole-Hydrotherapie (Gruppe)",
+      "gruppe": "67",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6801": {
+      "bezeichnung": "Thermal-Wannenbad mit Kohlensäure",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6802": {
+      "bezeichnung": "Thermal-Mineralbad ohne Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6803": {
+      "bezeichnung": "Thermal-Mineralbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6804": {
+      "bezeichnung": "Thermal-Mineralgasbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6805": {
+      "bezeichnung": "Thermal-Kohlensäure-Trockengasbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6806": {
+      "bezeichnung": "Thermal-Wannenbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6807": {
+      "bezeichnung": "Thermal-Wannenbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6808": {
+      "bezeichnung": "Thermal-Wannenbad mit Fango",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6809": {
+      "bezeichnung": "Thermal-Sprudelwannenbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6810": {
+      "bezeichnung": "Thermal-Teilbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6811": {
+      "bezeichnung": "Thermal-Quellgasbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6812": {
+      "bezeichnung": "Thermal, Schwefel, Sole Bad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6813": {
+      "bezeichnung": "Mineralwannenbad mit Zusatz und Ruhe",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6814": {
+      "bezeichnung": "Mineral-Teilbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6815": {
+      "bezeichnung": "Mineral-Teilbad nach Hauff",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6816": {
+      "bezeichnung": "Mineral-Teilbad nach Hauff Solebad für Kinder",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6817": {
+      "bezeichnung": "Solebad einschl. Ruhe",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6818": {
+      "bezeichnung": "Solebad einschl. Zusatz und Ruhe",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6819": {
+      "bezeichnung": "Solebad mit Zusatz (z. B. Baldrian, Haferstroh, Kalmuswurzel usw.)",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6820": {
+      "bezeichnung": "Sole-Perlsprudelbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6821": {
+      "bezeichnung": "Sole-Perlsprudelbad mit Zusatz und Ruhe",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6822": {
+      "bezeichnung": "Sole-Halbbad bzw. Sitzbad ohne Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6823": {
+      "bezeichnung": "Sole-Halbbad bzw. Sitzbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6824": {
+      "bezeichnung": "Sole-Kohlensäure-Fichtennadelbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6825": {
+      "bezeichnung": "Solemar offene Badekur",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6826": {
+      "bezeichnung": "Solemar Einzelanwendungen",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6827": {
+      "bezeichnung": "Jod-Sole-Wannenbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6828": {
+      "bezeichnung": "Jod-Sole-Bürstenbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6829": {
+      "bezeichnung": "Jod-Sole Wannenbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6830": {
+      "bezeichnung": "Jod-Sole Bürstenbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6831": {
+      "bezeichnung": "Jod, Schwefel, Sole Teilbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6832": {
+      "bezeichnung": "Jod, Schwefel, Sole Sitzbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6833": {
+      "bezeichnung": "Jod, Schwefel, Sole Vollbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6834": {
+      "bezeichnung": "Meerwasserbad ohne Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6835": {
+      "bezeichnung": "Meerwasserbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6836": {
+      "bezeichnung": "Meerwasserbad mit CO-2, Luft oder Sauerstoff",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6837": {
+      "bezeichnung": "Meerwasserwarmbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6838": {
+      "bezeichnung": "Süßwasserbad (Fichtennadel, Moorextrakt, Schwefel, Kamille, Balnacid, Heublumen, Brombaldrian usw.)",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6839": {
+      "bezeichnung": "Schlickbäde",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6840": {
+      "bezeichnung": "Süßwasserbad mit Kräuterextrakt",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6841": {
+      "bezeichnung": "Süßwasserbad mit Kohlensäure",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6842": {
+      "bezeichnung": "Süßwasserbad mit Sauerstoff",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6843": {
+      "bezeichnung": "Süßwasserbad mit Sauerstoff und Fichtennadel",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6844": {
+      "bezeichnung": "Süßwasserbad mit Kohlensäure und Fichtennadel",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6845": {
+      "bezeichnung": "Süßwasserbad mit Salicyl-Moor, Schwefel, Moor o. ä. Zusätzen",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6846": {
+      "bezeichnung": "Süßwasserbad/Mineralbad mit verordnetem Arzneimittelzusatz und Ruhe",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6847": {
+      "bezeichnung": "Kohlensäure-Mischbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6848": {
+      "bezeichnung": "Kohlensäure-Thermal-Sitzbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6849": {
+      "bezeichnung": "Kohlensäure-Thermal-Sitzbad ohne Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6850": {
+      "bezeichnung": "Kohlensäure-Thermal-Teilbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6851": {
+      "bezeichnung": "Kohlensäure-Thermalbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6852": {
+      "bezeichnung": "Kohlensäure-Thermalbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6853": {
+      "bezeichnung": "Kohlensäure-Thermalbad mit Durchströmung",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6854": {
+      "bezeichnung": "Kohlensäurebad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6855": {
+      "bezeichnung": "Trockengasbäder",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6856": {
+      "bezeichnung": "Gewölbebad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6857": {
+      "bezeichnung": "Ungarisches Gewichtsbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6858": {
+      "bezeichnung": "Neurodermitis- oder Psoriasisbehandlung (Solebad und UVA/B-Bestrahlung)",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6859": {
+      "bezeichnung": "Fichtennadelextraktbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6860": {
+      "bezeichnung": "Luftperlbad ohne Zusatz/Sprudelstrombad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6861": {
+      "bezeichnung": "Luftperlbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6862": {
+      "bezeichnung": "Bürstenbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6863": {
+      "bezeichnung": "Eichenrindenbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6864": {
+      "bezeichnung": "Haferstrohbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6865": {
+      "bezeichnung": "Weizenkleiebad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6866": {
+      "bezeichnung": "Zinnkrautbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6867": {
+      "bezeichnung": "Eisteilbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6868": {
+      "bezeichnung": "Sauerstoffbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6869": {
+      "bezeichnung": "Rubrimentbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6870": {
+      "bezeichnung": "Kamillensitzbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6871": {
+      "bezeichnung": "Radonbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6872": {
+      "bezeichnung": "Mutterlauge (1 Liter)",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6873": {
+      "bezeichnung": "Lehmvollbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6874": {
+      "bezeichnung": "Lehmstampfbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6875": {
+      "bezeichnung": "Sitzreibebad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6876": {
+      "bezeichnung": "Ozonbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6877": {
+      "bezeichnung": "Thermalquellsprudelbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6878": {
+      "bezeichnung": "Naturmoor Vollbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6879": {
+      "bezeichnung": "Naturmoor Arm-/Fußbad mit Zusatz",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6880": {
+      "bezeichnung": "Solebad und UVA/B Punktbestrahlung (Neurodermitis- oder Psoriasis-behandlung)",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6881": {
+      "bezeichnung": "Dampfbad (z.B. mit Kohlensäure)",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6882": {
+      "bezeichnung": "Dampfdusche (z.B. mit Kohlensäure)",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6883": {
+      "bezeichnung": "Quellenbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6884": {
+      "bezeichnung": "Sauerstoffbad mit Massage",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6885": {
+      "bezeichnung": "Kohlensäurebad mit Krankengymnastik",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6886": {
+      "bezeichnung": "Kohlensäurebad mit Massage",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6887": {
+      "bezeichnung": "Vierzellenbad z.B. mit Sole (auch mit Heilwasser oder Meerwasser)",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X6888": {
+      "bezeichnung": "Halbbad",
+      "gruppe": "68",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7001": {
+      "bezeichnung": "Nasen-/Rachen-/Munddusche mit Zusatz",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7002": {
+      "bezeichnung": "Nasen-/Rachen-/Munddusche mit Zusatz und Medikamentenzusatz",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7003": {
+      "bezeichnung": "Sole/Meerwasserinhalation Mund-, Nasen- Augendusche",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7004": {
+      "bezeichnung": "Sole/Meerwasser-Einzelinhalation mit Zusatz",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7005": {
+      "bezeichnung": "Sole/Meerwasser-Rauminhalation",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7006": {
+      "bezeichnung": "Sole/Meerwasser-Einzelinhalation",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7007": {
+      "bezeichnung": "Sole/Meerwasser-Rauminhalation mit Zusatz",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7008": {
+      "bezeichnung": "Aerosol-Inhalation",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7009": {
+      "bezeichnung": "Apparate- oder Einzelinhalation",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7010": {
+      "bezeichnung": "Apparate- oder Einzelinhalation mit Medikamenten und Extrakten",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7011": {
+      "bezeichnung": "Rauminhalation in der Gruppe mit Mineralwasser und Zusatz",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7012": {
+      "bezeichnung": "Rauminhalation Sole und Medikamente (Einzelkabine",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7013": {
+      "bezeichnung": "Ultraschall Rauminhalation",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7014": {
+      "bezeichnung": "Ultraschall (Einzelkabine)",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7015": {
+      "bezeichnung": "Inhalation am Einzelapparat mit Medikamentenzusatz",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7016": {
+      "bezeichnung": "Inhalation am Einzelapparat mit Vibration",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7017": {
+      "bezeichnung": "Aerosolvernebelung mit selbstgestelltem Medikament",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7018": {
+      "bezeichnung": "Aerosolvernebelung mit Medikament und Verordnung",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7019": {
+      "bezeichnung": "Sauerstoff-Medikament-Vernebler",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7020": {
+      "bezeichnung": "Behandlung mit Überdruckbeatmungsgerät (IPPB)",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7021": {
+      "bezeichnung": "Inhalationszusätze",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7022": {
+      "bezeichnung": "Radon-Stollen",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7023": {
+      "bezeichnung": "Spezialinhalation",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7024": {
+      "bezeichnung": "Radonemanation",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7025": {
+      "bezeichnung": "Höhlentherapie",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7026": {
+      "bezeichnung": "Radon-Stollen (Zusatzpostion)",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7027": {
+      "bezeichnung": "Radon-Stollen (Zusatzpostion)",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7028": {
+      "bezeichnung": "Radon-Stollen (Zusatzpostion)",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7029": {
+      "bezeichnung": "Radon-Stollen (Zusatzpostion)",
+      "gruppe": "70",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7101": {
+      "bezeichnung": "Photo-Therapie",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7102": {
+      "bezeichnung": "Schwefel-Photo-Therapie",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7103": {
+      "bezeichnung": "Sole-Photo-Therapie",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7104": {
+      "bezeichnung": "Sole-Spülung",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7105": {
+      "bezeichnung": "Jod-Sole Sprühbehandlung am Auge",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7106": {
+      "bezeichnung": "Photo-Therapie (Punktbestrahlung)",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7107": {
+      "bezeichnung": "Photo-Therapie (Teilbehandlung)",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7108": {
+      "bezeichnung": "Photo-Therapie (Medikament)",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7109": {
+      "bezeichnung": "Heilschlamm/Heilerde",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7110": {
+      "bezeichnung": "cortisonfreie Kopfbehandlung",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7111": {
+      "bezeichnung": "Licht-Öl-Bad (unter ärztl. Leitung)",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7112": {
+      "bezeichnung": "Photo-Chemotherapie",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7113": {
+      "bezeichnung": "Vaginale Moortherapie",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7114": {
+      "bezeichnung": "Solebad zur Phototherapie",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7115": {
+      "bezeichnung": "Arm- oder Fußbad mit Sole zur Phototherapie",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7116": {
+      "bezeichnung": "Hirnleistungstraining Gruppe (bis 4 Patienten)",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7117": {
+      "bezeichnung": "Hirnleistungstraining Gruppe (bis 6 Patienten)",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7118": {
+      "bezeichnung": "Lauftherapie/Gefäßtraining",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7119": {
+      "bezeichnung": "Bewegungsheilbad als kontrollierte Selbstbehandlung für Schwerbehinderte",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7120": {
+      "bezeichnung": "UV-Bestrahlung",
+      "gruppe": "71",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7201": {
+      "bezeichnung": "Schwangerschaftsgymnastik",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7202": {
+      "bezeichnung": "Gehübungen",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7203": {
+      "bezeichnung": "Kurgymnastik Gruppe",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7204": {
+      "bezeichnung": "Trinkkur (nur im Rahmen genehmigter Badekuren)",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7205": {
+      "bezeichnung": "Badezusätze",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7206": {
+      "bezeichnung": "Blutegelbehandlung",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7207": {
+      "bezeichnung": "Trinkkur (10er Karte)",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7208": {
+      "bezeichnung": "Trinkkur (25er Karte)",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7209": {
+      "bezeichnung": "Trinkkur (25er Karte)",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7210": {
+      "bezeichnung": "Zusatzposition für weitere Packungen mit natürl. Peloiden",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7211": {
+      "bezeichnung": "Trink- und Gurgelkur komplett",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7212": {
+      "bezeichnung": "Leihgebühr für Schutzmantel",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7213": {
+      "bezeichnung": "Spuckflasche",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7214": {
+      "bezeichnung": "Sauerstoff-Lieferung",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7215": {
+      "bezeichnung": "Rheumagruppe (Krankenkassenanteil)",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7216": {
+      "bezeichnung": "Dusche",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7217": {
+      "bezeichnung": "Schwimmen im Bewegungsbad",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7218": {
+      "bezeichnung": "Klimatherapie",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7219": {
+      "bezeichnung": "Befunde und ähnliches",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7220": {
+      "bezeichnung": "Zuschlag für Behindertenkabine",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7221": {
+      "bezeichnung": "Analyse/Diagnostik im Bewegungslabor",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7222": {
+      "bezeichnung": "Begleitkarte (nur auf ärztl Anweisung)",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7223": {
+      "bezeichnung": "Tinitus (Ohrgeräuschbewältigungstraining)",
+      "gruppe": "72",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7301": {
+      "bezeichnung": "Zusatz 1",
+      "gruppe": "73",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7302": {
+      "bezeichnung": "Zusatz 2",
+      "gruppe": "73",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7303": {
+      "bezeichnung": "Zusatz 3",
+      "gruppe": "73",
+      "quelle": "heilmittelkatalog"
+    },
+    "X7304": {
+      "bezeichnung": "Zusatz 4",
+      "gruppe": "73",
+      "quelle": "heilmittelkatalog"
+    },
+    "X8001": {
+      "bezeichnung": "Hornhautabtragung",
+      "gruppe": "80",
+      "quelle": "heilmittelkatalog"
+    },
+    "X8002": {
+      "bezeichnung": "Nagelbearbeitung",
+      "gruppe": "80",
+      "quelle": "heilmittelkatalog"
+    },
+    "X8003": {
+      "bezeichnung": "Podologische Komplexbehandlung",
+      "gruppe": "80",
+      "quelle": "heilmittelkatalog"
+    },
+    "X8004": {
+      "bezeichnung": "Hornhautabtragung an einem Fuß",
+      "gruppe": "80",
+      "quelle": "heilmittelkatalog"
+    },
+    "X8005": {
+      "bezeichnung": "Nagelbearbeitung an einem Fuß",
+      "gruppe": "80",
+      "quelle": "heilmittelkatalog"
+    },
+    "X8006": {
+      "bezeichnung": "Podologische Komplexbehandlung an einem Fuß",
+      "gruppe": "80",
+      "quelle": "heilmittelkatalog"
+    },
+    "X8010": {
+      "bezeichnung": "Podologische Behandlung (klein)",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "80"
+    },
+    "X8020": {
+      "bezeichnung": "Podologische Behandlung (groß)",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "80"
+    },
+    "X8030": {
+      "bezeichnung": "Podologische Befundung",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "80"
+    },
+    "X8100": {
+      "bezeichnung": "Erstbefundung",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "81"
+    },
+    "X8210": {
+      "bezeichnung": "Anpassung einer einteiligen unilateralen und bilateralen Nagelkorrekturspange, z. B. nach Ross Fraser",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "82"
+    },
+    "X8220": {
+      "bezeichnung": "Fertigung einer einteiligen unilateralen und bilateralen Nagelkorrekturspange, z. B. nach Ross Fraser",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "82"
+    },
+    "X8230": {
+      "bezeichnung": "Nachregulierung der einteiligen unilateralen und bilateralen Nagelkorrekturspange, z. B. nach Ross Fraser",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "82"
+    },
+    "X8300": {
+      "bezeichnung": "Vorbereitung des Nagels, Anpassung und Aufsetzen einer mehrteiligen bilateralen Nagelkorrekturspange",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "83"
+    },
+    "X8400": {
+      "bezeichnung": "Vorbereitung des Nagels, Anpassung und Aufsetzen einer einteiligen Kunststoff- oder Metall-Nagelkorrekturspange",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "84"
+    },
+    "X8510": {
+      "bezeichnung": "indikationsspezifische Kontrolle auf Sitz- und Passgenauigkeit",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "85"
+    },
+    "X8520": {
+      "bezeichnung": "Behandlungsabschluss / Entfernung der Nagelkorrekturspange",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "85"
+    },
+    "X9701": {
+      "bezeichnung": "Übermittlungsgebühr für Mitteilung / Bericht an den Arzt",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "1",
+      "quelle": "heilmittelpreise",
+      "gruppe": "97"
+    },
+    "X9801": {
+      "bezeichnung": "Med. Fußpflege (Orthonoxy)",
+      "gruppe": "98",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9901": {
+      "bezeichnung": "Ärztlich verordneter Hausbesuch, Einsatzpauschale inkl. Wegegeld",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "3",
+      "quelle": "heilmittelpreise",
+      "gruppe": "99"
+    },
+    "X9902": {
+      "bezeichnung": "Hausbesuch mehrerer Patienten (z.B. in einer Einrichtung/Gemeinschaft)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9903": {
+      "bezeichnung": "Hausbesuch bis 3 km",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9904": {
+      "bezeichnung": "Hausbesuch bis 10 km",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9905": {
+      "bezeichnung": "Hausbesuch ab 11 km",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9906": {
+      "bezeichnung": "Wegegeldpauschale",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9907": {
+      "bezeichnung": "Wegegeld je Kilometer",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9908": {
+      "bezeichnung": "Wegegeld je Doppelkilometer",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9909": {
+      "bezeichnung": "Wegegeld pausch. in geschl. Ortschaften",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9910": {
+      "bezeichnung": "Wegegeld je Kilometer bei Überschreiten der Ortsgrenze",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9911": {
+      "bezeichnung": "Wegegeld pausch. bis 15 km",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9912": {
+      "bezeichnung": "Öffentliche Verkehrsmittel",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9913": {
+      "bezeichnung": "Hausbesuch eines Patienten (z. B. in einer Einrichtung/Gemeinschaft)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9914": {
+      "bezeichnung": "Hausbesuch (für mobile Krankengymnasten)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9915": {
+      "bezeichnung": "Hausbesuch eines weiteren Patienten",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9916": {
+      "bezeichnung": "Hausbesuch (KG)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9917": {
+      "bezeichnung": "Hausbesuch eines weiteren Patienten (KG)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9918": {
+      "bezeichnung": "Hausbesuch (Sprachtherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9919": {
+      "bezeichnung": "Hausbesuch eines weiteren Patienten (Sprachtherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9920": {
+      "bezeichnung": "Hausbesuch (Ergotherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9921": {
+      "bezeichnung": "Hausbesuch eines weiteren Patienten (Ergotherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9923": {
+      "bezeichnung": "Wegegeld pausch. in geschl. Ortschaften (KG)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9924": {
+      "bezeichnung": "Wegegeld pausch. bei Überschreitung der Ortschaft (KG)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9925": {
+      "bezeichnung": "Wegegeld je Kilometer (KG)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9926": {
+      "bezeichnung": "Wegegeld pausch. in geschl. Ortschaften (Sprachtherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9927": {
+      "bezeichnung": "Wegegeld pausch. bei Überschreitung der Ortschaft (Sprachtherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9928": {
+      "bezeichnung": "Wegegeld je Kilometer (Sprachtherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9929": {
+      "bezeichnung": "Wegegeld pausch. in geschl. Ortschaften (Ergotherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9930": {
+      "bezeichnung": "Wegegeld pausch. bei Überschreitung der Ortschaft (Ergotherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9931": {
+      "bezeichnung": "Wegegeld je Kilometer (Ergotherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9932": {
+      "bezeichnung": "Mehraufwand für die Beratung zur Integration in das häusliche und soziale Umfeld",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "4",
+      "quelle": "heilmittelpreise",
+      "gruppe": "99"
+    },
+    "X9933": {
+      "bezeichnung": "Hausbesuch, ärztlich verordnet, inkl. Wegegeld",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "99"
+    },
+    "X9934": {
+      "bezeichnung": "Hausbesuch in soz. Einrichtung inkl. Wegegeld",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "99"
+    },
+    "X9935": {
+      "bezeichnung": "Hausbesuch inclusive Wegegeld (Einsatzpauschale",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9936": {
+      "bezeichnung": "Hausbesuch mehrerer Patienten (z.B. in einer Einrichtung/Gemeinschaft) inclusive Wegegeld (Einsatzpauschale",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9937": {
+      "bezeichnung": "Ärztlich verordneter Hausbesuch - Wegegeld je Kilometer bis einschließlich 40 km",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "99"
+    },
+    "X9938": {
+      "bezeichnung": "Hausbesuch eines weiteren Patienten (Ernährungstherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9939": {
+      "bezeichnung": "Wegegeld pausch. in geschl. Ortschaften (Ernährungstherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9940": {
+      "bezeichnung": "Wegegeld pausch. bei Überschreitung der Ortschaft (Ernährungstherapie)",
+      "gruppe": "99",
+      "quelle": "heilmittelkatalog"
+    },
+    "X9941": {
+      "bezeichnung": "Ärztlich verordneter Hausbesuch - Wegegeld je Kilometer ab dem 41. km",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "99"
+    },
+    "X9942": {
+      "bezeichnung": "Hausbesuch bei der Beratung im häuslichen und sozialen Umfeld - Wegegeld je Kilometer bis einschließlich 40 km",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "99"
+    },
+    "X9943": {
+      "bezeichnung": "Hausbesuch bei der Beratung im häuslichen und sozialen Umfeld - Wegegeld je Kilometer ab dem 41. km",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "5",
+      "quelle": "heilmittelpreise",
+      "gruppe": "99"
+    },
+    "X9944": {
+      "bezeichnung": "Hygienemaßnahmen Corona*",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "2",
+      "quelle": "heilmittelpreise",
+      "gruppe": "99"
+    }
+  },
+  "leistungsgruppen": {
+    "01": "Massagen",
+    "02": "Man. Lymphdrainage",
+    "03": "Bewegungstherapie/ Übungsbehandl., EB",
+    "04": "Bewegungstherapie/Ü bungsbehandlung GB",
+    "05": "Krankengymnastik, normal, EB",
+    "06": "Krankengymnastik, normal GB",
+    "07": "Krankengymnastik, spezial, EB",
+    "08": "Krankengymnastik, spezial, GB",
+    "09": "Krankengymnastik im Bewegungsbad, EB",
+    "10": "Krankengymnastik im Bewegungsbad, GB",
+    "11": "Traktionsbehandlung/- Extensionsbehandlun g",
+    "12": "Manuelle Therapie",
+    "13": "Elektrotherapie",
+    "14": "Lichttherapie",
+    "15": "Wärme- u. Kältetherapie",
+    "16": "Hydrotherapie",
+    "17": "Med. Bäder",
+    "18": "Inhalationstherapie",
+    "19": "Sonstiges",
+    "20": "Standardisierte Heilmittelkombination en",
+    "30": "Erstuntersuchung",
+    "31": "Einzelbehandlung (Preis incl. Vor- und Nachbereitung",
+    "32": "Gruppenbehandlung (Preis incl. Vor- und Nachbereitung)",
+    "33": "Ausführlicher sprach- therapeut. Bericht",
+    "34": "Beratung",
+    "40": "Befunderhebung",
+    "41": "Einzelbehandlung",
+    "42": "Gruppenbehandlung",
+    "43": "Thermische Anwendung, Wärme/Kälte",
+    "44": "Schienen",
+    "45": "Sonstiges",
+    "50": "Maßnahmen der Ernährungstherapie",
+    "60": "Massagen",
+    "61": "Man. Lymphdrainage",
+    "62": "Bewegungstherapie, EB",
+    "63": "Bewegungstherapie, GB",
+    "64": "Traktionsbehandlung/ Extensionsbehandlun g",
+    "65": "Elektrotherapie",
+    "66": "Wärme- und Kältetherapie",
+    "67": "Hydrotherapie",
+    "68": "Med. Bäder",
+    "69": "Med. Bäder",
+    "70": "Inhalationstherapie",
+    "71": "weitere kurortspezifische Behandlungsformen",
+    "72": "Sonstiges",
+    "73": "Zusatzpositionen für Badezusätze",
+    "80": "Maßnahmen der podologischen Therapie",
+    "81": "Nagelspangenbehand lung Erstbefundung",
+    "82": "Nagelspangenbehand lung nach Ross Fraser",
+    "83": "Nagelspangenbehand lung mehrteilig bilateral",
+    "84": "Nagelspangenbehand lung einteilige Kunststoff- oder Metall- Nagelkorrekturspange",
+    "85": "Nagelspangenbehand lung weitere Leistungen",
+    "97": "Mitteilung/Bericht an den Arzt",
+    "98": "Med.Fußpflege",
+    "99": "Hausbesuch/Wegegeld"
+  },
+  "_abweichende_bezeichnungen": [
+    "X0108",
+    "X0201",
+    "X0202",
+    "X0204",
+    "X0205",
+    "X0301",
+    "X0305",
+    "X0306",
+    "X0401",
+    "X0402",
+    "X0405",
+    "X0501",
+    "X0507",
+    "X0601",
+    "X0702",
+    "X0708",
+    "X0709",
+    "X0710",
+    "X0711",
+    "X0712",
+    "X0805",
+    "X0902",
+    "X1004",
+    "X1005",
+    "X1302",
+    "X1303",
+    "X1310",
+    "X1312",
+    "X1501",
+    "X1517",
+    "X1531",
+    "X1532",
+    "X1533",
+    "X1534",
+    "X1714",
+    "X1732",
+    "X1733",
+    "X1801",
+    "X2001",
+    "X3102",
+    "X3103",
+    "X3104",
+    "X3220",
+    "X3222",
+    "X3223",
+    "X3224",
+    "X3302",
+    "X4002",
+    "X4102",
+    "X4103",
+    "X4104",
+    "X4105",
+    "X4107",
+    "X4108",
+    "X4109",
+    "X4112",
+    "X4205",
+    "X4206",
+    "X4207",
+    "X4208",
+    "X4209",
+    "X4210",
+    "X4211",
+    "X4212",
+    "X4301",
+    "X4405",
+    "X4406",
+    "X5001",
+    "X5002",
+    "X5003",
+    "X5004",
+    "X5005",
+    "X5006",
+    "X5007",
+    "X5008",
+    "X8030",
+    "X8210",
+    "X8220",
+    "X8230",
+    "X9701",
+    "X9901",
+    "X9932",
+    "X9933",
+    "X9934",
+    "X9937",
+    "X9941",
+    "X9942",
+    "X9943",
+    "X9944"
+  ]
+}

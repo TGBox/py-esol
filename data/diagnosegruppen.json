@@ -1,0 +1,372 @@
+{
+  "_hinweis": [
+    "Automatisch erzeugt aus der KBV-Heilmittelstammdatei (SDHM).",
+    "NICHT von Hand bearbeiten — beim nächsten Import wird die Datei überschrieben.",
+    "Eigene Bezeichnungen gehören nach data/codelisten.json unter",
+    "'diagnosegruppe'; die haben Vorrang.",
+    "",
+    "Erzeugt mit: python tools/import_kbv_stammdaten.py",
+    "",
+    "'kapitel_nummer' ist die laufende Nummer des Kapitels im",
+    "Heilmittelkatalog (I..V -> 1..5). Sie ist NICHT ohne Weiteres der",
+    "Schlüssel des 16. ZHE-Feldes: in echten Abrechnungsdateien steht dort",
+    "bei einer Ergotherapie-Verordnung (Kapitel IV) eine 1. Der",
+    "Zusammenhang ist ungeklärt und wird deshalb nirgends verwendet."
+  ],
+  "_quelle": {
+    "datei": "sdhm_2.10_74_tf2024q0.xml",
+    "version": "2.10",
+    "gueltig": "2024-10-01..",
+    "erstellt": "2024-03-27",
+    "schnittstelle": "Heilmittelstammdatei",
+    "anzahl_diagnosegruppen": 44,
+    "anzahl_kapitel": 5
+  },
+  "kapitel": [
+    {
+      "nummer": "1",
+      "kapitel": "I",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "diagnosegruppen": [
+        "CS",
+        "EX",
+        "WS",
+        "PN",
+        "ZN",
+        "AT",
+        "GE",
+        "LY",
+        "SO1",
+        "SO2",
+        "SO3",
+        "SO4",
+        "SO5"
+      ]
+    },
+    {
+      "nummer": "2",
+      "kapitel": "II",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "diagnosegruppen": [
+        "DF",
+        "NF",
+        "QF",
+        "UI1",
+        "UI2"
+      ]
+    },
+    {
+      "nummer": "3",
+      "kapitel": "III",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "diagnosegruppen": [
+        "ST1",
+        "ST2",
+        "ST3",
+        "ST4",
+        "SP1",
+        "SP2",
+        "SP3",
+        "SP4",
+        "SP5",
+        "SP6",
+        "RE1",
+        "RE2",
+        "SF",
+        "SC"
+      ]
+    },
+    {
+      "nummer": "4",
+      "kapitel": "IV",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "diagnosegruppen": [
+        "SB1",
+        "SB2",
+        "SB3",
+        "EN1",
+        "EN2",
+        "EN3",
+        "PS1",
+        "PS2",
+        "PS3",
+        "PS4"
+      ]
+    },
+    {
+      "nummer": "5",
+      "kapitel": "V",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "diagnosegruppen": [
+        "SAS",
+        "CF"
+      ]
+    }
+  ],
+  "diagnosegruppen": {
+    "AT": {
+      "bezeichnung": "Störungen der Atmung",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "CF": {
+      "bezeichnung": "Mukoviszidose (Cystische Fibrose)",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "V",
+      "kapitel_nummer": "5"
+    },
+    "CS": {
+      "bezeichnung": "Chronifiziertes Schmerzsyndrom",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "DF": {
+      "bezeichnung": "Diabetisches Fußsyndrom",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "II",
+      "kapitel_nummer": "2"
+    },
+    "EN1": {
+      "bezeichnung": "ZNS-Erkrankungen (Gehirn) / Entwicklungsstörungen",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "IV",
+      "kapitel_nummer": "4"
+    },
+    "EN2": {
+      "bezeichnung": "ZNS-Erkrankungen (Rückenmark) / Neuromuskuläre Erkrankungen",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "IV",
+      "kapitel_nummer": "4"
+    },
+    "EN3": {
+      "bezeichnung": "Periphere Nervenläsionen / Muskelerkrankungen",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "IV",
+      "kapitel_nummer": "4"
+    },
+    "EX": {
+      "bezeichnung": "Erkrankungen der Extremitäten und des Beckens",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "GE": {
+      "bezeichnung": "Arterielle Gefäßerkrankungen (bei konservativer Behandlung, nach interventioneller / operativer Behandlung)",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "LY": {
+      "bezeichnung": "Lymphabflussstörungen",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "NF": {
+      "bezeichnung": "Krankhafte Schädigung am Fuß als Folge einer sensiblen oder sensomotorischen Neuropathie (primär oder sekundär)",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "II",
+      "kapitel_nummer": "2"
+    },
+    "PN": {
+      "bezeichnung": "Periphere Nervenläsionen / Muskelerkrankungen",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "PS1": {
+      "bezeichnung": "Entwicklungs-, Verhaltens- und emotionale Störungen mit Beginn in Kindheit und Jugend",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "IV",
+      "kapitel_nummer": "4"
+    },
+    "PS2": {
+      "bezeichnung": "Neurotische, Belastungs-, somatoforme und Persönlichkeitsstörungen",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "IV",
+      "kapitel_nummer": "4"
+    },
+    "PS3": {
+      "bezeichnung": "Wahnhafte und affektive Störungen / Abhängigkeitserkrankungen",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "IV",
+      "kapitel_nummer": "4"
+    },
+    "PS4": {
+      "bezeichnung": "Dementielle Syndrome",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "IV",
+      "kapitel_nummer": "4"
+    },
+    "QF": {
+      "bezeichnung": "Krankhafte Schädigung am Fuß als Folge eines Querschnittsyndroms (komplett oder inkomplett)",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "II",
+      "kapitel_nummer": "2"
+    },
+    "RE1": {
+      "bezeichnung": "Störungen des Redeflusses",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "RE2": {
+      "bezeichnung": "Störungen des Redeflusses",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "SAS": {
+      "bezeichnung": "Seltene angeborene Stoffwechselerkrankungen",
+      "bereich": "Maßnahmen der Ernährungstherapie",
+      "kapitel": "V",
+      "kapitel_nummer": "5"
+    },
+    "SB1": {
+      "bezeichnung": "Erkrankungen der Wirbelsäule, Gelenke und Extremitäten (mit motorisch-funktionellen Schädigungen)",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "IV",
+      "kapitel_nummer": "4"
+    },
+    "SB2": {
+      "bezeichnung": "Erkrankungen der Wirbelsäule, Gelenke und Extremitäten (mit motorisch-funktionellen und sensomotorisch-perzeptiven Schädigungen)",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "IV",
+      "kapitel_nummer": "4"
+    },
+    "SB3": {
+      "bezeichnung": "System- und Autoimmunerkrankungen mit Bindegewebe-, Muskel- und Gefäßbeteiligung (mit motorisch-funktionellen / sensomotorisch-perzeptiven Schädigungen)",
+      "bereich": "Maßnahmen der Ergotherapie",
+      "kapitel": "IV",
+      "kapitel_nummer": "4"
+    },
+    "SC": {
+      "bezeichnung": "Krankhafte Störungen des Schluckaktes",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "SF": {
+      "bezeichnung": "Störungen der Stimm- und Sprechfunktion",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "SO1": {
+      "bezeichnung": "Störung der Dickdarmfunktion",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "SO2": {
+      "bezeichnung": "Störungen der Ausscheidung (Stuhlinkontinenz, Harninkontinenz)",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "SO3": {
+      "bezeichnung": "Schwindel unterschiedlicher Genese und Ätiologie",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "SO4": {
+      "bezeichnung": "Sekundäre periphere trophische Störungen bei Erkrankungen",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "SO5": {
+      "bezeichnung": "Prostatitis, Adnexitis",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "SP1": {
+      "bezeichnung": "Störungen der Sprache vor Abschluss der Sprachentwicklung",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "SP2": {
+      "bezeichnung": "Störungen der auditiven Wahrnehmung",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "SP3": {
+      "bezeichnung": "Störungen der Artikulation",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "SP4": {
+      "bezeichnung": "Störungen des Sprechens / der Sprache bei hochgradiger Schwerhörigkeit oder Taubheit",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "SP5": {
+      "bezeichnung": "Störungen der Sprache nach Abschluss der Sprachentwicklung",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "SP6": {
+      "bezeichnung": "Störungen der Sprechmotorik",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "ST1": {
+      "bezeichnung": "Organisch bedingte Erkrankungen der Stimme",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "ST2": {
+      "bezeichnung": "Funktionell bedingte Erkrankungen der Stimme",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "ST3": {
+      "bezeichnung": "Psychogene Aphonie",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "ST4": {
+      "bezeichnung": "Psychogene Dysphonie",
+      "bereich": "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie",
+      "kapitel": "III",
+      "kapitel_nummer": "3"
+    },
+    "UI1": {
+      "bezeichnung": "Unguis incarnatus Stadium 1",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "II",
+      "kapitel_nummer": "2"
+    },
+    "UI2": {
+      "bezeichnung": "Unguis incarnatus Stadium 2 oder 3",
+      "bereich": "Maßnahmen der Podologischen Therapie",
+      "kapitel": "II",
+      "kapitel_nummer": "2"
+    },
+    "WS": {
+      "bezeichnung": "Wirbelsäulenerkrankungen",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    },
+    "ZN": {
+      "bezeichnung": "ZNS-Erkrankungen einschließlich des Rückenmarks / Neuromuskuläre Erkrankungen",
+      "bereich": "Maßnahmen der Physiotherapie",
+      "kapitel": "I",
+      "kapitel_nummer": "1"
+    }
+  }
+}

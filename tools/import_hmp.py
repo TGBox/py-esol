@@ -10,6 +10,15 @@ im Rezept-Baum Klartext statt nur der Nummer steht.
     python tools/import_hmp.py "HMP Stand 01.07.2026.xml"
     python tools/import_hmp.py neu.xml --out data/heilmittelpreise.json
 
+Mehrere Dateien lassen sich zusammenführen — der GKV-Spitzenverband liefert die
+Blankoverordnungs-Positionen nach § 125a je Heilmittelbereich getrennt nach:
+
+    python tools/import_hmp.py quellen/HMP_Stand_01.07.2026.xml \
+                               quellen/blanko_leistungen_ergo_20250801.xml
+
+Die zuerst genannte Datei gewinnt bei gleichem Code. Reihenfolge also: erst die
+große Stammdatei, danach die Ergänzungen.
+
 BEWUSST NICHT ÜBERNOMMEN werden die Höchstpreise. Der Haftungsausschluss der
 Stammdatei sagt ausdrücklich, sie sei "nicht zu Abrechnungszwecken bestimmt";
 maßgeblich sind die Vergütungsvereinbarungen nach § 125/§ 125a. In einem
@@ -135,6 +144,59 @@ def parse_hmp(xml_pfad: Path) -> Dict[str, Any]:
         if gueltig_ab:
             staende[gueltig_ab] += 1
 
+    return _huelle(
+        [{
+            "datei": xml_pfad.name,
+            "hmp_version": root.attrib.get("HMP_Version", ""),
+            "schema_version": root.attrib.get("Schema_Version", ""),
+            "hmp_gueltig_ab": root.attrib.get("HMP_Gueltig_ab", ""),
+            "anzahl_positionen": len(positionen),
+            "heilmittelbereiche": dict(sorted(bereiche.items())),
+            "gueltigkeitsstaende": dict(sorted(staende.items())),
+        }],
+        positionen,
+        uebersprungen,
+        sorted(set(doppelt)),
+    )
+
+
+def parse_mehrere(xml_pfade: List[Path]) -> Dict[str, Any]:
+    """
+    Liest mehrere HMP-XML und führt sie zusammen. Bei gleichem Code gewinnt die
+    zuerst genannte Datei — so kann die große Stammdatei die Ergänzungslisten
+    überstimmen, statt umgekehrt.
+    """
+    positionen: Dict[str, Dict[str, str]] = {}
+    quellen: list[Dict[str, Any]] = []
+    uebersprungen = 0
+    doppelt: list[str] = []
+
+    for pfad in xml_pfade:
+        teil = parse_hmp(pfad)
+        quellen.extend(teil["_quelle"]["dateien"])
+        uebersprungen += teil["_uebersprungen"]
+        doppelt.extend(teil["_doppelte_codes"])
+        for code, eintrag in teil["positionen"].items():
+            if code in positionen:
+                if positionen[code].get("bezeichnung") != eintrag.get("bezeichnung"):
+                    doppelt.append(code)
+                continue
+            positionen[code] = eintrag
+
+    return _huelle(quellen, positionen, uebersprungen, sorted(set(doppelt)))
+
+
+def _huelle(quellen: List[Dict[str, Any]], positionen: Dict[str, Dict[str, str]],
+            uebersprungen: int, doppelt: List[str]) -> Dict[str, Any]:
+    """Baut die Zieldatei-Struktur um die eingelesenen Positionen herum."""
+    bereiche: Counter = Counter()
+    staende: Counter = Counter()
+    for eintrag in positionen.values():
+        if eintrag.get("bereich"):
+            bereiche[eintrag["bereich"]] += 1
+        if eintrag.get("gueltig_ab"):
+            staende[eintrag["gueltig_ab"]] += 1
+
     return {
         "_hinweis": [
             "Automatisch erzeugt aus der Heilmittelpreisstammdatei des GKV-Spitzenverbands.",
@@ -151,10 +213,15 @@ def parse_hmp(xml_pfad: Path) -> Dict[str, Any]:
             "Die Auflösung passiert beim Nachschlagen in codelisten.py.",
         ],
         "_quelle": {
-            "datei": xml_pfad.name,
-            "hmp_version": root.attrib.get("HMP_Version", ""),
-            "schema_version": root.attrib.get("Schema_Version", ""),
-            "hmp_gueltig_ab": root.attrib.get("HMP_Gueltig_ab", ""),
+            # 'dateien' ist die Liste aller eingelesenen Quellen. 'datei',
+            # 'hmp_version' und 'schema_version' spiegeln die erste davon —
+            # damit bleibt hmp_beschreibung() in codelisten.py unverändert
+            # lesbar, auch wenn mehrere Dateien zusammengeführt wurden.
+            "dateien": quellen,
+            "datei": " + ".join(q["datei"] for q in quellen),
+            "hmp_version": quellen[0].get("hmp_version", "") if quellen else "",
+            "schema_version": quellen[0].get("schema_version", "") if quellen else "",
+            "hmp_gueltig_ab": quellen[0].get("hmp_gueltig_ab", "") if quellen else "",
             "anzahl_positionen": len(positionen),
             "heilmittelbereiche": dict(sorted(bereiche.items())),
             "gueltigkeitsstaende": dict(sorted(staende.items())),
@@ -172,20 +239,24 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Erzeugt data/heilmittelpreise.json aus der GKV-Heilmittelpreisstammdatei (XML).",
     )
-    parser.add_argument("xml", help="Pfad zur HMP-XML des GKV-Spitzenverbands")
+    parser.add_argument("xml", nargs="+",
+                        help="Pfad(e) zur HMP-XML des GKV-Spitzenverbands; "
+                             "bei gleichem Code gewinnt die zuerst genannte Datei")
     parser.add_argument(
         "--out", "-o", default=str(STANDARD_ZIEL),
         help=f"Zieldatei (Standard: {STANDARD_ZIEL.relative_to(_project_root)})",
     )
     args = parser.parse_args()
 
-    xml_pfad = Path(args.xml)
-    if not xml_pfad.is_file():
-        print(f"Fehler: Datei nicht gefunden: {xml_pfad}", file=sys.stderr)
-        sys.exit(2)
+    xml_pfade = [Path(p) for p in args.xml]
+    for pfad in xml_pfade:
+        if not pfad.is_file():
+            print(f"Fehler: Datei nicht gefunden: {pfad}", file=sys.stderr)
+            sys.exit(2)
+    xml_pfad = xml_pfade[0]
 
     try:
-        daten = parse_hmp(xml_pfad)
+        daten = parse_mehrere(xml_pfade)
     except ValueError as e:
         print(f"Fehler: {e}", file=sys.stderr)
         sys.exit(1)
@@ -197,9 +268,11 @@ def main() -> None:
     )
 
     quelle = daten["_quelle"]
-    print(f"Heilmittelpreisstammdatei eingelesen: {xml_pfad.name}")
-    print(f"  HMP-Version {quelle['hmp_version']} / Schema {quelle['schema_version']}")
-    print(f"  {quelle['anzahl_positionen']} Positionsnummern")
+    print("Heilmittelpreisstammdatei eingelesen:")
+    for q in quelle["dateien"]:
+        print(f"  {q['anzahl_positionen']:5}  {q['datei']}"
+              f"  (HMP {q['hmp_version']} / Schema {q['schema_version']})")
+    print(f"\n  {quelle['anzahl_positionen']} Positionsnummern nach Zusammenführung")
     for bereich, anzahl in quelle["heilmittelbereiche"].items():
         print(f"    {anzahl:4}  {bereich}")
     print(f"  Gültigkeitsstände: {', '.join(quelle['gueltigkeitsstaende'])}")

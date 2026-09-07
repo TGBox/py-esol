@@ -1,0 +1,51 @@
+bezeichnung;code;einzelpreis;gruppe;hmcode
+Massage, auch Spezialmassagen (Bindegewebs-, Reflexzonen-, Segment-, Periost- Bürsten- und Colonmassage);9401;19.06;BG-Leistung Physio;1
+Apparative Kälteanwendung (Kaltgas, Kaltluft);9207;10.53;BG-Leistung Physio;1
+Hand-, Fußbad mit Zusatz;9405;7.50;BG-Leistung Physio;1
+Kohlensäurebad;9407;24.44;BG-Leistung Physio;1
+Hydroelektrisches Vollbad (z.B. Stangerbad);9409;24.33;BG-Leistung Physio;1
+Hydroelektrisches Teilbad (Zwei-/Vierzellenbad);9410;12.77;BG-Leistung Physio;1
+Unterwasserdruckstrahlmassage einschl. Nachruhe;9412;29.74;BG-Leistung Physio;1
+Extensionsbehandlung (unabhängig vom Zeitaufwand);9414;8.02;BG-Leistung Physio;1
+Ruhe, keine Berechnung nach Zeitintervallen;9601;5.37;BG-Leistung Physio;1
+Hausbesuch;9602;15.99;BG-Leistung Physio;1
+Wegegebühr bei ärztlich verordnetem Hausbesuch je km;9603;0.38;BG-Leistung Physio;1
+Ergotherapeutische Behandlung bei motorisch-funktionellen Störungen;9651;15.53;BG-Leistung Ergo;3
+Ergotherapeutische Behandlung bei sensomotorischen/perzeptiven Störungen;9652;15.53;BG-Leistung Ergo;4
+Ergotherapeutisches Hirnleistungstraining/ Neuropsychologisch orientierte Behandlung;9653;16.20;BG-Leistung Ergo;3
+Ergotherapeutische Behandlung bei psychisch-funktionellen Störungen;9654;15.53;BG-Leistung Ergo;5
+Arbeitstherapie/betriebliches ArbeitstrainingNur in Absprache mit dem UV-Träger;9655;16.68;BG-Leistung Ergo;4
+Beratung zur Integration in das berufliche und soziale Umfeld (außerhalb der ergotherapeutischen Praxis);9656;16.68;BG-Leistung Ergo;4
+Ergotherapeutische Behandlung bei motorisch-funktionellen Störungen, Gruppe;9651 G;5.54;BG-Leistung Ergo;3
+Ergotherapeutische Behandlung bei sensomotorischen/perzeptiven Störungen, Gruppe;9652 G;5.54;BG-Leistung Ergo;4
+Ergotherapeutisches Hirnleistungstraining/ Neuropsychologisch orientierte Behandlung, Gruppe;9653 G;5.54;BG-Leistung Ergo;4
+Ergotherapeutische Behandlung bei psychisch-funktionellen Störungen,Gruppe;9654 G;5.54;BG-Leistung Ergo;7
+Ergotherapeutische Funktionsanalyse(keine Berechnung nach Zeitintervall);9657;34.71;BG-Leistung Ergo;1
+Thermische Anwendung,Kälte/Wärme(keine Berechnung nach Zeitintervall);9658;7.67;BG-Leistung Ergo;1
+Ergotherapeutische Schiene;9659;;BG-Leistung Ergo;1
+ausführlicher Bericht auf Anforderung des UV-Trägers;9660;34.71;BG-Leistung Ergo;1
+Wegegeld je km bei ärztlichverordnetem Hausbesuch;9662;0.38;BG-Leistung Ergo;1
+Kompressionsbandagierung;9403a;19.26;BG-Leistung Physio;1
+Chirogymnastik;9413;18.00;BG-Leistung Physio;1
+KG, auch auf neurophysiologischer Grundlage;9101;13.53;BG-Leistung Physio;2
+KG bei zentralen Bewegungsstörungen (Kinderbehandlung);9102;13.89;BG-Leistung Physio;4
+KG bei zentr. Bewegungsstörungen (Erwachsenenbeh.);9103;13.89;BG-Leistung Physio;3
+KG in der Gruppe;9104;5.59;BG-Leistung Physio;2
+KG im Bewegungsbad;9105;15.40;BG-Leistung Physio;2
+KG im Bewegungsbad in der Gruppe;9106;7.73;BG-Leistung Physio;2
+Manuelle Therapie;9107;16.15;BG-Leistung Physio;2
+Wärmeanwendung;9201;8.76;BG-Leistung Physio;1
+Heiße Rolle;9202;7.40;BG-Leistung Physio;2
+Packungen oder Teilbäder mit Paraffinen;9203;10.47;BG-Leistung Physio;2
+Fango mit natürlichen Peloiden, ein Körperabschnitt;9204;14.05;BG-Leistung Physio;2
+Fango mit natürlichen Peloiden, Doppelpackung, zwei Körperabschnitte;9205;17.80;BG-Leistung Physio;2
+Kälteanwendung;9206;14.33;BG-Leistung Physio;1
+Reizstrom;9301;5.94;BG-Leistung Physio;2
+Elektrogymnastik, (je Muskel-/Nerv-Einheit);9302;5.94;BG-Leistung Physio;2
+Ultraschall;9303;10.34;BG-Leistung Physio;1
+Jontophorese;9304;9.03;BG-Leistung Physio;1
+Lymphdrainage, Teilbehandlung;9402;11.91;BG-Leistung Physio;3
+Lymphdrainage Ganzbehandlung;9403;11.91;BG-Leistung Physio;4
+Einzelinhalation;9501;8.76;BG-Leistung Physio;1
+Rauminhalation, je Teilnehmer;9502;4.40;BG-Leistung Physio;1
+Ärztlich verordneter Hausbesuch bei einem Patienten (je Besuch);9661;14.77;BG-Leistung Ergo;1

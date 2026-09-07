@@ -1,0 +1,148 @@
+code;bezeichnung;einzelpreis;gruppe
+30.1;	Spülung des Ohres;15.50;HP Sonstiges
+10.1;	für jede angefangene Stunde bei Tag;5.50;HP Nebengebühren für Hausbesuche
+10.3;	durch Erstattung der Auslagen für öffentliche Verkehrsmittel;;HP Nebengebühren für Hausbesuche
+11.1;Kurze Krankheitsbescheinigung oder Brief im Interesse des Patienten;15.50;HP Schriftliche Auslassungen und  Krankheitsbesch.
+11.2;	Ausführlicher Krankheitsbericht oder Gutachten (DIN A4 engzeilig maschinengeschrieben);20.50;HP Schriftliche Auslassungen und  Krankheitsbesch.
+11.3;Individuell angefertigter schriftlicher Diätplan bei Ernährungs- und Stoffwechselstörungen;26.00;HP Schriftliche Auslassungen und  Krankheitsbesch.
+12.4;Harnuntersuchung, nur sediment;4.60;HP Chemisch-physikalische Untersuchungen
+14.4;Grundumsatzbestimmung mit Hilfe der Atemgasuntersuchung;26.00;HP Spezielle Untersuchungen
+14.5;Prüfung der Lungenkapazität (Spirometrische Untersuchung);20.50;HP Spezielle Untersuchungen
+14.6;Elektrokardiogramm mit mindestens 9 Ableitungen;51.50;HP Spezielle Untersuchungen
+14.7;Elektrokardiogramm mit Standardableitungen, Goldbergerableitungen, Nehbsche Ableitungen, Brustwandableitungen;31.00;HP Spezielle Untersuchungen
+14.8;Oszillogramm-Methoden;25.50;HP Spezielle Untersuchungen
+14.9;Spezielle Herz-Kreislauf-Untersuchungen (Schellong);25.50;HP Spezielle Untersuchungen
+14.10;Ultraschall-Gefäßdoppler-Untersuchung zu peripheren Venendruck- und/oder Strömungsmessung;11.30;HP Spezielle Untersuchungen
+15.1;Photoaufnahmen zu diagnostischen Zwecken, Aufnahmen schwarz/weiß (pro Augenpaar);15.50;HP Photoaufnahmen
+15.2;Vergrößerungen sowie Farbaufnahmen werden zum handelsüblichen Preis berechnet;;HP Photoaufnahmen
+16.1;Elektro Neural-Diagnostik;26.00;HP Bioenergetische Verfahren
+16.2;Segmentdiagnostik, Maximaldiagnostik u.a.;20.50;HP Bioenergetische Verfahren
+16.3;Bioelektrische Funktionsdiagnostik;41.00;HP Bioenergetische Verfahren
+16.4;Hautwiderstandsmessungen;26.00;HP Bioenergetische Verfahren
+17.1;Neurologische Untersuchung;26.00;HP Neurologische Untersuchungen
+18.1;Einfache heilmagnetische Spezialbehandlungen, soweit sie nicht das gewöhnliche Maß einer Behandlung in zeitlicher Hinsicht überschreiten;10.50;HP Heilmagnetische Behandlungen
+18.2;Heilmagnetische Spezialbehandlungen, soweit sie in zeitlicher Hinsicht das gewöhnliche Maß überschreiten;26.00;HP Heilmagnetische Behandlungen
+19.1;Psychotherapie von halbstündiger Dauer;26.00;HP Psychotherapie
+19.2;	Psychotherapie von 50 bis 90 Minuten Dauer;46.00;HP Psychotherapie
+19.3;Ausstellung eines psychodiagnostischen Befundes;38.50;HP Psychotherapie
+19.4;Psychotherapeutisches Gutachten je zweizeiliger Schreibmaschinenseite;15.50;HP Psychotherapie
+19.5;Psychologische Exploration mit eingehender Beratung;46.00;HP Psychotherapie
+19.6;Anwendung und Auswertung von Testverfahren (TAT, TUA, Rorschach usw.);38.50;HP Psychotherapie
+19.7;Behandlung von Störungen der Sprechorgane je Sitzung;31.00;HP Psychotherapie
+25.3;Injektion, intravenös, intraarteriell;7.70;HP Injektionen, Infusionen
+25.4;intrakutane Reiztherapie (Quaddelbehandlung), pro Sitzung;13.00;HP Injektionen, Infusionen
+25.5;Injektion, intraartikulär;15.50;HP Injektionen, Infusionen
+25.6;Neural- oder segmentgezielte Injektionen nach Hunecke;26.00;HP Injektionen, Infusionen
+26.2;Aderlaß;12.80;HP Blutentnahmen
+27.1;Setzen von Blutegeln, ggf. einschließl. Verband;31.00;HP Hautableitungsverfahren, Hautreizverfahren
+27.2;Skarifikation der Haut;10.50;HP Hautableitungsverfahren, Hautreizverfahren
+27.3;Setzen von Schröpfköpfen, unblutig;8.00;HP Hautableitungsverfahren, Hautreizverfahren
+27.4;Setzen von Schröpfköpfen, blutig;20.50;HP Hautableitungsverfahren, Hautreizverfahren
+27.5;Schröpfkopfmassage einschließl. Gleitmittel;10.50;HP Hautableitungsverfahren, Hautreizverfahren
+27.6;Anwendung großer Saugapparate für ganze Extremitäten;26.00;HP Hautableitungsverfahren, Hautreizverfahren
+28.1;Behandlung mittels paravertebraler Infiltration, einmalig bzw. medikamentöse Infiltrationsbehandlung im Bereich einer Körperregion;15.50;HP Infiltrationen
+28.2;Behandlung mittels paravertebraler Infiltration, mehrmalig bzw. medikamentöse Infiltrationsbehandlung im Bereich mehrerer Körperregionen;20.50;HP Infiltrationen
+20.3;Bindegewebsmassage;20.50;HP Atemtherapie, Massagen
+21.1;Akupunktur einschließlich Pulsdiagnose;26.00;HP Akupunktur
+21.2;	Moxibustionen, Elektroakupunktur, Injektionen und Quaddelungen in Akupunkturpunkte;15.50;HP Akupunktur
+22.1;Inhalationen, soweit sie vom Heilpraktiker mit den verschiedenen Apparaturen in der Sprechstunde ausgeführt werden;13.00;HP Inhalationen
+23.1;Anwendung von Aerosolen mit Kompressor, Preßluft- bzw. Sauerstoffapparaten;15.50;HP Aerosole
+24.1;Eigenblutinjektion einschl. Blutentnahme und Reinjektion;13.00;HP Eigenblut, Eigenharn
+24.2;Eigenharninjektion;13.00;HP Eigenblut, Eigenharn
+25.1;Injektion, subkutan;5.20;HP Injektionen, Infusionen
+4;Eingehende Beratung, die das gewöhnliche Maß übersteigt, von mindestens 10 Minuten Dauer, gegebenenfalls einschließlich einer Untersuchung;22.00;HP Diverse Leistung
+5;	 Beratung, auch mittels Fernsprecher, gegebenenfalls einschließlich einer kurzen Untersuchung;20.50;HP Diverse Leistung
+6;	Für die gleichen Leistungen wie unter 5, jedoch außerhalb der normalen Sprechstundenzeit.;24.50;HP Diverse Leistung
+7;	Für die gleichen Leistungen wie unter 5, jedoch bei Nacht, zwischen 20 und 7 Uhr;28.50;HP Diverse Leistung
+8;Für die gleichen Leistungen wie unter 5, jedoch sonn- und feiertags;27.00;HP Diverse Leistung
+2;Durchführung des vollständigen Krankenexamens mit Repertorisation nach den Regeln der klassischen Homöopathie;41.00;HP Diverse Leistung
+25.2;Injektion, intramuskulär;5.20;HP Injektionen, Infusionen
+26.1;Blutentnahme;3.60;HP Blutentnahmen
+29.1;Roedersches Behandlungs- und Mandelabsaugverfahren;15.50;HP Roedersches Verfahren
+30.2;	Anwendung der Beutelbegasung für ganze Extremitäten mit Ozon oder Sauerstoff;36.00;HP Sonstiges
+31.1;Eröffnung eines oberflächlichen Abszesses;13.00;HP Abszesse u.a.
+31.2;Entfernung von Aknepusteln pro Sitzung;10.50;HP Abszesse u.a.
+32.1;bei einer kleinen Wunde;10.50;HP Versorgung einer frischen Wunde
+32.2;bei einer größeren und verunreinigten Wunde;15.50;HP Versorgung einer frischen Wunde
+33.1;Verbände, jedesmal;15.50;HP Verbände (außer zur Wundbehandlung)
+33.2;	elastische Stütz-, Tape- und Pflasterverbände;15.50;HP Verbände (außer zur Wundbehandlung)
+33.3;Kompressions- oder Zinkleimverband;13.00;HP Verbände (außer zur Wundbehandlung)
+34.1;Chiropraktische Behandlung;18.00;HP Gelenk- und Wirbelsäulenbehandlung
+34.2;Gezielter chiropraktischer Eingriff an der Wirbelsäule;19.00;HP Gelenk- und Wirbelsäulenbehandlung
+35.1;des Unterkiefers;15.50;HP Osteopathische Behandlung
+35.2;des Schultergelenkes;26.00;HP Osteopathische Behandlung
+35.3;der Handgelenke, der Oberschenkel, der Unterschenkel, der Vorderarme und der Fußgelenke;26.00;HP Osteopathische Behandlung
+35.4;der Schlüsselbeine und der Kniegelenke;15.50;HP Osteopathische Behandlung
+35.5;	der Daumen;13.00;HP Osteopathische Behandlung
+35.6;der Finger und Zehen;13.00;HP Osteopathische Behandlung
+36.1;Leitung eines ansteigenden Vollbades;15.50;HP Hydro- und Elektrotherapie
+36.2;Leitung eines ansteigenden Teilbades;8.00;HP Hydro- und Elektrotherapie
+36.3;Spezialdarmbad (subaquales Darmbad);23.00;HP Hydro- und Elektrotherapie
+36.4;Kneippsche Güsse;8.00;HP Hydro- und Elektrotherapie
+37.1;	Teilheißluftbad, z.B. Kopf oder Arm;8.00;HP Elektrische Bäder- und Heißluftbäder
+37.2;Ganzheißluftbad, z.B. Rumpf oder Beine;10.50;HP Elektrische Bäder- und Heißluftbäder
+37.3;Heißluftbad im geschlossenen Kasten;10.50;HP Elektrische Bäder- und Heißluftbäder
+37.4;Elektrisches Vierzellenbad;13.00;HP Elektrische Bäder- und Heißluftbäder
+38.1;Fangopackungen;15.50;HP Spezialpackungen
+38.2;Paraffinpackungen, örtliche;15.50;HP Spezialpackungen
+38.3;Paraffinganzpackungen;23.00;HP Spezialpackungen
+38.4;Kneippsche Wickel- und Ganzpackungen, Prießnitz- und Schlenzpackungen;31.00;HP Spezialpackungen
+39.1;Einfache oder örtliche Lichtbestrahlungen;8.00;HP Elektro-physikalische Heilmethoden
+39.2;Ganzbestrahlungen;10.50;HP Elektro-physikalische Heilmethoden
+39.4;Faradisation, Galvanisation und verwandte Verfahren (Schwellstromgeräte);15.50;HP Elektro-physikalische Heilmethoden
+9.1;bei Tag;29.50;HP Hausbesuch, einschließlich Beratung
+9.2;in dringenden Fällen (Eilbesuch, sofort ausgeführt);32.00;HP Hausbesuch, einschließlich Beratung
+9.3;bei Nacht und an Sonn- und Feiertagen;26.50;HP Hausbesuch, einschließlich Beratung
+10.2;für jede angefangene Stunde bei NachtDas Wegegeld wird ersetzt bei einer Entfernung von 2 bis 25 Kilometern:;10.50;HP Nebengebühren für Hausbesuche
+10.4;durch besondere Vereinbarung mit dem Patienten, wie Gestellung eines Transportmittels. Hierbei besteht nur Anspruch auf Vergütung der Zeitversäumnis. Bei Benutzung des eigenen Fahrzeuges für den zurückgelegten Kilometer;;HP Nebengebühren für Hausbesuche
+10.5;bei Tag;1.25;HP Nebengebühren für Hausbesuche
+10.6;bei Nacht;2.50;HP Nebengebühren für Hausbesuche
+10.7;	Handelt es sich um einen Fernbesuch von über 25 km Entfernung zwischen Praxis- und Besuchsort, so können pro Kilometer an Reisekosten in Anrechnung gebracht werden;0.25;HP Nebengebühren für Hausbesuche
+10.8;Handelt es sich bei einem Krankenbesuch um eine Reise, welche länger als sechs Stunden dauert, so kann der Heilpraktiker anstelle des Wegegeldes die tatsächlich entstandenen Reisekosten in Anrechnung bringen und außerdem für den Zeitaufwand pro Stunde Reisezeit berechnen. Der Patient ist hiervon vorher in Kenntnis zu setzen.;20.50;HP Nebengebühren für Hausbesuche
+12.1;Harnuntersuchungen qualitativ mittels bis zu Verwendung eines Mehrfachreagenzträgers (Teststreifen) durch visuellen Farbvergleich;3.10;HP Chemisch-physikalische Untersuchungen
+12.2;	Harnuntersuchung quantitativ (es ist anzugeben, auf welchen Stoff untersucht wurde, z.B. Zucker usw.);4.60;HP Chemisch-physikalische Untersuchungen
+12.5;Carzinochrom-Reaktion (CCR);17.90;HP Chemisch-physikalische Untersuchungen
+12.7;Blutstatus (nicht neben Ziff. 12.9, 12.10, 12.11);18.00;HP Chemisch-physikalische Untersuchungen
+13.1;Sonstige Untersuchungen unter Zuhilfenahme spezieller Apparaturen oder Färbeverfahren besonders schwieriger Art, z.B. ph-Messungen im strömenden Blut oder Untersuchungen nach v. Bremer, Enderlein usw.;31.00;HP Sonstige Untersuchungen
+14.1;Binokulare mikroskopische Untersuchung des Augenvordergrundes;10.50;HP Spezielle Untersuchungen
+14.2;Binokulare Spiegelung des Augenhintergrundes;10.50;HP Spezielle Untersuchungen
+14.3;Grundumsatzbestimmung nach Read;8.00;HP Spezielle Untersuchungen
+12.8;Blutzuckerbestimmung;8.00;HP Chemisch-physikalische Untersuchungen
+12.9;Hämoglobinbestimmung;5.50;HP Chemisch-physikalische Untersuchungen
+12.10;Differenzierung des gefärbten Blutausstriches;7.70;HP Chemisch-physikalische Untersuchungen
+12.11;Zählung der Leuko- und Erythrozyten;5.50;HP Chemisch-physikalische Untersuchungen
+12.12;Blutkörperchen-Senkungsgeschwindigkeit (BKS) einschließlich Blutentnahme;6.00;HP Chemisch-physikalische Untersuchungen
+12.13;Einfache mikroskopische und/oder chemische Untersuchungen von Körperflüssigkeiten und Ausscheidungen auch mit einfachen oder schwierigen Färbeverfahren sowie Dunkelfeld, pro Untersuchung;9.50;HP Chemisch-physikalische Untersuchungen
+12.14;Aufwendige Chemogramme von Körperflüssigkeiten und Ausscheidungen je nach Umfang (z.B. Enzymdiagnostik, Nieren- chemie, Blutserumchemie, Stuhlchemie, Elektrolyse, Elektrophorese, Fermentchemie, pro Einzeluntersuchung);10.50;HP Chemisch-physikalische Untersuchungen
+12.15;Kristallographie, Photometrie, pro Einzeluntersuchung;10.50;HP Chemisch-physikalische Untersuchungen
+19.8;Behandlung einer Einzelperson durch Hypnose;26.00;HP Psychotherapie
+20.1;Atemtherapeutische Behandlungsverfahren;31.00;HP Atemtherapie, Massagen
+20.2;Nervenpunktmassage nach Cornelius, Aurelius u.a. Spezialnervenmassage;15.50;HP Atemtherapie, Massagen
+20.4;Teilmassage (Massage einzelner Körperteile);10.50;HP Atemtherapie, Massagen
+20.5;Großmassage;18.00;HP Atemtherapie, Massagen
+20.6;Sondermassagen - Unterwasserdruckstrahlmassage - Lymphdrainage - Schrägbettbehandlung u.a;20.50;HP Atemtherapie, Massagen
+20.7;Behandlung mit physikalischen oder medico-mechanischen Apparaten;26.00;HP Atemtherapie, Massagen
+20.8;Einreibungen zu therapeutischen Zwecken in die Haut;8.00;HP Atemtherapie, Massagen
+25.7;Infusion;8.70;HP Injektionen, Infusionen
+25.8;Dauertropfinfusion;12.80;HP Injektionen, Infusionen
+25.9;Gasgemischinjektionen (z.B. Ozon oder Sauerstoff), intramuskulär;13.00;HP Injektionen, Infusionen
+25.10;Gasgemischinjektionen, intraarteriell;26.00;HP Injektionen, Infusionen
+25.11;HOT-Behandlung (Hämatogene Oxidationstherapie);51.50;HP Injektionen, Infusionen
+27.7;Setzen von Fontanellen;15.50;HP Hautableitungsverfahren, Hautreizverfahren
+27.8;Setzen von Cantharidenblasen;10.50;HP Hautableitungsverfahren, Hautreizverfahren
+27.9;Reinjektion des Blaseninhaltes (aus Ziffer 27.8);10.50;HP Hautableitungsverfahren, Hautreizverfahren
+27.10;Anwendung von Pustulantien;10.50;HP Hautableitungsverfahren, Hautreizverfahren
+27.11;	Baunscheidtieren;20.50;HP Hautableitungsverfahren, Hautreizverfahren
+27.12;Biersche Stauung;8.00;HP Hautableitungsverfahren, Hautreizverfahren
+37.5;Elektrisches Vollbad (Stangerbad);13.00;HP Elektrische Bäder- und Heißluftbäder
+39.5;Anwendung der Influenzmaschine;10.50;HP Elektro-physikalische Heilmethoden
+39.6;	Anwendung von Heizsonnen (Infrarot);8.00;HP Elektro-physikalische Heilmethoden
+39.7;Verschorfung mit heißer Luft und heißen Dämpfen;10.50;HP Elektro-physikalische Heilmethoden
+39.8;Behandlung mit hochgespannten Strömen, Hochfrequenzströmen in Verbindung mit verschiedenen Apparaten;15.50;HP Elektro-physikalische Heilmethoden
+39.9;Langwellenbehandlung (Diathermie), Kurzwellen- und Mikrowellenbehandlung;18.00;HP Elektro-physikalische Heilmethoden
+1;Für die eingehende, das gewöhnliche Maß übersteigende Untersuchung;20.50;HP Diverse Leistung
+3;Kurze Information, auch per Telefon, oder Ausstellung einer Wiederholungsverordnung, als einzige Leistung pro Inanspruchnahme des Heilpraktikers;4.50;HP Diverse Leistung
+39.10;Magnetfeldtherapie mit besonderen Spezialapparaten;20.50;HP Elektro-physikalische Heilmethoden
+39.11;Elektromechanische und elektrothermische Behandlung (je nach Aufwand und Dauer);31.00;HP Elektro-physikalische Heilmethoden
+39.12;Niederfrequente Reizstromtherapie, z.B. Jono Modulator;26.00;HP Elektro-physikalische Heilmethoden
+39.13;Ultraschall-Behandlung;15.50;HP Elektro-physikalische Heilmethoden

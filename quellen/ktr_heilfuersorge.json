@@ -1,0 +1,237 @@
+{
+    "960870014": {
+        "IK": "960870014",
+        "Name": "Landesamt f\u00fcr Besoldung und Versorgung",
+        "Bundesland": "BW",
+        "eMail": "",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "70730",
+            "Ort": "Fellbach",
+            "StrassePostfach": "Landesamt f\u00fcr Besoldung und Versorgung Baden-W\u00fcrttemberg"
+        }
+    },
+    "999999901": {
+        "IK": "999999901",
+        "Name": "\u00c4rztlicher Dienst der Bayerischen Polizei",
+        "Bundesland": "BY",
+        "eMail": "",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "81669",
+            "Ort": "M\u00fcnchen",
+            "StrassePostfach": "Rosenheimer Stra\u00dfe 130"
+        }
+    },
+    "999999902": {
+        "IK": "999999902",
+        "Name": "Polizei Berlin Dir ZS 121-123 Finanzen",
+        "Bundesland": "BE",
+        "eMail": "",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "12101",
+            "Ort": "Berlin",
+            "StrassePostfach": "Platz der Luftbr\u00fccke 6"
+        }
+    },
+    "999999903": {
+        "IK": "999999903",
+        "Name": "ZDPol Heilf\u00fcrsorge",
+        "Bundesland": "BB",
+        "eMail": "",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "14471",
+            "Ort": "Postdam",
+            "StrassePostfach": "An der Pirschheide 11"
+        }
+    },
+    "999999904": {
+        "IK": "999999904",
+        "Name": "Performa Nord",
+        "Bundesland": "HB",
+        "eMail": "office@performanord.bremen.de",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "28195",
+            "Ort": "Bremen",
+            "StrassePostfach": "Schillerstr. 1"
+        }
+    },
+    "999999905": {
+        "IK": "999999905",
+        "Name": "Polizei Hamburg Heilf\u00fcrsorge",
+        "Bundesland": "HH",
+        "eMail": "pers41@polizei.hamburg.de",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "22761",
+            "Ort": "Hamburg",
+            "StrassePostfach": "Stresemannstra\u00dfe 341-347"
+        }
+    },
+    "999999906": {
+        "IK": "999999906",
+        "Name": "Landesamt f\u00fcr zentrale Aufgaben und Technik",
+        "Bundesland": "MV",
+        "eMail": "",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "19061",
+            "Ort": "Schwerin",
+            "StrassePostfach": "Parkweg 12"
+        }
+    },
+    "960370031": {
+        "IK": "960370031",
+        "Name": "Nds. Landesamt f\u00fcr Bez\u00fcge und Versorgung",
+        "Bundesland": "NI",
+        "eMail": "NLBVZIBAurich@nlbv.niedersachsen.de",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "26585",
+            "Ort": "Aurich",
+            "StrassePostfach": "Postfach 1506"
+        }
+    },
+    "103600525": {
+        "IK": "103600525",
+        "Name": "Freie Heilf\u00fcrsorge NRW",
+        "Bundesland": "NW",
+        "eMail": "za5.3td.lzpd@polizei.nrw.de",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "47059",
+            "Ort": "Duisburg",
+            "StrassePostfach": "LZPD NRW, TD 13.2 Freie Heilf\u00fcrsorge, Schifferstr. 10"
+        }
+    },
+    "999999909": {
+        "IK": "999999909",
+        "Name": "Landesamt f\u00fcr Finanzen",
+        "Bundesland": "RP",
+        "eMail": "",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "56073",
+            "Ort": "Koblenz",
+            "StrassePostfach": "Hoevelstr. 10"
+        }
+    },
+    "999999910": {
+        "IK": "999999910",
+        "Name": "Polizeiverwaltungsamt Heilf\u00fcrsorge",
+        "Bundesland": "SN",
+        "eMail": "gs.hfsv.pva@polizei.sachsen.de",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "01112",
+            "Ort": "Dresden",
+            "StrassePostfach": "Postfach 230 209"
+        }
+    },
+    "999999911": {
+        "IK": "999999911",
+        "Name": "Landesbereitschaftspolizei",
+        "Bundesland": "ST",
+        "eMail": "heilfuersorge.pi-zd@polizei.sachsen-anhalt.de",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "39114",
+            "Ort": "Magdeburg",
+            "StrassePostfach": "Alt Prester 5"
+        }
+    },
+    "999999912": {
+        "IK": "999999912",
+        "Name": "Dienstleistungszentrum Personal",
+        "Bundesland": "SH",
+        "eMail": "poststelle@dlzp.landsh.de",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "24113",
+            "Ort": "Kiel",
+            "StrassePostfach": "Speckenbeker Weg 133"
+        }
+    },
+    "999999913": {
+        "IK": "999999913",
+        "Name": "Polizei\u00e4rztlicher Dienst",
+        "Bundesland": "TH",
+        "eMail": "",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "99014",
+            "Ort": "Erfurt",
+            "StrassePostfach": "PF 101464"
+        }
+    },
+    "951287019": {
+        "IK": "951287019",
+        "Name": "Bundespolizeipr\u00e4sidium - Referat 83",
+        "eMail": "bpolp.ref83.hf-abrechnungen@polizei.bund.de",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "53754",
+            "Ort": "Sankt Augustin",
+            "StrassePostfach": "Abrechnungsstelle Heilf\u00fcrsorge der Bundespolizei"
+        }
+    },
+    "999999920": {
+        "IK": "999999920",
+        "Name": "Bundesamt f. Personalmanagement Bundeswehr - Referat PA 1.4",
+        "eMail": "",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "15344",
+            "Ort": "Strausberg",
+            "StrassePostfach": "Pr\u00f6tzeler Chaussee 25 - Abrechnungsstelle Heilf\u00fcrsorge"
+        }
+    },
+    "999999921": {
+        "IK": "999999921",
+        "Name": "Postbeamtenkrankenkasse",
+        "eMail": "",
+        "VKGDFU": {},
+        "VKGANS": {},
+        "VKGZIEL": {},
+        "ANS": {
+            "PLZ": "70469",
+            "Ort": "Stuttgart",
+            "StrassePostfach": "Maybachstra\u00dfe 54\/56"
+        }
+    }
+}

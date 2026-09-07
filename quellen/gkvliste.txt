@@ -1,0 +1,2952 @@
+Kassen-IK	Kassen Bezeichnung	PLZ	Ort	Straße
+136580174	ADD Aufnahmeeinrichtung	66869	Kusel	Haischbachstr. 100
+960770046	ADD Aufnahmeeinrichtung	66869	Kusel	Haischbachstr. 100
+136580414	ADD Aufnahmeeinrichtung	54292	Trier	Dasbacherstr. 19
+136580425	ADD Aufnahmeeinrichtung	54411	Hermeskeil	Trierer Str. 200
+108018132	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+106818216	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+106818249	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+106818261	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+106918228	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107018414	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107018436	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107118233	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107415507	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107415541	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107515520	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107515564	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107515575	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107515586	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107615532	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107615554	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107636423	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107815705	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107815716	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107815727	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107815738	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107815750	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107815761	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107815794	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+107815807	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018007	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018110	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018336	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018347	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018358	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018369	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018519	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018520	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018531	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018542	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018553	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018575	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018586	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108095249	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108095250	AOK Baden Württemberg	71332	Waiblingen	Schorndorfer Str. 32
+108018132	AOK Baden-Württembeg Sprechst.	71332	Waiblingen	Schorndorfer Str. 32
+108310400	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108416214	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108516419	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108516420	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108516431	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108516442	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108516453	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108516464	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108516475	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108516486	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108516497	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108616513	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108616524	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108616535	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108616546	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108616557	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108716115	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108816811	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108816822	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108816833	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108916618	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108916629	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108916630	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108916641	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108916652	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108916663	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108916709	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109016314	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109016325	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109016336	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109016347	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109016358	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109016369	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109016370	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109116714	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109116725	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109116736	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109116747	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109116758	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109116769	AOK Bayern	81739	München	Carl-Wery-Str. 28
+109116770	AOK Bayern	81739	München	Carl-Wery-Str. 28
+108616568	AOK Bayern Hilfsmittel	95632	Wunsiedel	Schönlinder Weg 30
+106315003	AOK Beratungs.-u.Prüfstelle SS	56068	Koblenz	Rizzastr. 11
+106215364	AOK Beratungs.-u.Prüfstelle SS	56068	Koblenz	Rizzastr. 11
+106310315	AOK Beratungs.-u.Prüfstelle SS	56068	Koblenz	Rizzastr. 11
+106415355	AOK Beratungs.-u.Prüfstelle SS	56068	Koblenz	Rizzastr. 11
+106515221	AOK Beratungs.-u.Prüfstelle SS	56068	Koblenz	Rizzastr. 11
+100696012	AOK Brandenburg	14513	Teltow	Am Teltowkanal 8
+109519016	AOK Brandenburg	14513	Teltow	Am Teltowkanal 8
+100696012	AOK Brandenburg SSB	14513	Teltow	Am Teltowkanal 8
+103119199	AOK Bremen Sprechst.	28195	Bremen	Bgm.Schmidt-Str. 95
+103119199	AOK Bremen/Bremerhaven	28195	Bremen	Bgm.Smidt-Str. 95
+104612111	AOK HUERTH	50354	Hürth	LUXENBURGERSTR.323
+101197349	AOK Halle Sprech.	6108	Halle (Saale)	Robert-Franz-Ring 14
+102040499	AOK Hamburg Sprechstundenbed.	22089	Hamburg	Pappelallee 22-26
+105313145	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105213064	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105213097	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105213122	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105213188	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105313043	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105313190	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105313247	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105413011	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105413179	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105513023	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105513034	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105513136	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105513158	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105513216	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105613273	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105713207	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105713230	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105813300	AOK Hessen	65760	Eschborn	Kölner Str. 8
+105110208	AOK Hessen Sprech.	65760	Eschborn	Kölner Str. 8
+107018425	AOK Mannheim	68161	Mannheim	Renzstr. 11-13
+106918251	AOK Mittlerer Oberrhein	76133	Karlsruhe	Kriegsstr. 41
+102091696	AOK Ndr. Sprechstundenbed.	30173	Hannover	Hans Boeckler Allee
+102114819	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101814028	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101814197	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101814200	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101814346	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101814437	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101814518	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101900374	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101900421	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101900535	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101900615	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101914085	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101914212	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101914520	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101914553	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101914702	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101914724	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102000413	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102000457	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102000505	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102014179	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102014180	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102014226	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102014271	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102014328	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102014501	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102100436	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102100620	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102114103	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102114114	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102114261	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102114410	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102114535	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102114591	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102114717	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102200460	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102214013	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102214295	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102300472	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102314365	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102314376	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102314628	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102314684	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102400393	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102400576	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102414139	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102414151	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102414468	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102414630	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102414663	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102500361	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102500485	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102500522	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102514050	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102514072	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102514356	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102514389	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102514390	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102514470	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102600567	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102614095	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102614142	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102614493	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102614585	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102700580	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102714165	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102714427	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102714564	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102714600	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102714611	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102714644	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102814064	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102814337	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+102814678	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+105903149	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+105903150	AOK Niedersachsen	37081	Göttingen	Godehardstr. 24
+101317004	AOK NordWest (Schles.-H)	24145	Kiel	Edisonstr. 70
+101317037	AOK NordWest (Schles.-H)	24145	Kiel	Edisonstr. 70
+101317151	AOK NordWest (Schles.-H)	24145	Kiel	Edisonstr. 70
+101317173	AOK NordWest (Schles.-H)	24145	Kiel	Edisonstr. 70
+101317219	AOK NordWest (Schles.-H)	24145	Kiel	Edisonstr. 70
+101317220	AOK NordWest (Schles.-H)	24145	Kiel	Edisonstr. 70
+103411401	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511004	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511048	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511093	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511128	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511139	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511151	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511184	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511195	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511220	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511253	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511264	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511286	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103511413	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711017	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711028	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711039	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711051	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711073	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711108	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711119	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711142	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711164	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711175	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711200	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711211	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711233	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711244	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+103711277	AOK NordWest (Westf.L.)	44269	Dortmund	Kopenhagener Str. 1
+109519005	AOK Nordost (Berlin)	10963	Berlin	Wilhelmstr. 1
+109719018	AOK Nordost (Berlin)	10963	Berlin	Wilhelmstr. 1
+109519005	AOK Nordost (Berlin) SSB	10963	Berlin	Wilhelmstr.1
+100395611	AOK Nordost (Meckl.Vorp.)	17033	Neubrandenburg	Alfred Lyllthal Str.
+100295017	AOK Nordost (Meckl.Vorp.)	17033	Neubrandenburg	Alfred Lyllthal Str.
+100395622	AOK Nordost (Meckl.Vorp.)	17033	Neubrandenburg	Alfred Lyllthal Str.
+100495315	AOK Nordost (Meckl.Vorp.)	17033	Neubrandenburg	Alfred Lyllthal Str.
+100395611	AOK Nordost (Meckl.Vorp.) SSB	17033	Neubrandenburg	Alfred Lyllthal Str.
+101317184	AOK Nordwest Sprech.	24145	Kiel	Edisonstr. 70
+102040503	AOK Nordwest Sprech.	24145	Kiel	Edisonstr. 70
+105998018	AOK Plus	98528	Suhl	Am Fröhlichen Mann
+105810615	AOK Plus	98528	Suhl	Am Fröhlichen Mann
+106098317	AOK Plus	98528	Suhl	Am Fröhlichen Mann
+106198615	AOK Plus	98528	Suhl	Am Fröhlichen Mann
+107299005	AOK Plus ( Sachsen)	9119	Chemnitz	Stollberger Str. 73
+107799614	AOK Plus ( Sachsen)	9119	Chemnitz	Stollberger Str. 73
+107999013	AOK Plus ( Sachsen)	9119	Chemnitz	Stollberger Str. 73
+108299314	AOK Plus ( Sachsen)	9119	Chemnitz	Stollberger Str. 73
+105998018	AOK Plus Sprech.KH	98528	Suhl	Am Fröhlichen Mann
+104212505	AOK Rheinland	40822	Mettmann	Neander Str. 16
+101519213	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104112014	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104112047	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104112105	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104112263	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104212059	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104212173	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104212208	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104212516	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104212538	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104212549	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104212561	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104212594	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104212607	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104412062	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104412131	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104412233	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104512074	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104512198	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104512212	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104612020	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104612031	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104612086	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104612097	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104612144	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104612166	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104612246	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104812124	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104812157	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104812180	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104812282	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104912227	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104912250	AOK Rheinland	40822	Mettmann	Neander Str. 16
+104912272	AOK Rheinland	40822	Mettmann	Neander Str. 16
+134280052	AOK Rheinland	40822	Mettmann	Neander Str. 16
+107310373	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106215397	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315014	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315025	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315058	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315069	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315070	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315116	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315252	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315263	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315274	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315285	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106315296	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106415300	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106415311	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106415322	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106415333	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106415344	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106415377	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106415388	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106515209	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106515210	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+106515232	AOK Rheinland-Pfalz	56410	Montabaur	Robert-Bosch-Straße
+107310373	AOK Rheinland-Pfalz	56470	Bad Marienberg (West	Jahnstr. 1
+107310373	AOK Rheinland-Pfalz Pflegekass	56470	Bad Marienberg (West	Jahnstrasse 1
+101097008	AOK Roßlau	6862	Dessau-Roßlau	Hauptstraße 128-129
+109319309	AOK Saarland	66121	Saarbrücken	Halbergstr. 1
+101097008	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101020723	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101020745	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101023511	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101097019	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101120494	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101120713	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101121280	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101123373	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101123556	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101131395	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101197316	AOK Sachsen-Anhalt	39106	Magdeburg	Lüneburger Str. 4
+101310018	AOK Schleswig-Holstein Impf.	25421	Pinneberg	Hindenburgdamm 60
+108018121	AOK Stuttgart	70176	Stuttgart	Breitscheidstr. 20
+107415596	AOK Waldshut	79761	Waldshut-Tiengen	Am Rheinfels 2
+107436557	Abrechnungszentrum Emmendingen	79312	Emmendingen	An der B3 Haus Nr. 6
+139380054	Amt f. Soz. Grundsicherung	66424	Homburg	Am Forum 1
+133180071	Amt f. Soz.Dienste	28217	Bremen	Hans Böckler Str. 9
+100696012	Aok Nordost	17033	Neubrandenburg	Alfred-Lythall Str.
+133780475	Asylstelle	32423	Minden	Portastraße 13
+133780340	Asylstelle Kreis Lippe	32756	Detmold	Felix-Fechenbach Str
+133780647	Asylstelle Kreis Lippe	32756	Detmold	Felix-Fechenbach Str
+133781911	Asylstelle Kreis Lippe	32756	Detmold	Felix-Fechenbach Str
+133780512	Asylstelle Recklinghausen	45657	Recklinghausen	Kurt-Schumacher-Alle
+133780191	Asylstelle Warendorf	59227	Ahlen	Westenmauer 10
+104940005	BARMER Blutzuckerselbstmessung	42285	Wuppertal	Lichtscheider Str. 8
+104940005	BARMER HAUSAPOTHEKEN	42285	Wuppertal	LICHTSCHEIDER STR.89
+138680077	BEZIRK OBERFRANKEN	95448	Bayreuth	COTTENBACHERSTR. 23
+139580591	BEZIRKSAMT WEDDING	13353	Berlin	MUELLERSTR. 146-147
+120991009	BG BAU Region Süd	81241	München	Am Knie 6
+120591038	BG BAU Region Süd	81241	München	Am Knie 6
+120890962	BG BAU Region Süd	81241	München	Am Knie 6
+120890984	BG BAU Region Süd	81241	München	Am Knie 6
+120990996	BG BAU Region Süd	81241	München	Am Knie 6
+120991010	BG BAU Region Süd	81241	München	Am Knie 6
+120992317	BG BAU Region Süd	81241	München	Am Knie 6
+121490107	BG BAU Region Süd	81241	München	Am Knie 6
+120390887	BG Bau	30519	Hannover	Hildesheimer Str. 30
+120290875	BG Bau	30519	Hannover	Hildesheimer Str. 30
+120390898	BG Bau	30519	Hannover	Hildesheimer Str. 30
+120391025	BG Bau	30519	Hannover	Hildesheimer Str. 30
+121190912	BG Bau	30519	Hannover	Hildesheimer Str. 30
+121191047	BG Bau	30519	Hannover	Hildesheimer Str. 30
+120590925	BG Bau Mitte	51065	Köln	Eulenbergstr. 13-21
+120590947	BG Bau Mitte	51065	Köln	Eulenbergstr. 13-21
+120690959	BG Bau Mitte	51065	Köln	Eulenbergstr. 13-21
+121192344	BG Bau Mitte	51065	Köln	Eulenbergstr. 13-21
+120290524	BG Chemie	22453	Hamburg	Borsteler Chaussee 5
+121590006	BG Chemie	6110	Halle (Saale)	Merseburger Str. 52
+121490027	BG Druck u. Papierverarb.	4001	Leipzig	Gustav-Adolf-Str. 6
+120590479	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+120390466	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+120590184	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+120590446	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+120690664	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+120690697	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+120890483	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+120990495	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+120990747	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+121190455	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+121490072	BG Energie Textil Elektro (ETE	50968	Köln	Gustav-Heinemann-Ufe
+120391786	BG Gem.Unf.Vers.Oldenburg	26122	Oldenburg	Gartenstr.9
+120391764	BG Gemeindeunfall NDR Sach.	30519	Hannover	Am Mittelfelde 169
+120391742	BG Gemeindeunfallvers.	38102	Braunschweig	Berliner Platz 1 c
+120291466	BG Gesundheitsd.u.Wohlf.	97070	Würzburg	Röntgenring 2
+120292332	BG Gesundheitsd.u.Wohlf.	97070	Würzburg	Röntgenring 2
+120792202	BG Gesundheitsd.u.Wohlf.	97070	Würzburg	Röntgenring 2
+120992293	BG Gesundheitsd.u.Wohlf.	97070	Würzburg	Röntgenring 2
+121490083	BG Gesundheitsd.u.Wohlf.	97070	Würzburg	Röntgenring 2
+120291079	BG Handel und Warendistributio	28195	Bremen	Falkenstrasse 7
+120491082	BG Handel und Warendistributio	28195	Bremen	FALKENSTR.7
+120491151	BG Handel und Warendistributio	28195	Bremen	Falkenstrasse 7
+120591130	BG Handel und Warendistributio	28195	Bremen	Falkenstrasse 7
+120591141	BG Handel und Warendistributio	28195	Bremen	Falkenstrasse 7
+120891053	BG Handel und Warendistributio	28195	Bremen	Falkenstrasse 7
+120891100	BG Handel und Warendistributio	28195	Bremen	Falkenstrasse 7
+121191172	BG Handel und Warendistributio	28195	Bremen	Falkenstrasse 7
+120591129	BG Handel und Warendistributio	45116	ESSEN	HENRIETTENSTR. 2
+120791096	BG Handel und Warendistributio	55128	Mainz	Haifa Allee 36
+120991167	BG Handel und Warendistributio	80335	München	LINPRUNSTR.52
+121191069	BG Handel und Warendistributio	10715	Berlin	BUNDESALLEE 57/58
+121690041	BG Handel und Warendistributio	7545	Gera	BAHNHOFSTR.22
+120392377	BG Holz und Metall	30173	Hannover	Seligmann Allee 4
+120590583	BG Holz und Metall	30173	Hannover	Seligmann Allee 4
+120590264	BG Holz und Metall	40010	Düsseldorf	Kreuzstr. 54
+120590275	BG Holz und Metall	50829	Köln	Hugo-Eckener-Str. 20
+120890633	BG Holz und Metall	50829	Köln	Hugo-Eckener-Str. 20
+120590607	BG Holz und Metall	50829	Köln	Hugo-Eckenerstr. 20
+120790391	BG Holz und Metall	55124	Mainz	Isaac-Fulda-Allee 18
+120590253	BG Holz und Metall	55124	Mainz	Isaac-Fulda-Allee 18
+120790335	BG Holz und Metall	55124	Mainz	Isaac-Fulda-Allee 18
+121090385	BG Holz und Metall	55124	Mainz	Isaac-Fulda-Allee 18
+120990623	BG Holz und Metall	81241	München	Am Knie 8
+120990359	BG Holz und Metall	81241	München	Am Knie 8
+121590028	BG Holz und Metall	10825	Berlin	Innsbrucker Strasse
+120390284	BG Holz und Metall	10825	Berlin	Innsbrucker Strasse
+121192333	BG Holz und Metall	10825	Berlin	Innsbrucker Strasse
+121690085	BG Holz und Metall	99097	Erfurt	Lucas-Chranach-Platz
+121690018	BG Holz und Metall	99097	Erfurt	Lucas-Chranach-Platz
+120590208	BG Hütten-Walzwerke	44263	Dortmund	Semerteichstr. 98
+120692791	BG LAND-U.FORSTWIRTSCHAFT	64289	Darmstadt	BARTNINGSTR.57
+121092811	BG LANDWIRTSCHAFT SAARL.	66121	Saarbrücken	HEINERSTR. 2-4
+120391968	BG Landesunfallk.NDR Sach.	30519	Hannover	Am Mittelfelde 169
+120991737	BG Landesunfallkasse Bayern (K	80805	München	Ungererstr. 71
+120991908	BG Landesunfallkasse Bayern (K	80805	München	Ungererstr. 71
+120991942	BG Landesunfallkasse Bayern (K	80805	München	Ungererstr. 71
+120992841	BG Landwirtschaft	97072	Würzburg	Friedr.Ebert-Ring 33
+120992863	BG Landwirtschaft	81673	München	Neumarkter Str. 35
+120892873	BG Landwirtschaft Baden	76135	Karlsruhe	Steinhäuserstr. 14
+120692702	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120192718	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120392732	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120392743	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120592756	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120592767	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120592778	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120692780	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120692893	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120892884	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120992830	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120992943	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+121192925	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+121492939	BG Landwirtschaftliche	34121	Kassel	Frankfurterstr. 126
+120790723	BG Lederindustrie	55127	Mainz	Lortzingstr. 2
+120491958	BG Metall Nordd.	20149	Hamburg	Rothenb.Chaussee 145
+120292365	BG Metall Nordd.	20149	Hamburg	Rothenb.Chaussee 145
+120890369	BG Metall Südd.	70563	Stuttgart	Vollmöllerstr. 11
+120890405	BG Metall Südd.	70563	Stuttgart	Vollmöllerstr. 11
+120990348	BG Metall Südd.	80639	München	Arnulfstr. 283
+120890780	BG NAHRUNG-GASTSTAETTEN	68165	Mannheim	DYNAMO-STR. 7-9
+120790847	BG NAHRUNG-GASTSTAETTEN	68165	Mannheim	DYNAMO-STR. 7-9
+120890837	BG NAHRUNG-GASTSTAETTEN	68165	Mannheim	DYNAMO-STR. 7-9
+120892463	BG NAHRUNG-GASTSTAETTEN	68165	Mannheim	DYNAMO-STR. 7-9
+121190821	BG NAHRUNG-GASTSTAETTEN	68165	Mannheim	DYNAMO-STR. 7-9
+121690052	BG NAHRUNG-GASTSTAETTEN	68165	Mannheim	DYNAMO-STR. 7-9
+120990075	BG RCI	90449	Nürnberg	Südwestpark 2 und 4
+120590015	BG RCI Bergbau	53175	Bonn	Peter Hensen Str. 1
+121090056	BG RCI Bergbau	66119	Saarbrücken	Talstraße 15
+120892588	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120390035	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120390068	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120390104	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120590026	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120590093	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120590538	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120690551	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120790643	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120890542	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120990042	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+120990565	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+121190514	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+121690029	BG RCI HV	69115	Heidelberg	Kurfürsten-Anl. 62
+121490005	BG Steinbruch	1277	Dresden	Lud.-Hartmann-Str.40
+120892305	BG Unfallk.Post u. Telekom	72072	Tübingen	Europaplatz 2
+121191913	BG Unfallkasse Berlin	12277	Berlin	Culemeyerstr. 2
+121290003	BG Unfallkasse Brandenb.	15236	Frankfurt / Oder	Müllroser Chaussee 7
+120491754	BG Unfallkasse Bremen	28217	Bremen	Konsul-Smith Str. 76
+120392037	BG Unfallkasse Bund und Bahn	26382	Wilhelmshaven	Weserstr. 47
+120592313	BG Unfallkasse Bund und Bahn	26382	Wilhelmshaven	Weserstr. 47
+120692041	BG Unfallkasse Bund und Bahn	26382	Wilhelmshaven	Weserstr. 47
+120692198	BG Unfallkasse Hessen	60486	Frankfurt am Main	Leonardo-da-Vinci 20
+121390015	BG Unfallkasse Mecklenb.	19053	Schwerin	Wismarsche Str. 199
+120591802	BG Unfallkasse NRW GUV	40227	Düsseldorf	Moskauer Str. 18
+120591982	BG Unfallkasse NRW GUV	40227	Düsseldorf	Moskauer Str. 18
+120291934	BG Unfallkasse Nord	22083	Hamburg	Spohrstr. 2
+120191819	BG Unfallkasse Nord	22083	Hamburg	Spohrstr. 2
+120591824	BG Unfallkasse Nordrhein-Westf	48159	Münster	Salzmannstr.156
+120791791	BG Unfallkasse Rhld./Pf.	56626	Andernach	Oransteinstr. 10
+121091843	BG Unfallkasse Saarland	66125	Saarbrücken	Beethovenstr. 41
+121590039	BG Unfallkasse Sachs.-Anhalt	39261	Zerbst/Anhalt	Käsperstraße 31
+121490118	BG Unfallkasse Sachsen	1662	Meißen	Rosa-Luxemburgstr. 1
+121690074	BG Unfallkasse Thüringen	99867	Gotha	Humboldtstr. 111
+121690063	BG Unfallkasse Thüringen	99867	Gotha	Humboldtstr. 111
+120891838	BG Unfallkasse Württemb.	70329	Stuttgart	Augsburger Str. 700
+120891725	BG Unfallkasse Württemb.	70329	Stuttgart	Augsburger Str. 700
+121192377	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120592541	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+121192399	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120592507	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+121192402	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120592530	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+121192413	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120892383	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120892407	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120892418	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120892429	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120892430	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+121192424	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120892441	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+121192435	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120892485	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+121192446	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120991496	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120992328	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120992339	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120992340	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120992351	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+121192457	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120992362	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120992373	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120992384	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120992395	BG Verbindungsstelle	10117	Berlin	Glinkastraße 40
+120391321	BG Verkehr	30163	Hannover	Walderseestr. 5
+120591334	BG Verkehr	42103	Wuppertal	Aue 96
+120991350	BG Verkehr	81539	München	Dreisenhofenerstr. 7
+121490061	BG Verkehr	1187	Dresden	Hofmühlenstr. 4
+120291319	BG Verkehr (Fahrzeughaltung)	22765	Hamburg	Ottenser Hauptstr.54
+120291400	BG Verkehr (Fahrzeughaltung)	22765	Hamburg	Ottenser Hauptstr.54
+120691346	BG Verkehr / Fahrzeughaltung	65197	Wiesbaden	Wiesbadener Str. 70
+121191309	BG Verkehr BV Berlin	10969	Berlin	Axel-Springer-Str. 5
+120291295	BG Verkehr HV	22765	Hamburg	Ottenser Hauptstr. 5
+120791212	BG Verwaltung	55124	Mainz	Isaac-Fulda-Allee 3
+120291182	BG Verwaltung	55124	Mainz	Isaac-Fulda-Allee 3
+120291251	BG Verwaltung	55124	Mainz	Isaac-Fulda-Allee 3
+120291262	BG Verwaltung	55124	Mainz	Isaac-Fulda-Allee 3
+120592448	BG Verwaltung	55124	Mainz	Isaac-Fulda-Allee 3
+120990122	BG Verwaltung	55124	Mainz	Isaac-Fulda-Allee 3
+120991236	BG Verwaltung	55124	Mainz	Isaac-Fulda-Allee 3
+121690030	BG Verwaltung	99084	Erfurt	Koenbergkstr. 1
+121191285	BG Verwaltung	99084	Erfurt	Koenbergkstr. 1
+120390865	BG Zucker	55127	Mainz	Lortzingstraße 2
+102122660	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+101520158	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+102022146	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+102122740	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+102122897	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+102192459	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+102722597	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+102732316	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+105430502	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+106020508	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+106023943	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+106229304	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+106231295	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+106428247	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+106428292	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108029306	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108029373	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108029384	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108029395	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108029408	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108029419	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108029420	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108029431	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108031297	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108035827	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108092623	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108092634	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108092645	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108633375	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108729461	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108729472	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108729483	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108729494	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108891960	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+109033587	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+109033689	BKK 24	31683	Obernkirchen	Sülbecker Brand 1
+108530850	BKK AUDI Ost	85057	Ingolstadt	Ettingerstr. 70
+102136735	BKK AUDI Ost	85057	Ingolstadt	Ettingerstr. 70
+108434318	BKK AUDI Ost	85057	Ingolstadt	Ettingerstr. 70
+108837428	BKK AUDI Ost	85057	Ingolstadt	Ettingerstr. 70
+103525909	BKK Achenbach-Buschhütte	57223	Kreuztal	Siegener Str. 152
+104127692	BKK Actimonda	52068	Aachen	Hüttenstr. 1
+104124597	BKK Actimonda	52068	Aachen	Hüttenstr. 1
+104124973	BKK Actimonda	52068	Aachen	Hüttenstr. 1
+104127420	BKK Actimonda	52068	Aachen	Hüttenstr. 1
+104127716	BKK Actimonda	52068	Aachen	Hüttenstr. 1
+104624206	BKK Actimonda	52068	Aachen	Hüttenstr. 1
+104624901	BKK Actimonda	52068	Aachen	Hüttenstr. 1
+104627345	BKK Actimonda	52068	Aachen	Hüttenstr. 1
+104923151	BKK Actimonda	52068	Aachen	Hüttenstr. 1
+104927020	BKK Actimonda	52068	Aachen	Hüttenstr. 1
+104629688	BKK Actimonda Ost	52068	Aachen	Hüttenstr. 1
+108833355	BKK Akzo Nobel	63785	Obernburg a. Main	Glanzstoffstraße
+108891982	BKK Akzo Nobel	63785	Obernburg a. Main	Glanzstoffstraße
+107536002	BKK Alcan Singen	78224	Singen (Hohentwiel)	Alusingen-Platz 1
+103121013	BKK Atlas Ahlmann	28217	Bremen	Am Kaffee-Quartier 3
+101320270	BKK Atlas Ahlmann	28217	Bremen	Am Kaffee-Quartier 3
+103121024	BKK Atlas Ahlmann	28217	Bremen	Am Kaffee-Quartier 3
+103192656	BKK Atlas Ahlmann	28217	Bremen	Am Kaffee-Quartier 3
+108534160	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+101936606	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+101937424	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+102122795	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+103526294	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+103526330	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+105230270	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+108035769	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+108428515	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+108429060	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+108429106	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+108433204	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+108633068	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+108836600	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+108839464	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+109132634	BKK Audi	85057	Ingolstadt	Ettingerstr. 70
+105530444	BKK B. Braun Aesculap	34212	Melsungen	Grüne Strasse 1
+105530422	BKK B. Braun Aesculap	34212	Melsungen	Grüne Strasse 1
+107536171	BKK B. Braun Aesculap	34212	Melsungen	Grüne Strasse 1
+109034270	BKK BMW AG	84130	Dingolfing	Mengkofenerstr. 6
+108537642	BKK BMW AG	84130	Dingolfing	Mengkofenerstr. 6
+109028535	BKK BMW AG München	80809	München	Dostlerstr. 3
+109028524	BKK BMW AG München	80809	München	Dostlerstr. 3
+109028546	BKK BMW AG München	80809	München	Dostlerstr. 3
+109028557	BKK BMW AG München	80809	München	Dostlerstr. 3
+109028568	BKK BMW AG München	80809	München	Dostlerstr. 3
+109028579	BKK BMW AG München	80809	München	Dostlerstr. 3
+109028580	BKK BMW AG München	80809	München	Dostlerstr. 3
+109028591	BKK BMW AG München	80809	München	Dostlerstr. 3
+109531090	BKK BMW AG München	80809	München	Dostlerstr. 3
+109021685	BKK BMW AG Ost	84130	Dingolfing	Menkofenerstr. 6
+108036123	BKK BOSCH	70469	Stuttgart	Wernerstr. 1
+108023388	BKK BOSCH - Ost	70469	Stuttgart	Wernerstr. 1
+104626903	BKK BPW Bergische Achs.KG	51674	Wiehl	Ohlerhammer
+109928351	BKK BVM München	80637	München	Helene Weber Allee 2
+109528701	BKK BVM Berlin	12439	Berlin	Schnellerstr. 140
+109991996	BKK BVM Koblenz	56068	Koblenz	Casinostr. 39
+109938503	BKK Bahn Frankfurt	60486	Frankfurt am Main	Franklinstr. 54
+109928636	BKK Bahn Frankfurt	60486	Frankfurt am Main	Franklinstr. 54
+109936829	BKK Bahn Frankfurt	60486	Frankfurt am Main	Franklinstr. 54
+109937944	BKK Bahn Frankfurt	60486	Frankfurt am Main	Franklinstr. 54
+109938320	BKK Bahn Frankfurt	60486	Frankfurt am Main	Franklinstr. 54
+109938331	BKK Bahn Münster	48143	Münster	Bahnhofstr. 1-5
+109936852	BKK Bahn Ost	48143	Münster	Engelstr. 55
+109936874	BKK Bahn Ost	48143	Münster	Engelstr. 55
+109920514	BKK Bahn Ost Berlin	10243	Berlin	Karl-Marx-Allee 90a
+109531272	BKK Bahn Ost Berlin	10243	Berlin	Karl-Marx-Allee 90a
+109920525	BKK Bahn Ost Berlin	10243	Berlin	Karl-Marx-Allee 90a
+109920569	BKK Bahn Ost Berlin	10243	Berlin	Karl-Marx-Allee 90a
+109920536	BKK Bahn Ost Cottbus	3048	Cottbus	Calauer Str. 71
+109920547	BKK Bahn Ost Cottbus	3048	Cottbus	Calauer Str. 71
+109936830	BKK Bahn Ost Cottbus	3048	Cottbus	Calauer Str. 71
+109937955	BKK Bahn Ost Cottbus	3048	Cottbus	Calauer Str. 71
+109920558	BKK Bahn Ost Cottbus	3048	Cottbus	Calauer Str. 71
+109936841	BKK Bahn Ost Frankfurt	60487	Frankfurt am Main	Rödelheimer Str. 45
+109938342	BKK Bahn Rosenheim	83022	Rosenheim	Tegernseestr. 16
+109936863	BKK Bahn Rosenheim	83022	Rosenheim	Tegernseestr. 16
+109938319	BKK Bahn Rosenheim	83022	Rosenheim	Tegernseestr. 16
+109929114	BKK Bahn West Berlin	10243	Berlin	Karl-Marx-Allee 90a
+109929249	BKK Bahn West Berlin	10785	Berlin	Schöneberger Ufer 1
+109938353	BKK Bahn Wuppertal	42103	Wuppertal	Döppersberg 41
+104926702	BKK Bergisch Land	42719	Solingen	Heresbachstr. 29
+104927473	BKK Bergisch Land	42719	Solingen	Heresbachstr. 29
+103725342	BKK Bertelsmann	33335	Gütersloh	Carl-Miele Str. 214
+103720893	BKK Bertelsmann	33335	Gütersloh	Carl-Miele Str. 214
+109538019	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+101520067	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+101520114	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+101538012	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+101592133	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+103526682	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+105921458	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108023117	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108023219	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108028167	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108029910	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108029921	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108036101	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108036394	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108036452	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108038012	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108092133	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108428263	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+108433088	BKK CITY	20097	Hamburg	HAMMERBROOKSTR. 94
+103523440	BKK Continentale-West	22335	Hamburg	Sengelmannstr. 120
+101523297	BKK Continentale-West	22335	Hamburg	Sengelmannstr. 120
+101523446	BKK Continentale-West	22335	Hamburg	Sengelmannstr. 120
+103521632	BKK Continentale-West	22335	Hamburg	Sengelmannstr. 120
+103523565	BKK Continentale-West	22335	Hamburg	Sengelmannstr. 120
+103524430	BKK Continentale-West	22335	Hamburg	Sengelmannstr. 120
+103526432	BKK Continentale-West	22335	Hamburg	Sengelmannstr. 120
+103527397	BKK Continentale-West	22335	Hamburg	Sengelmannstr. 120
+103527672	BKK Continentale-West	22335	Hamburg	Sengelmannstr. 120
+105530364	BKK Continentale-West	22335	Hamburg	Sengelmannstr. 120
+108030775	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103121091	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128851	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128862	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128873	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128884	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128895	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128908	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128919	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128920	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128931	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128942	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+103128953	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+107836210	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108030786	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108030797	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108030800	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108030811	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108030822	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108031914	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108032458	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108032469	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108032470	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108037099	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108037102	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108037113	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108037124	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108037135	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108037146	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108037157	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108039650	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108039661	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108091030	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108091041	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+109531136	BKK DaimlerChrysler	28309	Bremen	Mercedesstr. 1
+108038078	BKK DaimlerChrysler Ost	28309	Bremen	Mercedesstr. 1
+103123674	BKK DaimlerChrysler Ost	28309	Bremen	Mercedesstr. 1
+103128964	BKK DaimlerChrysler Ost	28309	Bremen	Mercedesstr. 1
+108038089	BKK DaimlerChrysler Ost	28309	Bremen	Mercedesstr. 1
+108038090	BKK DaimlerChrysler Ost	28309	Bremen	Mercedesstr. 1
+108038103	BKK DaimlerChrysler Ost	28309	Bremen	Mercedesstr. 1
+106329236	BKK Debeka Ost	56072	Koblenz	Im Metternicher Feld
+106329225	BKK Debeka West	56072	Koblenz	Im Metternicher Feld
+104224634	BKK Deutsche Bank	40212	Düsseldorf	Königsallee 45-47
+104220878	BKK Deutsche Bank	40212	Düsseldorf	Königsallee 45-47
+109939003	BKK Deutsche Hausapotheke	38440	Wolfsburg	Goethestr. 49
+109921296	BKK Deutsche Ost Hausapo.	38440	Wolfsburg	Goethestraße 49
+103724294	BKK Diakonie	33617	Bielefeld	Königsweg 8
+100821957	BKK Diakonie	33617	Bielefeld	Königsweg 8
+103727093	BKK Diakonie	33617	Bielefeld	Königsweg 8
+103729701	BKK Diakonie	33617	Bielefeld	Königsweg 8
+103724249	BKK Dürkopp Adler AG	33719	Bielefeld	Bunzlauerstr. 10
+104125509	BKK EUREGIO	52525	Heinsberg	Boos Fremery Str. 62
+106331593	BKK EVM	56068	Koblenz	Schützenstr. 80/82
+102429648	BKK EWE	26122	Oldenburg	Staulinie 16-17
+102622120	BKK EWE	26122	Oldenburg	Staulinie 16-17
+102429659	BKK EWE Ost	26123	Oldenburg	Donnerschweerstr. 20
+102129930	BKK Energie	30159	Hannover	Lange Laube 6
+101320269	BKK Energie	30159	Hannover	Lange Laube 6
+101520136	BKK Energie	30159	Hannover	Lange Laube 6
+102121761	BKK Energie	30159	Hannover	Lange Laube 6
+102122341	BKK Energie	30159	Hannover	Lange Laube 6
+102129941	BKK Energie	30159	Hannover	Lange Laube 6
+102129952	BKK Energie	30159	Hannover	Lange Laube 6
+102129963	BKK Energie	30159	Hannover	Lange Laube 6
+102129974	BKK Energie	30159	Hannover	Lange Laube 6
+102131455	BKK Energie	30159	Hannover	Lange Laube 6
+102131466	BKK Energie	30159	Hannover	Lange Laube 6
+102132070	BKK Energie	30159	Hannover	Lange Laube 6
+102132081	BKK Energie	30159	Hannover	Lange Laube 6
+102132218	BKK Energie	30159	Hannover	Lange Laube 6
+102136746	BKK Energie	30159	Hannover	Lange Laube 6
+102137462	BKK Energie	30159	Hannover	Lange Laube 6
+103525384	BKK Energie	30159	Hannover	Lange Laube 6
+103726412	BKK Energie	30159	Hannover	Lange Laube 6
+103729529	BKK Energie	30159	Hannover	Lange Laube 6
+104525057	BKK Energie	30159	Hannover	Lange Laube 6
+104525104	BKK Energie	30159	Hannover	Lange Laube 6
+104528711	BKK Energie	30159	Hannover	Lange Laube 6
+105530353	BKK Energie	30159	Hannover	Lange Laube 6
+108428844	BKK Energie	30159	Hannover	Lange Laube 6
+108429446	BKK Energie	30159	Hannover	Lange Laube 6
+108432269	BKK Energie	30159	Hannover	Lange Laube 6
+108891619	BKK Energie	30159	Hannover	Lange Laube 6
+105732324	BKK Ernst & Young	34212	Melsungen	Rotenburger Str. 15
+102122557	BKK Exklusiv	31275	Lehrte	Zum Blauen See 7
+101922110	BKK Exklusiv	31275	Lehrte	Zum Blauen See 7
+102122410	BKK Exklusiv	31275	Lehrte	Zum Blauen See 7
+102122955	BKK Exklusiv	31275	Lehrte	Zum Blauen See 7
+103121046	BKK Exklusiv	31275	Lehrte	Zum Blauen See 7
+102131320	BKK Exklusiv Ost	31275	Lehrte	Zum Blauen See 7
+100223522	BKK Exklusiv Ost	31275	Lehrte	Zum Blauen See 7
+102121486	BKK Exklusiv Ost	31275	Lehrte	Zum Blauen See 7
+102423697	BKK Exklusiv Ost	31275	Lehrte	Zum Blauen See 7
+104628222	BKK FUER HEILBERUFE	40549	Düsseldorf	SCHIESS STR. 43
+107035687	BKK FUER HEILBERUFE	40549	Düsseldorf	SCHIESS STR. 43
+104628233	BKK FUER HEILBERUFE OST	40549	Düsseldorf	SCHIESS STR. 43
+109033393	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+108633422	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+108733559	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+108923003	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+108932480	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+108933276	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+108933642	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+109034964	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+109034975	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+109037488	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+109037569	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+109092000	BKK Faber-Castell	94209	Regen	Bahnhofstr.45
+103121137	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+102522185	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+102522210	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+102522562	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+102522573	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+102522700	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+102522711	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+102529592	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+102529638	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+103121035	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+103121080	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+103121115	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+103121148	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+103121160	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+103121171	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+103723998	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+103725581	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+103725616	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+103725912	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+107729631	BKK Firmus West	49074	Osnabrück	Luisenstraße 1a
+107036370	BKK Freudenberg Lederwerk	69465	Weinheim	Hermann-Herder-Str.4
+104625684	BKK Gemeinsame	50668	Köln	Jakordenstr. 18-20
+104625731	BKK Gemeinsame	50668	Köln	Jakordenstr. 18-20
+104625786	BKK Gemeinsame	50668	Köln	Jakordenstr. 18-20
+104691721	BKK Gemeinsame Ost	50668	Köln	Jakordenstr. 18-20
+104631498	BKK Gemeinsame Ost	50668	Köln	Jakordenstr. 18-20
+103724272	BKK Gildemeister/Seidens.	33649	Bielefeld	Winterstr. 49
+103524101	BKK Gildemeister/Seidens.	33649	Bielefeld	Winterstr. 49
+103791489	BKK Gildemeister/Seidens.	33649	Bielefeld	Winterstr. 49
+104424830	BKK Grillo-Werke AG	47166	Duisburg	Buschstr. 95
+107835071	BKK Groz-Beckert	72458	Albstadt	Parkweg 2
+104427207	BKK HORNITEX WERKE	47199	Duisburg	RHEINSTR. 20
+103724238	BKK Heimat	33617	Bielefeld	Bolbrinkersweg 6
+103723896	BKK Heimat	33617	Bielefeld	Bolbrinkersweg 6
+103724261	BKK Heimat	33617	Bielefeld	Bolbrinkersweg 6
+106231536	BKK Heimat	33617	Bielefeld	Bolbrinkersweg 6
+103736722	BKK Herford Minden Rav.Ost	32051	Herford	Am Kleinbahnhof 5
+107615532	BKK Herford Minden Ravens.	32051	Herford	Am Kleinbahnhof 5
+103725525	BKK Herford Minden Ravens.	32051	Herford	Am Kleinbahnhof 5
+103726069	BKK Herford Minden Ravens.	32051	Herford	Am Kleinbahnhof 5
+103729778	BKK Herford Minden Ravens.	32051	Herford	Am Kleinbahnhof 5
+103792572	BKK Herford Minden Ravens.	32051	Herford	Am Kleinbahnhof 5
+105530331	BKK Herkules	34117	Kassel	Fünffensterstr. 5
+107429785	BKK Hochrhein-Wiesental	79618	Rheinfelden (Baden)	Kapuziner Str. 9
+107436410	BKK Hochrhein-Wiesental	79618	Rheinfelden (Baden)	Kapuziner Str. 9
+107535114	BKK Hochrhein-Wiesental	79618	Rheinfelden (Baden)	Kapuziner Str. 9
+107536433	BKK Hochrhein-Wiesental	79618	Rheinfelden (Baden)	Kapuziner Str. 9
+109132690	BKK Hosokawa Alpine AG	86199	Augsburg	Peter-Dörfler-Str.13
+108831386	BKK KBA Ost	1445	Radebeul	Friedrich-List-Str.
+107920634	BKK KBA Ost	1445	Radebeul	Friedrich-List-Str.
+108934142	BKK Krones	93069	Neutraubling	Zwickauerstr. 8
+108928736	BKK Krones	93069	Neutraubling	Zwickauerstr. 8
+108833674	BKK König u. Bauer	97080	Würzburg	Friedr.-König-Str.3
+108891608	BKK König u. Bauer	97080	Würzburg	Friedr.-König-Str.3
+105830517	BKK Linde	65187	Wiesbaden	Konrad-Adenauer-Ring
+101530753	BKK Linde	65187	Wiesbaden	Konrad-Adenauer-Ring
+101530764	BKK Linde	65187	Wiesbaden	Konrad-Adenauer-Ring
+105230101	BKK Linde	65187	Wiesbaden	Konrad-Adenauer-Ring
+105821242	BKK Linde	65187	Wiesbaden	Konrad-Adenauer-Ring
+108891551	BKK Linde	65187	Wiesbaden	Konrad-Adenauer-Ring
+103726081	BKK MELITTA Plus	32425	Minden	Marienstr. 122
+102822623	BKK MELITTA Plus	32425	Minden	Marienstr. 122
+102822634	BKK MELITTA Plus	32425	Minden	Marienstr. 122
+103726092	BKK MELITTA Plus	32425	Minden	Marienstr. 122
+107835333	BKK MTU	88045	Friedrichshafen	Maybachplatz 1
+108036145	BKK Mahle GmbH	70376	Stuttgart	Pragstr. 26-46
+105330431	BKK Mayer, K.	63179	Obertshausen	Industriestr. 3
+105230076	BKK Merck	64293	Darmstadt	Frankfurter Str. 133
+103723317	BKK Miele Ost	33332	Gütersloh	Carl-Miele-Str. 29
+103725364	BKK Miele-Werke GmbH	33332	Gütersloh	Carl-Miele Str. 29
+103726548	BKK Miele-Werke GmbH	33332	Gütersloh	Carl-Miele Str. 29
+103792663	BKK Miele-Werke GmbH	33332	Gütersloh	Carl-Miele Str. 29
+101520078	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+100189461	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+100589465	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+100989469	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+101389465	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+101531220	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+101589467	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+101789469	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+102120076	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+102192471	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+103089466	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+103489460	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+104089468	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+105089461	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+106289465	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+106389466	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+106489467	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+106589468	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+106789460	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+107289467	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+107389468	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+107889463	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+108089467	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+108389460	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+108428980	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+108428991	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+108433113	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+108492569	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+108891539	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+108891653	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+109389462	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+109589464	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+109789466	BKK Mobil Oil AG	29221	Celle	Burggrafenstr. 1
+101520465	BKK Mobil Oil AG Blutzuckersel	20095	Hamburg	Steinstr. 5
+104826120	BKK Monforts A.Masch.Fb.	41238	Mönchengladbach	Schwalmstr. 303
+104491707	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101120735	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101123260	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101320225	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101332332	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101391700	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101391711	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101392518	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101520089	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101520090	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101520169	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101520181	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101520329	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101521547	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101522105	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101522116	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101532152	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+101592587	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+102022271	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103524043	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103524076	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103524087	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103524920	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103524931	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103524942	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103525135	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103525464	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103526001	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103526864	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103526897	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103527444	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103527536	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103601309	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103725193	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103725228	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+103726478	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104127088	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104225292	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104229296	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104424829	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104424874	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104437993	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104491718	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104521598	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104525002	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104525013	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104525024	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104525035	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104525046	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104526252	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104528130	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104528744	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104621258	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104621726	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104628119	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104628142	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104826200	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104926483	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+104926531	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+106331742	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+107435293	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+107720596	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+107720643	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+108031300	BKK Novitas	47059	Duisburg	Schifferstr. 92,-100
+108532512	BKK Ostbayern	84503	Altötting	Trostberger Str. 42
+105723301	BKK PWC Dtsch.Revision	34212	Melsungen	Burgstrasse 1-3
+105723312	BKK PWC Dtsch.Revision	34212	Melsungen	Burgstrasse 1-3
+105792190	BKK PWC Dtsch.Revision	34212	Melsungen	Burgstrasse 1-3
+105792203	BKK PWC Dtsch.Revision	34212	Melsungen	Burgstrasse 1-3
+106431572	BKK Pfaff AG	67655	Kaiserslautern	Pirmasenserstr. 132
+106431583	BKK Pfaff AG	67655	Kaiserslautern	Pirmasenserstr. 132
+106420977	BKK Pfaff Ost	67655	Kaiserslautern	Königstr. 154
+106431652	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106231821	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106331764	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106423925	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106431550	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106431663	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106431674	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106431696	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106432038	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106531631	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106935274	BKK Pfalz	67059	Ludwigshafen am Rhei	Lichtenbergstraße 16
+106437453	BKK Pfalz Ost	67061	Ludwigshafen am Rhei	Knollstr. 20-24
+106423630	BKK Pfalz Ost	67061	Ludwigshafen am Rhei	Knollstr. 20-24
+101922757	BKK Preussag	38226	Salzgitter	Thiestr.15
+109531045	BKK Preussag	38226	Salzgitter	Thiestr.15
+101921814	BKK Preussag Ost	38226	Salzgitter	Thiestr. 15
+101931440	BKK Preussag Publik	38226	Salzgitter	Thiestr. 15
+101922917	BKK Preussag Publik	38226	Salzgitter	Thiestr. 15
+101992035	BKK Preussag Publik	38226	Salzgitter	Thiestr. 15
+102222057	BKK Preussag Publik	38226	Salzgitter	Thiestr. 15
+102122944	BKK Preussen-Elektra	30159	Hannover	Lange Laube 6
+108591499	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+102022191	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+102122476	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+105830539	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108433099	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108528286	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108532794	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108532932	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108591503	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108592241	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108632784	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108729018	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108732171	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108732525	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108733332	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108891540	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108933049	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+108933492	BKK ProVita	85232	Bergkirchen	Münchner Weg 5
+106492393	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+100720660	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+101822610	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102022260	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102121863	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102122352	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102122374	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102129008	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102192426	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102222251	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102422685	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102522221	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102522584	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102522653	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102522880	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+102722600	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+103121079	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+103521789	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+103525419	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+103526591	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+103730668	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104123687	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104621588	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104621771	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104621942	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104624035	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104624411	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104624912	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104625673	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104625742	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104625753	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104625800	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104625822	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104625833	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104625924	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104625935	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104626776	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104626787	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104627129	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104627334	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104627356	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104627458	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104628460	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104628609	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104826222	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104921650	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+104926494	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+105328415	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+105330157	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+105832052	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+106229532	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+106231854	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+106321396	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+106421228	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+106431685	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+106431845	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+106492406	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+107931170	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+109132554	BKK Pronova	67063	Ludwigshafen am Rhei	Brunckstr. 47
+105823040	BKK R+V	65205	Wiesbaden	Kreuzberger Ring 21
+105823051	BKK R+V	65205	Wiesbaden	Kreuzberger Ring 21
+104526387	BKK RUHRCHEMIE	46147	Oberhausen	BRUCHSTR.2
+102131240	BKK RWE-DEA AG	29225	Celle	Welfenallee 32
+101320214	BKK RWE-DEA AG	29225	Celle	Welfenallee 32
+101529260	BKK RWE-DEA AG	29225	Celle	Welfenallee 32
+102122820	BKK RWE-DEA AG	29225	Celle	Welfenallee 32
+102191470	BKK RWE-DEA AG	29225	Celle	Welfenallee 32
+103532270	BKK RWE-DEA AG	29225	Celle	Welfenallee 32
+104627528	BKK RWE-DEA AG	29225	Celle	Welfenallee 32
+106531802	BKK RWE-DEA AG	29225	Celle	Welfenallee 32
+107532042	BKK Rieker Ricosta Weisser	78532	Tuttlingen	Stockacher Str. 4-6
+107536035	BKK Rieker Ricosta Weisser	78532	Tuttlingen	Stockacher Str. 4-6
+107536182	BKK Rieker Ricosta Weisser	78532	Tuttlingen	Stockacher Str. 4-6
+108833505	BKK SKD	97419	Schweinfurt	Gunnar Wester Str. 1
+107535751	BKK SKD	97419	Schweinfurt	Gunnar Wester Str. 1
+108623102	BKK SKD	97419	Schweinfurt	Gunnar Wester Str. 1
+108823455	BKK SKD	97419	Schweinfurt	Gunnar Wester Str. 1
+108832946	BKK SKD	97419	Schweinfurt	Gunnar Wester Str. 1
+108891595	BKK SKD	97419	Schweinfurt	Gunnar Wester Str. 1
+105230418	BKK STEININDUSTRIE DT.AG	64686	Lautertal (Odenwald)	NIBELUNGENSTR. 351
+104625376	BKK STEINMUELLER GMBH	51643	Gummersbach	FABRIKSTR.1
+105330168	BKK Salus	63263	Neu-Isenburg	Siemensstr. 5a
+105321269	BKK Salus	63263	Neu-Isenburg	Siemensstr. 5a
+105392539	BKK Salus	63263	Neu-Isenburg	Siemensstr. 5a
+105392540	BKK Salus	63263	Neu-Isenburg	Siemensstr. 5a
+108035576	BKK Scheufelen	73252	Lenningen	Ad.-Scheufelen-Str.3
+107531187	BKK Schwarzwald-Baar	78647	Trossingen	Löhrstr. 45
+107535977	BKK Schwarzwald-Baar	78647	Trossingen	Löhrstr. 45
+107536057	BKK Schwarzwald-Baar	78647	Trossingen	Löhrstr. 45
+107536079	BKK Schwarzwald-Baar	78647	Trossingen	Löhrstr. 45
+107536160	BKK Schwarzwald-Baar	78647	Trossingen	Löhrstr. 45
+107536308	BKK Schwarzwald-Baar	78647	Trossingen	Löhrstr. 45
+107536262	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+101532243	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+105330066	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+106331628	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+106935515	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+107536273	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+109928328	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+109928339	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+109928340	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+109928362	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+109939708	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+109992101	BKK Schwenninger	78056	Villingen-Schwenning	Winkelstraße 7
+107538890	BKK Schwenninger Ost	36041	Fulda	Kothenbachweg 2-4
+109938046	BKK Schwenninger Ost	36041	Fulda	Kothenbachweg 2-4
+101320032	BKK Securvita	20095	Hamburg	Burchardstr. 17
+101392164	BKK Securvita	20095	Hamburg	Burchardstr. 17
+101392222	BKK Securvita	20095	Hamburg	Burchardstr. 17
+101392255	BKK Securvita	20095	Hamburg	Burchardstr. 17
+101520283	BKK Securvita	20095	Hamburg	Burchardstr. 17
+101320942	BKK Securvita Ost	20095	Hamburg	Burchardstr. 17
+101392266	BKK Securvita Ost	20095	Hamburg	Burchardstr. 17
+101392460	BKK Securvita Ost	20095	Hamburg	Burchardstr. 17
+108433896	BKK Siemens Karlsruhe	76187	Karlsruhe	Siemensallee 84
+108433248	BKK Siemens München	80339	München	Heimeranstr. 31
+101320349	BKK Siemens München	80339	München	Heimeranstr. 31
+101892147	BKK Siemens München	80339	München	Heimeranstr. 31
+102734283	BKK Siemens München	80339	München	Heimeranstr. 31
+103527284	BKK Siemens München	80339	München	Heimeranstr. 31
+103726401	BKK Siemens München	80339	München	Heimeranstr. 31
+104427582	BKK Siemens München	80339	München	Heimeranstr. 31
+104626925	BKK Siemens München	80339	München	Heimeranstr. 31
+104825857	BKK Siemens München	80339	München	Heimeranstr. 31
+104825880	BKK Siemens München	80339	München	Heimeranstr. 31
+104826836	BKK Siemens München	80339	München	Heimeranstr. 31
+104926713	BKK Siemens München	80339	München	Heimeranstr. 31
+105334220	BKK Siemens München	80339	München	Heimeranstr. 31
+105334231	BKK Siemens München	80339	München	Heimeranstr. 31
+107031126	BKK Siemens München	80339	München	Heimeranstr. 31
+107035563	BKK Siemens München	80339	München	Heimeranstr. 31
+107035621	BKK Siemens München	80339	München	Heimeranstr. 31
+107035632	BKK Siemens München	80339	München	Heimeranstr. 31
+107035643	BKK Siemens München	80339	München	Heimeranstr. 31
+107035676	BKK Siemens München	80339	München	Heimeranstr. 31
+107035698	BKK Siemens München	80339	München	Heimeranstr. 31
+107035712	BKK Siemens München	80339	München	Heimeranstr. 31
+107535988	BKK Siemens München	80339	München	Heimeranstr. 31
+107536284	BKK Siemens München	80339	München	Heimeranstr. 31
+107835878	BKK Siemens München	80339	München	Heimeranstr. 31
+107836209	BKK Siemens München	80339	München	Heimeranstr. 31
+108021308	BKK Siemens München	80339	München	Heimeranstr. 31
+108033244	BKK Siemens München	80339	München	Heimeranstr. 31
+108034176	BKK Siemens München	80339	München	Heimeranstr. 31
+108034212	BKK Siemens München	80339	München	Heimeranstr. 31
+108035019	BKK Siemens München	80339	München	Heimeranstr. 31
+108035020	BKK Siemens München	80339	München	Heimeranstr. 31
+108035382	BKK Siemens München	80339	München	Heimeranstr. 31
+108035439	BKK Siemens München	80339	München	Heimeranstr. 31
+108035440	BKK Siemens München	80339	München	Heimeranstr. 31
+108035451	BKK Siemens München	80339	München	Heimeranstr. 31
+108035484	BKK Siemens München	80339	München	Heimeranstr. 31
+108035495	BKK Siemens München	80339	München	Heimeranstr. 31
+108423428	BKK Siemens München	80339	München	Heimeranstr. 31
+108428720	BKK Siemens München	80339	München	Heimeranstr. 31
+108433259	BKK Siemens München	80339	München	Heimeranstr. 31
+108433705	BKK Siemens München	80339	München	Heimeranstr. 31
+108433716	BKK Siemens München	80339	München	Heimeranstr. 31
+108433727	BKK Siemens München	80339	München	Heimeranstr. 31
+108433738	BKK Siemens München	80339	München	Heimeranstr. 31
+108433749	BKK Siemens München	80339	München	Heimeranstr. 31
+108433750	BKK Siemens München	80339	München	Heimeranstr. 31
+108433761	BKK Siemens München	80339	München	Heimeranstr. 31
+108433772	BKK Siemens München	80339	München	Heimeranstr. 31
+108433783	BKK Siemens München	80339	München	Heimeranstr. 31
+108433794	BKK Siemens München	80339	München	Heimeranstr. 31
+108433807	BKK Siemens München	80339	München	Heimeranstr. 31
+108433818	BKK Siemens München	80339	München	Heimeranstr. 31
+108433829	BKK Siemens München	80339	München	Heimeranstr. 31
+108433830	BKK Siemens München	80339	München	Heimeranstr. 31
+108433841	BKK Siemens München	80339	München	Heimeranstr. 31
+108433852	BKK Siemens München	80339	München	Heimeranstr. 31
+108433863	BKK Siemens München	80339	München	Heimeranstr. 31
+108433874	BKK Siemens München	80339	München	Heimeranstr. 31
+108433885	BKK Siemens München	80339	München	Heimeranstr. 31
+108433909	BKK Siemens München	80339	München	Heimeranstr. 31
+108433910	BKK Siemens München	80339	München	Heimeranstr. 31
+108433921	BKK Siemens München	80339	München	Heimeranstr. 31
+108433932	BKK Siemens München	80339	München	Heimeranstr. 31
+108433943	BKK Siemens München	80339	München	Heimeranstr. 31
+108433954	BKK Siemens München	80339	München	Heimeranstr. 31
+108433976	BKK Siemens München	80339	München	Heimeranstr. 31
+108433987	BKK Siemens München	80339	München	Heimeranstr. 31
+108433998	BKK Siemens München	80339	München	Heimeranstr. 31
+108434001	BKK Siemens München	80339	München	Heimeranstr. 31
+108434012	BKK Siemens München	80339	München	Heimeranstr. 31
+108434023	BKK Siemens München	80339	München	Heimeranstr. 31
+108434034	BKK Siemens München	80339	München	Heimeranstr. 31
+108434045	BKK Siemens München	80339	München	Heimeranstr. 31
+108434056	BKK Siemens München	80339	München	Heimeranstr. 31
+108434067	BKK Siemens München	80339	München	Heimeranstr. 31
+108434078	BKK Siemens München	80339	München	Heimeranstr. 31
+108434103	BKK Siemens München	80339	München	Heimeranstr. 31
+108434125	BKK Siemens München	80339	München	Heimeranstr. 31
+108434136	BKK Siemens München	80339	München	Heimeranstr. 31
+108434158	BKK Siemens München	80339	München	Heimeranstr. 31
+108532874	BKK Siemens München	80339	München	Heimeranstr. 31
+108533476	BKK Siemens München	80339	München	Heimeranstr. 31
+108634194	BKK Siemens München	80339	München	Heimeranstr. 31
+108733296	BKK Siemens München	80339	München	Heimeranstr. 31
+108734184	BKK Siemens München	80339	München	Heimeranstr. 31
+108734208	BKK Siemens München	80339	München	Heimeranstr. 31
+108934255	BKK Siemens München	80339	München	Heimeranstr. 31
+109131438	BKK Siemens München	80339	München	Heimeranstr. 31
+109132623	BKK Siemens München	80339	München	Heimeranstr. 31
+109134248	BKK Siemens München	80339	München	Heimeranstr. 31
+108223858	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+104821604	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+107023228	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+107821326	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108023139	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223723	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223734	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223745	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223756	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223767	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223778	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223789	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223790	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223803	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223814	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223825	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108223836	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+108228318	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+109132280	BKK Siemens Ost München	80339	München	Heimeranstr. 31
+101532254	BKK Spar Ost	20097	Hamburg	Hammerbrookstr.5
+109132678	BKK Stadt Augsburg	86153	Augsburg	Vogeltorplatz 1
+106936311	BKK Südzucker	68165	Mannheim	Joseph-Meyer-Str. 13
+106928388	BKK Südzucker Ost	68165	Mannheim	Joseph-Meyer-Str. 13
+102137985	BKK TUI Leisure Travel	30625	Hannover	Karl-Wiechert-Allee
+102192017	BKK TUI Leisure Travel	30625	Hannover	Karl-Wiechert-Allee
+102031410	BKK Technoform	37075	Göttingen	Weender Landstr. 94-
+102022204	BKK Technoform	37075	Göttingen	Weender Landstr. 94-
+102022248	BKK Technoform	37075	Göttingen	Weender Landstr. 94-
+102022501	BKK Technoform	37075	Göttingen	Weender Landstr. 94-
+102022863	BKK Technoform	37075	Göttingen	Weender Landstr. 94-
+102222013	BKK Technoform	37075	Göttingen	Weender Landstr. 94-
+102222024	BKK Technoform	37075	Göttingen	Weender Landstr. 94-
+102222035	BKK Technoform	37075	Göttingen	Weender Landstr. 94-
+107835242	BKK Technoform	37075	Göttingen	Weender Landstr. 94-
+108632900	BKK Textilgruppe Hof	95028	Hof	Fabrikzeile 21
+109723913	BKK VBU	10969	Berlin	Lindenstr. 67
+100820488	BKK VBU	10969	Berlin	Lindenstr. 67
+101120702	BKK VBU	10969	Berlin	Lindenstr. 67
+101121930	BKK VBU	10969	Berlin	Lindenstr. 67
+101131921	BKK VBU	10969	Berlin	Lindenstr. 67
+101132294	BKK VBU	10969	Berlin	Lindenstr. 67
+101320043	BKK VBU	10969	Berlin	Lindenstr. 67
+101320236	BKK VBU	10969	Berlin	Lindenstr. 67
+101392368	BKK VBU	10969	Berlin	Lindenstr. 67
+102122294	BKK VBU	10969	Berlin	Lindenstr. 67
+103521790	BKK VBU	10969	Berlin	Lindenstr. 67
+103524350	BKK VBU	10969	Berlin	Lindenstr. 67
+103526012	BKK VBU	10969	Berlin	Lindenstr. 67
+103527295	BKK VBU	10969	Berlin	Lindenstr. 67
+103527308	BKK VBU	10969	Berlin	Lindenstr. 67
+103527514	BKK VBU	10969	Berlin	Lindenstr. 67
+103726398	BKK VBU	10969	Berlin	Lindenstr. 67
+104124962	BKK VBU	10969	Berlin	Lindenstr. 67
+104127157	BKK VBU	10969	Berlin	Lindenstr. 67
+104127215	BKK VBU	10969	Berlin	Lindenstr. 67
+104127567	BKK VBU	10969	Berlin	Lindenstr. 67
+104221492	BKK VBU	10969	Berlin	Lindenstr. 67
+104224678	BKK VBU	10969	Berlin	Lindenstr. 67
+104226464	BKK VBU	10969	Berlin	Lindenstr. 67
+104424761	BKK VBU	10969	Berlin	Lindenstr. 67
+104424772	BKK VBU	10969	Berlin	Lindenstr. 67
+104424794	BKK VBU	10969	Berlin	Lindenstr. 67
+104424863	BKK VBU	10969	Berlin	Lindenstr. 67
+104428480	BKK VBU	10969	Berlin	Lindenstr. 67
+104523340	BKK VBU	10969	Berlin	Lindenstr. 67
+104527220	BKK VBU	10969	Berlin	Lindenstr. 67
+104626889	BKK VBU	10969	Berlin	Lindenstr. 67
+104825254	BKK VBU	10969	Berlin	Lindenstr. 67
+104825846	BKK VBU	10969	Berlin	Lindenstr. 67
+104825879	BKK VBU	10969	Berlin	Lindenstr. 67
+104826108	BKK VBU	10969	Berlin	Lindenstr. 67
+104826131	BKK VBU	10969	Berlin	Lindenstr. 67
+104826197	BKK VBU	10969	Berlin	Lindenstr. 67
+104830638	BKK VBU	10969	Berlin	Lindenstr. 67
+104892110	BKK VBU	10969	Berlin	Lindenstr. 67
+104892358	BKK VBU	10969	Berlin	Lindenstr. 67
+104892369	BKK VBU	10969	Berlin	Lindenstr. 67
+104927008	BKK VBU	10969	Berlin	Lindenstr. 67
+104927714	BKK VBU	10969	Berlin	Lindenstr. 67
+105230383	BKK VBU	10969	Berlin	Lindenstr. 67
+105321236	BKK VBU	10969	Berlin	Lindenstr. 67
+105330179	BKK VBU	10969	Berlin	Lindenstr. 67
+105330191	BKK VBU	10969	Berlin	Lindenstr. 67
+105530262	BKK VBU	10969	Berlin	Lindenstr. 67
+105830232	BKK VBU	10969	Berlin	Lindenstr. 67
+105923461	BKK VBU	10969	Berlin	Lindenstr. 67
+105923508	BKK VBU	10969	Berlin	Lindenstr. 67
+105928809	BKK VBU	10969	Berlin	Lindenstr. 67
+105928810	BKK VBU	10969	Berlin	Lindenstr. 67
+106023486	BKK VBU	10969	Berlin	Lindenstr. 67
+106123476	BKK VBU	10969	Berlin	Lindenstr. 67
+107923192	BKK VBU	10969	Berlin	Lindenstr. 67
+107930658	BKK VBU	10969	Berlin	Lindenstr. 67
+107934550	BKK VBU	10969	Berlin	Lindenstr. 67
+108020999	BKK VBU	10969	Berlin	Lindenstr. 67
+108028394	BKK VBU	10969	Berlin	Lindenstr. 67
+108035348	BKK VBU	10969	Berlin	Lindenstr. 67
+108036134	BKK VBU	10969	Berlin	Lindenstr. 67
+108036463	BKK VBU	10969	Berlin	Lindenstr. 67
+108036474	BKK VBU	10969	Berlin	Lindenstr. 67
+108036485	BKK VBU	10969	Berlin	Lindenstr. 67
+108036496	BKK VBU	10969	Berlin	Lindenstr. 67
+108036500	BKK VBU	10969	Berlin	Lindenstr. 67
+108036511	BKK VBU	10969	Berlin	Lindenstr. 67
+108036522	BKK VBU	10969	Berlin	Lindenstr. 67
+108036533	BKK VBU	10969	Berlin	Lindenstr. 67
+108036544	BKK VBU	10969	Berlin	Lindenstr. 67
+108038181	BKK VBU	10969	Berlin	Lindenstr. 67
+108223541	BKK VBU	10969	Berlin	Lindenstr. 67
+108223596	BKK VBU	10969	Berlin	Lindenstr. 67
+108433215	BKK VBU	10969	Berlin	Lindenstr. 67
+108891584	BKK VBU	10969	Berlin	Lindenstr. 67
+109528698	BKK VBU	10969	Berlin	Lindenstr. 67
+109528723	BKK VBU	10969	Berlin	Lindenstr. 67
+109530976	BKK VBU	10969	Berlin	Lindenstr. 67
+109531114	BKK VBU	10969	Berlin	Lindenstr. 67
+109737010	BKK VBU	10969	Berlin	Lindenstr. 67
+103526615	BKK VDN	58239	Schwerte	Rosenweg 15
+103524112	BKK VDN	58239	Schwerte	Rosenweg 15
+104927042	BKK VDN	58239	Schwerte	Rosenweg 15
+103532065	BKK VDN Ost	58239	Schwerte	Rosenweg 15
+107832012	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+106935263	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+106935504	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+107435932	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+107535103	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+107835162	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+107836221	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+108491740	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+108492320	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+108492331	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+108633433	BKK Verbundplus	88400	Biberach an der Riß	Bismarckring 49
+107832023	BKK Verbundplus Ost	88400	Biberach an der Riß	Bismarckring 49
+101123395	BKK Verbundplus Ost	88400	Biberach an der Riß	Bismarckring 49
+107920462	BKK Verbundplus Ost	88400	Biberach an der Riß	Bismarckring 49
+107921577	BKK Verbundplus Ost	88400	Biberach an der Riß	Bismarckring 49
+108491751	BKK Verbundplus Ost	88400	Biberach an der Riß	Bismarckring 49
+101531231	BKK Vereins- u. Westbank	20097	Hamburg	Nagelsweg 49
+104526376	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+100220415	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+100221472	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+100229891	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+100320611	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+100323099	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+100334526	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+100721525	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+101320338	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+101323160	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+101520012	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+101520966	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524065	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524123	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524214	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524361	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524372	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524383	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524394	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524407	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524441	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524452	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524474	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524496	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524522	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524533	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103524544	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103525124	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103525408	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103525420	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103525442	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103525453	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103525603	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103525954	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103525976	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103525998	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103526660	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103526693	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103526795	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103526808	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103526853	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103526875	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103526944	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103526955	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103526966	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103527262	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103527320	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103527649	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103528274	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103529457	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103721440	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103723339	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103724227	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103724250	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103724283	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103724329	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103724341	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103724352	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103724363	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103724374	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103725159	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103725160	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103725217	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103725262	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103725284	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103725319	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103725558	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103725592	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103725989	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103726263	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103726274	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103726310	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103726559	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103727106	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103727491	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103727629	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103728174	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103729518	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103729621	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103791490	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+103791504	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104224667	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104224703	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104226340	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104227181	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104227728	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104227739	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104227751	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104227773	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104227784	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104227795	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104228796	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104229321	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104229673	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104230734	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104230745	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104234863	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104234921	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104234943	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104424841	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104424885	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104424896	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104427149	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104526365	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104529255	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104529288	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104826175	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104826233	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104826585	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104827405	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104829759	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104831946	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104926757	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104926995	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104927019	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104927031	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+104927484	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+105228209	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+105230463	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+105230577	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+105230599	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+105330282	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+105332160	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+105923973	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+106224387	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+106229451	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+107221809	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+107821703	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+107835322	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+107923181	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+108533604	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+108723249	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+108729450	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+108733321	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+108891562	BKK Viactiv	46045	Oberhausen	Willy-Brandt-Platz 3
+108031424	BKK Voralb	72622	Nürtingen	Neuffenerstr. 54
+108035792	BKK Voralb	72622	Nürtingen	Neuffenerstr. 54
+108035849	BKK Voralb	72622	Nürtingen	Neuffenerstr. 54
+108035883	BKK Voralb	72622	Nürtingen	Neuffenerstr. 54
+108036441	BKK WMF	73312	Geislingen an der St	Eberhard Str.
+108021400	BKK WMF Ost	73312	Geislingen an der St	Eberhardstr.
+105530126	BKK Werra-Meissner	37269	Eschwege	Sudentenlandstr. 2a
+107836243	BKK Wieland Werke AG	89079	Ulm	Graf Arco-Str. 36
+105734543	BKK Wirtschaft & Finanzen	34212	Melsungen	Bahnhofstr. 19
+105734554	BKK Wirtschaft & Finanzen	34212	Melsungen	Bahnhofstr. 19
+105734565	BKK Wirtschaft & Finanzen	34212	Melsungen	Bahnhofstr. 19
+105792123	BKK Wirtschaft & Finanzen	34212	Melsungen	Bahnhofstr. 19
+108036577	BKK Würth	74653	Künzelsau	Gartenstr.11
+108023140	BKK Würth Ost	74653	Künzelsau	Gartenstraße 11
+108036098	BKK Württ.Schwesternsch.	70174	Stuttgart	Relenbergstr.90
+107829563	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+104627595	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+106329566	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+106329793	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+106331548	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+106331606	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+106331617	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+106331640	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+106331775	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+106331811	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+106331877	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+107835311	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+107835992	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+107836367	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+109033360	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+109331908	BKK ZF und Partner	88045	Friedrichshafen	Charlottenstr. 2
+107829574	BKK Zahnradfabrik Ost	88046	Friedrichshafen	Ehlerstr. 50
+106323640	BKK Zahnradfabrik Ost	88046	Friedrichshafen	Ehlerstr. 50
+106329577	BKK Zahnradfabrik Ost	88046	Friedrichshafen	Ehlerstr. 50
+106329862	BKK Zahnradfabrik Ost	88046	Friedrichshafen	Ehlerstr. 50
+103525567	BKK der Siemag	57271	Hilchenbach	Wiesenstr. 30
+103526659	BKK der Siemag	57271	Hilchenbach	Wiesenstr. 30
+103527466	BKK der Siemag	57271	Hilchenbach	Wiesenstr. 30
+108035612	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+101320247	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+106020600	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+107820029	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+107835093	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+107835743	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+108035031	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+108035188	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+108092177	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+108532738	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+108533385	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+108538164	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+108733285	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+108833561	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+108891631	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+109132689	BKK mhplus	71636	Ludwigsburg	Schult.-Köhle-Str. 7
+108034508	BKK mhplus Ost	96515	Sonneberg	Fried.-Eng.Str. 157
+108092202	BKK mhplus Ost	96515	Sonneberg	Fried.-Eng.Str. 157
+108431406	BKK sports direkt	78604	Rietheim-Weilheim	Dürbheimer Str. 36
+107531405	BKK sports direkt	78604	Rietheim-Weilheim	Dürbheimer Str. 36
+104940005	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100180008	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100189303	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100189450	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100189483	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100189688	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100220404	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100580002	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100589307	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100589454	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100589487	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100589682	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100821753	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100980006	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100989301	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100989458	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100989481	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+100989686	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101380002	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101389307	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101389454	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101389487	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101389682	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101579001	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101579216	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101580004	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101589309	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101589412	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101589456	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101589478	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101589489	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101589684	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101780006	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101789301	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101789458	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101789481	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101789686	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101829081	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101829092	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101921299	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101922837	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101930724	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+101939006	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102022237	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102023626	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102030340	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102121738	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102121830	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102122136	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102122307	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102122318	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102122329	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102122363	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102122385	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102122432	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102122465	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102129849	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102129850	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102178509	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102222525	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+102422162	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103080003	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103089308	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103089455	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103089488	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103089683	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103480007	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103489302	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103489459	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103489482	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103489687	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103524054	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103525475	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+103526283	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104080005	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104089300	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104089457	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104089480	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104089685	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104224601	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104224612	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104224725	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104226987	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104228477	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104232360	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104232371	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104239915	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104239926	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104625708	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104625764	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104625946	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104926508	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104926520	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104927053	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104927064	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104927554	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104940539	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104940620	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104941197	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104941847	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104942791	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104946216	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104978011	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105080008	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105089303	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105089450	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105089483	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105089688	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105180009	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105189304	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105189451	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105189484	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105189689	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+105530342	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106280002	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106289307	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106289454	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106289487	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106289682	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106380003	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106389308	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106389455	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106389488	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106389683	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106480004	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106489309	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106489456	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106489489	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106489684	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106531799	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106580005	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106589300	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106589457	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106589480	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106589685	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106780007	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106789302	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106789459	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106789482	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+106789687	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107280004	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107289309	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107289456	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107289489	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107289684	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107380005	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107389300	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107389457	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107389480	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107389685	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107536295	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107720471	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107723178	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107880000	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107889305	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107889452	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107889485	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+107889680	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108035770	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108079454	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108079808	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108080004	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108089309	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108089456	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108089489	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108089684	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108221468	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108353709	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108380007	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108389302	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108389459	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108389482	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108389687	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108423714	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108429311	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108431963	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108431996	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108432009	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108433077	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108433102	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108433180	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108433191	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108433237	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108632773	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108633525	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108633536	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108729553	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108732809	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108733310	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108733467	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108737597	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108821362	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108833516	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108891573	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108933573	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+108933653	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109129662	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109132576	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109132612	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109139915	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109139926	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109380009	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109389304	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109389451	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109389484	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109389689	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109521270	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109530670	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109538031	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109580001	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109580012	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109589306	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109589453	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109589486	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109589681	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109723490	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109723888	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109780003	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109789308	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109789455	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109789488	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109789683	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109920810	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109920821	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109920832	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109920843	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109920854	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109920865	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109921296	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109931937	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109932095	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109932108	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109932119	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109932120	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109932131	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109932186	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109932222	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109932346	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109934985	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109934996	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939003	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939014	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939025	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939036	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939047	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939058	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939069	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939070	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939081	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939092	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939105	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939116	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939127	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939138	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939149	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939150	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939161	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939172	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939183	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939194	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939207	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939218	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109939229	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109991291	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+109991304	Barmer Ersatzkasse	42285	Wuppertal	Lichtscheider Str. 8
+104940005	Barmer HM302 / BVG	42285	Wuppertal	Lichtenscheider Str.
+103600730	Berufsfeuewehr	30169	Hannover	Feuerwehrstr. 1
+138480053	Bezirk Oberbayern	80538	München	Prinzregentenstr. 14
+138980127	Bezirk Oberpfalz	93051	Regensburg	Ludwig-Thoma-Str. 15
+139580443	Bezirksamt Pankow u. Berlin	13088	Berlin	Berliner Allee 252
+138880068	Bezirksamt Unterfranken	97001	Würzburg	Silcherstraße 5
+133581759	Bezirksregierung	59821	Arnsberg	Seibertzstr. 1
+960570011	Bezirksregierung	40474	Düsseldorf	Cecilienallee 2
+103600342	Bundespolizeidirektion	53757	Sankt Augustin	Bundesgrenz. Str.100
+103600397	Bundespolizeidirektion	53757	Sankt Augustin	Bundesgrenz. Str.100
+123600342	Bundespolizeidirektion	53757	Sankt Augustin	Bundesgrenz. Str.100
+107815749	CC Hilfsmittel Bodensee-Obersc	88212	Ravensburg	Charlottenstr. 49
+108018325	CC Hilfsmittel Heilbronn-Frank	97941	Tauberbischofsheim	Wolfstalflurstr. 10
+107815772	CC Hilfsmittel Neckar-Alb	72072	Tübingen	Europastr. 4
+107118277	CC Hilfsmittel Nordschwarzwald	72202	Nagold	Stettiner Strasse 8
+108018564	CC Hilfsmittel Ostwürttemberg	73525	Schwäbisch Gmünd	Pfeifergäßle 21
+107415518	CC Hilfsmittel Südl.Oberrhein	77933	Lahr	Obere Bergstr. 13
+107815783	CC Hilfsmittel Ulm-Biberach	88400	Biberach an der Riß	Zeppelinring 2-4
+101560000	DAK	55130	Mainz	Wilh.-Theodor-Römhil
+101560501	DAK Pflegekasse	53474	Bad Neuenahr-Ahrweil	Wilhelmstr.
+101560534	DAK Pflegekasse	67098	Bad Dürkheim	Weinstr.Nord 19 b
+101583600	DAK Pflegekasse Ost	99084	Erfurt	Anger 81
+101583688	DAK Pflegekasse Ost	37308	Heilbad Heiligenstad	Wilhelmstr. 68
+105830016	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+100167999	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+100169991	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+100567993	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+100569995	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+100723572	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+100967997	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+100969999	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101120677	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101367993	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101369995	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101520103	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101520147	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101520352	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101520454	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101532301	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101536919	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101536920	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554718	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554730	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554752	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554763	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554785	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554821	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554832	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554843	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554876	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554898	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554923	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554967	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101554978	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101557608	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101557653	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560000	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560523	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560556	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560590	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560614	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560625	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560636	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560658	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560670	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560681	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560705	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560716	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560749	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560761	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560783	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560807	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560818	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560841	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560874	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560896	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560910	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560932	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560976	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101560987	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101561056	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101561125	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101561136	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101561216	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101561238	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101561249	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101561261	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101562570	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564399	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564413	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564446	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564457	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564468	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564479	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564491	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564505	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564527	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564550	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564572	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564583	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564594	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564607	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564641	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564674	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564721	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564754	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564834	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101564845	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101566778	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101566825	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101566858	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101566870	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101566881	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101566994	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101567995	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101568008	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101568075	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101569997	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583622	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583633	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583644	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583699	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583713	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583724	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583735	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583746	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583779	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583791	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101583826	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101584166	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101584202	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101584213	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101585065	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101585087	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101585101	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101592235	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101592280	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101592612	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101767997	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101769999	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+101922859	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+103067994	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+103069996	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+103467998	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+103469990	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+103724330	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+103728301	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104067996	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104069998	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104123437	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104124029	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104131368	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104136911	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104221619	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104224623	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104525068	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104525080	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104527231	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104624400	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104629508	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+104629699	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105067999	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105069991	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105167990	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105169992	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105230087	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105230098	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105320805	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105323535	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105328426	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105328437	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105328448	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105328459	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105330204	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105330215	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105330226	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105330453	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105334583	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105429872	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105430056	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105430114	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105430249	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105430250	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105430307	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105430396	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105430409	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105430498	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105530320	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105723356	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105730037	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105830528	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105830540	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105830608	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105836717	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+105921210	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106020655	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106023705	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106029734	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106267993	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106269995	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106367994	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106369996	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106467995	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106469997	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106567996	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106569998	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106767998	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106769990	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106835364	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106835375	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106836387	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106929904	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106932204	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+106935285	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107135212	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107135780	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107267995	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107269997	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107367996	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107369998	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107429741	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107435306	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107435408	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107435419	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107435420	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107435590	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107435603	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107435910	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107436158	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107531940	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107535396	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107535409	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107535864	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107536013	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107536024	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107536331	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107621415	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107629981	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107629992	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107635046	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107635353	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107635810	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107635832	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107822975	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107823603	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107828185	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107829712	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107829723	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107829734	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107835060	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107835139	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107835173	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107836232	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107867991	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107869993	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107929713	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+107929724	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108028407	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108035462	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108035952	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108036407	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108067995	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108069997	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108220764	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108367998	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108369990	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108532863	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108733309	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+108892095	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+109132565	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+109132725	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+109367990	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+109369992	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+109567992	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+109569994	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+109721341	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+109767994	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+109769996	DAK-Gesundheit	20097	Hamburg	Nagelsweg 27-31
+660510096	DDG-Rechnungsprüfstelle	45141	Essen	Grabenstr. 102
+661430080	Davaso GmbH	4315	Leipzig	Torgauer Platz 1-3
+105379202	EINTRACHT	63150	Heusenstamm	AM LINDENBAUM 18
+103600989	Feuerwehr	17489	Greifswald, Hansesta	Wolgaster Str. 63 B
+103600843	Feuerwehr Hansestadt	23552	Lübeck	Fischstr. 2-6
+121390059	Feuerwehr UK Meckl.-Vorp.	19061	Schwerin	Bertha-von-Suttner-S
+120292321	Feuerwehr UK Meckl.-Vorp.	19061	Schwerin	Bertha-von-Suttner-S
+121390026	Feuerwehr UK Meckl.-Vorp.	19061	Schwerin	Bertha-von-Suttner-S
+120392333	Feuerwehr Unfallkasse NDS	30159	Hannover	Bertastraße 5
+121690096	Feuerwehr-Unfall-Kasse	99086	Erfurt	Magdeburger Allee 4
+121590040	Feuerwehr-Unfall-Kasse	99086	Erfurt	Magdeburger Allee 4
+168140530	Freie Arzt und Medizinkasse	60320	Frankfurt am Main	Hansaallee 154
+103601310	Freie Arzt und Medizinkasse	60320	Frankfurt am Main	Hansaallee 154
+163601310	Freie Arzt und Medizinkasse	60320	Frankfurt am Main	Hansaallee 154
+135280204	GEMEINDEVERW.SOZ.AMT	69488	Birkenau	HAUPTSTR.119
+139380247	GEMEINDEVERW.SOZ.AMT	66352	Großrosseln	KLOSTERPLATZ 2-3
+139380281	GEMEINDEVERW.SOZ.AMT	66292	Riegelsberg	SAARBRUECKER STR.31
+134180302	GEMEINDEVERWALTUNG	52152	Simmerath	RATHAUS
+139380270	Gemeindeverw. Soz. Amt	66287	Quierschied	Rathaus Str. 7
+139380327	Gemeindeverw. Soz. Amt	66271	Kleinblittersdorf	Alte Schulstraße 5
+134180404	Gemeindeverwaltung	52538	Selfkant	Am Rathaus 13
+134180518	Gemeindeverwaltung	52393	Hürtgenwald	Rathaus
+134180632	Gemeindeverwaltung	52393	Hürtgenwald	Rathaus
+134680875	Gemeindeverwaltung	51484	Overath	Hauptstraße 10
+135280168	Gemeindeverwaltung	65474	Bischofsheim	Schulstr. 13-15
+135280259	Gemeindeverwaltung	64569	Nauheim	Weingartenstr. 46-50
+590300321	Gesundheitsversorgung f.Papier	30451	Hannover	Windheimstr. 4
+101570104	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+100171007	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+100571001	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+100971005	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+101371001	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+101571003	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+101771005	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+103071002	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+103471006	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+104071004	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+105071007	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+105171008	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+106271001	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+106371002	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+106471003	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+106571004	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+106771006	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+107271003	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+107371004	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+107871009	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+108071003	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+108371006	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+109371008	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+109571000	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+109771002	HEK-Hanseatische KK	22041	Hamburg	Wandsbeker Zollstr.
+101568086	Hamburg-Münchener EK	70178	Stuttgart	Tübinger Str. 12-16
+103170002	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+100186801	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+100586805	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+100986809	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+101386805	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+101586807	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+101786809	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+102400510	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+102800499	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+103086806	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+103486800	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+104086808	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+105086801	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+105186802	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+106286805	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+106386806	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+106486807	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+106586808	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+106786800	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+107286807	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+107386808	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+107886803	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+108086807	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+108386800	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+109386802	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+109586804	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+109786806	Handelskrankenkasse	28195	Bremen	Martinistr. 26
+205313566	Hess.Ministerium f.Arbeit	65187	Wiesbaden	Dostojewskistr. 4
+109500297	IKK Brandenburg-Berlin	14776	Brandenburg an der H	Sankt Annen Str. 28
+109500275	IKK Brandenburg-Berlin	14776	Brandenburg an der H	Sankt Annen Str. 28
+109500286	IKK Brandenburg-Berlin	14776	Brandenburg an der H	Sankt Annen Str. 28
+109500300	IKK Brandenburg-Berlin	14776	Brandenburg an der H	Sankt Annen Str. 28
+100602360	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+100602315	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+100602348	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+100602359	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+100702327	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+100802339	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+109702202	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+109702213	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+109702224	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+109702235	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+109702246	IKK Brandenburg-Berlin Ost	14776	Brandenburg an der H	Sankt Annen Str. 28
+103500693	IKK Classic	44135	Dortmund	Burgwall 20
+101003005	IKK Classic	44135	Dortmund	Burgwall 20
+101534564	IKK Classic	44135	Dortmund	Burgwall 20
+101900443	IKK Classic	44135	Dortmund	Burgwall 20
+102100389	IKK Classic	44135	Dortmund	Burgwall 20
+102100540	IKK Classic	44135	Dortmund	Burgwall 20
+102700557	IKK Classic	44135	Dortmund	Burgwall 20
+103500740	IKK Classic	44135	Dortmund	Burgwall 20
+103500784	IKK Classic	44135	Dortmund	Burgwall 20
+103500819	IKK Classic	44135	Dortmund	Burgwall 20
+103500820	IKK Classic	44135	Dortmund	Burgwall 20
+103500842	IKK Classic	44135	Dortmund	Burgwall 20
+103500864	IKK Classic	44135	Dortmund	Burgwall 20
+103500886	IKK Classic	44135	Dortmund	Burgwall 20
+103500900	IKK Classic	44135	Dortmund	Burgwall 20
+103500944	IKK Classic	44135	Dortmund	Burgwall 20
+103500999	IKK Classic	44135	Dortmund	Burgwall 20
+103501013	IKK Classic	44135	Dortmund	Burgwall 20
+103501024	IKK Classic	44135	Dortmund	Burgwall 20
+103501046	IKK Classic	44135	Dortmund	Burgwall 20
+103501068	IKK Classic	44135	Dortmund	Burgwall 20
+103529026	IKK Classic	44135	Dortmund	Burgwall 20
+103700719	IKK Classic	44135	Dortmund	Burgwall 20
+103700720	IKK Classic	44135	Dortmund	Burgwall 20
+103700731	IKK Classic	44135	Dortmund	Burgwall 20
+103700753	IKK Classic	44135	Dortmund	Burgwall 20
+103700764	IKK Classic	44135	Dortmund	Burgwall 20
+103700775	IKK Classic	44135	Dortmund	Burgwall 20
+103700797	IKK Classic	44135	Dortmund	Burgwall 20
+103700800	IKK Classic	44135	Dortmund	Burgwall 20
+103700833	IKK Classic	44135	Dortmund	Burgwall 20
+103700855	IKK Classic	44135	Dortmund	Burgwall 20
+103700877	IKK Classic	44135	Dortmund	Burgwall 20
+103700899	IKK Classic	44135	Dortmund	Burgwall 20
+103700924	IKK Classic	44135	Dortmund	Burgwall 20
+103700935	IKK Classic	44135	Dortmund	Burgwall 20
+103700957	IKK Classic	44135	Dortmund	Burgwall 20
+103700968	IKK Classic	44135	Dortmund	Burgwall 20
+103700979	IKK Classic	44135	Dortmund	Burgwall 20
+103700980	IKK Classic	44135	Dortmund	Burgwall 20
+103701004	IKK Classic	44135	Dortmund	Burgwall 20
+103701059	IKK Classic	44135	Dortmund	Burgwall 20
+103701071	IKK Classic	44135	Dortmund	Burgwall 20
+104001441	IKK Classic	44135	Dortmund	Burgwall 20
+104101113	IKK Classic	44135	Dortmund	Burgwall 20
+104101146	IKK Classic	44135	Dortmund	Burgwall 20
+104201158	IKK Classic	44135	Dortmund	Burgwall 20
+104201249	IKK Classic	44135	Dortmund	Burgwall 20
+104401161	IKK Classic	44135	Dortmund	Burgwall 20
+104401207	IKK Classic	44135	Dortmund	Burgwall 20
+104401252	IKK Classic	44135	Dortmund	Burgwall 20
+104401412	IKK Classic	44135	Dortmund	Burgwall 20
+104501173	IKK Classic	44135	Dortmund	Burgwall 20
+104501264	IKK Classic	44135	Dortmund	Burgwall 20
+104501286	IKK Classic	44135	Dortmund	Burgwall 20
+104501435	IKK Classic	44135	Dortmund	Burgwall 20
+104601129	IKK Classic	44135	Dortmund	Burgwall 20
+104601130	IKK Classic	44135	Dortmund	Burgwall 20
+104601185	IKK Classic	44135	Dortmund	Burgwall 20
+104601210	IKK Classic	44135	Dortmund	Burgwall 20
+104601301	IKK Classic	44135	Dortmund	Burgwall 20
+104601403	IKK Classic	44135	Dortmund	Burgwall 20
+104801198	IKK Classic	44135	Dortmund	Burgwall 20
+104801223	IKK Classic	44135	Dortmund	Burgwall 20
+104801234	IKK Classic	44135	Dortmund	Burgwall 20
+104801427	IKK Classic	44135	Dortmund	Burgwall 20
+104901291	IKK Classic	44135	Dortmund	Burgwall 20
+104901315	IKK Classic	44135	Dortmund	Burgwall 20
+104901326	IKK Classic	44135	Dortmund	Burgwall 20
+108303526	IKK Classic	44135	Dortmund	Burgwall 20
+108402081	IKK Classic	44135	Dortmund	Burgwall 20
+108403516	IKK Classic	44135	Dortmund	Burgwall 20
+108502048	IKK Classic	44135	Dortmund	Burgwall 20
+108502071	IKK Classic	44135	Dortmund	Burgwall 20
+108502106	IKK Classic	44135	Dortmund	Burgwall 20
+108602038	IKK Classic	44135	Dortmund	Burgwall 20
+108602061	IKK Classic	44135	Dortmund	Burgwall 20
+108702051	IKK Classic	44135	Dortmund	Burgwall 20
+108702120	IKK Classic	44135	Dortmund	Burgwall 20
+108702142	IKK Classic	44135	Dortmund	Burgwall 20
+108702175	IKK Classic	44135	Dortmund	Burgwall 20
+108703508	IKK Classic	44135	Dortmund	Burgwall 20
+108802165	IKK Classic	44135	Dortmund	Burgwall 20
+108902019	IKK Classic	44135	Dortmund	Burgwall 20
+108902111	IKK Classic	44135	Dortmund	Burgwall 20
+108902133	IKK Classic	44135	Dortmund	Burgwall 20
+108902155	IKK Classic	44135	Dortmund	Burgwall 20
+108902199	IKK Classic	44135	Dortmund	Burgwall 20
+109102024	IKK Classic	44135	Dortmund	Burgwall 20
+109102091	IKK Classic	44135	Dortmund	Burgwall 20
+109102182	IKK Classic	44135	Dortmund	Burgwall 20
+108001963	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+105801603	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+106801672	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+106801730	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+106901797	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107001756	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107001825	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107101699	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107101859	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107401705	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107401727	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107401807	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107501784	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107501864	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107501900	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107501955	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107601843	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107801878	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107801890	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107801947	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001667	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001689	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001714	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001747	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001769	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001770	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001816	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001838	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001883	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001918	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001929	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+108001930	IKK Classic	65189	Wiesbaden	ABR.-LINCOLN STR. 32
+107202793	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+101002970	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+101534575	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+103500706	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+103529071	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+105201516	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+105201527	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+105301540	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+105301551	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+105301562	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+105301584	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+105401530	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+105501575	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+105801590	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+106003120	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+106103132	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+107202704	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+107702776	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+107702787	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+107902723	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+107902734	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+107902745	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+107902756	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+107902767	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+108001974	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+108202717	IKK Classic Dresden	1099	Dresden	Arndstr. 13
+105903116	IKK Classic Erfurt	99086	Erfurt	Magdeburger Allee 56
+101500154	IKK Classic Hamburg	22525	Hamburg	Kieler Str. 464-470
+101202961	IKK Gesund Plus Magdeburg	39124	Magdeburg	Umfassungsstr. 85
+100902900	IKK Gesund Plus Magdeburg	39124	Magdeburg	Umfassungsstr. 85
+101002958	IKK Gesund Plus Magdeburg	39124	Magdeburg	Umfassungsstr. 85
+101102915	IKK Gesund Plus Magdeburg	39124	Magdeburg	Umfassungsstr. 85
+101102937	IKK Gesund Plus Magdeburg	39124	Magdeburg	Umfassungsstr. 85
+103100201	IKK Gesund Plus Magdeburg	39124	Magdeburg	Umfassungsstr. 85
+101300129	IKK Nord	24937	Flensburg	Augustastr. 3-5
+100202527	IKK Nord	24937	Flensburg	Augustastr. 3-5
+100202549	IKK Nord	24937	Flensburg	Augustastr. 3-5
+100302539	IKK Nord	24937	Flensburg	Augustastr. 3-5
+100402518	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101300038	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101300049	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101300050	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101300061	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101300072	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101300083	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101300094	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101300107	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101300118	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101302564	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101302586	IKK Nord	24937	Flensburg	Augustastr. 3-5
+101302597	IKK Nord	24937	Flensburg	Augustastr. 3-5
+109303301	IKK Südwest	66111	Saarbrücken	Berliner Promenade 9
+106201379	IKK Südwest	66111	Saarbrücken	Berliner Promenade 9
+106301336	IKK Südwest	66111	Saarbrücken	Berliner Promenade 9
+106301358	IKK Südwest	66111	Saarbrücken	Berliner Promenade 9
+106301392	IKK Südwest	66111	Saarbrücken	Berliner Promenade 9
+106401348	IKK Südwest	66111	Saarbrücken	Berliner Promenade 9
+106401360	IKK Südwest	66111	Saarbrücken	Berliner Promenade 9
+106501383	IKK Südwest	66111	Saarbrücken	Berliner Promenade 9
+103501080	IKK big	44141	Dortmund	Semerteichstr. 54-56
+103501091	IKK big	44141	Dortmund	Semerteichstr. 54-56
+104227169	IKK big	44141	Dortmund	Semerteichstr. 54-56
+104229582	IKK big	44141	Dortmund	Semerteichstr. 54-56
+104229606	IKK big	44141	Dortmund	Semerteichstr. 54-56
+108421335	IKK big	44141	Dortmund	Semerteichstr. 54-56
+108434261	IKK big	44141	Dortmund	Semerteichstr. 54-56
+109531476	IKK big	44141	Dortmund	Semerteichstr. 54-56
+136480015	Jugendamt	66869	Kusel	Trierer Str. 49
+136480140	Jugendamt	76726	Germersheim	Luitpoldplatz 1
+137780189	Jugendamt	9111	Chemnitz	Bahnhofstr. 53
+137780258	Jugendamt	9111	Chemnitz	Bahnhofstr. 53
+102171012	KKH Erykonzentrate	30625	Hannover	Karl-Wiechert-Allee
+102171012	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+100175502	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+100575506	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+100975500	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+101375506	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+101520363	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+101520900	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+101575508	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+101775500	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+102172422	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+102173127	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+102173786	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+102187771	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+103075507	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+103475501	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+104075509	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+104621748	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+104625695	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+105075502	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+105175503	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+106275506	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+106375507	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+106475508	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+106575509	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+106775501	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+107275508	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+107375509	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+107875504	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108075508	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108375501	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108429333	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108429344	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108429355	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108429366	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108432429	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108433135	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108433146	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108433157	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108433168	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108433179	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108433692	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+108891664	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+109023665	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+109375503	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+109530885	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+109530998	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+109575505	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+109720750	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+109775507	KKH-Allianz	30625	Hannover	Karl-Wiechert-Allee
+131380477	KREISAUSSCHUSS LAUENBURG	23909	Ratzeburg	BARLACHSTR. 2
+138580178	KREISJUGENDAMT	85221	Dachau	WEIHERWEG 16
+131380331	KREISSOZIALAMT	23795	Bad Segeberg	HAMBURGER STR.30
+137580109	KREISSOZIALAMT	78048	Villingen-Schwenning	AM HOPFBUEHL 2
+137882400	KREISSOZIALAMT	88045	Friedrichshafen	GLAERNISCHSTR. 1-3
+137882592	KREISSOZIALAMT	72336	Balingen	HIRSCHBERGSTR. 29
+331460748	KV Sachsen	1099	Dresden	Schützenhöhe 12
+103505006	Knappschaft	44575	Castrop-Rauxel	Engelsburgstr. 1 a
+103505006	Knappschaft	52072	Aachen	Uersfeld 24
+109906402	Knappschaft Erykonzentrate	52072	Aachen	Uersfeld 24
+109906435	Knappschaft Hessen	47441	Moers	Knappschaftstr. 1
+109919500	Knappschaft Hessen	47441	Moers	Knappschaftstr. 1
+109990553	Knappschaft Ost	47441	Moers	Knappschaftstr. 1
+109919511	Knappschaft Ost	47441	Moers	Knappschaftstr. 1
+109905003	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+100105006	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+100705002	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+101005007	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+101305000	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+101505002	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+102105000	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+103105002	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+104405007	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+105505001	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+106005008	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+106205000	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+106305001	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+106405002	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+106505003	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+106905007	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+107405004	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+107705007	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+107805008	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+108005002	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+108405006	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+109305007	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+109505009	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+109705001	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+109990508	Knappschaft Pfalz	47441	Moers	Knappschaftstr.1
+109906914	Knappschaft Saar	47441	Moers	Knappschaftstr. 1
+103600752	Kommunaler Versorg. Verband Sa	1307	Dresden	Marschnerstr. 37
+135780129	Kreisausschuss SEK Jugendamt	34576	Homberg	Hans-Scholl-Str. 5
+135380192	Kreisausschuß	36381	Schlüchtern	Gartenstraße 5-7
+131380558	Kreisausschuß Dithmarsch	25746	Heide	Stettiner Str. 30
+135680082	Kreisjugendamt	65549	Limburg	Schiede 43
+136380194	Kreisjugendamt	56564	Neuwied	Wilh.-Leuschner-Str.
+130780015	Kreissoz.Spree Neis.	3149	Forst (Lausitz)	Heinrich-Heine-Str.1
+130880050	Kreissozialamt	14943	Luckenwalde	Am Nuthefließ 2
+131180099	Kreissozialamt	6217	Merseburg	Domstraße 4
+131380569	Kreissozialamt	24306	Plön	Hamburger Str. 17
+132080125	Kreissozialamt	37520	Osterode am Harz	Herzberger Str. 5
+134680283	Kreissozialamt	53879	Euskirchen	Jülicher Ring 32
+135280099	Kreissozialamt	64646	Heppenheim (Bergstra	Gräffstr. 5
+135280102	Kreissozialamt	64646	Heppenheim (Bergstra	Gräffstr. 5
+135280180	Kreissozialamt	64646	Heppenheim (Bergstra	Gräffstr. 5
+135280215	Kreissozialamt	64646	Heppenheim (Bergstra	Gräffstr. 5
+135280237	Kreissozialamt	64521	Groß-Gerau	Wilh.-Seipp-Str. 4
+135280191	Kreissozialamt	64521	Groß-Gerau	Wilh.-Seipp-Str. 4
+500642983	Kreissozialamt	64521	Groß-Gerau	Wilh.-Seipp-Str. 4
+137580074	Kreissozialamt	78467	Konstanz	Benediktinerplatz 1
+137882477	Kreissozialamt	88400	Biberach an der Riß	Rollinstr. 9
+130780037	Kreissozialamt Dahme	15907	Lübben (Spreewald)	Beethovenweg 14b
+138080264	Kreissozialamt Göppingen	73033	Göppingen	Lorcherstr. 6
+138080128	Kreissozialamt Hohenlohek	74653	Künzelsau	Allee 17
+139380349	Kreissozialamt Merzig	66663	Merzig	Am Gaswerk 3
+134280109	Kreissozialamt Neuss	41515	Grevenbroich	Lindenstraße 2-6
+130880049	Kreisverwaltung	17291	Prenzlau	Karl-Marx-Str.1
+131888880	Kreisverwaltung	26789	Leer (Ostfriesland)	Bergmannstraße 13
+134680294	Kreisverwaltung	53721	Siegburg	Kaiser-Wilhelm-Pl. 1
+135480126	Kreisverwaltung	61169	Friedberg (Hessen)	Pfingsweide 7
+135680071	Kreisverwaltung	65549	Limburg	Gartenstr. 1
+136280160	Kreisverwaltung	55232	Alzey	Ernst-Ludwig-Str.36
+136380014	Kreisverwaltung	55765	Birkenfeld	Schloßallee 11
+136380025	Kreisverwaltung	56129	Bad Ems	Insel Silberau
+136380047	Kreisverwaltung	55469	Simmern	Ludwigstraße 3-5
+136380138	Kreisverwaltung	57610	Altenkirchen (Wester	Parkstraße 1
+136380207	Kreisverwaltung	56410	Montabaur	Peter Altmeier Platz
+136480151	Kreisverwaltung	67292	Kirchheimbolanden	Uhlandstr. 2
+136480208	Kreisverwaltung	67098	Bad Dürkheim	Philipp-Fauth-Str. 1
+136580061	Kreisverwaltung	54290	Trier	Willy-Brandt-Platz 1
+136580094	Kreisverwaltung	54634	Bitburg	Trierer Str. 1
+136580107	Kreisverwaltung	54516	Wittlich	Kurfürstenstr. 16
+136580118	Kreisverwaltung	54550	Daun	Mainzer Str. 25
+138080446	Kreisverwaltung	73728	Esslingen am Neckar	Pulverwiesen 11
+136380149	Kreisverwaltung Cochem	56812	Cochem	Endertplatz 2
+136380081	Kreisverwaltung Cochem	56812	Cochem	Endertplatz 2
+136380105	Kreisverwaltung Cochem	56812	Cochem	Endertplatz 2
+136480184	Kreisverwaltung Jugendamt	67655	Kaiserslautern	Fischerstrasse 12
+136380127	Kreisverwaltung Mayen-Kob.	56068	Koblenz	Bahnhofstraße 9
+136480093	Kreisverwaltung Rhld.-Pfalz	67063	Ludwigshafen am Rhei	Europaplatz 5
+136480195	Kreisverwaltung Südliche Weins	76829	Landau in der Pfalz	Arzheimer Strasse 1
+136480082	Kreisverwaltung Südwestpfalz	66963	Pirmasens	Unt.Sommerwaldweg 40
+133580601	Kreisverwaltung Unna EA	59427	Unna - Massen	Lippestraße 44-46
+151600020	LANDESSOZIALAMT	98617	Meiningen	CHARLOTTENSTR. 2
+131980097	LANDRATSAMT	38518	Gifhorn	SCHLOSSPLATZ 1
+132580142	LANDRATSAMT	49082	Osnabrück	AM SCHOELERBERG 1
+132780064	LANDRATSAMT	21335	Lüneburg	AM MICHAELISKLOSTER
+134180153	LANDRATSAMT	52070	Aachen	ZOLLERNSTR.10
+137580154	LANDRATSAMT	79761	Waldshut-Tiengen	KAISERSTR. 110
+138480144	LANDRATSAMT	81541	München	MARIAHILFPLATZ 17 A
+138680135	LANDRATSAMT	96450	Coburg	LAUTERER STR. 60
+138680168	LANDRATSAMT	95448	Bayreuth	MARKGRAFENALLEE 5
+138980058	LANDRATSAMT	93025	REGENSBURG	POSTFACH 120329
+139080051	LANDRATSAMT	94032	Passau	DOMPLATZ 11
+132180228	LANDRATSAMT SCHAUMBURG	31655	Stadthagen	BRESLAUERSTR.2-4
+131380570	LANDRATSAMT SOZ.AMT	24768	Rendsburg	BERLINER STR. 1
+132380093	LANDRATSAMT SOZ.AMT	29439	Lüchow (Wendland)	LANGE STR.11
+133580304	LANDRATSAMT SOZ.AMT	58332	Schwelm	HAUPTSTR.92
+133780293	LANDRATSAMT SOZ.AMT	48231	Warendorf	WALDENBURGER STR. 2
+133780317	LANDRATSAMT SOZ.AMT	46325	Borken	BURLOER STR.93
+133780603	LANDRATSAMT SOZ.AMT	48653	Coesfeld	SCHUETZENWALL
+133780692	LANDRATSAMT SOZ.AMT	37671	Höxter	MOLTKESTR.12
+134180482	LANDRATSAMT SOZ.AMT	52348	DUEREN	BISMARCKSTR. 16
+138980105	LANDRATSAMT SOZ.AMT	92224	Amberg	SCHLOSSGRABEN 3
+600556605	LANDRATSAMT SOZ.AMT	59425	Unna	FRIEDR.-EBERT-STR.17
+108008880	LKK BADEN-WURTTEMBERG	70199	Stuttgart	VOGELRAINSTR.25
+106908874	LKK BADEN-WURTTEMBERG	70199	Stuttgart	VOGELRAINSTR.25
+108608820	LKK Franken u. Oberbayern	81673	München	Neumarktstr. 35
+108508863	LKK Franken u. Oberbayern	81673	München	Neumarktstr. 35
+108609148	LKK Franken u. Oberbayern	81673	München	Neumarktstr. 35
+108808844	LKK Franken u. Oberbayern	81673	München	Neumarktstr. 35
+108809059	LKK Franken u. Oberbayern	81673	München	Neumarktstr. 35
+105508890	LKK Gartenbau	34121	Kassel	Frankfurter Str.126
+105509083	LKK Gartenbau	34121	Kassel	Frankfurter Str.126
+102108731	LKK Hannover	30173	Hannover	Im Haspelfeld 24
+101908748	LKK Hannover	30173	Hannover	Im Haspelfeld 24
+102408723	LKK Hannover	30173	Hannover	Im Haspelfeld 24
+105508787	LKK Hessen,Rh.-Pfalz,Saarland	54292	Trier	Bahnhofplatz 8
+105208795	LKK Hessen,Rh.-Pfalz,Saarland	54292	Trier	Bahnhofplatz 8
+106408802	LKK Hessen,Rh.-Pfalz,Saarland	54292	Trier	Bahnhofplatz 8
+109308818	LKK Hessen,Rh.-Pfalz,Saarland	54292	Trier	Bahnhofplatz 8
+110687794	LKK Hessen,Rh.-Pfalz,Saarland	54292	Trier	Bahnhofplatz 8
+110687896	LKK Hessen,Rh.-Pfalz,Saarland	54292	Trier	Bahnhofplatz 8
+100609049	LKK Mittel- u.Ostdeutschl.	15366	Hoppegarten	Hoppegartenerstr.100
+108209075	LKK Mittel- u.Ostdeutschl.	15366	Hoppegarten	Hoppegartenerstr.100
+109709049	LKK Mittel- u.Ostdeutschl.	15366	Hoppegarten	Hoppegartenerstr.100
+101308719	LKK Schleswig-Holstein	24143	Kiel	Schulstr. 29
+109008837	LKK Schwaben	86156	Augsburg	Tunnelstraße 29
+109108850	LKK Schwaben	86156	Augsburg	Tunnelstraße 29
+103708773	LKK Westfalen	48147	Münster	Hoher Heckenweg 76
+103708751	LKK Westfalen	48147	Münster	Hoher Heckenweg 76
+104208769	LKK Westfalen	48147	Münster	Hoher Heckenweg 76
+136080077	LRA-Soz.Saale-Orla-Krs.	7907	Schleiz	Oschitzerstraße 4
+138280039	LWV Sachsen	4109	Leipzig	Thomasiusstr. 1
+138080208	LWV Württ./Hohenz.	70176	Stuttgart	Endenspurstr. 39
+151000024	Landesamt f. Soz.u.Versorg.	66115	Saarbrücken	Hochstraße 67
+103600923	Landesamt f.Besoldung u.Versor	70736	Fellbach	Schaflandstr. 3/1
+130780060	Landesamt f.Soz.u.Versorg.	3048	Cottbus	Lipezker Str. 45 Ha
+103600570	Landespolizei Sachsen	1129	Dresden	Neuländer Str. 60
+131580093	Landessozialamt SH 212-3	22081	Hamburg	Barmbeker Markt 22
+135580105	Landeswohlfahrtsverband Kassel	34117	Kassel	Kölnische Str. 30
+131280114	Landkreis Anhalt-Bitterfeld Au	6366	Köthen (Anhalt)	Flugplatz 1
+131180066	Landkreis Anhalt-Bitterfeld Au	6366	Köthen (Anhalt)	Flugplatz 1
+137980067	Landkreis Görlitz LRA	2826	Görlitz	Otto-Müller-Straße 7
+135780118	Landkreis Marburg-Biedenkopf	35043	Marburg	Raiffeisenstr. 6
+134480145	Landkreis Wesel	46483	Wesel	Reeser Landstr. 31
+135980132	Landrats.Kyffhaeuserkrs.	99706	Sondershausen	Markt 8
+135980143	Landrats.Kyffhaeuserkrs.	99706	Sondershausen	Markt 8
+130380088	Landrats.Nordwestm.	23936	Grevesmühlen	Börzowerweg 1-3
+130280043	Landratsamt	19370	Parchim	Ludwigsl-Chaussee 5
+130480045	Landratsamt	17389	Anklam	Demminerstr. 71-74
+131080065	Landratsamt	39218	Schönebeck (Elbe)	Cokturhof
+131080087	Landratsamt	38820	Halberstadt	Friedrich-Ebert-Str.
+131080101	Landratsamt	39576	Stendal	Hospitalstraße 1
+131080112	Landratsamt	29410	Salzwedel, Hansestad	Karl-Marx-Str. 32
+131280067	Landratsamt	39261	Zerbst/Anhalt	Fritz-Brandt-Str. 1
+131980166	Landratsamt	38350	Helmstedt	Kreishaus
+131980177	Landratsamt	38640	Goslar	Kreishaus
+132380106	Landratsamt	29525	Uelzen	Veersserstr. 53
+132680063	Landratsamt	27474	Cuxhaven	Vincent Lübeck Str.2
+134480350	Landratsamt	47533	Kleve	Nassauer Allee 15-23
+135580070	Landratsamt	36037	Fulda	Woerthstr. 15
+135580127	Landratsamt	35066	Frankenberg	Bahnhofstr. 8-14
+135980154	Landratsamt	99867	Gotha	Mauerstraße 20
+135980165	Landratsamt	99867	Gotha	Mauerstraße 20
+136080146	Landratsamt	4600	Altenburg	Lindenaustraße 10
+136080157	Landratsamt	4600	Altenburg	Lindenaustraße 10
+136080168	Landratsamt	7973	Greiz	Dr.Rathenau-Platz 11
+136080179	Landratsamt	7973	Greiz	Dr.Rathenau-Platz 11
+136180067	Landratsamt	98646	Hildburghausen	Wiesenstraße 18
+136180078	Landratsamt	98646	Hildburghausen	Wiesenstraße 18
+137180069	Landratsamt	75365	Calw	Vogteistraße 44
+137780076	Landratsamt	8371	Glauchau	Chemnitzer Str. 29
+137780145	Landratsamt	8606	Oelsnitz/Vogtl.	Stephanstr. 9
+137780167	Landratsamt	8209	Auerbach/Vogtl.	Bahnhofstr. 12
+137882455	Landratsamt	88212	Ravensburg	Friedenstr. 6
+137882488	Landratsamt	72072	Tübingen	Wilhelm-Keil-Str. 50
+137882503	Landratsamt	72764	Reutlingen	Bismarckstr. 14
+137980001	Landratsamt	1796	Pirna	Schloßhof 2/4
+137980114	Landratsamt	2625	Bautzen	Kornmarkt 4-6
+138080117	Landratsamt	71638	Ludwigsburg	Hindenburgstr. 40
+138080253	Landratsamt	74523	Schwäbisch Hall	Münzstr. 1
+138580032	Landratsamt	84503	Altoetting	Bahnhofstr. 38
+138680113	Landratsamt	96317	Kronach	Güterstraße 18
+138680146	Landratsamt	95632	Wunsiedel	Bezirksamtstr. 6
+139180085	Landratsamt	89312	Günzburg	Kapuzinermauer 1
+139380087	Landratsamt	66564	Ottweiler	Wilh. Heinrich Str.
+139380178	Landratsamt	66564	Ottweiler	Wilh. Heinrich Str.
+139380098	Landratsamt	66740	Saarlouis	Kaiser-Wilhelm-Str.
+139380189	Landratsamt	66740	Saarlouis	Kaiser-Wilhelm-Str.
+501001116	Landratsamt	66740	Saarlouis	Kaiser-Wilhelm-Str.
+135980063	Landratsamt Sömmerda	99610	Soemmerda	Bahnhofstr. 9
+139180314	Landratsamt Alb-Donau Kreis	89077	Ulm	Schillerstraße 30
+131180180	Landratsamt Burgenlandkr.	6618	Naumburg (Saale)	Schönburger Str. 41
+131080098	Landratsamt Börde	39340	Haldensleben	Gerikestr. 104
+132580119	Landratsamt Emsland	49716	Meppen	Kreishaus
+137780178	Landratsamt Erzgebirgskrs.	9496	Marienberg	Poststr. 6
+170689046	Landratsamt Fachdienst II.3	65307	Bad Schwalbach	Heimbacher Str. 7
+132380082	Landratsamt Harburg	21423	Winsen (Luhe)	Schlossplatz 6
+133580451	Landratsamt Hochsauerland	59872	Meschede	Steinstraße 27
+135980052	Landratsamt Ilm-Kreis	99310	Arnstadt	Ritterstraße 14
+136180012	Landratsamt Ilm-Kreis	99310	Arnstadt	Ritterstraße 14
+135380158	Landratsamt Jugendamt	63128	Dietzenbach	Werner-Hilpert-Str.
+138680157	Landratsamt Jugendamt	95032	Hof	Schaumbergstr. 14
+135580183	Landratsamt Kassel	34277	Fuldabrück	Albert-Einstein Str.
+138280062	Landratsamt Leipziger Ld.	4552	Borna	Stauffenbergstr. 4
+136180090	Landratsamt Meiningen	98617	Meiningen	Obertshäuser Platz 1
+137780087	Landratsamt Mittelsachsen	9599	Freiberg	Frauensteiner Str. 4
+138280073	Landratsamt Mittelsachsen	4720	Döbeln	Str. des Friedens 20
+135980029	Landratsamt Nordhausen	99734	Nordhausen	Behringstraße 3
+138280028	Landratsamt Nordsachsen	4860	Torgau	Schloßstr. 27
+130380044	Landratsamt Nordvorpommern	18507	Grimmen	Bahnhofstr. 12/13
+135380136	Landratsamt Offenbach	63128	Dietzenbach	Werner-Hilpert-Str.
+137680064	Landratsamt Ortenaukreis	77652	Offenburg	Badstr. 20
+139180132	Landratsamt Ostallgäu	87610	Marktoberdorf	Schwabenstr. 11
+131380525	Landratsamt Pinneberg	25337	Elmshorn	Kurt Wagener Str. 11
+138080219	Landratsamt Rems-Murr-Kr.	71332	Waiblingen	Alter Postplatz 10
+137080104	Landratsamt Rhein-Neckar	69115	Heidelberg	Kurfürstenanlage 40
+137980147	Landratsamt Riesa	1558	Großenhain	Herrmann Str. 30-34
+136080022	Landratsamt Saale-Holzl.	7607	Eisenberg	Goethestr. 10
+135780107	Landratsamt Schwalm-Eder-Kreis	34576	Homberg	Hans-Scholl-Str. 5
+132780097	Landratsamt Soltau	29683	Fallingbostel	Harburger Str. 2-4
+131980111	Landratsamt Soz. Amt	38300	Wolfenbüttel	Bahnhofstr. 11
+131980144	Landratsamt Soz. Amt	31224	Peine	Burgstraße 1
+132080056	Landratsamt Soz. Amt	37603	Holzminden	Bgm.-Schrader-Str.25
+132080170	Landratsamt Soz. Amt	37083	Göttingen	Reinhäuser Landstr.4
+132080089	Landratsamt Soz. Amt	37083	Göttingen	Reinhäuser Landstr.4
+132180115	Landratsamt Soz. Amt	30169	Hannover	Hildesheimer Str. 20
+133580484	Landratsamt Soz. Amt	57462	Olpe	Danziger Str. 2
+133580689	Landratsamt Soz. Amt	57072	Siegen	Koblenzer Str. 73
+133580690	Landratsamt Soz. Amt	57072	Siegen	Koblenzer Str. 73
+134680773	Landratsamt Soz. Amt	51643	Gummersbach	Moltkestr. 42
+135280248	Landratsamt Soz. Amt	64711	Erbach	Michelstädter Str.12
+135380227	Landratsamt Soz. Amt	65719	Hofheim am Taunus	Am Kreishaus 1-5
+135380250	Landratsamt Soz. Amt	61352	Bad Homburg	L.-Erhard-Anlage 1-5
+135480079	Landratsamt Soz. Amt	36341	Lauterbach (Hessen)	Goldhelg 20
+135580172	Landratsamt Soz. Amt	36199	Rotenburg a. d. Fuld	Lindenstr. 1
+136880053	Landratsamt Soz. Amt	76437	Rastatt	Am Schlossplatz 5
+136980101	Landratsamt Soz. Amt	76126	Karlsruhe	Beiertheimer Allee 2
+137080079	Landratsamt Soz. Amt	74821	Mosbach	Renzstr. 10
+137480051	Landratsamt Soz. Amt	79104	Freiburg im Breisgau	Stadt Str. 2
+137480073	Landratsamt Soz. Amt	79312	Emmendingen	Bahnhofstraße 2-4
+137480084	Landratsamt Soz. Amt	79539	Lörrach	Palmstr. 3
+138080297	Landratsamt Soz. Amt	73430	Aalen	Stuttgarter Str.41
+138480075	Landratsamt Soz. Amt	74072	Heilbronn	Lerchenstraße 40
+138880091	Landratsamt Soz. Amt	97616	Neustadt / Saale	Spörleinstraße 11
+138880115	Landratsamt Soz. Amt	97688	Bad Kissingen	Obere Marktstraße 6
+138880137	Landratsamt Soz. Amt	97421	Schweinfurt	Schrammstr. 1
+138880171	Landratsamt Soz. Amt	63897	Miltenberg	Brückenstraße 2
+138880182	Landratsamt Soz. Amt	63739	Aschaffenburg	Bayernstr. 18
+139380065	Landratsamt Soz. Amt	66606	St. Wendel	Mommstraße 21-25A
+139380101	Landratsamt Soz. Amt	66606	St. Wendel	Mommstraße 21-25A
+139380123	Landratsamt Soz. Amt	66606	St. Wendel	Mommstraße 21-25A
+139380167	Landratsamt Soz. Amt	66606	St. Wendel	Mommstraße 21-25A
+139380190	Landratsamt Soz. Amt	66606	St. Wendel	Mommstraße 21-25A
+600563192	Landratsamt Soz. Amt	59494	Soest	Hoher Weg 1-3
+103495037	Landratsamt Soz.Amt	64289	Darmstadt	Jägertorstr. 207
+132080147	Landratsamt Soz.Amt	37154	Northeim	Medenheimerstr. 6/8
+133780501	Landratsamt Soz.Amt	33102	Paderborn	Aldegreverstr. 10-14
+137780203	Landratsamt Stollberg	9366	Niederdorf	Dorfstr. 13
+135980030	Landratsamt Unstrut-Hain.Ks	99974	Mühlhausen/Thüringen	Brunnenstraße 97
+137780190	Landratsamt Vogtlandkreis	8523	Plauen	Postplatz 5
+137780269	Landratsamt Vogtlandkreis Asyl	8523	Plauen	Bahnhofstrasse 42-48
+136180023	Landratsamt Wartburgkrs.	36433	Bad Salzungen	Erzberger Allee 14
+135980187	Landratsamt Weimar Land	99510	Apolda	Bahnhofstraße 28
+135980198	Landratsamt Weimar Land	99510	Apolda	Bahnhofstraße 28
+137980034	Landratsamt Weisseritzk.	1744	Dippoldiswalde	Dr. Külzstr. 1
+137780327	Landratsamt Zwickau	8412	Werdau	Königswalder Straße
+137780101	Landratsamt Zwickau	8412	Werdau	Königswalder Straße
+130680047	Landsrats. Pots.Mittelmark.	14806	Belzig	Niemöllerstr. 1-2
+110987855	Landw.Alterskasse	86156	Augsburg	Tunnelstr. 29
+139380350	Last f. Flüchtlinge	66822	Lebach	Oderring 25
+104940005	MGDA(EINSCHREIBEN9999985)	65760	Eschborn	CARL-MANNICH STR.26
+305310142	MGDA(INTEGRATION 9999809)	65760	Eschborn	Carl-Mannich-Str. 26
+270600186	MS-ZENTRUM NEUROL.KLINIK	35392	Gießen	AM STEG 12
+133280083	Magistrat der Stadt Bremerhave	27576	Bremerhaven	Heinrich-Schmalfeldt
+661100310	Nacht- und Notdienstfonds	10179	Berlin	Alte Jacobstr. 85/86
+103600898	OFD Nieders. LBV Aurich	26603	Aurich	Schlossplatz 3
+510710511	PFLEGE-U.ALTENZENTRUM	55743	Idar-Oberstein	FR.EBERT RING 3
+511000182	PFLEGEHEIM 'SEID GETROST'	66564	Ottweiler	FUERTHER STR. 31
+660511166	PROTAXplus GmbH & Co. KG	45128	Essen	Rellinghauser Str. 8
+103600547	Polizei	22761	Hamburg	Stresemannstr. 341
+103600616	Polizei	19061	Schwerin	Parkweg 12
+103600514	Polizei Brandenburg	14471	Potsdam	An der Pirschheide 1
+103600627	Polizei Heilfürsorge Berlin	12101	Berlin	Platz der Luftbrücke
+103600605	Polizei Sachsen Anhalt	39114	Magdeburg	Alt Prester 5
+103600809	Polizei Sachsen Anhalt	39114	Magdeburg	Alt Prester 5
+103600525	Polizei- LZPD NRW	47059	Duisburg	Schifferstr. 10
+103600503	Polizei-Sanitätsstelle	24116	Kiel	Mühlenweg 166
+103600182	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600013	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600024	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600035	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600046	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600079	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600080	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600091	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600104	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600115	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600126	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600159	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600160	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600217	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600239	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600251	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600273	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+103600295	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+950585030	Postbeamtenkrankenkasse	70469	Stuttgart	Maybachstr. 54
+500643564	Pro Familia	63067	Offenbach am Main	Domstraße 43
+500643597	Pro Familia	60325	Frankfurt am Main	Palmengartenstr. 14
+105413113	Rechnungsprüfst. AOK Hessen	98528	Suhl	Am fröhlichen Mann
+590600108	Regierungspräsidium (HEA)	35394	Gießen	Lilienthalstr. 2
+102030647	Rezeptprüfstelle Duderstadt	37115	Duderstadt	Adenauerring 25
+100072802	SHV AOK Berlin -U-	10963	Berlin	Wilhelmstr. 1
+138880079	SHV Main-Spessart	97753	Karlstadt	Marktplatz 8
+134480463	SOZIALAMT	47506	Neukirchen-Vluyn	HANS-BOECKLER-STR.26
+138080344	SOZIALAMT	70794	Filderstadt	EICHERSTR. 9
+102091710	SSB Nordrhein	40474	Düsseldorf	Tersteegenstr. 12
+107204056	SSB Nordrhein	40474	Düsseldorf	Tersteegenstr. 12
+332513583	SSB Nordrhein	40474	Düsseldorf	Tersteegenstr. 12
+139180154	STADTVERW.SOZ/JUG.AMT	86150	Augsburg	MAXIMILIAN STR.4
+132580073	STADTVERWALTUNG	49803	LINGEN / EMS	ELISABETHEN STR.14
+133580202	STADTVERWALTUNG	58840	Plettenberg	GRUENESTR. 12
+133580495	STADTVERWALTUNG	58239	Schwerte	RATHAUSSTR. 31
+133780670	STADTVERWALTUNG	48429	Rheine	-SOZIALAMT-
+134180200	STADTVERWALTUNG	52134	Herzogenrath	RATHAUSPLATZ 1
+134480189	STADTVERWALTUNG	47623	Kevelaer	PETER-PLUEMPE PLATZ
+137882605	STADTVERWALTUNG	72458	Albstadt	MARKTSTR. 35
+138580098	STADTVERWALTUNG	86899	Landsberg am Lech	VON KUEHLMANNSTR.15
+138780125	STADTVERWALTUNG	91522	Ansbach	NUERNBERGER STR.32
+138880148	STADTVERWALTUNG	97421	Schweinfurt	MARKT 1
+134480167	STADTVERWALTUNG -ASYL-	46459	Rees	MARKT 1
+132280070	STADTVERWALTUNG SOZ.AMT	31134	Hildesheim	HANNOVERSCHE STR.6
+132480083	STADTVERWALTUNG SOZ.AMT	26105	OLDENBURG	PFERDEMARKT 14
+132480185	STADTVERWALTUNG SOZ.AMT	27749	Delmenhorst	AM STADTWALL 10
+133580576	STADTVERWALTUNG SOZ.AMT	44649	Herne	HAUPTSTR.241
+137580132	STADTVERWALTUNG SOZ.AMT	78048	Villingen-Schwenning	JUS.-KERNER STR.7
+138780307	STADTVERWALTUNG SOZ.AMT	90317	NUERNBERG	DIETZSTR.4
+130480023	Sozialamt	17109	Demmin, Hansestadt	A.-Pompe-Str. 12
+130680036	Sozialamt	16816	Neuruppin	Virchowstr. 14
+130680069	Sozialamt	14712	Rathenow	Platz der Freiheit 1
+130780048	Sozialamt	4916	Herzberg	Kochritzerstr. 20
+131280089	Sozialamt	6449	Aschersleben	Ermslebenerstr. 77
+134180335	Sozialamt	52525	Heinsberg	Valkenburger Str. 45
+136180034	Sozialamt	96515	Sonneberg	Bahnhofstr. 66
+137980103	Sozialamt	1662	Meißen	Brauhausstr. 21
+137980169	Sozialamt	1662	Meißen	Brauhausstr. 21
+138280051	Sozialamt	4509	Delitzsch	Richard-Wagner-Str.
+138580021	Sozialamt	84453	Mühldorf a. Inn	Toeginger Str.18
+138580167	Sozialamt	82256	Fürstenfeldbruck	Münchner Str. 32
+138880193	Sozialamt	97318	Kitzingen	Kaiserstraße 4
+131080134	Sozialamt Bördekreis	39387	Oschersleben (Bode)	Triststraße 9-10
+139180256	Sozialamt Donau Ries	86609	Donauwörth	Pflegstraße 2
+134680693	Sozialamt Erftkreis	50126	Bergheim	Willy-Brandt-Platz 1
+132780111	Sozialamt Landkr.Diepholz	28857	Syke	Hinrich-Hanno-Platz
+132780100	Sozialamt Landkr.Diepholz	28857	Syke	Hinrich-Hanno-Platz
+133581292	Sozialamt Märkischer Krs.	58762	Altena	Bismarckstr. 17
+131180055	Sozialamt Weißenfels	6667	Weißenfels	Am Stadtpark 6
+131280090	Sozialamt Wittenberg	6886	Lutherstadt Wittenbe	Breitscheidtstr. 3
+139180234	Sozialhilfe Schwaben	86152	Augsburg	Hafnerberg 10
+138780078	Sozialhilfeverw. Mittelf.	91522	Ansbach	Danziger Str. 5
+102040514	Sprechst.ZÄ. Sachsen-Anhalt	37115	Duderstadt	Adenauerring 25
+102091709	Sprechstundenbedarf RPD	37115	Duderstadt	Adenauerring 25
+135880108	Stadtjugendamt	65197	Wiesbaden	Homburger Strasse 29
+136280171	Stadtjugendamt	67547	Worms	Marktplatz 2
+137080091	Stadtjugendamt Mannheim	68167	Mannheim	Holzbauerstr. 6-8
+103600876	Stadtverwaltung	17033	Neubrandenburg	Friedr.-Engels Ring
+130380011	Stadtverwaltung	18055	Rostock	St. Georg-Str. 109
+130380066	Stadtverwaltung	23966	Wismar	Am Markt 1
+130880061	Stadtverwaltung	15230	Frankfurt (Oder)	Logenstraße 8
+131180044	Stadtverwaltung	6128	Halle (Saale)	Südpromenade 30
+131280056	Stadtverwaltung	6813	Dessau	Ferd.v.Schill Str. 8
+131380171	Stadtverwaltung	52058	Aachen	Bahnhofstrasse
+131380605	Stadtverwaltung	24534	Neumünster	Großflecken 73
+131980133	Stadtverwaltung	38226	Salzgitter	Joachim-Campe-Str. 6
+132180091	Stadtverwaltung	30161	Hannover	Hamburger Allee 25
+132180239	Stadtverwaltung	67433	Neustadt an der Wein	Konrad-Adenauer Str.
+132880101	Stadtverwaltung	26382	Wilhelmshaven	Rathauspaltz 1
+133280072	Stadtverwaltung	27576	Bremerhaven	Stadthaus 4
+133580144	Stadtverwaltung	58675	Hemer	Hademareplatz 48
+133580521	Stadtverwaltung	44532	Lünen	Willy Brandt Platz 1
+133780328	Stadtverwaltung	33034	Brakel	Am Markt 12
+133780841	Stadtverwaltung	37671	Höxter	Westerbachstraße 45
+134180299	Stadtverwaltung	52349	Düren	Kaiserplatz
+134180324	Stadtverwaltung	52428	Jülich	Grosse Rurstr. 17
+134280369	Stadtverwaltung	40878	Ratingen	Minoritenstr. 2-6
+134480190	Stadtverwaltung	47533	Kleve	Kavarinerstr. 20-22
+134580113	Stadtverwaltung	45468	Mülheim an der Ruhr	Ruhrstraße 32-34
+134680808	Stadtverwaltung	51439	Bergisch Gladbach	An der Gohrsmühle 18
+134981824	Stadtverwaltung	42853	Remscheid	Alleestr. 66
+135080019	Stadtverwaltung	99423	Weimar	Schwanseestr. 17
+135080020	Stadtverwaltung	99423	Weimar	Schwanseestr. 17
+135280113	Stadtverwaltung	65451	Kelsterbach	Mörfelder Str. 33
+135380114	Stadtverwaltung	60326	Frankfurt am Main	Mainzer Landstraße 2
+135580138	Stadtverwaltung	34117	Kassel	Obere Königstr. 8
+135580161	Stadtverwaltung	36037	Fulda	Bonifatiusplatz 1-3
+135980018	Stadtverwaltung	99817	Eisenach	Am Markt 22
+135980110	Stadtverwaltung	99084	Erfurt	Juri Gagarin Ring 15
+136080033	Stadtverwaltung	7545	Gera	Gagarinstraße 99-101
+136080180	Stadtverwaltung	7743	Jena	Lutherplatz 3
+136180056	Stadtverwaltung	98527	Suhl	Fried. Königstr. 42
+136880075	Stadtverwaltung	76532	Baden-Baden	Gewerbepark Cite 1
+137180058	Stadtverwaltung	75175	Pforzheim	Marktplatz 4
+137780123	Stadtverwaltung	8523	Plauen	Melanchtonstr.
+137780214	Stadtverwaltung	9119	Chemnitz	Annaberger Str. 93
+137882627	Stadtverwaltung	72070	Tübingen	Bei d. Fruchtschrann
+137980045	Stadtverwaltung	2826	Görlitz	Untermarkt 6-8
+137980090	Stadtverwaltung	1309	Dresden	Glashütter Straße 51
+138280040	Stadtverwaltung	4109	Leipzig	Burgplatz 1
+138480279	Stadtverwaltung	80336	München	Schwanthalerstr. 62
+138580292	Stadtverwaltung	85049	Ingolstadt	Rathausplatz 4
+138680204	Stadtverwaltung	95445	Bayreuth	Dr.- Franz-Str. 6
+138680226	Stadtverwaltung	96450	Coburg	Oberer Burglass 1
+138980092	Stadtverwaltung	92224	Amberg	Spitalgraben 3
+139080153	Stadtverwaltung	94036	Passau	Vornholzstr. 40
+139180325	Stadtverwaltung	86153	Augsburg	Postfach 11 19 60
+135880073	Stadtverwaltung der Magistrat	65197	Wiesbaden	Homburger Str. 29
+135780094	Stadtverwaltung - FB4-	35037	Marburg	Friedrichstr. 36
+134180415	Stadtverwaltung Asyl	52531	Übach-Palenberg	Rathausplatz 4
+130680092	Stadtverwaltung Bereich 3811	14467	Potsdam	Hegelallee 6
+136380172	Stadtverwaltung Jugendamt	56564	Neuwied	Heddesdorfer Str. 33
+138780272	Stadtverwaltung Schwabach	91126	Schwabach	Eisentrautstr.2
+131980155	Stadtverwaltung Soz. Amt	38100	Braunschweig	An der Martinikirche
+133580462	Stadtverwaltung Soz. Amt	44787	Bochum	Willy-Brandt-Platz 2
+133580703	Stadtverwaltung Soz. Amt	58636	Iserlohn	Werner-Jacobi-Platz
+133581178	Stadtverwaltung Soz. Amt	44122	Dortmund	Luisenstraße 11-13
+133780339	Stadtverwaltung Soz. Amt	33602	Bielefeld	Niederwall 23
+133780497	Stadtverwaltung Soz. Amt	48151	Münster	Albersloher Weg 31
+134480430	Stadtverwaltung Soz. Amt	47049	Duisburg	Schwanenstr. 5-7
+134580088	Stadtverwaltung Soz. Amt	46045	Oberhausen	Schwartz Str. 72
+134680272	Stadtverwaltung Soz. Amt	51103	Köln	Ottmar-Pohl-Platz 1
+134680706	Stadtverwaltung Soz. Amt	51373	Leverkusen	Fr.-Ebert-Platz 1
+134680886	Stadtverwaltung Soz. Amt	53111	Bonn	Oxfordstr. 19
+134981755	Stadtverwaltung Soz. Amt	42103	Wuppertal	Friedrich-Engels-All
+135280066	Stadtverwaltung Soz. Amt	64293	Darmstadt	Frankfurter Str. 71
+135380103	Stadtverwaltung Soz. Amt	63450	Hanau	Am Markt
+136480220	Stadtverwaltung Soz. Amt	67227	Frankenthal (Pfalz)	Rathausplatz 2-7
+136480253	Stadtverwaltung Soz. Amt	76829	Landau in der Pfalz	Friedrich Ebert Str.
+136480264	Stadtverwaltung Soz. Amt	66954	Pirmasens	Maler Bürkel Str. 33
+136580083	Stadtverwaltung Soz. Amt	54292	Trier	Augustinerhof
+136980076	Stadtverwaltung Soz. Amt	76133	Karlsruhe	Kaiserallee 4
+137480095	Stadtverwaltung Soz. Amt	79114	Freiburg im Breisgau	Berliner Allee 1
+138080139	Stadtverwaltung Soz. Amt	74072	Heilbronn	Gymnasiumstr. 4
+138080322	Stadtverwaltung Soz. Amt	70173	Stuttgart	Eberhardstr. 33
+138880159	Stadtverwaltung Soz. Amt	63739	Aschaffenburg	Dalbergstraße 15
+138880160	Stadtverwaltung Soz. Amt	97070	Würzburg	Karmeliten Str. 43
+138980069	Stadtverwaltung Soz. Amt	93053	Regensburg	Johann-Hösl-Str. 11
+139380269	Stadtverwaltung Soz. Amt	66346	Püttlingen	Rathausplatz 1
+131382037	Stadtverwaltung Soz. Amt z. Hd	23560	Lübeck	Kronsforder Allee 2-
+132080169	Stadtverwaltung Soz.Amt	37083	Göttingen	Hiroshima-Platz 1-4
+132380071	Stadtverwaltung Soz.Amt	21335	Lüneburg	Am Ochsenmarkt
+134280110	Stadtverwaltung Soz.Amt	42781	Haan	Alleestraße 8
+136480106	Stadtverwaltung Soz.Amt	67346	Speyer	Maximilianstr. 8
+136480128	Stadtverwaltung Soz.Amt	67653	Kaiserslautern	Maxstr. 19
+136480242	Stadtverwaltung Zweibrücken	66482	Zweibrücken	Herzogstraße 1
+661430115	Syntela BKK DEMAG Kr.-M.	4315	Leipzig	Torgauer Platz 1-3
+661430091	Syntela Bertelsmann BKK	4315	Leipzig	Torgauer Platz 1-3
+661430079	Syntela E.ON BKK	4315	Leipzig	Torgauer Platz 1-3
+101576623	Techniker HM302 / BVG	47119	Duisburg	Ruhrorter Str. 187
+101576623	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+100177504	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+100577508	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+100977502	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101300130	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101302655	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101377508	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101575519	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101576020	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101576086	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101576111	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101576188	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101576645	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101576656	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101576667	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101577500	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101578603	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101588821	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101588843	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101589310	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+101777502	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+103077509	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+103477503	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+104077501	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+105077504	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+105177505	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+106277508	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+106377509	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+106477500	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+106577501	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+106777503	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+107277500	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+107377501	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+107877506	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+108077500	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+108377013	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+108377503	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+109377505	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+109577006	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+109577507	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+109777509	Techniker Krankenkasse	47119	Duisburg	Ruhrorter Str. 187
+103601515	Thür.Landesverwaltungsamt	7545	Gera	Puschkinplatz 7
+103600444	Wehrbereichsverwalt. Ost	15344	Strausberg	Prötzeler Chaussee 2
+950593018	Wehrbereichsverwalt. Ost	15344	Strausberg	Prötzeler Chaussee 2
+951293017	Wehrbereichsverwalt. Ost	15344	Strausberg	Prötzeler Chaussee 2

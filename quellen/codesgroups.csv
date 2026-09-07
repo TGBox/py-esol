@@ -1,0 +1,57 @@
+id;group
+01;Massagen
+02;Man. Lymphdrainage
+03;Bewegungstherapie/ Übungsbehandl., EB
+04;Bewegungstherapie/Ü bungsbehandlung GB
+05;Krankengymnastik, normal, EB
+06;Krankengymnastik, normal GB
+07;Krankengymnastik, spezial, EB
+08;Krankengymnastik, spezial, GB
+09;Krankengymnastik im Bewegungsbad, EB
+10;Krankengymnastik im Bewegungsbad, GB
+11;Traktionsbehandlung/- Extensionsbehandlun g
+12;Manuelle Therapie
+13;Elektrotherapie
+14;Lichttherapie
+15;Wärme- u. Kältetherapie
+16;Hydrotherapie
+17;Med. Bäder
+18;Inhalationstherapie
+19;Sonstiges
+20;Standardisierte Heilmittelkombination en
+30;Erstuntersuchung
+31;Einzelbehandlung (Preis incl. Vor- und Nachbereitung
+32;Gruppenbehandlung (Preis incl. Vor- und Nachbereitung)
+33;Ausführlicher sprach- therapeut. Bericht
+34;Beratung
+40;Befunderhebung
+41;Einzelbehandlung
+42;Gruppenbehandlung
+43;Thermische Anwendung, Wärme/Kälte
+44;Schienen
+45;Sonstiges
+60;Massagen
+61;Man. Lymphdrainage
+62;Bewegungstherapie, EB
+63;Bewegungstherapie, GB
+64;Traktionsbehandlung/ Extensionsbehandlun g
+65;Elektrotherapie
+66;Wärme- und Kältetherapie
+67;Hydrotherapie
+68;Med. Bäder
+69;Med. Bäder
+70;Inhalationstherapie
+71;weitere kurortspezifische Behandlungsformen
+72;Sonstiges
+73;Zusatzpositionen für Badezusätze
+80;Maßnahmen der podologischen Therapie
+81;Nagelspangenbehand lung Erstbefundung
+82;Nagelspangenbehand lung nach Ross Fraser
+83;Nagelspangenbehand lung mehrteilig bilateral
+84;Nagelspangenbehand lung einteilige Kunststoff- oder Metall- Nagelkorrekturspange
+85;Nagelspangenbehand lung weitere Leistungen
+97;Mitteilung/Bericht an den Arzt
+98;Med.Fußpflege
+99;Hausbesuch/Wegegeld
+50;Maßnahmen der Ernährungstherapie
+99;44

@@ -14,7 +14,41 @@
     "Die Auflösung passiert beim Nachschlagen in codelisten.py."
   ],
   "_quelle": {
-    "datei": "HMP Stand 01.07.2026.xml",
+    "dateien": [
+      {
+        "datei": "HMP_Stand_01.07.2026.xml",
+        "hmp_version": "3.0",
+        "schema_version": "3.2",
+        "hmp_gueltig_ab": "2024-01-01",
+        "anzahl_positionen": 229,
+        "heilmittelbereiche": {
+          "Ergotherapie": 73,
+          "Ernährungstherapie": 27,
+          "Physiotherapie": 92,
+          "Podologie": 18,
+          "Stimm-, Sprech-Sprach- und Schlucktherapie": 19
+        },
+        "gueltigkeitsstaende": {
+          "2026-01-01": 92,
+          "2026-06-01": 27,
+          "2026-07-01": 110
+        }
+      },
+      {
+        "datei": "blanko_leistungen_ergo_20250801.xml",
+        "hmp_version": "3.0",
+        "schema_version": "3.2",
+        "hmp_gueltig_ab": "2024-01-01",
+        "anzahl_positionen": 33,
+        "heilmittelbereiche": {
+          "Ergotherapie": 33
+        },
+        "gueltigkeitsstaende": {
+          "2025-08-01": 33
+        }
+      }
+    ],
+    "datei": "HMP_Stand_01.07.2026.xml + blanko_leistungen_ergo_20250801.xml",
     "hmp_version": "3.0",
     "schema_version": "3.2",
     "hmp_gueltig_ab": "2024-01-01",
@@ -1409,5 +1443,37 @@
     }
   },
   "_uebersprungen": 0,
-  "_doppelte_codes": []
+  "_doppelte_codes": [
+    "54142",
+    "54144",
+    "54145",
+    "54147",
+    "54149",
+    "54152",
+    "54162",
+    "54164",
+    "54165",
+    "54167",
+    "54169",
+    "54172",
+    "54245",
+    "54247",
+    "54248",
+    "54249",
+    "54251",
+    "54252",
+    "54265",
+    "54267",
+    "54268",
+    "54269",
+    "54271",
+    "54272",
+    "54341",
+    "54445",
+    "54446",
+    "59741",
+    "59972",
+    "59973",
+    "59974"
+  ]
 }

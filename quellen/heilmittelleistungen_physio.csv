@@ -1,0 +1,101 @@
+code;bezeichnung;einzelpreis;gruppe
+KG;KG;24.08;Physiotherapie
+KG im Bewegungsbad;KG im Bewegungsbad;27.53;Physiotherapie
+KMT;KMT;17.57;Physiotherapie
+KG-Gerät;KG-Gerät;45.34;Physiotherapie
+KG Gruppe;KG Gruppe;10.78;Physiotherapie
+Übungsbehandlung;Übungsbehandlung;11.12;Physiotherapie
+KG im Bewegungsbad Gruppe;KG im Bewegungsbad Gruppe;19.63;Physiotherapie
+Übungsbehandlung Gruppe;Übungsbehandlung Gruppe;6.85;Physiotherapie
+UWM;UWM;27.42;Physiotherapie
+Übungsbehandlung im Bewegungsbad;Übungsbehandlung im Bewegungsbad;26.71;Physiotherapie
+Übungsbehandlung im Bewegungsbad Gruppe;Übungsbehandlung im Bewegungsbad Gruppe;19.51;Physiotherapie
+SM;SM;17.57;Physiotherapie
+PM;PM;17.57;Physiotherapie
+Wärmetherapie mittels heiße Rolle;Wärmetherapie mittels heiße Rolle;10.94;Physiotherapie
+BGM;BGM;21.11;Physiotherapie
+Wärmetherapie mittels Heißluft;Wärmetherapie mittels Heißluft;6.04;Physiotherapie
+Wärmetherapie mittels Ultraschall;Wärmetherapie mittels Ultraschall;11.91;Physiotherapie
+Warmpackungen (z. B. Fango);Warmpackungen (z. B. Fango);13.13;Physiotherapie
+Wärmetherapie mittels Vollbäder mit Peloid./Paraf.;Wärmetherapie mittels Vollbäder mit Peloid./Paraf.;45.01;Physiotherapie
+Kältetherapie mittels Kaltpackungen;Kältetherapie mittels Kaltpackungen;9.71;Physiotherapie
+Wärmetherapie mittels Teilbäder mit Peloid./Paraf.;Wärmetherapie mittels Teilbäder mit Peloid./Paraf.;34.81;Physiotherapie
+Kältetherapie mittels Kaltgas;Kältetherapie mittels Kaltgas;9.71;Physiotherapie
+Kältetherapie mittels Kaltluft;Kältetherapie mittels Kaltluft;9.71;Physiotherapie
+Elektrotherapie;Elektrotherapie;6.85;Physiotherapie
+MT;MT;28.92;Physiotherapie
+hydroelektrisches Teilbad (Stangerbad);hydroelektrisches Teilbad (Stangerbad);11.77;Physiotherapie
+Chirogymnastik;Chirogymnastik;16.59;Physiotherapie
+Traktion;Traktion;7.02;Physiotherapie
+hydroelektrisches Vollbad (Stangerbad);hydroelektrisches Vollbad (Stangerbad);22.43;Physiotherapie
+Elektrostimulation;Elektrostimulation;15.20;Physiotherapie
+KG-ZNS (Bobath);KG-ZNS (Bobath);38.24;Physiotherapie
+KG-ZNS;KG-ZNS;38.24;Physiotherapie
+KG-ZNS (Vojta);KG-ZNS (Vojta);38.24;Physiotherapie
+KG-ZNS (PNF);KG-ZNS (PNF);38.24;Physiotherapie
+KG-ZNS-Kinder;KG-ZNS-Kinder;47.80;Physiotherapie
+KG-Atemtherapie;KG-Atemtherapie;24.08;Physiotherapie
+KG-ZNS-Kinder (Vojta);KG-ZNS-Kinder (Vojta);47.80;Physiotherapie
+KG-ZNS-Kinder (Bobath);KG-ZNS-Kinder (Bobath);47.80;Physiotherapie
+KG-Atemtherapie Gruppe;KG-Atemtherapie Gruppe;10.78;Physiotherapie
+Inhalationstherapie;Inhalationstherapie;10.03;Physiotherapie
+KG-Muko;KG-Muko;72.26;Physiotherapie
+MLD-30 + anschließender Kompressionsbandagierung;MLD-30 + anschließender Kompressionsbandagierung;47.85;Physiotherapie
+MLD-30;MLD-30;29.23;Physiotherapie
+MLD-45;MLD-45;43.83;Physiotherapie
+MLD-45 + anschließender Kompressionsbandagierung;MLD-45 + anschließender Kompressionsbandagierung;62.45;Physiotherapie
+MLD-60;MLD-60;58.45;Physiotherapie
+MLD-60 + anschließender Kompressionsbandagierung;MLD-60 + anschließender Kompressionsbandagierung;77.07;Physiotherapie
+Kohlensäurebäder und Kohlensäuregasbäder (Teilbad);Kohlensäurebäder und Kohlensäuregasbäder (Teilbad);21.37;Physiotherapie
+Kohlensäurebäder und Kohlensäuregasbäder (Vollbad);Kohlensäurebäder und Kohlensäuregasbäder (Vollbad);21.37;Physiotherapie
+CM;CM;17.57;Physiotherapie
+Hornhautabtragung;Hornhautabtragung;30.70;Podologie
+Nagelbearbeitung;Nagelbearbeitung;30.70;Podologie
+Podologische Komplexbehandlung;Podologische Komplexbehandlung;44.00;Podologie
+Nagelspangenbehandlung;Nagelspangenbehandlung;0.00;Podologie
+Stimmtherapie-30;Stimmtherapie-30;45.95;Stimm-, Sprech-Sprach- und Schlucktherapie
+Stimmtherapie-45;Stimmtherapie-45;63.19;Stimm-, Sprech-Sprach- und Schlucktherapie
+Stimmtherapie-60;Stimmtherapie-60;80.42;Stimm-, Sprech-Sprach- und Schlucktherapie
+Stimmtherapie-Gruppe-45;Stimmtherapie-Gruppe-45;56.87;Stimm-, Sprech-Sprach- und Schlucktherapie
+Stimmtherapie-Gruppe-90;Stimmtherapie-Gruppe-90;103.40;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprech- und Sprachtherapie-45;Sprech- und Sprachtherapie-45;63.19;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprech- und Sprachtherapie-30;Sprech- und Sprachtherapie-30;45.95;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprech- und Sprachtherapie-60;Sprech- und Sprachtherapie-60;80.42;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprech- und Sprachtherapie-Gruppe-45;Sprech- und Sprachtherapie-Gruppe-45;56.87;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprech- und Sprachtherapie-Gruppe-90;Sprech- und Sprachtherapie-Gruppe-90;103.40;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprachtherapie-30;Sprachtherapie-30;45.95;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprachtherapie-60;Sprachtherapie-60;80.42;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprachtherapie-Gruppe-90;Sprachtherapie-Gruppe-90;103.40;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprachtherapie-Gruppe-45;Sprachtherapie-Gruppe-45;56.87;Stimm-, Sprech-Sprach- und Schlucktherapie
+Stimm-, Sprech- und Sprachtherapie-30;Stimm-, Sprech- und Sprachtherapie-30;45.95;Stimm-, Sprech-Sprach- und Schlucktherapie
+Kältetherapie;Kältetherapie;6.67;Ergotherapie
+Wärmetherapie;Wärmetherapie;6.67;Ergotherapie
+Stimm-, Sprech- und Sprachtherapie-45;Stimm-, Sprech- und Sprachtherapie-45;63.19;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprachtherapie-45;Sprachtherapie-45;63.19;Stimm-, Sprech-Sprach- und Schlucktherapie
+Stimm-, Sprech- und Sprachtherapie-Gruppe-45;Stimm-, Sprech- und Sprachtherapie-Gruppe-45;56.87;Stimm-, Sprech-Sprach- und Schlucktherapie
+Stimm-, Sprech- und Sprachtherapie-Gruppe-90;Stimm-, Sprech- und Sprachtherapie-Gruppe-90;103.40;Stimm-, Sprech-Sprach- und Schlucktherapie
+Stimm-, Sprech- und Sprachtherapie-60;Stimm-, Sprech- und Sprachtherapie-60;80.42;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprechtherapie-45;Sprechtherapie-45;63.19;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprechtherapie-30;Sprechtherapie-30;45.95;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprechtherapie-60;Sprechtherapie-60;80.42;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprechtherapie-Gruppe-45;Sprechtherapie-Gruppe-45;56.87;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprech- und Stimmtherapie-30;Sprech- und Stimmtherapie-30;45.95;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprechtherapie-Gruppe-90;Sprechtherapie-Gruppe-90;103.40;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprech- und Stimmtherapie-45;Sprech- und Stimmtherapie-45;63.19;Stimm-, Sprech-Sprach- und Schlucktherapie
+Sprech- und Stimmtherapie-60;Sprech- und Stimmtherapie-60;80.42;Stimm-, Sprech-Sprach- und Schlucktherapie
+Schlucktherapie-30;Schlucktherapie-30;45.95;Stimm-, Sprech-Sprach- und Schlucktherapie
+Schlucktherapie-45;Schlucktherapie-45;63.19;Stimm-, Sprech-Sprach- und Schlucktherapie
+Motorisch-funkt. Beh.;Motorisch-funkt. Beh.;43.56;Ergotherapie
+Schlucktherapie-60;Schlucktherapie-60;80.42;Stimm-, Sprech-Sprach- und Schlucktherapie
+Motorisch-funkt. Beh. Gruppe;Motorisch-funkt. Beh. Gruppe;34.58;Ergotherapie
+Motorisch-funkt. Beh. mit ergoth. Schiene/n;Motorisch-funkt. Beh. mit ergoth. Schiene/n;43.56;Ergotherapie
+Thermische Anwendungen;Thermische Anwendungen;6.67;Ergotherapie
+Sensomotorisch-perz. Beh.;Sensomotorisch-perz. Beh.;58.64;Ergotherapie
+Sensomotorisch-perz. Beh. Gruppe;Sensomotorisch-perz. Beh. Gruppe;46.91;Ergotherapie
+Sensomotorisch-perz. Beh. mit ergoth. Schiene/n;Sensomotorisch-perz. Beh. mit ergoth. Schiene/n;58.64;Ergotherapie
+Hirnleistungstraining/neuropsych. orientierte Beh.;Hirnleistungstraining/neuropsych. orientierte Beh.;48.28;Ergotherapie
+Hirnleistungstraining Gruppe;Hirnleistungstraining Gruppe;37.98;Ergotherapie
+Psychisch-funkt. Beh. Gruppe;Psychisch-funkt. Beh. Gruppe;58.08;Ergotherapie
+Psychisch-funkt. Beh.;Psychisch-funkt. Beh.;73.41;Ergotherapie
+Ernährungstherapie;Ernährungstherapie;67.82;Ernährungstherapie
+Ernährungstherapie Gruppe;Ernährungstherapie Gruppe;47.47;Ernährungstherapie

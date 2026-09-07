@@ -1,0 +1,113 @@
+kapitel;hmcode;preis;bezeichnung
+1;X0102;27.42;Unterwasserdruckstrahlmassage
+1;X0106;17.57;Klassische Massagetherapie (KMT)
+1;X0107;21.11;Bindegewebsmassage (BGM)
+1;X0108;17.57;Segment-, Periost-, Colonmassage
+1;X0201;43.83;Manuelle Lymphdrainage MLD -45 Minuten (Großbehandlung)
+1;X0202;58.45;Manuelle Lymphdrainage MLD -60 Minuten (Ganzbehandlung)
+1;X0204;18.62;Kompressionsbandagierung einer Extremität
+1;X0205;29.23;Manuelle Lymphdrainage MLD -30 Minuten (Teilbehandlung)
+1;X0301;11.12;Übungsbehandlung: Einzelbehandlung
+1;X0305;26.71;Übungsbehandlung im Bewegungsbad: Einzelbehandlung
+1;X0306;16.59;Chirogymnastik
+1;X0401;6.85;Übungsbehandlung: Gruppenbehandlung (2 - 5 Patienten)
+1;X0402;19.51;ÜB im Bewegungsbad: Gruppenbehandlung mit 2-3 Patienten
+1;X0405;13.23;ÜB im Bewegungsbad: Gruppenbehandlung mit 4-5 Patienten
+1;X0501;24.08;Krankengymnastik: Einzelbehandlung
+1;X0507;45.34;KGG: Parallele Einzelbehandlung bis zu 3 Patienten
+1;X0601;10.78;Krankengymnastik: Gruppenbehandlung (2 - 5 Patienten)
+1;X0702;72.26;KG zur Behandlung schwerer Erkrankungen der Atmungsorgane 
+1;X0708;47.8;KG-ZNS-Kinder nach Bobath 
+1;X0709;47.8;KG-ZNS-Kinder nach Vojta 
+1;X0710;38.24;KG-ZNS nach Bobath
+1;X0711;38.24;KG-ZNS nach Vojta
+1;X0712;38.24;KG-ZNS PNF
+1;X0805;13.47;KG in der Gruppe bei zerebral bed. Funktionsstörungen
+1;X0902;27.53;Krankengymnastik im Bewegungsbad: Einzelbehandlung
+1;X1004;19.63;KG im Bewegungsbad: Gruppenbehandlung mit 2-3 Patienten
+1;X1005;12.97;KG im Bewegungsbad: Gruppenbehandlung mit 4-5 Patienten
+1;X1104;7.02;Traktionsbehandlung mit Gerät
+1;X1201;28.92;Manuelle Therapie
+1;X1302;6.85;Elektrotherapie
+1;X1303;15.2;Elektrostimulation
+1;X1310;11.77;Hydroelektrisches Teilbad
+1;X1312;22.43;Hydroelektrisches Vollbad
+1;X1501;13.13;Warmpackung
+1;X1517;6.04;Wärmetherapie mittels Heißluft
+1;X1530;10.94;Heiße Rolle
+1;X1531;11.91;Ultraschall Wärme
+1;X1532;45.01;Vollbad
+1;X1533;34.81;Teilbad
+1;X1534;9.71;Kältetherapie
+1;X1714;22.53;Kohlesäurebad
+1;X1732;21.37;Kohlesäuregasbad Vollbad
+1;X1733;21.37;Kohlesäuregasbad Teilbad
+1;X1801;10.03;Inhalationstherapie
+1;X2001;57.24;D1 Standardisierte Heilmittelkombination
+1;X9701;1.14;Übermittlungsgebühr für Mitteilung / Bericht an den Arzt
+2;X8010;30.7;Podologische Behandlung (klein)
+2;X8020;44;Podologische Behandlung (groß)
+2;X8030;3;Podologische Befundung
+2;X8100;48.71;Erstbefundung
+2;X8210;86.54;Anpassung einer einteiligen unilateralen und bilateralen Nagelkorrekturspange, z. B. nach Ross Fraser
+2;X8220;47.37;Fertigung einer einteiligen unilateralen und bilateralen Nagelkorrekturspange, z. B. nach Ross Fraser
+2;X8230;43.39;Nachregulierung der einteiligen unilateralen und bilateralen Nagelkorrekturspange, z. B. nach Ross Fraser
+2;X8300;86.81;Vorbereitung des Nagels, Anpassung und Aufsetzen einer mehrteiligen bilateralen Nagelkorrekturspange
+2;X8400;47.64;Vorbereitung des Nagels, Anpassung und Aufsetzen einer einteiligen Kunststoff- oder Metall-Nagelkorrekturspange
+2;X8510;15.19;indikationsspezifische Kontrolle auf Sitz- und Passgenauigkeit
+2;X8520;22.71;Behandlungsabschluss / Entfernung der Nagelkorrekturspange
+2;X9933;17.5;Hausbesuch, ärztlich verordnet, inkl. Wegegeld
+2;X9934;10;Hausbesuch in soz. Einrichtung inkl. Wegegeld
+2;X9944;1.5;Hygienemaßnahmen Corona*
+3;X3010;103.4;Erstdiagnostik
+3;X3011;51.7;Bedarfsdiagnostik
+3;X3102;45.95;Einzel-Therapie, Regelbehandlungszeit: 30 Min
+3;X3103;63.19;Einzel-Therapie, Regelbehandlungszeit: 45 Min
+3;X3104;80.42;Einzel-Therapie, Regelbehandlungszeit: 60 Min
+3;X3220;56.87;Gruppen-Therapie 2 Patientinnen und/oder Patienten, je Patientin oder Patient Regelbehandlungszeit: 45 Minuten
+3;X3222;28.35;Gruppen-Therapie 3-5 Patientinnen und/oder Patienten, je Patientin oder Patient Regelbehandlungszeit: 45 Minuten
+3;X3223;103.4;Gruppen-Therapie 2 Patientinnen und/oder Patienten, je Patientin oder Patient Regelbehandlungszeit: 90 Minuten
+3;X3224;54.91;Gruppen-Therapie 3 - 5 Patientinnen und/oder Patienten, je Patientin oder Patient Regelbehandlungszeit: 90 Minuten
+3;X3302;5.74;Bericht des Leistungserbringers an die verordnende Ärztin oder den verordnenden Arzt 
+3;X3303;103.4;Bericht auf besondere Anforderung
+3;X9901;19.73;Ärztlich verordneter Hausbesuch, Einsatzpauschale inkl. Wegegeld
+3;X9944;1.5;Hygienemaßnahmen Corona*
+4;X4002;32.49;Analyse des ergotherapeutischen Bedarfs
+4;X4102;43.56;Motorisch-funktionelle Behandlung: Einzelbehandlung
+4;X4103;58.64;Sensomotorisch-perzeptive Behandlung: Einzelbehandlung
+4;X4104;48.28;Ergotherapeutisches Hirnleistungstraining: Einzelbehandlung
+4;X4105;73.41;Psychisch-funktionelle Behandlung: Einzelbehandlung
+4;X4107;130.69;Motorisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld
+4;X4108;175.93;Sensomotorisch-perzeptive Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld
+4;X4109;146.82;Psychisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld
+4;X4112;146.82;Ergotherapeutisches Hirnleistungstraining: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld
+4;X4205;34.58;Motorisch-funktionelle Behandlung: Parallelbehandlung bei verordneter Position X4102 oder X4209 und gleichzeitiger Anwesenheit von zwei Patienten
+4;X4206;46.91;Sensomotorisch-perzeptive Behandlung: Parallelbehandlung bei verordneter Position X4103 oder X4210 und gleichzeitiger Anwesenheit von zwei Patienten
+4;X4207;37.98;Ergoth. Hirnleistungstraining: Parallelbehandlung bei verordneter Position X4104 oder X4211 und gleichzeitiger Anwesenheit von zwei Patienten
+4;X4208;58.08;Psychisch-funktionelle Behandlung: Parallelbehandlung bei verordneter Position X4105 oder X4212 und gleichzeitiger Anwesenheit von zwei Patienten 
+4;X4209;15.88;Motorisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)
+4;X4210;20.54;Sensomotorisch-perzeptive Behandlung: Gruppenbehandlung (3 - 6 Patienten)
+4;X4211;20.54;Ergotherapeutisches Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten)
+4;X4212;37.88;Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)
+4;X4301;6.67;Thermische Anwendung (Wärme oder Kälte)
+4;X4405;;Ergotherapeutische temporäre Schiene: Herstellung, Anpassung und Korrektur temporärer Schienen ohne Kostenvoranschlag bis 200,00 €
+4;X4406;;Ergotherapeutische temporäre Schiene: Herstellung, Anpassung und Korrektur temporärer Schienen nach Kostenvoranschlag ab 200,01 €
+4;X9701;0.94;Übermittlungsgebühr für Mitteilung/Bericht an die Verordnende oder den Verordnenden
+4;X9932;19.87;Mehraufwand für die Beratung zur Integration in das häusliche und soziale Umfeld
+4;X9933;19.87;Hausbesuch inclusive Wegegeld (Einsatzpauschale)
+4;X9934;12.96;Hausbesuch in einer sozialen Einrichtung/Gemeinschaft inclusive Wegegeld (Einsatzpauschale)
+4;X9944;1.5;Hygienemaßnahmen Corona*
+5;X5001;67.82;Ernährungstherapeutische Anamnese 60 Minuten
+5;X5002;33.91;Ernährungstherapeutische Anamnese 30 Minuten
+5;X5003;67.82;Ernährungstherapeutische Intervention - Einzelbehandlung 60 Minuten
+5;X5004;33.91;Ernährungstherapeutische Intervention - Einzelbehandlung 30 Minuten
+5;X5005;67.82;Ernährungstherapeutische Intervention - Einzelbehandlung im häuslichen oder sozialen Umfeld 
+5;X5006;47.47;Ernährungstherapeutische Intervention - Gruppenbehandlung 60 Minuten
+5;X5007;23.74;Ernährungstherapeutische Intervention - Gruppenbehandlung 30 Minuten
+5;X5008;55.49;Berechnung und Auswertung von Ernährungsprotokollen und Entwicklung entsprechender individueller Empfehlungen
+5;X5009;55.49;Notwendige Abstimmung der Therapie mit einer dritten Partei
+5;X9937;0.18;Ärztlich verordneter Hausbesuch - Wegegeld je Kilometer bis einschließlich 40 km
+5;X9941;0.73;Ärztlich verordneter Hausbesuch - Wegegeld je Kilometer ab dem 41. km
+5;X9942;0.18;Hausbesuch bei der Beratung im häuslichen und sozialen Umfeld - Wegegeld je Kilometer bis einschließlich 40 km
+5;X9943;0.73;Hausbesuch bei der Beratung im häuslichen und sozialen Umfeld - Wegegeld je Kilometer ab dem 41. km
+5;X9944;1.5;Hygienemaßnahmen Corona*

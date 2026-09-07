@@ -258,7 +258,14 @@ def decode_zhe(fields: List[Any]) -> Dict[str, Any]:
     zhe["zuzahlungskennzeichen_text"] = codelisten.describe(
         "zuzahlungskennzeichen", zhe["zuzahlungskennzeichen"]
     )
-    zhe["diagnosegruppe_text"] = codelisten.describe("diagnosegruppe", zhe["diagnosegruppe"])
+    # describe_diagnosegruppe ergänzt den Heilmittelbereich aus der
+    # KBV-Heilmittelstammdatei: 'EN3 — Periphere Nervenläsionen [Ergotherapie]'.
+    # Damit ist auf einen Blick klar, ob Diagnosegruppe und Abrechnungscode
+    # überhaupt zueinander passen.
+    zhe["diagnosegruppe_text"] = codelisten.describe_diagnosegruppe(zhe["diagnosegruppe"])
+    zhe["diagnosegruppe_bereich"] = codelisten.diagnosegruppe_info(
+        zhe["diagnosegruppe"]
+    ).get("bereich", "")
     zhe["verordnungsart_text"] = codelisten.describe("verordnungsart", zhe["verordnungsart"])
     zhe["verordnungsbesonderheiten_text"] = codelisten.describe(
         "verordnungsbesonderheiten", zhe["verordnungsbesonderheiten"], leer_text="keine"
@@ -624,6 +631,11 @@ def verordnung_textzeilen(beleg: Dict[str, Any]) -> List[str]:
     ) or "—"
 
     uebersicht = beleg.get("behandlung") or {}
+    leg = leistungserbringergruppe(
+        beleg.get("abrechnungscode"),
+        next((str(g.get("tarif_kz") or "")
+              for g in (beleg.get("positionsgruppen") or []) if g.get("tarif_kz")), ""),
+    )
 
     lines = [
         f"Verordnung vom:      {zhe.get('verordnungsdatum_text', '—')}",
@@ -644,6 +656,36 @@ def verordnung_textzeilen(beleg: Dict[str, Any]) -> List[str]:
         f"Behandlungszeitraum: {uebersicht.get('zeitraum_text', '—')} "
         f"({uebersicht.get('anzahl_behandlungstage', 0)} Behandlungstage)",
     ]
+
+    if leg["text"]:
+        lines.append(f"Leistungsgruppe:     {leg['text']}")
+
+    # Kostenträger im Klartext samt Datenannahmestelle — in der Hotline ist die
+    # Frage "wohin muss die Datei" so häufig wie "was bedeutet dieser Code".
+    for schluessel, beschriftung in (("kostentraeger_ik", "Kostenträger"),
+                                     ("krankenkasse_ik", "Krankenkasse"),
+                                     ("leistungserbringer_ik", "IK Leistungserbr.")):
+        ik = str(beleg.get(schluessel) or "").strip()
+        if not ik:
+            continue
+        if schluessel == "krankenkasse_ik" and ik == str(beleg.get("kostentraeger_ik") or ""):
+            continue  # steht in den meisten Dateien identisch im FKT
+        lines.append(f"{beschriftung + ':':20} {codelisten.describe_ik(ik)}")
+        stelle = codelisten.annahmestelle(ik, "dfu")
+        # Nur nennen, wenn die Annahmestelle eine andere Stelle ist — viele
+        # Kassen nehmen selbst an, dann ist die Zeile reine Wiederholung.
+        if stelle.get("ik") and stelle["ik"] != ik:
+            lines.append(f"  Annahmestelle:     {codelisten.describe_ik(stelle['ik'])}")
+
+    # Verordnungsbedarf je Diagnose (Anlage 2 / Anlage 3 der Heilmittel-Richtlinie)
+    for d in diagnosen:
+        code = str(d.get("code") or "")
+        zeilen = codelisten.verordnungsbedarf_zeilen(code)
+        if not zeilen:
+            continue
+        lines.append(f"Verordnungsbedarf:   {code}: {zeilen[0]}")
+        for zeile in zeilen[1:]:
+            lines.append(f"                       {zeile}")
 
     if beleg.get("genehmigung"):
         for skz in beleg["genehmigung"]:

@@ -19,35 +19,10 @@ Es unterstützt Leistungserbringer im Heilmittelbereich (Physiotherapie, Ergothe
   * **VKZ 04 (Korrekturrechnung)**: Neuberechnung/Korrektur abgesetzter Rechnungsbelege.
   * **VKZ 10 (Wiederaufnahme Blankoverordnung § 125a SGB V)**: Abrechnung nach Unterbrechung bei Blankoverordnungen.
   * **Interaktive Belegauswahl**: Gezielte Auswahl einzelner Belege per Checkbox-Dialog in der GUI mit automatischer Neuberechnung aller `GES`-Gesamtsummen.
-  * **Bearbeitbare Vorschau**: Im Tab *Vorschau & EDIFACT-Diff* steht rechts die
-    vollständige Korrekturdatei — und die lässt sich direkt dort von Hand
-    nachbearbeiten. Vor dem Speichern läuft die bearbeitete Fassung durch die
-    4-stufige Validierung; Fehler verhindern das Speichern.
 * **📄 Auftragsdatei-Generator (`.auf`)**:
   * Automatische Erstellung von EDIFACT-Begleitdateien (`50000001...`) für die physikalische Datenübertragung.
 * **🔄 UTF-8 ➔ ISO-8859-15 Konverter**:
   * Stapelkonvertierung fehlerhaft kodierter Dateien in den geforderten ISO-8859-15 EDIFACT-Standard.
-* **📋 Verordnungs-Ansicht (Support & Hotline)**:
-  * **Virtuelles Muster 13/18**: Eigene Box „Verordnung / verordnender Arzt" mit Verordnungsdatum,
-    BSNR/LANR, Verordnungsart, Diagnosegruppe, dekodierter Leitsymptomatik (Stellen a/b/c/X),
-    Therapiefrequenz, Therapiebericht, Hausbesuch, Dringlichkeit, Verordnungsbesonderheiten,
-    ICD-10-Diagnosen (`DIA`), Genehmigung (`SKZ`) und Ursprungsrechnung (`URI`) — alle
-    17 `ZHE`-Felder statt bisher nur dem Zuzahlungskennzeichen.
-  * **Behandlungsverlauf statt Positionsflut**: Gleiche Leistungen werden zu Leistungsgruppen
-    zusammengefasst (Anzahl Termine, Zeitraum von–bis, Summen); die Einzeltermine bleiben
-    aufklappbar. Aus 54 `EHE`-Zeilen werden 4 lesbare Gruppen.
-  * **Plausibilitätshinweise**: Behandlung vor Verordnungsdatum, fehlende Pflichtfelder,
-    fehlendes `DIA`, Zuzahlungs-Widersprüche, fehlende individuelle Leitsymptomatik.
-  * **Rezept-Baum**: `UNB → Nachricht → Verordnung/Beleg → Verordnungsdaten / Diagnosen /
-    Leistungen / Belegsumme`, jedes Feld mit Namen aus der `SchemaRegistry`; Filter durchsucht
-    den gesamten Baum inklusive Unterknoten.
-  * **Klartexte aus zwei Quellen**: `data/codelisten.json` (von Hand gepflegt, Vorrang)
-    und `data/heilmittelpreise.json` aus der **Heilmittelpreisstammdatei des
-    GKV-Spitzenverbands** (§ 125 / § 125a SGB V). Damit tragen alle
-    Abrechnungspositionsnummern amtliche Bezeichnungen statt nur Nummern; zusätzlich
-    wird **Regelversorgung (§ 125) von Blankoversorgung (§ 125a)** unterschieden.
-    Codes ohne Eintrag werden ausdrücklich als *„kein Klartext hinterlegt"* angezeigt
-    — es wird nie ein Text geraten.
 * **🖥️ Grafische Benutzeroberfläche (Tkinter GUI)**:
   * Moderne Desktop-Oberfläche zur einfachen Bedienung ohne Kommandozeilenkenntnisse.
 
@@ -95,89 +70,6 @@ Oder Verwenden der vorkompilierten Binärdatei `dist/pyesol.exe`.
 * **`🔄 UTF-8 ➔ ISO`**: Konvertiert ausgewählte Dateien zu ISO-8859-15.
 * **`📄 .auf erstellen`**: Erstellt passende `.auf`-Auftragsdateien.
 * **`🛠️ Korrektur / Zuzahlung`**: Öffnet den interaktiven Konfigurator zur Belegauswahl und VKZ-Generierung (02, 03, 04, 10).
-* **Tab `📜 Virtuelles Verordnungsblatt`**: Verordnung im Muster-13/18-Layout inklusive
-  Arzt-, Diagnose- und Leitsymptomatik-Daten sowie gruppiertem Behandlungsverlauf.
-* **Tab `📊 Beleg-Dashboard & Rezept-Baum`**: Belegtabelle mit Fehlerstatus und darunter der
-  Klartext-Baum der gesamten Datei.
-
-### Vorschau von Hand nachbearbeiten
-
-Im Korrektur-Editor zeigt der Tab **`🔍 Vorschau & EDIFACT-Diff`** links das Original
-und rechts die neue Fassung. Über den Schalter oben wählt man den Umfang:
-
-| Anzeige | Rechte Seite | Bearbeitbar |
-|---|---|---|
-| **Ganze Datei** (Standard) | die vollständige Korrekturdatei mit allen ausgewählten Belegen — genau das, was gespeichert wird | **ja** |
-| **Nur dieser Beleg** | nur der aktive Beleg, zum Vergleich mit links | nein |
-
-Sobald rechts getippt wird, gilt diese Fassung als maßgeblich: der Rahmen wechselt
-auf *HANDBEARBEITET* und die Statuszeile warnt, dass spätere Änderungen an
-Stammdaten oder Positionen darin **nicht** enthalten sind. `🔄 Neu generieren`
-verwirft die Handarbeit nach Rückfrage.
-
-Beim Generieren wird die bearbeitete Fassung geprüft, bevor sie geschrieben wird:
-
-* **Fehler** verhindern das Speichern. Die häufigste Ursache nach Handarbeit sind
-  abgeleitete Werte, die nicht mehr passen — der Segmentzähler im `UNT`, die Summen
-  im `GES` oder die Nachrichtenzahl im `UNZ`. Der Hinweistext nennt das ausdrücklich.
-* **Warnungen** werden angezeigt und lassen sich per Rückfrage durchlassen.
-* **Zeichen außerhalb von ISO-8859-15** werden mit Zeile und Spalte gemeldet.
-  Typische Ursache: Text aus Word oder Outlook eingefügt (typografische
-  Anführungszeichen, Gedankenstriche).
-
-`✓ Bearbeitete Fassung prüfen` führt dieselbe Prüfung aus, ohne zu speichern.
-
-### Klartexte pflegen
-
-Bezeichnungen zu Verordnungsart, Diagnosegruppe, Therapiefrequenz, Heilmittel-Bereich und
-Abrechnungspositionsnummern stehen in `data/codelisten.json`. Leere Einträge (`""`) sind
-absichtlich leer und erscheinen in der GUI als *„kein Klartext hinterlegt"*, damit in der
-Hotline kein geratener Text genannt wird. Nach dem Nachtragen genügt der Button
-**`🔄 Codelisten neu laden`** im Verordnungsblatt — kein Neustart nötig.
-
-### Heilmittelpreisstammdatei einlesen
-
-Die Bezeichnungen der Abrechnungspositionsnummern kommen aus der XML-Stammdatei des
-GKV-Spitzenverbands. Bei einem neuen Stand (mehrmals jährlich):
-
-```bash
-python tools/import_hmp.py "HMP Stand 01.07.2026.xml"
-```
-
-Das schreibt `data/heilmittelpreise.json` — **nicht von Hand bearbeiten**, die Datei wird
-beim nächsten Import überschrieben. Eigene Bezeichnungen gehören nach `codelisten.json`,
-die haben Vorrang. Danach im Programm `🔄 Codelisten neu laden`; die Fußzeile im
-Verordnungsblatt zeigt den geladenen Stand.
-
-**Die maskierte erste Stelle:** Positionen nach § 125 (Regelversorgung) führt die
-Stammdatei mit `X` an erster Stelle, abgerechnet werden sie mit der Stelle des
-Heilmittelbereichs. Beim Nachschlagen wird deshalb zusätzlich `X` + Rest probiert:
-
-| Abrechnung | Stammdatei | Bezeichnung |
-|---|---|---|
-| `54103` (Tarif 00501) | `X4103` | Sensomotorisch-perzeptive Behandlung: Einzelbehandlung |
-| `54145` (Tarif 00502) | `54145` | Psychisch-funktionelle Behandlung … § 125a SGB V |
-
-Ohne diese Auflösung bleiben genau die häufigsten Positionen ohne Klartext — in den
-Testdaten 8 von 17.
-
-**Höchstpreise werden bewusst nicht übernommen.** Der Haftungsausschluss der Stammdatei
-sagt ausdrücklich, sie sei *„nicht zu Abrechnungszwecken bestimmt"*; maßgeblich sind die
-Vergütungsvereinbarungen. In einem Werkzeug, das Abrechnungsdateien prüft, würde ein
-Höchstpreis neben einem abgerechneten Betrag zwangsläufig als Soll-Ist-Vergleich gelesen.
-
-Positionsnummern dürfen nach Abrechnungscode gestaffelt werden:
-
-```json
-"positionsnummern": {
-  "*":  { "59702": "Allgemeine Position" },
-  "26": { "54103": "Ergotherapeutische Einzelbehandlung" }
-}
-```
-
-Im gebauten `.exe` wird zuerst `data/codelisten.json` **neben der EXE** gesucht, danach die
-gebündelte Datei. Mit der Umgebungsvariablen `PY_ESOL_CODELISTEN` lässt sich ein beliebiger
-Pfad erzwingen.
 
 ---
 
@@ -222,23 +114,52 @@ python tools/generate_auf.py path/to/ESOL_FILE
 #### E. UTF-8 zu ISO-8859-15 konvertieren
 
 ```bash
-# Ersetzt die Datei an ihrem Platz — der Dateiname bleibt unverändert
-python tools/convert_utf8_to_iso.py path/to/ESOL0253
-
-# Ganzen Ordner konvertieren (alle Dateien werden ersetzt)
-python tools/convert_utf8_to_iso.py path/to/ordner
-
-# Kopien in einen anderen Ordner schreiben, Dateinamen bleiben gleich
-python tools/convert_utf8_to_iso.py path/to/ESOL0253 --out-dir konvertiert/
+python tools/convert_utf8_to_iso.py path/to/ESOL_FILE
 ```
 
-> **Der Dateiname wird nie verändert.** ESOL-Dateien tragen bewusst keine Endung
-> (`ESOL0253`), und der Name gehört zur Einreichung — eine angehängte Endung würde
-> die Datei beim Abrechnungszentrum unbrauchbar machen. Zeigt das Ziel auf die
-> Quelle (das ist der Standard, und auch was die GUI tut), wird die Datei ersetzt.
-> Geschrieben wird über eine temporäre Datei und ein atomares Umbenennen, damit ein
-> Abbruch das Original nicht halb überschrieben zurücklässt.
-> `--inplace` ist dadurch wirkungslos und nur noch aus Kompatibilität vorhanden.
+---
+
+## 📚 Stammdaten und Klartexte
+
+Damit im Verordnungsblatt und im Rezept-Baum Klartext statt nur Codes steht,
+liest das Programm zur Laufzeit sechs Tabellen aus `data/`:
+
+| Datei | Inhalt | Erzeugt von |
+|---|---|---|
+| `codelisten.json` | eigene Pflege, **hat immer Vorrang** | von Hand |
+| `heilmittelpreise.json` | Positionsbezeichnungen nach § 125 / § 125a | `tools/import_hmp.py` |
+| `heilmittelkatalog.json` | X-Codes, Kurort/Bäder, BG/UV, Heilpraktiker | `tools/import_heilmittelkatalog.py` |
+| `kostentraeger.json` | IK → Kassenname, Anschrift, Datenannahmestelle | `tools/import_kostentraeger.py` |
+| `diagnosegruppen.json` | die 44 Diagnosegruppen der KBV | `tools/import_kbv_stammdaten.py` |
+| `verordnungsbedarf.json` | ICD → Anlage 2 / Anlage 3 | `tools/import_kbv_stammdaten.py` |
+
+Die Quelldateien der Kostenträger- und KBV-Verzeichnisse liegen in `quellen/`.
+Ein neuer Stand wird so eingespielt:
+
+```bash
+# Quelldatei nach quellen/ legen, dann den passenden Importer aufrufen
+python tools/import_kostentraeger.py
+python tools/import_kbv_stammdaten.py
+python tools/import_heilmittelkatalog.py
+python tools/import_hmp.py quellen/HMP_Stand_01.07.2026.xml
+```
+
+Im laufenden Programm genügt danach der Button **Codelisten neu laden** im
+Verordnungsblatt; die Statuszeile darunter nennt Umfang und Stand jeder Quelle.
+
+**Zwei Grundregeln**, die für alle Importer gelten:
+
+1. **Nichts wird geraten.** Ist zu einem Code in keiner Quelle ein Klartext
+   hinterlegt, zeigt die Anzeige `kein Klartext hinterlegt` — ein erfundener
+   Text, den jemand in der Hotline vorliest, wäre schlimmer als keiner.
+2. **Keine Preise.** Die Preisspalten der Quelldateien werden eingelesen und
+   verworfen. Maßgeblich für die Abrechnung sind die
+   Vergütungsvereinbarungen; ein Listenpreis neben einem abgerechneten Betrag
+   würde zwangsläufig als Soll-Ist-Vergleich gelesen.
+
+In der gebauten EXE werden alle sechs Tabellen mitgeliefert, zur Laufzeit aber
+**zuerst neben der EXE** unter `data/` gesucht. Ein neuer Stand lässt sich
+damit ohne Neu-Build verteilen: Datei daneben legen, neu laden.
 
 ---
 
@@ -253,21 +174,11 @@ python -m pytest
 Output:
 
 ```bash
-============================= 122 passed ==============================
+============================= 200 passed in 1.4s ==============================
 ```
 
-Die Testsuite darf keine modalen Dialoge öffnen — eine `autouse`-Fixture in
-`tests/conftest.py` ersetzt alle `messagebox`-, `filedialog`- und
-`simpledialog`-Funktionen durch nicht blockierende Stubs und protokolliert die
-Aufrufe. Ein Test kann das Protokoll auswerten:
-
-```python
-def test_x(dialog_protokoll):
-    ...
-    assert dialog_protokoll.wurde_aufgerufen("showinfo")
-```
-
-Braucht ein Test wirklich echte Dialoge, hebt `@pytest.mark.echte_dialoge` das auf.
+Der Workflow `.github/workflows/tests.yml` führt dieselbe Suite bei jedem Push
+auf `windows-latest` aus und baut bei einem Push auf `main` zusätzlich die EXE.
 
 ---
 
@@ -276,18 +187,9 @@ Braucht ein Test wirklich echte Dialoge, hebt `@pytest.mark.echte_dialoge` das a
 ```txt
 py-esol/
 ├── esol_validator.py             # Hauptklasse EsolValidator
-├── verordnung.py                 # Verordnungs-Auswertung (ZHE/DIA/SKZ, Positionsgruppen)
-├── codelisten.py                 # Loader für die editierbaren Klartext-Tabellen
-├── data/
-│   ├── codelisten.json           # Editierbare Klartexte (Verordnungsart, Diagnosegruppe, …)
-│   └── heilmittelpreise.json     # Positionsbezeichnungen, erzeugt aus der GKV-Stammdatei
 ├── validate.py                   # CLI-Validator für Einzeldateien
 ├── batch_validate.py             # CLI-Batch-Validator für Ordner
-├── main.py                       # Hauptfenster der Tkinter GUI
-├── gui_muster13_preview.py       # Virtuelles Verordnungsblatt (Muster 13/18)
-├── gui_recipe_tree.py            # Klartext-Rezept-Baum
-├── gui_beleg_dashboard.py        # Beleg-Dashboard mit KPI-Kacheln
-├── support_helper.py             # Fehlerübersetzung, Ticket-/HTML-Bericht, Baumaufbau
+├── main.py                        # Hauptfenster der Tkinter GUI
 ├── gui_correction_dialog.py      # Interaktiver Korrektur- & Belegauswahl-Dialog
 ├── pyesol.spec                   # PyInstaller Build-Spezifikation
 ├── parser/
@@ -300,77 +202,10 @@ py-esol/
 │   └── level4/                   # Sammelgruppen 1-6 (Physio, Ergo, Logo, Podologie)
 ├── tools/
 │   ├── convert_utf8_to_iso.py    # UTF-8 -> ISO-8859-15 Konverter
-│   ├── import_hmp.py             # Import der GKV-Heilmittelpreisstammdatei (XML)
 │   ├── generate_auf.py           # Generierung von .auf Auftragsdateien
 │   └── generate_correction.py    # Generator für VKZ 02, 03, 04, 10
-└── tests/                       # Pytest Test-Suite
+└── tests/                        # Pytest Test-Suite (44 Tests)
 ```
-
----
-
-## 📦 Standalone-EXE erzeugen & weitergeben
-
-Die EXE braucht auf dem Zielrechner **kein Python und keine IDE** — eine einzelne
-Datei, Doppelklick, fertig.
-
-### Lokal bauen
-
-```bash
-uv sync
-uv run pyinstaller py-esol.spec --noconfirm --clean
-```
-
-Ergebnis: `dist/py-esol.exe` (~21 MB). Maßgeblich ist **`py-esol.spec`** — die
-übrigen `.spec`-Dateien (`main.spec`, `pyesol.spec`, `ESOL-Validator.spec`) sind
-Altlasten ohne die nötigen `datas`-Einträge und können gelöscht werden.
-
-### Automatisch bei jedem Push auf `main`
-
-`.github/workflows/tests.yml` enthält dafür den Job **`exe`**. Er läuft nur auf
-`main` und nur, wenn die Tests grün sind — es soll nie eine EXE herausgehen, die
-eine kaputte Testsuite hinter sich hat. Nach dem Build validiert der Workflow
-`tests/fixtures/valid_esol_smoke` mit der frisch gebauten EXE. Fehlt ein Modul im
-Bundle, fällt es dort auf und nicht erst beim Mitarbeiter.
-
-GitHub Actions läuft in der Cloud und kann **nicht** in den lokalen Projektordner
-schreiben. Die EXE hängt als Artefakt am Lauf und wird abgeholt:
-
-```bat
-hole-exe.cmd
-```
-
-Das Skript sucht den letzten erfolgreichen `main`-Lauf und lädt die EXE nach
-`dist\py-esol.exe`. Voraussetzung ist die GitHub CLI, einmalig eingerichtet:
-
-```bash
-winget install --id GitHub.cli
-gh auth login
-```
-
-Ohne CLI geht es auch im Browser: *Repo → Actions → letzter CI-Lauf auf `main` →
-Artifacts → `py-esol-exe`*.
-
-### Weitergabe an Mitarbeiter
-
-* **SmartScreen:** Beim ersten Start warnt Windows bei nicht signierten
-  Programmen („Der Computer wurde geschützt"). *Weitere Informationen →
-  Trotzdem ausführen*. Das verschwindet erst mit einem Code-Signing-Zertifikat.
-* **Startzeit:** Eine One-File-EXE entpackt sich bei jedem Start in ein
-  Temp-Verzeichnis — die ersten paar Sekunden tut sich nichts. Das ist normal.
-* **Klartexte anpassen:** Wer `data/codelisten.json` **neben** die EXE legt, hat
-  Vorrang vor der eingebauten Fassung. So lassen sich Bezeichnungen beim Kunden
-  pflegen, ohne neu zu bauen.
-* **Artefakte verfallen nach 90 Tagen.** Für dauerhafte Links an Dritte ist ein
-  GitHub Release die bessere Wahl.
-
-### Warum die EXE die Werkzeuge findet
-
-Die GUI startet Validierung, Konvertierung, `.auf`- und Korrektur-Generierung als
-eigenen Prozess über `[sys.executable, <skriptpfad>, ...]`. Im gefrorenen Zustand
-ist `sys.executable` die EXE selbst; der Dispatcher am Ende von `main.py` wertet
-`sys.argv[1]` aus und ruft das passende **eingebettete** Modul auf. Die
-`.py`-Dateien müssen deshalb nicht mitgeliefert werden — der Pfad dient nur als
-Wegweiser. Wer diesen Dispatcher umbaut, macht die EXE unbrauchbar.
 
 ---
 

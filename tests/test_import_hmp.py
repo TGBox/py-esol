@@ -265,9 +265,26 @@ def test_defekte_hmp_datei_bricht_nichts(tmp_path: Path, monkeypatch):
 
 
 def test_kurzer_code_bricht_x_aufloesung_nicht(hmp_json):
-    """Ein einstelliger Code darf keine IndexError-Falle sein."""
-    assert codelisten.position_info("5", "26")["bezeichnung"] == ""
-    assert codelisten.position_info("", "26")["bezeichnung"] == ""
+    """
+    Ein einstelliger Code darf keine IndexError-Falle sein.
+
+    Aufgelöst werden darf er trotzdem: das Gebührenverzeichnis für
+    Heilpraktiker in data/heilmittelkatalog.json führt die Nummern 1 bis 8.
+    Für ESOL ist das folgenlos — Abrechnungspositionsnummern nach § 302 sind
+    immer fünfstellig, ein einstelliger Code kommt dort nicht vor. Der Test
+    hält nur fest, dass die X-Maske ('X' + Rest) bei Länge 1 nicht zuschlägt
+    und nichts wirft.
+    """
+    einstellig = codelisten.position_info("5", "26")
+    # hmp_code nennt den Code, unter dem der Eintrag gefunden wurde. Bei Länge 1
+    # darf das nur der Code selbst sein, niemals eine X-Variante.
+    assert einstellig["hmp_code"] in ("", "5")
+    assert not einstellig["hmp_code"].startswith("X")
+    assert einstellig["quelle"] in ("", "katalog")
+
+    leer = codelisten.position_info("", "26")
+    assert leer["bezeichnung"] == ""
+    assert leer["quelle"] == ""
 
 
 # --------------------------------------------- Ausgelieferte Projektdatei

@@ -22,15 +22,25 @@ a = Analysis(
     # Editierbare Klartext-Tabellen für die Verordnungs-Anzeige mitliefern.
     # Zur Laufzeit wird zuerst neben der EXE (data/codelisten.json) gesucht,
     # damit Bezeichnungen ohne Neu-Build gepflegt werden können.
+    # Alle Nachschlagetabellen werden zur Laufzeit zuerst neben der EXE gesucht
+    # (data/<name>.json) und erst danach im Bundle. So lässt sich ein neuer
+    # Stand ohne Neu-Build einspielen: Datei daneben legen, im Verordnungsblatt
+    # 'Codelisten neu laden'.
     datas=[
         ('data/codelisten.json', 'data'),
         # Positionsbezeichnungen aus der GKV-Heilmittelpreisstammdatei
-        # (erzeugt von tools/import_hmp.py). Wird zur Laufzeit ebenfalls zuerst
-        # neben der EXE gesucht, damit ein neuer GKV-Stand ohne Neu-Build
-        # eingespielt werden kann.
+        # (tools/import_hmp.py)
         ('data/heilmittelpreise.json', 'data'),
+        # Positionsbezeichnungen aus Heilmittelkatalog, BG/UV und dem
+        # Gebührenverzeichnis für Heilpraktiker (tools/import_heilmittelkatalog.py)
+        ('data/heilmittelkatalog.json', 'data'),
+        # IK-Verzeichnis: Kassenname, Anschrift, Datenannahmestelle
+        # (tools/import_kostentraeger.py)
         ('data/kostentraeger.json', 'data'),
-        ('assets', 'assets'),
+        # Diagnosegruppen und ICD-Verordnungsbedarf aus den
+        # KBV-Stammdateien (tools/import_kbv_stammdaten.py)
+        ('data/diagnosegruppen.json', 'data'),
+        ('data/verordnungsbedarf.json', 'data'),
     ],
     # Alle Imports im Projekt sind statisch, PyInstaller findet sie selbst.
     # reportlab (Begleitzettel-PDF) wird über pyinstaller-hooks-contrib erfasst.

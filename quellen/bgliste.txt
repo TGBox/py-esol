@@ -1,0 +1,119 @@
+IK;Nachfolge IK;Gültig ab;Gültig bis;Name1;Name2;Strasse;Land;PLZ;Ort-BG;Vorwahl;Tel-Nr;Fax-Nr;IK-UNIDAV;"KIM UNI-DAV"
+121192344;;01.01.2016;;BG der Bauwirtschaft;Hauptverwaltung;Hildegardstr. 29 - 30;DE;10715;Berlin;030;857810;85781500;120591481;dale-uv@dguv.kim.telematik
+120390887;;01.01.2015;;BG der Bauwirtschaft;Region Nord;Hildesheimer Straße 309;DE;30519;Hannover;0511;9870;9872440;120591481;dale-uv@dguv.kim.telematik
+120991009;;01.01.2015;;BG der Bauwirtschaft;Region Süd;Am Knie 6;DE;81241;München;089;889701;8897600;120591481;dale-uv@dguv.kim.telematik
+120590925;;01.01.2015;;BG der Bauwirtschaft;Region Mitte;Schwarzer Weg 3;DE;42117;Wuppertal;0202;3980;3981404;120591481;dale-uv@dguv.kim.telematik
+120290671;;01.01.2012;;BG ETEM;BV Hamburg, PLZ-Gebiet 20-22;Nagelsweg 33 - 35;DE;20097;Hamburg;040;2274480;227448-8599;120591481;dale-uv@dguv.kim.telematik
+120390466;;01.01.2010;;BG ETEM;BV Braunschweig, PLZ-Gebiet 26-31, 37, 38, 49;Lessingplatz 13;DE;38100;Braunschweig;0531;47170;47171721;120591481;dale-uv@dguv.kim.telematik
+120590184;;01.01.2012;;BG ETEM;BV Düsseldorf, PLZ-Gebiet 40, 41, 45-47;Auf'm Hennekamp 74;DE;40225;Düsseldorf;0211;93350;9335-4444;120591481;dale-uv@dguv.kim.telematik
+120590446;;09.09.2011;;BG ETEM;Hauptverwaltung;Gustav-Heinemann-Ufer 130;DE;50968;Köln;0221;37780;37781199;120591481;dale-uv@dguv.kim.telematik
+120590479;;09.09.2011;;BG ETEM;BV Köln, PLZ-Gebiet 32, 33, 48, 50-57, 58600-59;Gustav-Heinemann-Ufer 120;DE;50968;Köln;0221;37780;37781711;120591481;dale-uv@dguv.kim.telematik
+120590685;;01.01.2012;;BG ETEM;GS Wuppertal, PLZ-Gebiet 42, 44, 58-58599;Hofkamp 84;DE;42103;Wuppertal;0202;245830;2458330;120591481;dale-uv@dguv.kim.telematik
+120690697;;01.01.2012;;BG ETEM;BV Wiesbaden, PLZ-Gebiet 34, 35, 54, 55, 60, 61, 65-67;Rheinstr. 6-8;DE;65185;Wiesbaden;0611;1310;1318158;120591481;dale-uv@dguv.kim.telematik
+120890483;;01.01.2010;;BG ETEM;BV Stuttgart, PLZ-Gebiet 68-72, 74-77, 79;Schloßstr. 29 - 31;DE;70174;Stuttgart;0711;22970;22971771;120591481;dale-uv@dguv.kim.telematik
+120990495;;01.01.2010;;BG ETEM;BV Nürnberg, PLZ-Gebiet 36, 63, 64, 90-97;Frauentorgraben 29;DE;90443;Nürnberg;0911;24990;24991751;120591481;dale-uv@dguv.kim.telematik
+120990747;;15.08.2011;;BG ETEM;BV Augsburg, PLZ-Gebiet 73, 78, 80-89;Oblatterwallstraße 18;DE;86153;Augsburg;0821;31590;31597019;120591481;dale-uv@dguv.kim.telematik
+121190455;;13.09.2011;;BG ETEM;BV Berlin, PLZ-Gebiet 10, 12-19, 23-25, 39;Corrensplatz 2;DE;14195;Berlin;030;839020;839021731;120591481;dale-uv@dguv.kim.telematik
+121490027;;01.01.2012;;BG ETEM;GS Leipzig, PLZ-Gebiet 04, 06;Gustav-Adolf-Str. 6;DE;04105;Leipzig;0341;982240;982248812;120591481;dale-uv@dguv.kim.telematik
+121490072;;01.01.2010;;BG ETEM;BV Dresden, PLZ-Gebiet 01-03, 07-09, 98, 99;Stübelallee 49 c;DE;01309;Dresden;0351;31480;31481741;120591481;dale-uv@dguv.kim.telematik
+120291466;;23.09.2011;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV Hamburg;Schäferkampsallee 24;DE;20357;Hamburg;040;41250;4125-2999;120591481;dale-uv@dguv.kim.telematik
+120292332;;07.09.2011;;BG für Gesundheitsdienst und Wohlfahrtspflege;Hauptverwaltung;Pappelallee 35-37;DE;22089;Hamburg;040;202070;202072495;120591481;dale-uv@dguv.kim.telematik
+120392355;;13.10.2011;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV Delmenhorst;Fischstr. 31;DE;27749;Delmenhorst;04221;9130;913-4225;120591481;dale-uv@dguv.kim.telematik
+120592437;;01.04.2009;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV Köln;Bonner Str. 337;DE;50968;Köln;0221;37720;3772-5101;120591481;dale-uv@dguv.kim.telematik
+120592459;;01.04.2009;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV Bochum;Universitätsstr. 78;DE;44789;Bochum;0234;30780;0234 30786249;120591481;dale-uv@dguv.kim.telematik
+120792202;;01.04.2009;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV Mainz;Göttelmannstr. 3;DE;55130;Mainz;06131;8080;8083998;120591481;dale-uv@dguv.kim.telematik
+120892316;;19.07.2010;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV Karlsruhe;Philipp-Reis-Str. 3;DE;76137;Karlsruhe;0721;97200;9720-5573;120591481;dale-uv@dguv.kim.telematik
+120992282;;01.04.2009;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV München;Helmholtzstr. 2;DE;80636;München;089;350960;35096-4686;120591481;dale-uv@dguv.kim.telematik
+120992293;;01.04.2009;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV Würzburg;Röntgenring 2;DE;97070;Würzburg;0931;35750;3575-5825;120591481;dale-uv@dguv.kim.telematik
+121191478;;30.09.2011;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV Berlin;Spichernstr. 2;DE;10777;Berlin;030;896850;89685-3625;120591481;dale-uv@dguv.kim.telematik
+121490083;;03.08.2010;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV Dresden;Gret-Palucca-Str. 1 a;DE;01069;Dresden;0351;86470;8647-5625;120591481;dale-uv@dguv.kim.telematik
+121590051;;01.04.2009;;BG für Gesundheitsdienst und Wohlfahrtspflege;BV Magdeburg;Keplerstr. 12 c - 12 d;DE;39104;Magdeburg;0391;60905;6090-7825;120591481;dale-uv@dguv.kim.telematik
+120790335;;13.09.2011;;BG Holz und Metall;Hauptverwaltung  ;Isaac-Fulda-Allee 18;DE;55124;Mainz;0800;99900801;06131 802-29500;120591481;dale-uv@dguv.kim.telematik
+120390810;;01.01.2011;;BG Nahrungsmittel und Gastgewerbe;BV Hannover;Tiergartenstr. 109-111;DE;30559;Hannover;0511;235600;0800 1977553-19400;120591481;dale-uv@dguv.kim.telematik
+120590801;;01.01.2011;;BG Nahrungsmittel und Gastgewerbe;BV Dortmund;Hansbergstr. 28;DE;44141;Dortmund;0231;176340;0800 1977553-19300;120591481;dale-uv@dguv.kim.telematik
+120790847;;01.01.2011;;BG Nahrungsmittel und Gastgewerbe;BV Mainz;Lortzingstr. 2;DE;55127;Mainz;06131;7850;0800 1977553-19700;120591481;dale-uv@dguv.kim.telematik
+120890780;;20.03.2012;;BG Nahrungsmittel und Gastgewerbe;Hauptverwaltung;Dynamostr 7-11;DE;68165;Mannheim;0621;44560;0800 1977553 19000;120591481;dale-uv@dguv.kim.telematik
+120890837;;13.09.2011;;BG Nahrungsmittel und Gastgewerbe;BV Mannheim;Dynamostr 7-11;DE;68165;Mannheim;0621;44560;0800 1977553-19200;120591481;dale-uv@dguv.kim.telematik
+120990792;;01.01.2011;;BG Nahrungsmittel und Gastgewerbe;RD Süd;Am Knie 8;DE;81241;München;089;894660;0800 1977553-19100;120591481;dale-uv@dguv.kim.telematik
+121190821;;01.01.2011;;BG Nahrungsmittel und Gastgewerbe;BV Berlin;Fregestr. 44;DE;12161;Berlin;030;851050;0800 1977553-19500;120591481;dale-uv@dguv.kim.telematik
+121690052;;01.01.2011;;BG Nahrungsmittel und Gastgewerbe;BV Erfurt;Lucas-Cranach-Platz 2;DE;99097;Erfurt;0361;43910;0800 1977553-19600;120591481;dale-uv@dguv.kim.telematik
+120892588;;10.12.2018;;BG RCI;;;DE;30684;Hannover ;06221;5108-0 ;5108-41066;120591481;dale-uv@dguv.kim.telematik
+120291295;;07.09.2011;;BG Verkehr;Hauptverwaltung;Ottenser Hauptstr. 54 ;DE;22765;Hamburg;040;39800;39801666;120591481;dale-uv@dguv.kim.telematik
+120291319;;07.09.2011;;BG Verkehr;BV Hamburg;Ottenser Hauptstr. 54;DE;22765;Hamburg;040;325220-0;325220-2699;120591481;dale-uv@dguv.kim.telematik
+120292412;;01.10.2021;;BG Verkehr;BV Hamburg Berufskrankheitenabtlg.;Ottenser Hauptstr. 54;DE;22765;Hamburg;040;325220-0;325220-2699;120591481;dale-uv@dguv.kim.telematik
+120291364;;07.09.2011;;BG Verkehr;Bereich See / BV Hamburg;Ottenser Hauptstr. 54;DE;22765;Hamburg;040;325220-0;325220-2699;120591481;dale-uv@dguv.kim.telematik
+120391321;;03.03.2010;;BG Verkehr;BV Hannover;Walderseestr. 5-6;DE;30163;Hannover;0511;39956;3995700;120591481;dale-uv@dguv.kim.telematik
+120591334;;05.01.2011;;BG Verkehr;BV Wuppertal;Aue 96;DE;42103;Wuppertal;0202;38950;3895400;120591481;dale-uv@dguv.kim.telematik
+120691346;;09.12.2010;;BG Verkehr;BV Wiesbaden;Wiesbadener Str. 70;DE;65197;Wiesbaden;0611;94130;9413106;120591481;dale-uv@dguv.kim.telematik
+120991350;;09.12.2010;;BG Verkehr;BV München;Deisenhofener Str. 74;DE;81539;München;089;623020;62302100;120591481;dale-uv@dguv.kim.telematik
+121191309;;09.12.2010;;BG Verkehr;BV Berlin;Axel-Springer-Str. 52;DE;10969;Berlin;030;259970;25997298;120591481;dale-uv@dguv.kim.telematik
+121490061;;09.12.2010;;BG Verkehr;BV Dresden;Hofmühlenstr. 4;DE;01187;Dresden;0351;423650;4236581;120591481;dale-uv@dguv.kim.telematik
+120892305;;30.11.2005;;BG Verkehr;Sparte Post, Postbank, Telekom;Europaplatz 2;DE;72072;Tübingen;07071;9330;9334399;120591481;dale-uv@dguv.kim.telematik
+120491151;;01.01.2013;;BGHW;RD Nord ;Falkenstr. 7;DE;28195;Bremen;0421;301700;301702299;120591481;dale-uv@dguv.kim.telematik
+120591130;;04.01.2008;;BGHW;Direktion Bonn;Niebuhrstr. 5;DE;53113;Bonn;0228;54069;54065199;120591481;dale-uv@dguv.kim.telematik
+120591141;;01.01.2013;;BGHW;RD West;Langwartweg 103-105;DE;53129;Bonn;0228;54060;54065335;120591481;dale-uv@dguv.kim.telematik
+120891053;;12.11.2013;;BGHW;Hauptverwaltung;M 5, 7;DE;68161;Mannheim;0621;1830;1835191;120591481;dale-uv@dguv.kim.telematik
+120891100;;01.01.2013;;BGHW;RD Südwest;N 4, 18;DE;68161;Mannheim;0621;1830;1833200;120591481;dale-uv@dguv.kim.telematik
+120991112;;01.01.2013;;BGHW;RD Südost;Arnulfstr. 283;DE;80639;München;089;1787860;1787869599;120591481;dale-uv@dguv.kim.telematik
+121191172;;01.01.2013;;BGHW;RD Ost ;Bundesallee 57/58;DE;10715;Berlin;030;853010;853014609;120591481;dale-uv@dguv.kim.telematik
+120291182;;07.09.2011;;Verwaltungs-BG;Hauptverwaltung;Massaquoipassage 1;DE;22305;Hamburg;040;51460;51462940;120591481;dale-uv@dguv.kim.telematik
+120291193;;29.01.2010;;Verwaltungs-BG;BV Hamburg, BV II;Sachsenstr. 18;DE;20097;Hamburg;040;236560;2369439;120591481;dale-uv@dguv.kim.telematik
+120592380;;29.01.2010;;Verwaltungs-BG;BV Bielefeld, BV III;Nikolaus-Dürkopp-Str. 8;DE;33602;Bielefeld;0521;58010;61284;120591481;dale-uv@dguv.kim.telematik
+120592426;;21.01.2010;;Verwaltungs-BG;BV Duisburg;Wintgensstr. 27;DE;47058;Duisburg;0203;34870;2809005;120591481;dale-uv@dguv.kim.telematik
+120592448;;29.01.2010;;Verwaltungs-BG;BV Bergisch Gladbach, BV V;Kölner Str. 20;DE;51429;Bergisch Gladbach;02204;4070;1639;120591481;dale-uv@dguv.kim.telematik
+120791212;;29.01.2010;;Verwaltungs-BG;BV Mainz, BV VI;Isaac-Fulda-Allee 3;DE;55124;Mainz;06131;3890;371044;120591481;dale-uv@dguv.kim.telematik
+120891224;;29.01.2010;;Verwaltungs-BG;BV Ludwigsburg, BV VII;Martin-Luther-Str. 79;DE;71636;Ludwigsburg;07141;9190;902319;120591481;dale-uv@dguv.kim.telematik
+120990122;;29.01.2010;;Verwaltungs-BG;BV Würzburg;Riemenschneiderstr. 2;DE;97072;Würzburg;0931;79430;7943800;120591481;dale-uv@dguv.kim.telematik
+120991236;;29.01.2010;;Verwaltungs-BG;BV München, BV VIII;Barthstr. 20 ;DE;80339;München;089;500950;50095111;120591481;dale-uv@dguv.kim.telematik
+121191241;;29.01.2010;;Verwaltungs-BG;BV Berlin;Markgrafenstr. 18;DE;10969;Berlin;030;770030;7741319;120591481;dale-uv@dguv.kim.telematik
+121490016;;29.01.2010;;Verwaltungs-BG;BV Dresden, BV XII;Wiener Platz 6;DE;01069;Dresden;0351;81450;8145109;120591481;dale-uv@dguv.kim.telematik
+121690030;;29.01.2010;;Verwaltungs-BG;BV Erfurt, BV XI;Koenbergkstr. 1;DE;99084;Erfurt;0361;22360;2253466;120591481;dale-uv@dguv.kim.telematik
+120192718;;01.01.2013;;SVLFG Landw. BG;Standort Kiel;Weißensteinstr. 70 - 72;DE;34131;Kassel;0561;7850;785-219006;120591481;dale-uv@dguv.kim.telematik
+120392732;;01.01.2013;;SVLFG Landw. BG;Standort Hannover;Weißensteinstr. 70 - 72;DE;34131;Kassel;0561;7850;785-219006;120591481;dale-uv@dguv.kim.telematik
+120592778;;01.01.2013;;SVLFG Landw. BG;Standort Münster;Weißensteinstr. 70 - 72;DE;34131;Kassel;0561;7850;785-219006;120591481;dale-uv@dguv.kim.telematik
+120692780;;22.02.2013;;SVLFG Landw. BG;Standort Kassel;Weißensteinstr. 70 - 72;DE;34131;Kassel;0561;7850;785-219006;120591481;dale-uv@dguv.kim.telematik
+120692893;;01.01.2013;;SVLFG Landw. BG;Standort Kassel;Weißensteinstr. 70 - 72;DE;34131;Kassel;0561;7850;785-219006;120591481;dale-uv@dguv.kim.telematik
+120892884;;01.01.2013;;SVLFG Landw. BG;Standort Stuttgart;Weißensteinstr. 70 - 72;DE;34131;Kassel;0561;7850;785-219006;120591481;dale-uv@dguv.kim.telematik
+120992830;;01.01.2013;;SVLFG Landw. BG;Standort Landshut;Weißensteinstr. 70 - 73;DE;34131;Kassel;0561;7850;785-219006;120591481;dale-uv@dguv.kim.telematik
+120992943;;01.01.2013;;SVLFG Landw. BG;Standort Bayreuth;Weißensteinstr. 70 - 72;DE;34131;Kassel;0561;7850;785-219006;120591481;dale-uv@dguv.kim.telematik
+121192925;;01.01.2013;;SVLFG Landw. BG;Standort Hoppegarten;Weißensteinstr. 70 - 72;DE;34131;Kassel;0561;7850;785-219006;120591481;dale-uv@dguv.kim.telematik
+120692702;;06.04.2018;;SVLFG Landw. BG;Standort Kassel;Weißensteinstr. 70 - 72 ;DE;34131;Kassel;0561;7850;785-219006;120591481;dale-uv@dguv.kim.telematik
+120491754;;07.09.2011;;Unfallkasse Freie Hansestadt Bremen;;Konsul-Smidt-Str. 76 a ;DE;28217;Bremen;0421;350120;3501214;120591481;dale-uv@dguv.kim.telematik
+120692198;;12.12.2006;;Unfallkasse Hessen;;Leonardo-da-Vinci-Allee 20;DE;60486;Frankfurt;069;29972440;29972588;120591481;dale-uv@dguv.kim.telematik
+120791791;;30.11.2005;;Unfallkasse Rheinland-Pfalz;;Orensteinstr. 10;DE;56626;Andernach;02632;9600;960100;120591481;dale-uv@dguv.kim.telematik
+121091843;;12.12.2006;;Unfallkasse Saarland;;Beethovenstr. 41;DE;66125;Saarbrücken;06897;97330;973337;120591481;dale-uv@dguv.kim.telematik
+121191913;;12.11.2010;;Unfallkasse Berlin;;Culemeyerstr. 2;DE;12277;Berlin;030;76240;76241109;120591481;dale-uv@dguv.kim.telematik
+121290003;;30.11.2005;;Unfallkasse Brandenburg;;Müllroser Chaussee 75;DE;15236;Frankfurt;0335;52160;5216222;120591481;dale-uv@dguv.kim.telematik
+121390015;;17.10.2007;;Unfallkasse Mecklenburg-Vorpommern;;Wismarsche Str. 199;DE;19053;Schwerin;0385;51810;5181111;120591481;dale-uv@dguv.kim.telematik
+121490118;;05.03.2010;;Unfallkasse Sachsen;;Rosa-Luxemburg-Str. 17 a;DE;01662;Meißen;03521;7240;724333;120591481;dale-uv@dguv.kim.telematik
+121590039;;23.08.2010;;Unfallkasse Sachsen-Anhalt;;Käsperstr. 31;DE;39261;Zerbst;03923;7510;751333;120591481;dale-uv@dguv.kim.telematik
+121690063;;30.11.2005;;Unfallkasse Thüringen;Landesbereich;Humboldtstr. 111;DE;99867;Gotha;03621;7770;777111;120591481;dale-uv@dguv.kim.telematik
+121690074;;30.11.2005;;Unfallkasse Thüringen;Kommunaler Bereich;Humboldtstr. 111;DE;99867;Gotha;03621;7770;777111;120591481;dale-uv@dguv.kim.telematik
+120891838;;24.04.2009;;Unfallkasse Baden-Württemberg;Rehabilitation;Postfach 600604;DE;70306;Stuttgart;0711;93210;93219500;120591481;dale-uv@dguv.kim.telematik
+120291934;;05.03.2010;;Unfallkasse Nord;Standorte Hamburg und Kiel;Spohrstr. 2;DE;22083;Hamburg;040;271530;271531014;120591481;dale-uv@dguv.kim.telematik
+120591802;;06.01.2010;;Unfallkasse NRW;RD Rheinland;Moskauer Str. 18;DE;40227;Düsseldorf;0211;28080;2808119;120591481;dale-uv@dguv.kim.telematik
+120591824;;30.11.2012;;Unfallkasse NRW;RD Westfalen-Lippe;Salzmannstr. 156;DE;48159;Münster;0251;21020;218569;120591481;dale-uv@dguv.kim.telematik
+120391968;;12.12.2006;;Landesunfallkasse Niedersachsen;;Am Mittelfelde 169;DE;30519;Hannover;0511;87070;8707188;120591481;dale-uv@dguv.kim.telematik
+120991942;;12.12.2006;;Bayerische Landesunfallkasse;Sitz München;Ungererstr. 71;DE;80805;München;089;360930;36093135;120591481;dale-uv@dguv.kim.telematik
+120991737;;12.12.2006;;KUVB;Kommunale Unfallversicherung Bayern;Ungererstr. 71;DE;80805;München;089;360930;36093135;120591481;dale-uv@dguv.kim.telematik
+120391742;;12.12.2006;;Braunschweigischer GUVV;;Berliner Platz 1 c;DE;38102;Braunschweig;0531;273740;2737430;120591481;dale-uv@dguv.kim.telematik
+120391764;;12.12.2006;;GUVV Hannover;;Am Mittelfelde 169;DE;30519;Hannover;0511;87070;8707188;120591481;dale-uv@dguv.kim.telematik
+120391786;;12.12.2006;;GUVV Oldenburg;;Gartenstr. 9;DE;26122;Oldenburg;0441;779090;7790950;120591481;dale-uv@dguv.kim.telematik
+120692041;;02.01.2012;;Unfallversicherung Bund und Bahn;Bereich Bahn;Salvador-Allende-Str. 9;DE;60487;Frankfurt;069;478630;478632902;120591481;dale-uv@dguv.kim.telematik
+120392037;;30.09.2008;;Unfallversicherung Bund und Bahn;Bereich Bund;Weserstr. 47;DE;26382;Wilhelmshaven;04421;4074007;4074070;120591481;dale-uv@dguv.kim.telematik
+120392333;;21.12.2009;;Feuerwehr-Unfallkasse Niedersachsen;;Bertastr. 5;DE;30159;Hannover;0511;9895555;9895433;120591481;dale-uv@dguv.kim.telematik
+121290025;;30.11.2005;;Feuerwehr-Unfallkasse Brandenburg;;Müllroser Chaussee 75;DE;15236;Frankfurt;0335;52160;5216222;120591481;dale-uv@dguv.kim.telematik
+121590040;;02.08.2007;;Feuerwehr-Unfallkasse Mitte;LGSt Sachsen-Anhalt;Carl-Miller-Str. 7;DE;39112;Magdeburg;0391;544590;5445922;120591481;dale-uv@dguv.kim.telematik
+121690096;;03.09.2010;;Feuerwehr-Unfallkasse Mitte;LGSt Thüringen;Magdeburger Allee 4;DE;99086;Erfurt;0361;6015440;60154421;120591481;dale-uv@dguv.kim.telematik
+120292321;;20.02.2007;;Hanseatische Feuerwehr Unfallkasse Nord;LGSt Hamburg;Mönckebergstraße 5;DE;20095;Hamburg;040;253280-66;253280-73;120591481;dale-uv@dguv.kim.telematik
+121390059;;31.01.2007;;Hanseatische Feuerwehr-Unfallkasse Nord;LGSt Mecklenburg-Vorpommern;Bertha-von Suttner-Str. 5;DE;19061;Schwerin;0385;3031700;3031706;120591481;dale-uv@dguv.kim.telematik
+120192397;;17.08.2012;;Hanseatische Feuerwehr Unfallkasse Nord;LGSt Schleswig-Holstein ;Hopfenstr. 2 d;DE;24114;Kiel;0385;3031700;3031706;120591481;dale-uv@dguv.kim.telematik
+121192399;;01.10.2019;;Verbindungsstelle (DVUA) EE,FI,IS,IL,LV,LT,LU,PL,SE;;Postfach 40165;DE;10061;Berlin;0203;29520;02032952130;120591481;dale-uv@dguv.kim.telematik
+121192402;;01.10.2019;;Verbindungsstelle (DVUA) Belgien (BE), Irland (IE);;Postfach 40165;DE;10061;Berlin;06221;51080;02032952130;120591481;dale-uv@dguv.kim.telematik
+121192413;;01.10.2019;;Verbindungsstelle (DVUA) BA,HR,ME,MK,RS,SI,XK;;Postfach 40165;DE;10061;Berlin;0621;1830;02032952130;120591481;dale-uv@dguv.kim.telematik
+121192424;;01.10.2019;;Verbindungsstelle (DVUA) Italien (IT), Norwegen (NO);;Postfach 40165;DE;10061;Berlin;06221;51080;02032952130;120591481;dale-uv@dguv.kim.telematik
+121192435;;01.10.2019;;Verbindungsstelle (DVUA) BR,CH,ES,FR,PT,SK,CZ;;Postfach 40165;DE;10061;Berlin;0621;44560;02032952130;120591481;dale-uv@dguv.kim.telematik
+121192446;;01.10.2019;;Verbindungsstelle (DVUA) AT,BG,HU,LI,MD,RO,NL;;Postfach 40165;DE;10061;Berlin;089;889701;02032952130;120591481;dale-uv@dguv.kim.telematik
+121192457;;01.10.2019;;Verbindungsstelle (DVUA) DK, GR, MA, TN, TR;;Postfach 40165;DE;10061;Berlin;0821;31590;02032952130;120591481;dale-uv@dguv.kim.telematik
+121192377;;01.10.2019;;Verbindungsstelle (DVUA) CY, GB, MT, Quebec;;Postfach 40165;DE;10061;Berlin;030;130011610;02032952130;120591481;dale-uv@dguv.kim.telematik
+999999999;;01.01.2013;;Dummy-IK Heilverfahrensverordnung Bundesbeamte

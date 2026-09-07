@@ -297,7 +297,11 @@ def test_codelisten_position_nach_abrechnungscode(tmp_path, monkeypatch):
     try:
         assert codelisten.lookup_position("54103", "26") == "Ergo-Einzelbehandlung"
         assert codelisten.lookup_position("59702", "26") == "Allgemeine Position"
-        assert codelisten.lookup_position("54103", "99") == ""
+        # Mit Abrechnungscode 99 greift die eigene Staffelung nicht mehr; dann
+        # bleibt der Heilmittelkatalog als dritte Ebene, der 54103 über die
+        # X-Maske als X4103 kennt. Geprüft wird deshalb, dass NICHT die
+        # Ergo-spezifische eigene Bezeichnung herauskommt.
+        assert codelisten.lookup_position("54103", "99") != "Ergo-Einzelbehandlung"
         assert codelisten.describe_position("99999", "26").endswith(
             f"({codelisten.KEIN_KLARTEXT})"
         )
@@ -417,12 +421,27 @@ def test_abrechnungscode_heilmittelbereich():
 
 
 def test_diagnosegruppen_aller_fuenf_bereiche():
-    tabelle = codelisten.load().get("diagnosegruppe", {})
-    for code in ("WS", "EX", "SO5", "SB3", "EN1", "PS4", "ST1", "SP6", "RE2", "DF", "QF", "EE2"):
+    """
+    Maßgeblich sind seit dem Import der KBV-Heilmittelstammdatei die
+    Bezeichnungen in data/diagnosegruppen.json, nicht mehr die Liste in
+    codelisten.json. Der Bereich steht dort in einem eigenen Feld, statt dem
+    Klartext vorangestellt zu sein.
+    """
+    tabelle = codelisten.load_diagnosegruppen().get("diagnosegruppen", {})
+    for code in ("WS", "EX", "SO5", "SB3", "EN1", "PS4", "ST1", "SP6", "RE2",
+                 "DF", "QF", "UI1", "SAS", "CF"):
         assert tabelle.get(code), f"Diagnosegruppe {code} fehlt"
-    assert codelisten.lookup("diagnosegruppe", "EN1").startswith("Ergotherapie")
-    assert codelisten.lookup("diagnosegruppe", "SP4").startswith("Sprachtherapie")
-    assert codelisten.lookup("diagnosegruppe", "DF").startswith("Podologie")
+
+    assert codelisten.diagnosegruppe_info("EN1")["bereich"] == "Maßnahmen der Ergotherapie"
+    assert codelisten.diagnosegruppe_info("SP4")["bereich"] == \
+        "Maßnahmen der Stimm-, Sprech-, Sprach- und Schlucktherapie"
+    assert codelisten.diagnosegruppe_info("DF")["bereich"] == \
+        "Maßnahmen der Podologischen Therapie"
+
+    # EE1/EE2 gab es nur in der früheren, abweichenden Fassung — die KBV
+    # schlüsselt die Ernährungstherapie mit SAS und CF.
+    assert not tabelle.get("EE1")
+    assert "EE1" in codelisten.load()["_abweichungen_diagnosegruppe"]
 
 
 def test_offene_listen_bleiben_leer():

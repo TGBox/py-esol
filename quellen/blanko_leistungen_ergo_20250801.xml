@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<HMPRoot HMP_Version="3.0" HMP_Gueltig_ab="2024-01-01" Haftungsausschluss="Der GKV-Spitzenverband stellt zur Einbindung der Heilmittelpreise in die ärztliche Praxisverwaltungssoftware nach § 73 Abs. 10 SGB V die aktuell gültigen Heilmittelpreise nach § 125 SGB V in einer elektronisch lesbaren XML-Datei (Heilmittelpreisstammdatei) zur Verfügung. Die Heilmittelpreisstammdatei dient ausschließlich zur Abbildung der Preise für zu verordnende Heilmittel in der ärztlichen Praxisverwaltungssoftware (PVS) gemäß des Anforderungskataloges nach § 73 Absatz 10 SGB V für die Verordnung von Heilmitteln und ist nicht zu Abrechnungszwecken bestimmt. Der GKV-Spitzenverband übernimmt mit der Heilmittelpreisstammdatei keine Gewähr für die Richtigkeit und Vollständigkeit sowie fristgerechte Bereitstellung der aktuell gültigen Heilmittelpreise nach § 125 SGB V. Maßgeblich für die Abrechnung der Heilmittelerbringer sind ausschließlich die zwischen dem GKV-Spitzenverband und den für die Wahrnehmung der Interessen der Heilmittelerbringer maßgeblichen Spitzenorganisationen auf Bundesebene für den jeweiligen Heilmittelbereich abgestimmten und veröffentlichten Verträge nach § 125 Absatz 1 SGB V einschließlich der dazugehörigen Vergütungsanlagen.&#xA;" Schema_Version="3.2">
+		<HMP>
+			<HMP4>54003</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Analyse des ergotherapeutischen Bedarfs zum Vertrag nach § 125a SGB V</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>49.43</Hoechstpreis>
+			<Zuzahlung>4.94</Zuzahlung>
+			<Bemerkungen>Diese Position ist je Blankoverordnung bei Therapiebeginn einmal abrechenbar</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54503</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Versorgungsbezogene Pauschale je Blankoverordnung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>102.19</Hoechstpreis>
+			<Zuzahlung></Zuzahlung>
+			<Bemerkungen>Für den besonderen Aufwand der Leistungserbringenden bei der Versorgung der Patienten/-innen im Rahmen einer Blankoverordnung</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54142</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Motorisch-funktionelle Behandlung: Einzelbehandlung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54162</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Motorisch-funktionelle Behandlung: Einzelbehandlung als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54144</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Ergoth. Hirnleistungstraining: Einzelbehandlung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54164</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Ergoth. Hirnleistungstraining: Einzelbehandlung als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54145</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Psychisch-funktionelle Behandlung: Einzelbehandlung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54165</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Psychisch-funktionelle Behandlung: Einzelbehandlung als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54147</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Motorisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>Die Beratung zur Integration in das häusliche und soziale Umfeld kann zweimal pro Blankoverordnung erbracht werden.</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54167</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Motorisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>Die Beratung zur Integration in das häusliche und soziale Umfeld kann zweimal pro Blankoverordnung erbracht werden.</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54149</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Psychisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>Die Beratung zur Integration in das häusliche und soziale Umfeld kann zweimal pro Blankoverordnung erbracht werden.</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54169</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Psychisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>Die Beratung zur Integration in das häusliche und soziale Umfeld kann zweimal pro Blankoverordnung erbracht werden.</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54152</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Ergoth. Hirnleistungstraining: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>Die Beratung zur Integration in das häusliche und soziale Umfeld kann zweimal pro Blankoverordnung erbracht werden.</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54172</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Ergoth. Hirnleistungstraining: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>19.67</Hoechstpreis>
+			<Zuzahlung>1.97</Zuzahlung>
+			<Bemerkungen>Die Beratung zur Integration in das häusliche und soziale Umfeld kann zweimal pro Blankoverordnung erbracht werden.</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54245</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Motorisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>15.74</Hoechstpreis>
+			<Zuzahlung>1.57</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54265</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Motorisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>15.74</Hoechstpreis>
+			<Zuzahlung>1.57</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54247</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Ergoth. Hirnleistungstraining: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>15.74</Hoechstpreis>
+			<Zuzahlung>1.57</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54267</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Ergoth. Hirnleistungstraining: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>15.74</Hoechstpreis>
+			<Zuzahlung>1.57</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54248</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Psychisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>15.74</Hoechstpreis>
+			<Zuzahlung>1.57</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54268</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Psychisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>15.74</Hoechstpreis>
+			<Zuzahlung>1.57</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54249</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Motorisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>6.89</Hoechstpreis>
+			<Zuzahlung>0.69</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54269</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Motorisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>6.89</Hoechstpreis>
+			<Zuzahlung>0.69</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54251</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Ergoth. Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten)</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>6.89</Hoechstpreis>
+			<Zuzahlung>0.69</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54271</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Ergoth. Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>6.89</Hoechstpreis>
+			<Zuzahlung>0.69</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54252</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>6.89</Hoechstpreis>
+			<Zuzahlung>0.69</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54272</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>6.89</Hoechstpreis>
+			<Zuzahlung>0.69</Zuzahlung>
+			<Bemerkungen>1 Zeitintervall = 15 Minuten</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54341</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Thermische Anwendung (Wärme oder Kälte)</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>8.82</Hoechstpreis>
+			<Zuzahlung>0.88</Zuzahlung>
+			<Bemerkungen></Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54445</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Ergotherapeutische temporäre Schiene: Herstellung, Anpassung und Korrektur temporärer Schienen ohne Kostenvoranschlag bis 400,00 €</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis></Hoechstpreis>
+			<Zuzahlung></Zuzahlung>
+			<Bemerkungen>Bis zu zwei unterschiedliche Schienen sind je Schiene bis zur Kostenvoranschlagsgrenze pro Blankoverordnung abrechenbar.</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>54446</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Ergotherapeutische temporäre Schiene: Herstellung, Anpassung und Korrektur temporärer Schienen nach Kostenvoranschlag ab 400,01 €</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis></Hoechstpreis>
+			<Zuzahlung></Zuzahlung>
+			<Bemerkungen></Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>59741</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Übermittlungsgebühr für Mitteilung/Bericht an die Verordnende oder den Verordnenden</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>1.24</Hoechstpreis>
+			<Zuzahlung></Zuzahlung>
+			<Bemerkungen></Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>59972</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Mehraufwand für die Beratung zur Integration in das häusliche und soziale Umfeld</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>28.56</Hoechstpreis>
+			<Zuzahlung>2.86</Zuzahlung>
+			<Bemerkungen>Eine Abrechnung ist nur in Kombination mit den Positionsnummern 54147, 54149, 54152 möglich.</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>59973</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Hausbesuch inclusive Wegegeld (Einsatzpauschale)</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>28.56</Hoechstpreis>
+			<Zuzahlung>2.86</Zuzahlung>
+			<Bemerkungen>Die Position 59973 kann je Versicherte oder je Versicherten nur einmal je Tag in Ansatz gebracht werden.</Bemerkungen>
+		</HMP>
+
+		<HMP>
+			<HMP4>59974</HMP4>
+			<Heilmittelbereich>Ergotherapie</Heilmittelbereich>
+			<Bezeichnung>Hausbesuch in einer sozialen Einrichtung/Gemeinschaft inclusive Wegegeld (Einsatzpauschale)</Bezeichnung>
+			<Gueltig_ab>2025-08-01</Gueltig_ab>
+			<Hoechstpreis>18.63</Hoechstpreis>
+			<Zuzahlung>1.86</Zuzahlung>
+			<Bemerkungen>Der Begriff „soziale Einrichtung“ bezeichnet Einrichtungen, die zur Pflege und Betreuung älterer, pflegebedürftiger Personen oder von Personen mit Behinderung dienen.</Bemerkungen>
+		</HMP>
+</HMPRoot>

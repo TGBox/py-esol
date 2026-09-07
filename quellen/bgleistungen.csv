@@ -1,0 +1,51 @@
+bezeichnung;code;einzelpreis;gruppe;hmcode
+Ergotherapeutisches Hirnleistungstraining/ Neuropsychologisch orientierte Behandlung, Gruppe;11.3-G;5.54;BG-Leistung Ergo;4
+Ergotherapeutische Behandlung bei psychisch-funktionellen Störungen,Gruppe;11.4-G;5.54;BG-Leistung Ergo;7
+Ergotherapeutische Funktionsanalyse(keine Berechnung nach Zeitintervall);12.1.;34.71;BG-Leistung Ergo;1
+Thermische Anwendung,Kälte/Wärme(keine Berechnung nach Zeitintervall);12.2.;7.67;BG-Leistung Ergo;1
+Ergotherapeutische Schiene;12.3.;;BG-Leistung Ergo;1
+ausführlicher Bericht auf Anforderung des UV-Trägers;12.4.;34.71;BG-Leistung Ergo;1
+Ergotherapeutische Behandlung bei sensomotorischen/perzeptiven Störungen, Gruppe;11.2-G;5.54;BG-Leistung Ergo;4
+Ärztlich verordneter Hausbesuch bei einem Patienten (je Besuch);12.5.;14.77;BG-Leistung Ergo;1
+Wegegeld je km bei ärztlichverordnetem Hausbesuch;12.6.;0.38;BG-Leistung Ergo;1
+Beratung zur Integration in das berufliche und soziale Umfeld (außerhalb der ergotherapeutischen Praxis);11.6.;16.68;BG-Leistung Ergo;4
+Arbeitstherapie/betriebliches Arbeitstraining Nur in Absprache mit dem UV-Träger;11.5.;16.68;BG-Leistung Ergo;4
+Ergotherapeutische Behandlung bei psychisch-funktionellen Störungen;11.4.;15.53;BG-Leistung Ergo;5
+Wegegebühr bei ärztlich verordnetem Hausbesuch je km;8603;0.38;BG-Leistung Physio;1
+Ergotherapeutische Behandlung bei motorisch-funktionellen Störungen;11.1.;15.53;BG-Leistung Ergo;3
+Ergotherapeutische Behandlung bei sensomotorischen/perzeptiven Störungen;11.2.;15.53;BG-Leistung Ergo;4
+Ergotherapeutisches Hirnleistungstraining/ Neuropsychologisch orientierte Behandlung;11.3.;16.20;BG-Leistung Ergo;3
+Ergotherapeutische Behandlung bei motorisch-funktionellen Störungen, Gruppe;11.1-G;5.54;BG-Leistung Ergo;3
+KG in der Gruppe,  ab 3 Teilnehmern, je Teilnehmer ;8104;5.59;BG-Leistung Physio;2
+Wärmeanwendung bei einem oder mehreren Körperabschnitten (alle Wärmestrahler);8201;8.76;BG-Leistung Physio;1
+Warmpackung mit natürlichen Peloiden. Teilpackung, ein Körperabschnitt, auch Fangokneten ;8204;14.05;BG-Leistung Physio;2
+Warmpackung mit natürlichen Peloiden. Doppelpackung, zwei Körperabschnitte.;8205;17.80;BG-Leistung Physio;2
+KG im Bewegungsbad;8105;15.40;BG-Leistung Physio;2
+Reizstrom;8301;5.94;BG-Leistung Physio;2
+Ultraschall;8303;10.34;BG-Leistung Physio;1
+Einzelinhalation;8501;8.76;BG-Leistung Physio;1
+KG, auch auf neurophysiologischer Grundlage;8101;15.44;BG-Leistung Physio;2
+KG bei zentralen Bewegungsstörungen (Kinderbehandlung);8102;16.29;BG-Leistung Physio;4
+KG bei zentr. Bewegungsstörungen (Erwachsenenbeh.);8103;16.29;BG-Leistung Physio;3
+KG im Bewegungsbad in der Gruppe, je Teilnehmer;8106;8.31;BG-Leistung Physio;2
+Manuelle Therapie;8107;18.53;BG-Leistung Physio;2
+Kälteanwendung bei einem Körperabschnitt oder mehreren Körperabschnitten (Kompresse, Eisbeutel, Peloide, Eisteilbad) ;8206;16.51;BG-Leistung Physio;1
+Heiße Rolle bei einem oder mehreren Körperabschnitten.;8202;11.18;BG-Leistung Physio;2
+Packungen oder Teilbäder mit Paraffinen;8203;12.07;BG-Leistung Physio;2
+Hausbesuch;8602;23.67;BG-Leistung Physio;1
+Elektrogymnastik, (je Muskel-/Nerv-Einheit);8302;25.88;BG-Leistung Physio;2
+Jontophorese;8304;10.40;BG-Leistung Physio;1
+Massage, auch Spezialmassagen (Bindegewebs-, Reflexzonen-, Segment-, Periost- Bürsten- und Colonmassage);8401;22.47;BG-Leistung Physio;1
+Lymphdrainage, Teilbehandlung;8402;14.04;BG-Leistung Physio;3
+Lymphdrainage Ganzbehandlung;8403;14.04;BG-Leistung Physio;4
+Kompressionsbandagierung;8403a;23.81;BG-Leistung Physio;1
+Hand-, Fußbad mit Zusatz;8405;8.65;BG-Leistung Physio;1
+Kohlensäurebad;8407;28.81;BG-Leistung Physio;1
+Hydroelektrisches Vollbad (z.B. Stangerbad);8409;28.69;BG-Leistung Physio;1
+Hydroelektrisches Teilbad (Zwei-/Vierzellenbad);8410;15.05;BG-Leistung Physio;1
+Unterwasserdruckstrahlmassage einschl. Nachruhe;8412;35.07;BG-Leistung Physio;1
+Chirogymnastik;8413;21.23;BG-Leistung Physio;1
+Extensionsbehandlung (unabhängig vom Zeitaufwand);8414;8.97;BG-Leistung Physio;1
+Rauminhalation, je Teilnehmer;8502;5.10;BG-Leistung Physio;1
+Ruhe, keine Berechnung nach Zeitintervallen;8601;6.20;BG-Leistung Physio;1
+Apparative Kälteanwendung (Kaltgas, Kaltluft);8207;12.42;BG-Leistung Physio;1
