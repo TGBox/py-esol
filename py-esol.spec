@@ -29,6 +29,8 @@ a = Analysis(
         # neben der EXE gesucht, damit ein neuer GKV-Stand ohne Neu-Build
         # eingespielt werden kann.
         ('data/heilmittelpreise.json', 'data'),
+        ('data/kostentraeger.json', 'data'),
+        ('assets', 'assets'),
     ],
     # Alle Imports im Projekt sind statisch, PyInstaller findet sie selbst.
     # reportlab (Begleitzettel-PDF) wird über pyinstaller-hooks-contrib erfasst.
