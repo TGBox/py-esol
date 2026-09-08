@@ -403,14 +403,59 @@ def test_custom_zuzahlungskennzeichen(tmp_path: Path):
     orig_file = tmp_path / "orig_zkz.txt"
     orig_file.write_text(orig_esol, encoding="iso-8859-15")
 
-    # Generate with zuzahlungskennzeichen="1" (Zuzahlungsbefreit)
+    # Geprüft wird, dass das global gesetzte Kennzeichen im ZHE landet.
+    # Dafür VKZ 02: bei einer Zuzahlungsforderung (VKZ 03) ist dieselbe
+    # Kombination — "Zuzahlungsbefreit" auf einem Beleg, der 20,57 € Zuzahlung
+    # trägt — in sich widersprüchlich und wird abgelehnt. Das prüft der
+    # Test darunter.
     res_file = generate_correction_file(
-        orig_file, target_vk="03", new_rec_nr="99", new_rec_date="20260813", zuzahlungskennzeichen="1"
+        orig_file, target_vk="02", new_rec_nr="99", new_rec_date="20260813", zuzahlungskennzeichen="1"
     )
     content = res_file.read_text(encoding="iso-8859-15")
 
     # Verify ZHE field 3 is set to '1'
     assert "+1+EN1+04+" in content, f"Expected ZHE Zuzahlungskennzeichen '1', got:\n{content}"
+
+
+def test_vk03_lehnt_globale_befreiung_ab(tmp_path: Path):
+    """
+    Dieselbe Datei wie oben, aber als Zuzahlungsforderung: der Beleg trägt
+    20,57 € Zuzahlung, das global gesetzte Kennzeichen sagt "befreit".
+
+    Früher entstand daraus eine Datei mit "+1+" im ZHE und einer Forderung über
+    20,57 € im GZF — ein Widerspruch, den keine Prüfregel fand. Jetzt wird
+    stattdessen abgelehnt, weil es nichts zu fordern gibt.
+    """
+    import pytest
+
+    orig_esol = "\n".join([
+        "UNB+UNOC:3+441481776+107299005+20260614:1140+00099+B+SL148177S06+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++441481776+107299005+107299005+441481776'",
+        "REC+99:0+20260614+1'",
+        "GES+00+205,72+205,72+0,00'",
+        "GES+51+205,72+205,72+0,00'",
+        "NAM+Physio Praxis+++info@physio.de'",
+        "UNT+000007+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++441481776+107299005+107299005'",
+        "REC+99:0+20260614+1'",
+        "INV+A123456789+50000+1+00128'",
+        "NAD+Muster+Anna+19500101'",
+        "EHE+26:00501+59702+1,00+205,72+20260115+20,57'",
+        "ZHE+110178400+906716934+20250528+0+EN1+04+++++1++1110++0+1+3'",
+        "DIA+F98.9'",
+        "BES+205,72+20,57+0,00+20,57'",
+        "UNT+000010+00002'",
+        "UNZ+000002+00099'",
+    ])
+    orig_file = tmp_path / "orig_zkz_vk03.txt"
+    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+
+    with pytest.raises(ValueError, match="kein Beleg für eine Zuzahlungsforderung"):
+        generate_correction_file(
+            orig_file, target_vk="03", new_rec_nr="99", zuzahlungskennzeichen="1"
+        )
 
 
 def test_output_filename_formatting(tmp_path: Path):

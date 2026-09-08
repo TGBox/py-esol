@@ -1,4 +1,6 @@
 from pathlib import Path
+
+import pytest
 from tools.generate_correction import generate_correction_esol, generate_correction_file, parse_esol_belege_summary
 from esol_validator import EsolValidator
 
@@ -570,3 +572,214 @@ def test_andere_vkz_bleiben_vom_schalter_unberuehrt(tmp_path: Path):
         a = generate_correction_esol(_vk03_quelle(), target_vk=vk, brutto_nullen=True)
         b = generate_correction_esol(_vk03_quelle(), target_vk=vk, brutto_nullen=False)
         assert a == b, f"VKZ {vk} reagiert auf brutto_nullen"
+
+
+# --------------------- VKZ 03: Belege ohne Forderung fallen heraus
+
+def _vk03_mehrere_belege() -> str:
+    """
+    Drei Belege: forderungsfähig (zkz 3, 10,00 €), befreit mit Betrag
+    (zkz 1, 10,00 €) und ohne Zuzahlung (zkz 0, 0,00 €).
+    """
+    kopf = [
+        "UNB+UNOC:3+480512931+101777502+20260907:1040+00001+B+SL030179S03+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++480512931+101777502+101777502+480512931'",
+        "REC+51:0+20260122+1'",
+        "GES+00+270,00+300,00+30,00'",
+        "GES+11+270,00+300,00+30,00'",
+        "NAM+Praxis'",
+        "UNT+000007+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++480512931+101777502+101777502'",
+        "REC+51:0+20260122+1'",
+    ]
+    for nr, zkz, zuz in (("00001", "3", "10,00"), ("00002", "1", "10,00"),
+                         ("00003", "0", "0,00")):
+        kopf += [
+            f"INV+A123456789+11000+1+{nr}'",
+            "NAD+Muster+Max+19900101'",
+            f"ZHE+110178400+906716934+20250528+{zkz}+EN1+04+++++1++1110++0+1+2'",
+            f"EHE+26:00501+54103+1,00+100,00+20260115+{zuz}'",
+            "DIA+F98.9'",
+            f"BES+100,00+{zuz}+{zuz}+0,00'",
+        ]
+    return "\n".join(kopf + ["UNT+000024+00002'", "UNZ+000002+00001'"])
+
+
+def test_vk03_beleg_ohne_zuzahlung_wird_ausgeschlossen():
+    """
+    Früher entstand daraus GZF+0,00+0,00+0,00 — eine Forderung über null Euro,
+    die der eigenen Prüfung nicht auffiel.
+    """
+    from tools.generate_correction import vk03_ausgeschlossene_belege
+
+    ausgeschlossen = vk03_ausgeschlossene_belege(_vk03_mehrere_belege())
+    nummern = {e["belegnr"] for e in ausgeschlossen}
+    assert "00003" in nummern
+    grund = next(e["grund"] for e in ausgeschlossen if e["belegnr"] == "00003")
+    assert "0,00" in grund
+
+
+def test_vk03_global_gesetzte_befreiung_schliesst_alle_aus():
+    """
+    Der Defekt: das global gesetzte Kennzeichen landete im ZHE, wurde bei der
+    Pauschale aber übergangen. Ergebnis war eine Forderung über den vollen
+    Betrag mit "Zuzahlungsbefreit" im selben Beleg.
+    """
+    from tools.generate_correction import vk03_ausgeschlossene_belege
+
+    ausgeschlossen = vk03_ausgeschlossene_belege(
+        _vk03_mehrere_belege(), zuzahlungskennzeichen="1"
+    )
+    assert {e["belegnr"] for e in ausgeschlossen} == {"00001", "00002", "00003"}
+    for eintrag in ausgeschlossen:
+        assert "Zuzahlungsbefreit" in eintrag["grund"]
+
+
+def test_vk03_ohne_forderungsfaehigen_beleg_keine_datei():
+    with pytest.raises(ValueError, match="kein Beleg für eine Zuzahlungsforderung"):
+        generate_correction_esol(
+            _vk03_mehrere_belege(), target_vk="03", zuzahlungskennzeichen="1"
+        )
+
+
+def test_vk03_summen_enthalten_nur_verbliebene_belege():
+    """
+    Der Ausschluss muss in BEIDEN Durchläufen greifen. Täte er es nur im
+    Schreib-Durchlauf, zählten die GES-Summen die weggelassenen Belege mit.
+    """
+    neu = generate_correction_esol(_vk03_mehrere_belege(), target_vk="03")
+
+    inv = _segmente(neu, "INV")
+    assert len(inv) == 2, inv
+    assert "00003" not in " ".join(inv)
+
+    # Zwei Belege x 10,00 € Zuzahlung
+    for ges in _segmente(neu, "GES"):
+        felder = ges.rstrip("'").split("+")
+        assert felder[2] == "20,00", ges
+
+    assert len(_segmente(neu, "GZF")) == 2
+    for gzf in _segmente(neu, "GZF"):
+        assert gzf.startswith("GZF+10,00"), gzf
+
+
+def test_vk03_ausgeschlossene_belege_achtet_auf_die_auswahl():
+    from tools.generate_correction import vk03_ausgeschlossene_belege
+
+    # Nur der forderungsfähige Beleg gewählt -> nichts auszuschließen
+    assert vk03_ausgeschlossene_belege(
+        _vk03_mehrere_belege(), selected_belegnr_list=["00001"]
+    ) == []
+
+    # Nur der Beleg ohne Zuzahlung gewählt
+    ausgeschlossen = vk03_ausgeschlossene_belege(
+        _vk03_mehrere_belege(), selected_belegnr_list=["00003"]
+    )
+    assert [e["belegnr"] for e in ausgeschlossen] == ["00003"]
+
+
+def test_vk03_beleg_einzeln_freigeben():
+    """
+    Wer einen befreiten Beleg bewusst fordern will, setzt das Kennzeichen am
+    Beleg — die Einstellung am Einzelbeleg hat Vorrang vor der globalen.
+    """
+    from tools.generate_correction import vk03_ausgeschlossene_belege
+
+    ausgeschlossen = vk03_ausgeschlossene_belege(
+        _vk03_mehrere_belege(),
+        zuzahlungskennzeichen="1",
+        beleg_modifications={"00001": {"zuzahlungskennzeichen": "2"}},
+    )
+    assert "00001" not in {e["belegnr"] for e in ausgeschlossen}
+
+
+def test_andere_vkz_schliessen_keine_belege_aus():
+    """Der Ausschluss gilt nur für die Zuzahlungsforderung."""
+    for vk in ("02", "04", "10"):
+        neu = generate_correction_esol(_vk03_mehrere_belege(), target_vk=vk)
+        assert len(_segmente(neu, "INV")) == 3, f"VKZ {vk}"
+
+
+def test_effektives_zuzahlungskennzeichen_vorrangregel():
+    from tools.generate_correction import effektives_zuzahlungskennzeichen
+
+    beleg = {"belegnr": "00001", "zuzahlungskennzeichen": "3"}
+
+    # 1. Beleg-Einstellung gewinnt
+    assert effektives_zuzahlungskennzeichen(
+        beleg, {"00001": {"zuzahlungskennzeichen": "5"}}, "1", "03"
+    ) == "5"
+    # 2. dann das global gesetzte
+    assert effektives_zuzahlungskennzeichen(beleg, {}, "1", "03") == "1"
+    # 3. dann der VKZ-03-Vorgabewert
+    assert effektives_zuzahlungskennzeichen(beleg, {}, None, "03") == "2"
+    # 4. sonst das Original
+    assert effektives_zuzahlungskennzeichen(beleg, {}, None, "02") == "3"
+
+
+# ------------------------- Prüfregeln 1.3.12.3 und 1.3.12.4
+
+def _vk03_handgebaut(zkz: str, ehe_zuz: str, gzf: str) -> str:
+    """Eine VKZ-03-Datei von Hand — so, wie sie über die Vorschau entstehen kann."""
+    segmente = [
+        "UNB+UNOC:3+480512931+101777502+20260907:1040+00001+B+SL030179S03+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+03++480512931+101777502+101777502+480512931'",
+        "REC+1Z:0+20260907+1'",
+        "GES+00+10,00+0,00+10,00'",
+        "GES+11+10,00+0,00+10,00'",
+        "NAM+Praxis'",
+        "UNT+000007+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+03++480512931+101777502+101777502'",
+        "REC+1Z:0+20260907+1'",
+        "INV+A123456789+11000+1+00001'",
+        "URI+480512931+1:1+20260122+00001'",
+        "NAD+Muster+Max+19900101'",
+        f"EHE+26:00501+54103+1,00+100,00+20260115+{ehe_zuz}'",
+        f"ZHE+110178400+906716934+20250528+{zkz}+EN1+04+++++1++1110++0+1+2'",
+        "DIA+F98.9'",
+        f"GZF+{gzf}'",
+        "UNT+000011+00002'",
+        "UNZ+000002+00001'",
+    ]
+    return "\n".join(segmente)
+
+
+def _regeln(text: str) -> set:
+    validator = EsolValidator()
+    validator.register_default_rules()
+    ergebnis = validator.validate_string(text)
+    return {str(e).split("]")[0].split("[")[-1] for e in ergebnis.get_errors()}
+
+
+def test_regel_forderung_trotz_befreiung():
+    """1.3.12.3 — GZF fordert Geld, das Verordnungssegment sagt 'befreit'."""
+    for zkz in ("0", "1"):
+        regeln = _regeln(_vk03_handgebaut(zkz, "10,00", "10,00+10,00+0,00"))
+        assert "1.3.12.3" in regeln, f"zkz {zkz}: {regeln}"
+
+
+def test_regel_forderung_ueber_null():
+    """1.3.12.4 — eine Forderung ohne Betrag hat keinen Zweck."""
+    assert "1.3.12.4" in _regeln(_vk03_handgebaut("2", "0,00", "0,00+0,00+0,00"))
+
+
+def test_regeln_schlagen_beim_gueltigen_fall_nicht_an():
+    regeln = _regeln(_vk03_handgebaut("2", "10,00", "10,00+10,00+0,00"))
+    assert "1.3.12.3" not in regeln
+    assert "1.3.12.4" not in regeln
+    assert regeln == set(), regeln
+
+
+def test_regel_1_3_12_3_greift_auch_bei_anderen_leistungsbereichen():
+    """
+    Das Zuzahlungskennzeichen steht in allen Verordnungssegmenten an derselben
+    Stelle — die Regel darf nicht auf ZHE beschränkt sein.
+    """
+    text = _vk03_handgebaut("1", "10,00", "10,00+10,00+0,00").replace(
+        "ZHE+110178400", "ZHI+110178400"
+    )
+    assert "1.3.12.3" in _regeln(text)

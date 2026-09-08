@@ -361,6 +361,127 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
     return belege
 
 
+# Zuzahlungskennzeichen, die eine Zuzahlung ausschließen
+# (Anlage 3 zu TP 5, Abschnitt 8.1.3):
+#   0 = Keine gesetzliche Zuzahlung
+#   1 = Zuzahlungsbefreit
+# Bei diesen Werten existiert keine Zuzahlung, die sich nachfordern ließe.
+ZKZ_OHNE_ZUZAHLUNG = ("0", "1")
+
+_ZKZ_TEXT = {
+    "0": "Keine gesetzliche Zuzahlung",
+    "1": "Zuzahlungsbefreit",
+}
+
+
+def effektives_zuzahlungskennzeichen(
+    beleg: Dict[str, Any],
+    mods: Optional[Dict[str, Any]] = None,
+    global_zkz: Optional[str] = None,
+    target_vk: str = "03",
+) -> str:
+    """
+    Das Zuzahlungskennzeichen, das in der erzeugten Datei landet.
+
+    Vorrang, von stark nach schwach:
+      1. Einstellung am einzelnen Beleg (beleg_modifications)
+      2. global gesetztes Kennzeichen (Parameter zuzahlungskennzeichen)
+      3. bei VKZ 03 der Vorgabewert "2" (keine Zuzahlung trotz schriftlicher
+         Zahlungsaufforderung) — genau der Fall, für den es die
+         Zuzahlungsforderung gibt
+      4. sonst der Wert aus dem ZHE des Originalbelegs
+
+    Diese Reihenfolge muss mit der im Schreib-Durchlauf übereinstimmen, sonst
+    trägt die Datei ein anderes Kennzeichen als die Beträge hergeben.
+    """
+    b_mod = _get_beleg_mod(str(beleg.get("belegnr", "")), mods)
+    if b_mod and "zuzahlungskennzeichen" in b_mod:
+        return str(b_mod["zuzahlungskennzeichen"])
+    if global_zkz is not None:
+        return str(global_zkz)
+    if target_vk == "03":
+        return "2"
+    return str(beleg.get("zuzahlungskennzeichen", ""))
+
+
+def _beleg_zuzahlung(beleg: Dict[str, Any], mods: Optional[Dict[str, Any]] = None) -> float:
+    """
+    Die Zuzahlung, die für diesen Beleg gefordert würde — nach Anwendung der
+    Änderungen aus dem Korrektur-Editor.
+    """
+    b_mod = _get_beleg_mod(str(beleg.get("belegnr", "")), mods)
+
+    if b_mod and "positions" in b_mod:
+        proz = sum(
+            round(float(p.get("anzahl", 0.0)) * float(p.get("zuzahlung", 0.0)), 2)
+            for p in b_mod["positions"]
+        )
+    else:
+        proz = float(beleg.get("zuzahlung_proz", 0.0) or 0.0)
+
+    if b_mod and "zuzahlung_pausch" in b_mod:
+        pausch = float(b_mod["zuzahlung_pausch"])
+    else:
+        pausch = float(beleg.get("zuzahlung_pausch", 0.0) or 0.0)
+
+    return round(proz + pausch, 2)
+
+
+def vk03_ausgeschlossene_belege(
+    raw_content: str,
+    selected_belegnr_list: Optional[List[str]] = None,
+    zuzahlungskennzeichen: Optional[str] = None,
+    beleg_modifications: Optional[Dict[str, Any]] = None,
+) -> List[Dict[str, str]]:
+    """
+    Belege, die in einer Zuzahlungsforderung (VKZ 03) nichts zu suchen haben.
+
+    Zwei Gründe, beide fachlich derselbe: es gibt keinen Betrag zu fordern.
+
+      * Das Zuzahlungskennzeichen schließt eine Zuzahlung aus (0 oder 1).
+        Früher landete so ein Beleg trotzdem in der Datei — mit "befreit" im
+        ZHE und einer Forderung über den vollen Betrag im GZF. Die Datei war
+        in sich widersprüchlich und ist der eigenen Prüfung nicht aufgefallen.
+      * Die Zuzahlung des Belegs ist 0,00 €. Dann entstand eine Forderung über
+        null Euro — formal gültig, fachlich sinnlos.
+
+    Rückgabe je Beleg: belegnr, grund (Klartext), zuzahlungskennzeichen,
+    zuzahlung (formatiert). Leere Liste heißt: alle ausgewählten Belege sind
+    forderungsfähig.
+    """
+    mods = beleg_modifications or {}
+    auswahl = set(selected_belegnr_list) if selected_belegnr_list else None
+    ausgeschlossen: List[Dict[str, str]] = []
+
+    for beleg in parse_esol_belege_summary(raw_content):
+        b_nr = str(beleg.get("belegnr", ""))
+        if auswahl is not None and b_nr not in auswahl:
+            continue
+
+        zkz = effektives_zuzahlungskennzeichen(beleg, mods, zuzahlungskennzeichen, "03")
+        zuzahlung = _beleg_zuzahlung(beleg, mods)
+
+        grund = ""
+        if zkz in ZKZ_OHNE_ZUZAHLUNG:
+            text = _ZKZ_TEXT.get(zkz, "keine Zuzahlung")
+            grund = (
+                f"Zuzahlungskennzeichen {zkz} ({text}) — es besteht keine Zuzahlung, "
+                f"die nachgefordert werden könnte"
+            )
+        elif zuzahlung <= 0.005:
+            grund = "Zuzahlung 0,00 € — es gibt keinen Betrag zu fordern"
+
+        if grund:
+            ausgeschlossen.append({
+                "belegnr": b_nr,
+                "grund": grund,
+                "zuzahlungskennzeichen": zkz,
+                "zuzahlung": ContentHelper.format_decimal(zuzahlung),
+            })
+
+    return ausgeschlossen
+
+
 def _get_beleg_mod(belegnr: str, mods: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     """Helper to retrieve beleg modifications matching belegnr regardless of leading zeros."""
     if not mods or not belegnr:
@@ -421,6 +542,35 @@ def generate_correction_esol(
 
     selected_set = set(selected_belegnr_list) if selected_belegnr_list else None
     mods = beleg_modifications or {}
+
+    # Bei einer Zuzahlungsforderung fallen Belege heraus, für die es nichts zu
+    # fordern gibt. Der Ausschluss greift über selected_set und damit in BEIDEN
+    # Durchläufen — sonst zählte der erste Durchlauf die Beträge noch in die
+    # GES-Summen, während der zweite den Beleg wegließe.
+    if target_vk == "03":
+        ausgeschlossen = vk03_ausgeschlossene_belege(
+            raw_content,
+            selected_belegnr_list=selected_belegnr_list,
+            zuzahlungskennzeichen=zuzahlungskennzeichen,
+            beleg_modifications=beleg_modifications,
+        )
+        if ausgeschlossen:
+            if selected_set is None:
+                selected_set = {
+                    str(b.get("belegnr", "")) for b in parse_esol_belege_summary(raw_content)
+                }
+            selected_set -= {e["belegnr"] for e in ausgeschlossen}
+
+            if not selected_set:
+                zeilen = "\n".join(
+                    f"  Beleg {e['belegnr']}: {e['grund']}" for e in ausgeschlossen
+                )
+                raise ValueError(
+                    "Es bleibt kein Beleg für eine Zuzahlungsforderung übrig:\n"
+                    f"{zeilen}\n\n"
+                    "Eine Zuzahlungsforderung nach § 43c SGB V setzt voraus, dass eine "
+                    "Zuzahlung besteht, die nicht eingezogen werden konnte."
+                )
 
     # Discover all non-00 GES status codes present in raw file
     ges_status_codes = []
@@ -882,8 +1032,18 @@ def generate_correction_esol(
                     uri_belegnr,
                 ]
 
-                zkz = str(b_mod.get("zuzahlungskennzeichen", "2")) if b_mod else "2"
-                if zkz in ["0", "1"]:
+                # Das Kennzeichen muss hier dieselbe Vorrangregel durchlaufen wie
+                # beim Schreiben des ZHE-Feldes weiter oben. Vorher stand hier nur
+                # b_mod: ein global gesetztes "befreit" kam im ZHE an, wurde bei der
+                # Pauschale aber übergangen — die Datei forderte dann Geld von
+                # jemandem, den sie selbst als befreit auswies.
+                zkz = str(
+                    b_mod["zuzahlungskennzeichen"]
+                    if (b_mod and "zuzahlungskennzeichen" in b_mod)
+                    else (zuzahlungskennzeichen if zuzahlungskennzeichen is not None
+                          else ("2" if target_vk == "03" else ""))
+                )
+                if zkz in ZKZ_OHNE_ZUZAHLUNG:
                     current_inv_zuz_pausch = 0.0
                 elif b_mod and "zuzahlung_pausch" in b_mod:
                     current_inv_zuz_pausch = float(b_mod["zuzahlung_pausch"])
@@ -1127,6 +1287,22 @@ def main() -> None:
     input_path = Path(args.input_file)
 
     try:
+        # Bei einer Zuzahlungsforderung erst benennen, welche Belege herausfallen
+        # und warum — sonst fehlen sie später in der Datei, ohne dass es jemand
+        # gemerkt hat.
+        if args.type == "03" and input_path.is_file():
+            ausgeschlossen = vk03_ausgeschlossene_belege(
+                read_esol_file_text(input_path),
+                selected_belegnr_list=args.belege,
+                zuzahlungskennzeichen=args.zuzahlungskennzeichen,
+            )
+            if ausgeschlossen:
+                print(f"{len(ausgeschlossen)} Beleg(e) nicht forderungsfähig und "
+                      f"daher nicht in der Datei:")
+                for e in ausgeschlossen:
+                    print(f"  Beleg {e['belegnr']}: {e['grund']}")
+                print()
+
         res_path = generate_correction_file(
             input_path=input_path,
             output_path=Path(args.output_file) if args.output_file else None,

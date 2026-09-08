@@ -19,6 +19,7 @@ from tools.generate_correction import (
     parse_esol_belege_summary,
     generate_correction_esol,
     generate_correction_file,
+    vk03_ausgeschlossene_belege,
     pruefe_iso_8859_15,
     read_esol_file_text,
     format_date_german,
@@ -446,6 +447,60 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             "Der Button im Fensterkopf schaltet das Nullen wieder ein.\n\n"
             "Trotzdem so speichern?",
             icon="warning",
+        ))
+
+    def _bestaetige_ausgeschlossene_belege(self, ist_handarbeit: bool) -> bool:
+        """
+        Nennt vor dem Speichern die Belege, für die es nichts zu fordern gibt.
+
+        Sie fallen aus der Datei heraus — früher landeten sie darin, entweder mit
+        einer Forderung über 0,00 € oder, bei global gesetzter Befreiung, mit
+        einer Forderung über den vollen Betrag trotz Befreiungskennzeichen.
+        Beides fiel keiner Prüfung auf. Wer die Belege bewusst dabei haben will,
+        setzt das Zuzahlungskennzeichen am einzelnen Beleg.
+
+        Rückgabe False bedeutet: nicht speichern.
+        """
+        if self.target_vk != "03" or ist_handarbeit:
+            return True
+
+        try:
+            ausgeschlossen = vk03_ausgeschlossene_belege(
+                self.raw_content,
+                selected_belegnr_list=self.selected_belegnr_list,
+                zuzahlungskennzeichen=self.zuzahlungskennzeichen,
+                beleg_modifications=self.modifications,
+            )
+        except Exception:
+            return True  # Auskunft ist Beiwerk; sie darf das Speichern nicht verhindern
+
+        if not ausgeschlossen:
+            return True
+
+        zeilen = "\n".join(
+            f"  • Beleg {e['belegnr']} ({e['zuzahlung']} €): {e['grund']}"
+            for e in ausgeschlossen[:12]
+        )
+        if len(ausgeschlossen) > 12:
+            zeilen += f"\n  • … und {len(ausgeschlossen) - 12} weitere"
+
+        verbleibend = len(self.selected_belegnr_list) - len(ausgeschlossen)
+        if verbleibend <= 0:
+            messagebox.showerror(
+                "Kein forderungsfähiger Beleg",
+                f"Für keinen der {len(self.selected_belegnr_list)} gewählten Belege "
+                f"gibt es eine Zuzahlung, die nachgefordert werden könnte:\n\n{zeilen}\n\n"
+                "Eine Zuzahlungsforderung nach § 43c SGB V setzt voraus, dass eine "
+                "Zuzahlung besteht, die nicht eingezogen werden konnte. Es wird keine "
+                "Datei erzeugt.",
+            )
+            return False
+
+        return bool(messagebox.askokcancel(
+            "Belege ohne Forderung werden ausgelassen",
+            f"{len(ausgeschlossen)} von {len(self.selected_belegnr_list)} Belegen "
+            f"kommen nicht in die Datei:\n\n{zeilen}\n\n"
+            f"Die Datei enthält damit {verbleibend} Beleg(e). Fortfahren?",
         ))
 
     def _on_tab_changed(self, event):
@@ -1276,6 +1331,9 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             return
 
         if not self._bestaetige_brutto_ohne_nullen(bool(content_override)):
+            return
+
+        if not self._bestaetige_ausgeschlossene_belege(bool(content_override)):
             return
 
         try:
