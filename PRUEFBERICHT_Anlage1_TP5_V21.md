@@ -54,6 +54,14 @@ Befunde liegen alle in der Prüfung, nicht im Schema.
 aus der Anlage ab und hält den Abgleich fest, damit er nicht unbemerkt
 zurückfällt.
 
+Die Tests arbeiten auf `tests/fixtures/valid_esol_smoke` und verändern daran
+jeweils genau eine Stelle. Die erste Fassung nahm dafür `testdata/in/ESOL0001`
+— das lief lokal, im CI aber nicht: `testdata/` enthält echte
+Abrechnungsdateien und liegt nicht im Repository. Wo das Verzeichnis vorhanden
+ist, prüft je Testdatei eine zusätzliche Gegenprobe, dass keine der
+nachgebesserten Regeln auf echten Daten anschlägt; im CI wird sie
+übersprungen.
+
 ---
 
 ## 3. Behobene Befunde
@@ -314,11 +322,11 @@ korrekter als Stillschweigen.
 | `rules/level3/gzf_content_rule.py` | 1.3.12.3 greift nur noch bei Kennzeichen „0" |
 | `schema/schema.py` | `minLen: 22` für `EVO.eVO-ID` |
 | `tools/generate_correction.py` | Kennzeichen „1" schließt nicht mehr aus; „1"/„5" bleiben erhalten |
-| `tests/test_anlage1_konformitaet.py` | **neu** — 16 Tests gegen die Anlage |
+| `tests/test_anlage1_konformitaet.py` | **neu** — 18 Tests gegen die Anlage |
 | `tests/test_vk02_correction.py` | Tests zum Kennzeichen „1" umgestellt; zwei unvollständige Vorlagen ergänzt |
 | `tests/test_generate_correction.py` | ein Test zum Kennzeichen umgestellt |
 
-Testlauf: **297 erfolgreich, 0 Fehler** (6 übersprungen — parametrisierte
+Testlauf: **318 erfolgreich, 0 Fehler** (6 übersprungen — parametrisierte
 Tests, die der lokale Läufer nicht aufklappt).
 
 Die Auswertungsskripte der Anlage (`parse_anlage.py`, `diff_schema.py`) liegen
@@ -540,9 +548,10 @@ Neu, alle unmittelbar aus den Schlüsselverzeichnissen:
 | `esol_validator.py` | SKZ-Regel registriert |
 | `tools/generate_correction.py` | Summenstatus aus dem Versichertenstatus statt aus den GES-Zeilen des Originals |
 | `tests/test_anlage3_schluessel.py` | **neu** — 19 Tests gegen die Schlüsselverzeichnisse |
+| `tests/anlage_basis.py` | **neu** — gemeinsame Hilfen beider Abgleichstests |
 | `tests/test_verordnung.py` | Tests an die gefüllten Listen angepasst |
 
-Testlauf: **316 erfolgreich, 0 Fehler** (6 übersprungen — parametrisierte
+Testlauf: **318 erfolgreich, 0 Fehler** (6 übersprungen — parametrisierte
 Tests, die der lokale Läufer nicht aufklappt). Alle 53 Dateien in
 `testdata/in/` melden weiterhin genau dieselben 7 Fehler wie vor dem Abgleich
 (1.2.3.1 in ESOL0167, ESOL0305, ESOL0325) — keine der neuen Prüfungen erzeugt

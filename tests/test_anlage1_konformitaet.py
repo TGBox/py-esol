@@ -3,67 +3,30 @@ Abgleich mit der Technischen Anlage 1 zu den Richtlinien nach § 302 SGB V,
 TP 5 Version 21, Stand 17.02.2025, anzuwenden ab 01.10.2025.
 
 Die Tests halten die Stellen fest, an denen die Prüfung bei einem Abgleich mit
-der Anlage nachgebessert wurde. Sie arbeiten auf der fehlerfreien Referenzdatei
-tests/fixtures/valid_esol_smoke und verändern jeweils genau eine Stelle — so steht
-in jedem Test nur der Unterschied, nicht eine ganze nachgebaute Datei, die mit der
-Zeit von der Wirklichkeit abdriftet.
+der Anlage nachgebessert wurde. Grundlage ist die Referenzdatei
+tests/fixtures/valid_esol_smoke; jeder Test verändert daran genau eine Stelle,
+damit im Test nur der Unterschied steht (siehe tests/anlage_basis.py).
 """
 
-from pathlib import Path
+import pytest
 
-from esol_validator import EsolValidator
 from schema.schema import SchemaFactory
+from tests.anlage_basis import (
+    codes,
+    echte_dateien,
+    ersetzt,
+    mit_segment,
+    ohne,
+    zusammensetzen,
+    basis_zeilen,
+)
+from esol_validator import EsolValidator
 from tools.generate_correction import read_esol_file_text
-
-BASIS_DATEI = Path(__file__).resolve().parent / "fixtures" / "valid_esol_smoke"
-
-
-def _basis_zeilen():
-    text = read_esol_file_text(BASIS_DATEI)
-    return [z for z in text.split("\r\n") if z]
-
-
-def _zusammensetzen(zeilen):
-    """
-    Fügt die Zeilen wieder zu einer Datei zusammen und zieht dabei die Zähler
-    nach: UNT.Anzahl Einheiten und UNZ.Anzahl Nachrichten. Ohne das meldet
-    jede Änderung zusätzlich einen Zählerfehler und verdeckt, was der Test
-    eigentlich prüfen soll.
-    """
-    aus, puffer, anzahl_unh = [], [], 0
-    for z in zeilen:
-        if z.startswith("UNH"):
-            anzahl_unh += 1
-            puffer = [z]
-        elif z.startswith("UNT"):
-            puffer.append(z)
-            ref = puffer[0].split("+")[1]
-            puffer[-1] = f"UNT+{len(puffer):06d}+{ref}'"
-            aus.extend(puffer)
-            puffer = []
-        elif puffer:
-            puffer.append(z)
-        elif z.startswith("UNZ"):
-            ref = z.split("+")[2].rstrip("'")
-            aus.append(f"UNZ+{anzahl_unh:06d}+{ref}'")
-        else:
-            aus.append(z)
-    return "\r\n".join(aus) + "\r\n"
-
-
-def _codes(text):
-    validator = EsolValidator()
-    validator.register_default_rules()
-    return {e.code for e in validator.validate_string(text).get_errors()}
-
-
-def _ohne(tag):
-    return _zusammensetzen([z for z in _basis_zeilen() if not z.startswith(tag)])
 
 
 def test_basisdatei_ist_fehlerfrei():
     """Ohne diese Zusicherung sagt kein anderer Test in dieser Datei etwas."""
-    assert _codes(_zusammensetzen(_basis_zeilen())) == set()
+    assert codes(zusammensetzen(basis_zeilen())) == set()
 
 
 # --- Meldungen der Prüfstufen 1 und 2 dürfen nicht verschwinden -------------
@@ -83,7 +46,7 @@ def test_meldungen_der_stufe_2_erreichen_das_ergebnis():
     """
     validator = EsolValidator()
     validator.register_default_rules()
-    ergebnis = validator.validate_string(_ohne("FKT"))
+    ergebnis = validator.validate_string(ohne("FKT"))
 
     assert ergebnis.error_count() > 0
     assert ergebnis.has_stufe_errors(2)
@@ -100,7 +63,7 @@ def test_stufe_2_bricht_ab_und_stufe_3_laeuft_nicht_mehr():
     """
     validator = EsolValidator()
     validator.register_default_rules()
-    ergebnis = validator.validate_string(_ohne("FKT"))
+    ergebnis = validator.validate_string(ohne("FKT"))
 
     stufen = {e.stufe for e in ergebnis.get_errors()}
     assert stufen == {2}, stufen
@@ -111,26 +74,26 @@ def test_stufe_2_bricht_ab_und_stufe_3_laeuft_nicht_mehr():
 
 def test_fehlendes_nad_fehlt_nicht_unbemerkt():
     """NAD ist Muss, 1 je INV (Anlage 1, 5.5.3.1)."""
-    assert "1.2.1.6" in _codes(_ohne("NAD"))
+    assert "1.2.1.6" in codes(ohne("NAD"))
 
 
 def test_fehlendes_zhe_fehlt_nicht_unbemerkt():
     """ZHE ist Muss, 1 je Abrechnungsfall (Anlage 1, 5.5.3.3)."""
-    assert "1.2.1.6" in _codes(_ohne("ZHE"))
+    assert "1.2.1.6" in codes(ohne("ZHE"))
 
 
 def test_fehlendes_nam_fehlt_nicht_unbemerkt():
     """NAM ist Muss, 1 je SLGA (Anlage 1, 5.5.2)."""
-    assert "1.2.1.6" in _codes(_ohne("NAM"))
+    assert "1.2.1.6" in codes(ohne("NAM"))
 
 
 def test_zhe_darf_nicht_zweimal_im_block_stehen():
     zeilen = []
-    for z in _basis_zeilen():
+    for z in basis_zeilen():
         zeilen.append(z)
         if z.startswith("ZHE"):
             zeilen.append(z)
-    assert "1.2.1.6" in _codes(_zusammensetzen(zeilen))
+    assert "1.2.1.6" in codes(zusammensetzen(zeilen))
 
 
 def test_slga_braucht_mindestens_zwei_ges():
@@ -139,22 +102,18 @@ def test_slga_braucht_mindestens_zwei_ges():
     eines je Versichertenstatus (Anlage 1, 5.5.2).
     """
     zeilen, gesehen = [], False
-    for z in _basis_zeilen():
-        if z.startswith("GES") and not gesehen:
-            gesehen = True
+    for z in basis_zeilen():
+        if z.startswith("GES"):
+            if not gesehen:
+                gesehen = True
+                zeilen.append(z)
+        else:
             zeilen.append(z)
-        elif not z.startswith("GES"):
-            zeilen.append(z)
-    assert "1.2.1.6" in _codes(_zusammensetzen(zeilen))
+    assert "1.2.1.6" in codes(zusammensetzen(zeilen))
 
 
 def test_bes_und_gzf_schliessen_sich_aus():
-    zeilen = []
-    for z in _basis_zeilen():
-        zeilen.append(z)
-        if z.startswith("BES"):
-            zeilen.append("GZF+10,00+10,00+0,00'")
-    assert "1.2.1.6" in _codes(_zusammensetzen(zeilen))
+    assert "1.2.1.6" in codes(mit_segment("BES", "GZF+10,00+10,00+0,00'"))
 
 
 # --- Regel 1.2.2.8: überzählige Felder -------------------------------------
@@ -166,11 +125,7 @@ def test_ueberzaehliges_feld_im_segment():
     mehr Feldern als vorgesehen entsteht durch ein '+' zu viel oder durch ein
     mitgeschlepptes Feld aus einem anderen Leistungsbereich.
     """
-    zeilen = [
-        z.rstrip("'") + "+00501'" if z.startswith("ZHE") else z
-        for z in _basis_zeilen()
-    ]
-    assert "1.2.2.8" in _codes(_zusammensetzen(zeilen))
+    assert "1.2.2.8" in codes(ersetzt("++0+1+2'", "++0+1+2+00501'"))
 
 
 # --- Feldbeschreibung gegen die Anlage -------------------------------------
@@ -255,45 +210,16 @@ def test_minuszeichen_und_komma_zaehlen_nicht_zur_laenge():
     Nachkommastellen. "99999999,99" hat elf Zeichen, aber zehn Ziffern und ist
     damit zulässig; eine Ziffer mehr nicht.
     """
-    zeilen = [
-        "BES+99999999,99+0,00+0,00+0,00'" if z.startswith("BES") else z
-        for z in _basis_zeilen()
-    ]
-    assert "1.2.2.6" not in _codes(_zusammensetzen(zeilen))
-
-    zeilen = [
-        "BES+999999999,99+0,00+0,00+0,00'" if z.startswith("BES") else z
-        for z in _basis_zeilen()
-    ]
-    assert "1.2.2.6" in _codes(_zusammensetzen(zeilen))
+    assert "1.2.2.6" not in codes(ersetzt("BES+100,00+", "BES+99999999,99+"))
+    assert "1.2.2.6" in codes(ersetzt("BES+100,00+", "BES+999999999,99+"))
 
 
 def test_buchstabe_in_numerischem_feld_faellt_auf():
     """Kapitel 6.2 nennt genau diesen Fall als Grund zur Abweisung."""
-    def _verfaelsche_zhe(z):
-        teile = z.split("+")
-        # Feld 3 der ZHE ist das Verordnungsdatum (numerisch, JJJJMMTT)
-        teile[3] = teile[3][:4] + "X" + teile[3][5:]
-        return "+".join(teile)
-
-    zeilen = [
-        _verfaelsche_zhe(z) if z.startswith("ZHE") else z
-        for z in _basis_zeilen()
-    ]
-    assert "1.2.2.5" in _codes(_zusammensetzen(zeilen))
+    assert "1.2.2.5" in codes(ersetzt("+20250528+0+EN1", "+2025X528+0+EN1"))
 
 
 # --- EVO: Mindestlänge der eVO-ID ------------------------------------------
-
-
-def _mit_evo(evo_id):
-    """Fügt hinter dem NAD ein EVO-Segment ein (Anlage 1, 5.5.3.1)."""
-    zeilen = []
-    for z in _basis_zeilen():
-        zeilen.append(z)
-        if z.startswith("NAD"):
-            zeilen.append(f"EVO+{evo_id}'")
-    return _zusammensetzen(zeilen)
 
 
 def test_evo_id_mindestlaenge():
@@ -303,7 +229,27 @@ def test_evo_id_mindestlaenge():
     die einzige Mindestlängenangabe der ganzen Anlage; das Schema kannte den
     Begriff vorher nicht und ließ jede Länge bis 256 durch.
     """
-    assert "1.2.2.6" not in _codes(_mit_evo("A" * 22))
-    assert "1.2.2.6" in _codes(_mit_evo("A" * 21))
-    assert "1.2.2.6" not in _codes(_mit_evo("A" * 256))
-    assert "1.2.2.6" in _codes(_mit_evo("A" * 257))
+    assert "1.2.2.6" not in codes(mit_segment("NAD", f"EVO+{'A' * 22}'"))
+    assert "1.2.2.6" in codes(mit_segment("NAD", f"EVO+{'A' * 21}'"))
+    assert "1.2.2.6" not in codes(mit_segment("NAD", f"EVO+{'A' * 256}'"))
+    assert "1.2.2.6" in codes(mit_segment("NAD", f"EVO+{'A' * 257}'"))
+
+
+# --- Gegenprobe auf echten Dateien ----------------------------------------
+
+
+@pytest.mark.skipif(not echte_dateien(), reason="testdata/in liegt nicht vor")
+def test_echte_dateien_bleiben_ohne_neue_befunde():
+    """
+    Die Gegenprobe zu allem oben: keine der nachgebesserten Regeln darf auf
+    echten Abrechnungsdateien anschlagen. Bekannt und unverändert sind allein
+    die Aufhebungszeichen-Fehler (1.2.3.1) in drei Dateien.
+
+    testdata/ liegt nicht im Repository — im CI wird dieser Test übersprungen.
+    """
+    unerwartet = {}
+    for pfad in echte_dateien():
+        gefunden = codes(read_esol_file_text(pfad)) - {"1.2.3.1"}
+        if gefunden:
+            unerwartet[pfad.name] = sorted(gefunden)
+    assert unerwartet == {}, unerwartet
