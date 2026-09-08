@@ -9,7 +9,9 @@ from tkinter import filedialog, messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 from typing import Any, Dict, List, Optional
 
+import anonymisierung
 import theme_manager
+from gui_anonymisierung_dialog import frage_anonymisierung
 from gui_beleg_dashboard import BelegDashboardFrame
 from gui_begleitzettel_dialog import BegleitzettelDialog
 from gui_muster13_preview import Muster13PreviewFrame
@@ -191,6 +193,11 @@ class EsolValidatorGUI(tk.Tk):
             footer_frame, text="🌐 HTML-Bericht exportieren", command=self._export_html_report
         )
         btn_html.pack(side="left", padx=3)
+
+        btn_anonym = ttk.Button(
+            footer_frame, text="🕶 Anonyme Kopie der Datei", command=self._export_anonyme_datei
+        )
+        btn_anonym.pack(side="left", padx=3)
 
         btn_copy_log = ttk.Button(
             footer_frame, text="📋 Log kopieren", command=self._copy_to_clipboard
@@ -632,23 +639,151 @@ class EsolValidatorGUI(tk.Tk):
                 on_complete_callback=on_done,
             )
 
-    def _copy_ticket_summary(self):
+    def _anonymisierte_daten(self, titel: str, zweck: str, gruppen=None):
+        """
+        Fragt den Umfang der Anonymisierung ab und liefert die Daten für den
+        Bericht zurück: (Belege, Fehlerliste, Kopfzeilen).
+
+        Rückgabe None heißt: abgebrochen, es wird nichts exportiert.
+
+        'gruppen' übergeht den Dialog. Gedacht für Tests und für Aufrufe, die
+        den Umfang schon kennen — ohne diese Naht wäre der Export nur noch mit
+        Mausklick auslösbar und damit nicht mehr automatisiert prüfbar.
+
+        Die Fehlerliste muss mit durch — mehrere Prüfregeln zitieren den Wert
+        im Meldungstext, etwa `Versichertennummer "E430685837" hat ungültiges
+        Format`. Sonst stünde der Klartext trotz Anonymisierung im Bericht.
+        """
+        if gruppen is None:
+            gruppen = frage_anonymisierung(self, titel, zweck)
+        if gruppen is None:
+            return None
+
+        anon = anonymisierung.Anonymisierer(gruppen=gruppen)
+        belege = anon.belege(self.last_belege_summary)
+        fehler = anon.texte(self.last_validation_errors)
+        return belege, fehler, anon.bericht()
+
+    def _export_anonyme_datei(self):
+        """
+        Schreibt eine anonymisierte Kopie der geprüften ESOL-Datei — für den
+        Fall, dass eine Kundendatei an Kollegen oder den Hersteller gehen soll.
+        """
+        if not self.last_processed_file or not os.path.isfile(self.last_processed_file):
+            messagebox.showwarning(
+                "Keine Datei",
+                "Es ist keine geprüfte ESOL-Datei geladen, von der eine Kopie "
+                "erzeugt werden könnte.",
+            )
+            return
+
+        gruppen = frage_anonymisierung(
+            self,
+            "Anonyme Kopie der ESOL-Datei",
+            "Die Kopie behält Struktur, Zähler und Summen und lässt sich "
+            "genauso prüfen wie das Original. Was soll ersetzt werden?",
+        )
+        if gruppen is None:
+            return
+        if not gruppen:
+            messagebox.showinfo(
+                "Nichts zu tun",
+                "Ohne gewählte Feldgruppen wäre die Kopie mit dem Original "
+                "identisch. Es wurde keine Datei erzeugt.",
+            )
+            return
+
+        from tools.anonymisiere_esol import anonymisiere_datei
+
+        quelle = Path(self.last_processed_file)
+        out_dir = self.out_dir_entry.get().strip()
+        ziel_dir = Path(out_dir) if out_dir and os.path.isdir(out_dir) else quelle.parent
+        ziel = ziel_dir / f"{quelle.name}_anonym"
+
+        try:
+            ziel, anon = anonymisiere_datei(
+                quelle, ziel, gruppen, begleitdatei=True
+            )
+        except Exception as e:
+            messagebox.showerror("Fehler", f"Die anonyme Kopie konnte nicht erzeugt werden:\n{e}")
+            return
+
+        # Die Kopie gegenprüfen: wird sie durch die Ersetzung ungültig, ist der
+        # Ersatzwert schuld — das soll hier auffallen und nicht beim Empfänger.
+        from esol_validator import EsolValidator
+
+        validator = EsolValidator()
+        validator.register_default_rules()
+        vorher = validator.validate_string(read_esol_file_text(quelle))
+        nachher = validator.validate_string(ziel.read_text(encoding="iso-8859-15"))
+        neue = {str(e) for e in nachher.get_errors()} - {str(e) for e in vorher.get_errors()}
+
+        text = f"Anonyme Kopie erzeugt:\n\n{ziel}\n\n" + "\n".join(anon.bericht())
+        if neue:
+            # Kann zwei Ursachen haben: ein unpassender Ersatzwert, oder ein
+            # vorher VERDECKTER Fehler. Die Prüfung bricht nach einer Stufe ab —
+            # verschwindet mit dem ersetzten Namen ein Syntaxfehler der Stufe 2,
+            # läuft Stufe 3 erstmals durch und meldet, was dahinter lag.
+            stufe12 = [e for e in vorher.get_errors()
+                       if str(e).startswith(("ERROR [1.1", "ERROR [1.2"))]
+            text += ("\n\nDie Kopie zeigt Fehler, die das Original nicht zeigte:\n"
+                     + "\n".join(sorted(neue)[:5]))
+            text += ("\n\nDas Original hatte Fehler auf Stufe 1/2 — die Prüfung brach "
+                     "dort ab. Die Meldungen waren daher vermutlich schon vorher "
+                     "vorhanden, nur verdeckt."
+                     if stufe12 else
+                     "\n\nDas Original war auf Stufe 1/2 fehlerfrei — hier ist eher ein "
+                     "Ersatzwert schuld. Die Kopie vor der Weitergabe prüfen.")
+            messagebox.showwarning("Anonyme Kopie mit Auffälligkeiten", text)
+        else:
+            text += "\n\nDie Kopie darf NICHT abgerechnet werden."
+            messagebox.showinfo("Anonyme Kopie", text)
+
+    def _copy_ticket_summary(self, gruppen=None):
+        daten = self._anonymisierte_daten(
+            "Support-Bericht kopieren",
+            "Der Bericht landet in der Zwischenablage und von dort meist im "
+            "Ticketsystem. Was soll ersetzt werden?",
+            gruppen,
+        )
+        if daten is None:
+            return
+        belege, fehler, kopf = daten
+
         file_name = os.path.basename(self.last_processed_file) if self.last_processed_file else "ESOL-Datei"
         ticket_text = generate_ticket_summary(
             file_name=file_name,
-            validation_errors=self.last_validation_errors,
-            belege_summary=self.last_belege_summary,
+            validation_errors=fehler,
+            belege_summary=belege,
         )
+        # Der Kopf sagt, was ersetzt wurde — ohne diese Angabe weiß der
+        # Empfänger nicht, ob ein fehlender Name Absicht oder Datenfehler ist.
+        ticket_text = "\n".join(kopf) + "\n\n" + ticket_text
+
         self.clipboard_clear()
         self.clipboard_append(ticket_text)
-        messagebox.showinfo("Support-Bericht", "Der Support-Bericht wurde erfolgreich in die Zwischenablage kopiert!")
+        messagebox.showinfo(
+            "Support-Bericht",
+            "Der Support-Bericht wurde in die Zwischenablage kopiert.\n\n" + "\n".join(kopf),
+        )
 
-    def _export_html_report(self):
+    def _export_html_report(self, gruppen=None):
+        daten = self._anonymisierte_daten(
+            "HTML-Prüfbericht exportieren",
+            "Der Bericht wird als Datei gespeichert und weitergegeben. "
+            "Was soll ersetzt werden?",
+            gruppen,
+        )
+        if daten is None:
+            return
+        belege, fehler, kopf = daten
+
         file_name = os.path.basename(self.last_processed_file) if self.last_processed_file else "ESOL-Datei"
         html_content = generate_html_report(
             file_name=file_name,
-            validation_errors=self.last_validation_errors,
-            belege_summary=self.last_belege_summary,
+            validation_errors=fehler,
+            belege_summary=belege,
+            anonymisierung_kopf=kopf,
         )
 
         out_dir = self.out_dir_entry.get().strip()

@@ -254,9 +254,12 @@ def test_main_gui_support_notebook_integration(tmp_path: Path, dialog_protokoll)
         assert app.last_belege_summary[0]["belegnr"] == "00001"
         assert app.muster13_view.lbl_name.cget("text") == "Muster, Max"
 
-        # Test ticket summary copy
+        # Test ticket summary copy — ausdrücklich ohne Anonymisierung, damit
+        # der Klartext geprüft werden kann. Der Export fragt sonst per Dialog
+        # nach dem Umfang; der anonymisierte Weg hat eigene Tests in
+        # tests/test_anonymisierung.py.
         with patch.object(app, "clipboard_append") as mock_clip:
-            app._copy_ticket_summary()
+            app._copy_ticket_summary(gruppen=set())
             mock_clip.assert_called_once()
             args = mock_clip.call_args[0][0]
             assert "SUPPORT-TICKET BERICHT" in args

@@ -136,15 +136,32 @@ def generate_ticket_summary(file_name: str, validation_errors: List[str], belege
     return "\n".join(lines)
 
 
-def generate_html_report(file_name: str, validation_errors: List[str], belege_summary: List[Dict[str, Any]]) -> str:
+def generate_html_report(file_name: str, validation_errors: List[str],
+                        belege_summary: List[Dict[str, Any]],
+                        anonymisierung_kopf: Optional[List[str]] = None) -> str:
     """
     Erstellt einen eigenständigen, formatierten HTML-Prüfbericht.
+
+    anonymisierung_kopf: Zeilen aus Anonymisierer.bericht(). Sie stehen im
+    Kopf des Berichts, damit der Empfänger weiß, ob ein fehlender Name
+    Absicht ist oder ein Datenfehler.
     """
     now_str = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
     total_belege = len(belege_summary)
     total_brutto = sum(b.get("brutto", 0.0) for b in belege_summary)
     total_zuzahlung = sum(b.get("total_zuzahlung", 0.0) for b in belege_summary)
     status_class = "error" if validation_errors else "success"
+
+    # Hinweis auf die Anonymisierung in den Kopf des Berichts
+    anon_html = ""
+    if anonymisierung_kopf:
+        punkte = "".join(f"<li>{html.escape(z.strip())}</li>"
+                         for z in anonymisierung_kopf[1:] if z.strip())
+        anon_html = (
+            f'<div class="anon"><strong>{html.escape(anonymisierung_kopf[0])}</strong>'
+            f'<ul>{punkte}</ul></div>'
+        )
+
     status_text = "FEHLERHAFT" if validation_errors else "GÜLTIG"
 
     errors_html = ""
@@ -233,6 +250,9 @@ def generate_html_report(file_name: str, validation_errors: List[str], belege_su
     .status-badge {{ display: inline-block; padding: 6px 12px; border-radius: 4px; font-weight: bold; color: #fff; }}
     .status-badge.error {{ background-color: #e53e3e; }}
     .status-badge.success {{ background-color: #38a169; }}
+    .anon {{ background-color: #fffbea; border-left: 4px solid #d69e2e;
+             padding: 8px 12px; margin: 10px 0; font-size: 0.85em; }}
+    .anon ul {{ margin: 4px 0 0 18px; padding: 0; }}
     .error-card {{ background: #fff5f5; border-left: 4px solid #e53e3e; padding: 12px; margin-bottom: 15px; border-radius: 4px; }}
     .action-box {{ background: #feebc8; padding: 8px; border-radius: 4px; color: #744210; }}
     table {{ width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }}
@@ -253,6 +273,7 @@ def generate_html_report(file_name: str, validation_errors: List[str], belege_su
 <div class="container">
     <h1>📄 ESOL Support &amp; Prüfbericht</h1>
     <p><strong>Quelldatei:</strong> {html.escape(file_name)} | <strong>Erstellt am:</strong> {now_str}</p>
+    {anon_html}
     <p>Status: <span class="status-badge {status_class}">{status_text}</span></p>
 
     <div class="kpi-grid">
