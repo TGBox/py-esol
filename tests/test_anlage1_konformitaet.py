@@ -3,10 +3,10 @@ Abgleich mit der Technischen Anlage 1 zu den Richtlinien nach § 302 SGB V,
 TP 5 Version 21, Stand 17.02.2025, anzuwenden ab 01.10.2025.
 
 Die Tests halten die Stellen fest, an denen die Prüfung bei einem Abgleich mit
-der Anlage nachgebessert wurde. Sie arbeiten auf einer echten, fehlerfreien
-Datei aus testdata/ und verändern jeweils genau eine Stelle — so steht in jedem
-Test nur der Unterschied, nicht eine ganze nachgebaute Datei, die mit der Zeit
-von der Wirklichkeit abdriftet.
+der Anlage nachgebessert wurde. Sie arbeiten auf der fehlerfreien Referenzdatei
+tests/fixtures/valid_esol_smoke und verändern jeweils genau eine Stelle — so steht
+in jedem Test nur der Unterschied, nicht eine ganze nachgebaute Datei, die mit der
+Zeit von der Wirklichkeit abdriftet.
 """
 
 from pathlib import Path
@@ -15,7 +15,7 @@ from esol_validator import EsolValidator
 from schema.schema import SchemaFactory
 from tools.generate_correction import read_esol_file_text
 
-BASIS_DATEI = Path(__file__).resolve().parent.parent / "testdata" / "in" / "ESOL0001"
+BASIS_DATEI = Path(__file__).resolve().parent / "fixtures" / "valid_esol_smoke"
 
 
 def _basis_zeilen():
@@ -167,7 +167,7 @@ def test_ueberzaehliges_feld_im_segment():
     mitgeschlepptes Feld aus einem anderen Leistungsbereich.
     """
     zeilen = [
-        z.replace("+0+1+3'", "+0+1+3+00501'") if z.startswith("ZHE") else z
+        z.rstrip("'") + "+00501'" if z.startswith("ZHE") else z
         for z in _basis_zeilen()
     ]
     assert "1.2.2.8" in _codes(_zusammensetzen(zeilen))
@@ -270,8 +270,14 @@ def test_minuszeichen_und_komma_zaehlen_nicht_zur_laenge():
 
 def test_buchstabe_in_numerischem_feld_faellt_auf():
     """Kapitel 6.2 nennt genau diesen Fall als Grund zur Abweisung."""
+    def _verfaelsche_zhe(z):
+        teile = z.split("+")
+        # Feld 3 der ZHE ist das Verordnungsdatum (numerisch, JJJJMMTT)
+        teile[3] = teile[3][:4] + "X" + teile[3][5:]
+        return "+".join(teile)
+
     zeilen = [
-        z.replace("+20260112+0+PS1", "+2026X112+0+PS1") if z.startswith("ZHE") else z
+        _verfaelsche_zhe(z) if z.startswith("ZHE") else z
         for z in _basis_zeilen()
     ]
     assert "1.2.2.5" in _codes(_zusammensetzen(zeilen))
