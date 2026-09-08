@@ -437,10 +437,11 @@ def leistungserbringergruppe(abr_code: Any, tarif_kz: Any) -> Dict[str, str]:
                     1.-2. Stelle  Tarifbereich  (z. B. 00 = bundeseinheitlich)
                     3.-5. Stelle  Sondertarif
 
-    Zum Sondertarif sind in codelisten.json bewusst nur die Schlüssel
-    hinterlegt, die in Anlage 3 einzeln benannt sind. Die 3.-5. Stelle ist dort
-    überwiegend in Bereichen definiert; für einen Wert wie '501' wird daher
-    NICHTS geraten — die Anzeige nennt dann nur die Ziffern.
+    Die 3.-5. Stelle (Sondertarif) ist in Anlage 3 nicht als Einzelschlüssel,
+    sondern in Bereichen definiert. codelisten.sondertarif_bereich() löst sie
+    auf, ein Wert wie '501' bekommt dadurch den Text der Anlage
+    ("Sondertarifvereinbarung zwischen Leistungserbringern und Kostenträgern")
+    statt gar keinen. Ein Eintrag in codelisten.json hat Vorrang.
 
     Rückgabe (alle Werte anzeigefertig, leere Bestandteile bleiben ''):
       abr_code, abr_text, tarif_kz, tarifbereich, tarifbereich_text,

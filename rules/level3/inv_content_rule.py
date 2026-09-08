@@ -11,18 +11,12 @@ from validation_error import ValidationError
 class InvContentRule(RuleInterface):
     """Rule 1.3.5 — INV segment content validation."""
 
-    VALID_BELEGINFORMATION = [
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-    ]
+    # Schlüssel Beleginformation, Anlage 3 Abschnitt 8.1.18:
+    #   0 = keine Belegübermittlung zum Fall
+    #   1 = Belege zum Fall per Post übermittelt
+    #   2 = Belege zum Fall elektronisch (z. B. Image) übermittelt
+    # Vorher stand hier 0 bis 9 — die Werte 3 bis 9 kennt der Schlüssel nicht.
+    VALID_BELEGINFORMATION = ["0", "1", "2"]
 
     def get_stufe(self) -> int:
         return 3

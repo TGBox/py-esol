@@ -340,7 +340,71 @@ def lookup(liste: str, code: Any, default: str = "") -> str:
         if bezeichnung:
             return bezeichnung
 
+    if liste == "sondertarif":
+        bereich = sondertarif_bereich(key)
+        if bereich:
+            return bereich
+
     return default
+
+
+# Sondertarife, Anlage 3 zu TP 5, Abschnitt 8.1.5.2, 3. bis 5. Stelle.
+# Dort sind sie nicht einzeln aufgezählt, sondern in Bereichen definiert:
+#
+#   000 - 090 und A00 - A90    ohne Besonderheiten
+#   091 - 098 und A91 - A98    nicht besetzt (Belegung durch die Verbände der
+#                              Krankenkassen auf Bundesebene)
+#   099                        Leistung ohne preisliche Regelung, Abrechnung
+#                              nach genehmigtem Kostenvoranschlag
+#   U00 - ZZZ                  nicht besetzt
+#   alle übrigen Kombinationen Sondertarifvereinbarung zwischen einem oder
+#                              mehreren Leistungserbringern und einem oder
+#                              mehreren Kostenträgern
+#
+# Der letzte Bereich ist der interessante: das in den Echtdateien durchgehend
+# verwendete "501" fällt darunter. Vorher stand dazu nichts in der Anzeige,
+# weil eine Codetabelle Bereiche nicht abbilden kann.
+_SONDERTARIF_OHNE = "ohne Besonderheiten"
+_SONDERTARIF_FREI = ("nicht besetzt (Belegung durch die Verbände der "
+                     "Krankenkassen auf Bundesebene)")
+_SONDERTARIF_KVA = ("Leistung ohne preisliche Regelung, Abrechnung nach "
+                    "genehmigtem Kostenvoranschlag")
+_SONDERTARIF_VEREINBARUNG = ("Sondertarifvereinbarung zwischen Leistungserbringern "
+                             "und Kostenträgern")
+
+
+def sondertarif_bereich(code: Any) -> str:
+    """
+    Der Klartext zu den 3. bis 5. Stellen des Tarifkennzeichens.
+
+    Anlage 3 definiert diese Stellen in Bereichen, nicht als Einzelschlüssel.
+    Diese Funktion setzt die Bereiche um; geraten wird dabei nichts, jeder Zweig
+    steht wortgleich in der Anlage. Was in keinen Bereich fällt, bekommt keinen
+    Text.
+    """
+    key = str(code or "").strip().upper()
+    if len(key) != 3:
+        return ""
+
+    if key == "099":
+        return _SONDERTARIF_KVA
+    if key.isdigit():
+        zahl = int(key)
+        if 0 <= zahl <= 90:
+            return _SONDERTARIF_OHNE
+        if 91 <= zahl <= 98:
+            return _SONDERTARIF_FREI
+        return _SONDERTARIF_VEREINBARUNG
+    if key[0] == "A" and key[1:].isdigit():
+        zahl = int(key[1:])
+        if 0 <= zahl <= 90:
+            return _SONDERTARIF_OHNE
+        if 91 <= zahl <= 98:
+            return _SONDERTARIF_FREI
+        return _SONDERTARIF_VEREINBARUNG
+    if "U" <= key[0] <= "Z":
+        return _SONDERTARIF_FREI
+    return _SONDERTARIF_VEREINBARUNG
 
 
 # ---------------------------------------------------------------------------

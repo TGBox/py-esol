@@ -599,15 +599,6 @@ def generate_correction_esol(
                     "Zuzahlung besteht, die nicht eingezogen werden konnte."
                 )
 
-    # Discover all non-00 GES status codes present in raw file
-    ges_status_codes = []
-    for raw_seg in raw_segments:
-        t, f = parse_segment_fields(raw_seg)
-        if t == "GES" and len(f) > 0:
-            st = str(f[0])
-            if st != "00" and st not in ges_status_codes:
-                ges_status_codes.append(st)
-
     # First pass: extract original header metadata and calculate per-status totals for selected Belege
     orig_rec_nr = ""
     orig_rec_date = ""
@@ -659,20 +650,16 @@ def generate_correction_esol(
         elif tag == "INV":
             in_inv_block_p1 = True
             current_belegnr_p1 = str(fields[3]) if len(fields) > 3 and fields[3] else ""
-            vers_status = str(fields[1]) if len(fields) > 1 and fields[1] else "00"
-            st_prefix2 = vers_status[:2] if len(vers_status) >= 2 else "00"
-            st_prefix1 = vers_status[:1] if len(vers_status) >= 1 else "0"
-
-            if st_prefix2 in ges_status_codes:
-                current_ges_code_p1 = st_prefix2
-            else:
-                matching = [c for c in ges_status_codes if c.startswith(st_prefix1)]
-                if matching:
-                    current_ges_code_p1 = matching[0]
-                elif ges_status_codes:
-                    current_ges_code_p1 = ges_status_codes[0]
-                else:
-                    current_ges_code_p1 = "00"
+            vers_status = str(fields[1]) if len(fields) > 1 and fields[1] else ""
+            # Der Summenstatus folgt aus dem Versichertenstatz des Belegs
+            # (Anlage 3, 8.1.6) und nicht daraus, welche GES-Zeilen die
+            # Ursprungsdatei zufällig enthielt. Vorher wurden die ersten zwei
+            # Stellen genommen und, wenn die im Original nicht vorkamen, der
+            # erste passende oder gar der erste überhaupt vorhandene Status:
+            # Ein Rentner (Status 50000) in einer Datei ohne GES+51 landete
+            # damit unter "31" (Angehörige). Die Beträge stimmten in der Summe,
+            # standen aber in der falschen Zeile.
+            current_ges_code_p1 = ContentHelper.summenstatus(vers_status)
 
             keep_block_p1 = (selected_set is None) or (current_belegnr_p1 in selected_set)
             current_inv_zuz_proz_p1 = 0.0

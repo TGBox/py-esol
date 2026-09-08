@@ -1,250 +1,354 @@
 {
-  "_hinweis": [
-    "Editierbare Klartext-Tabellen für die Verordnungs-Anzeige (ZHE / DIA / SKZ / EHE / INV).",
-    "Diese Datei wird zur Laufzeit gelesen. Änderungen wirken nach einem Neustart der Anwendung —",
-    "im laufenden Betrieb genügt der Button 'Codelisten neu laden' im Verordnungsblatt.",
-    "",
-    "WICHTIG: Leere Bezeichnungen ('') sind ABSICHTLICH leer. Sie werden in der GUI als",
-    "'kein Klartext hinterlegt' angezeigt, damit in der Hotline niemals ein geratener",
-    "Text genannt wird. Bitte aus dem jeweils gültigen Katalog nachtragen.",
-    "",
-    "Struktur: jede Liste ist ein Objekt { \"<code>\": \"<Klartext>\" }.",
-    "Bei 'positionsnummern' darf zusätzlich nach Abrechnungscode gestaffelt werden:",
-    "  \"positionsnummern\": { \"*\": {...allgemein...}, \"26\": {...nur Abrechnungscode 26...} }"
+ "_hinweis": [
+  "Editierbare Klartext-Tabellen für die Verordnungs-Anzeige (ZHE / DIA / SKZ / EHE / INV).",
+  "Diese Datei wird zur Laufzeit gelesen. Änderungen wirken nach einem Neustart der Anwendung —",
+  "im laufenden Betrieb genügt der Button 'Codelisten neu laden' im Verordnungsblatt.",
+  "",
+  "WICHTIG: Leere Bezeichnungen ('') sind ABSICHTLICH leer. Sie werden in der GUI als",
+  "'kein Klartext hinterlegt' angezeigt, damit in der Hotline niemals ein geratener",
+  "Text genannt wird. Bitte aus dem jeweils gültigen Katalog nachtragen.",
+  "",
+  "Struktur: jede Liste ist ein Objekt { \"<code>\": \"<Klartext>\" }.",
+  "Bei 'positionsnummern' darf zusätzlich nach Abrechnungscode gestaffelt werden:",
+  "  \"positionsnummern\": { \"*\": {...allgemein...}, \"26\": {...nur Abrechnungscode 26...} }"
+ ],
+ "_quellen": {
+  "zuzahlungskennzeichen": "Anlage 3 zu TP 5, Version 21 (19.09.2025), Abschnitt 8.1.3 Zuzahlung",
+  "unfallkennzeichen": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.2 Unfall/Sonstiges",
+  "bvg_sonstiges_ser": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.2.1 BVG/SER — nur der Schlüsselwert 6 ist besetzt. Hinweis der Anlage: ab 01.07.2024 werden die Verordnungsmuster der KBV sukzessive von 'BVG' auf 'SER' umgestellt, der Wert 6 kann daher beides bedeuten.",
+  "rechnungsart": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.4 Rechnungsart",
+  "abrechnungscode": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.5.1 Abrechnungscode — vollständig. Welche Codes in welchem Leistungsbereich zulässig sind, sagt Abschnitt 8.1.14; im Leistungsbereich B (Heilmittel) sind es 21-29 und 71-74.",
+  "tarifbereich": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.5.2 Tarifkennzeichen, 1.-2. Stelle. 26-49 und 76-89 sind laut Anlage noch zu vergeben und stehen deshalb nicht in dieser Liste.",
+  "sondertarif": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.5.2 Tarifkennzeichen, 3.-5. Stelle. Dort in Bereichen definiert (000-090 und A00-A90 ohne Besonderheiten, 091-098 und A91-A98 nicht besetzt, 099 Kostenvoranschlag, U00-ZZZ nicht besetzt, alle uebrigen Kombinationen Sondertarifvereinbarung). Eine Codetabelle kann Bereiche nicht abbilden, deshalb loest codelisten.sondertarif_bereich() sie auf. Ein Eintrag in dieser Liste hat Vorrang - hier koennen hauseigene Sondertarife benannt werden.",
+  "summenstatus": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.6 Summenstatus",
+  "verarbeitungskennzeichen": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.7 Verarbeitungskennzeichen",
+  "diagnosegruppe": "Leer, weil maßgeblich data/diagnosegruppen.json aus der KBV-Heilmittelstammdatei (SDHM) gilt. Ein Eintrag hier überstimmt sie. Die früher hier gepflegte Fassung steht unter '_abweichungen_diagnosegruppe'.",
+  "therapiebericht": "Muster 13 (KBV) — Ja/Nein-Feld, kein Schlüsselverzeichnis",
+  "hausbesuch": "Muster 13 (KBV) — Ja/Nein-Feld, kein Schlüsselverzeichnis",
+  "dringlicher_behandlungsbedarf": "Muster 13 (KBV) — Ja/Nein-Feld, kein Schlüsselverzeichnis",
+  "positionsnummern": "Bezeichnungen kommen aus data/heilmittelpreise.json (GKV-Heilmittelpreisstammdatei) und, als dritte Ebene, aus data/heilmittelkatalog.json. Diese Liste ist nur für eigene Ergänzungen und hat Vorrang.",
+  "kostentraeger": "Namen kommen aus data/kostentraeger.json (Kostenträgerdatei nach § 302, gkvliste, bgliste, Heilfürsorge). Ein Eintrag hier überstimmt den Namen aus dem Verzeichnis, Adresse und Annahmestelle bleiben erhalten.",
+  "_offen": [
+   "therapiefrequenz (ZHE, 17. Feld): Anlage 3 hat dazu keinen Schlüssel. Anlage 1",
+   "  sagt nur: bei einer Frequenzspanne den höchsten Wert eintragen (1-3 = 3) und",
+   "  bei Podologie, Ernährungstherapie oder Verordnungen ohne Frequenzangabe die 0.",
+   "  Die Bedeutung von 1 bis 9 als Zahl ist damit nicht belegt — bitte eintragen.",
+   "laenderkennzeichen: Anlage 3, Abschnitt 8.5 verweist auf Anlage 8 zum Gemeinsamen",
+   "  Rundschreiben DEÜV. Diese Datei liegt hier nicht vor."
   ],
-
-  "_quellen": {
-    "zuzahlungskennzeichen": "Anlage 3 zu TP 5, Version 21 (19.09.2025), Abschnitt 8.1.3 Zuzahlung",
-    "unfallkennzeichen": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.2 Unfall/Sonstiges",
-    "bvg_sonstiges_ser": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.2.1 BVG/SER — nur der Schlüsselwert 6 ist besetzt. Hinweis der Anlage: ab 01.07.2024 werden die Verordnungsmuster der KBV sukzessive von 'BVG' auf 'SER' umgestellt, der Wert 6 kann daher beides bedeuten.",
-    "rechnungsart": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.4 Rechnungsart",
-    "abrechnungscode": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.5.1 Abrechnungscode",
-    "tarifbereich": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.5.2 Tarifkennzeichen, 1.-2. Stelle",
-    "sondertarif": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.5.2 Tarifkennzeichen, 3.-5. Stelle. Dort in Bereichen definiert: 000-090 und A00-A90 = ohne Besonderheiten, 091-098 und A91-A98 = nicht besetzt, 099 = Kostenvoranschlag, U00-ZZZ = nicht besetzt. Eintragen lohnt sich nur für Werte, die in den Dateien wirklich vorkommen — der in unseren Daten häufige Wert 501 fällt in keinen dieser Bereiche und ist in der erfassten Fassung nicht benannt.",
-    "summenstatus": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.6 Summenstatus",
-    "verarbeitungskennzeichen": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.7 Verarbeitungskennzeichen",
-    "diagnosegruppe": "Leer, weil maßgeblich data/diagnosegruppen.json aus der KBV-Heilmittelstammdatei (SDHM) gilt. Ein Eintrag hier überstimmt sie. Die früher hier gepflegte Fassung steht unter '_abweichungen_diagnosegruppe'.",
-    "therapiebericht": "Muster 13 (KBV) — Ja/Nein-Feld, kein Schlüsselverzeichnis",
-    "hausbesuch": "Muster 13 (KBV) — Ja/Nein-Feld, kein Schlüsselverzeichnis",
-    "dringlicher_behandlungsbedarf": "Muster 13 (KBV) — Ja/Nein-Feld, kein Schlüsselverzeichnis",
-    "positionsnummern": "Bezeichnungen kommen aus data/heilmittelpreise.json (GKV-Heilmittelpreisstammdatei) und, als dritte Ebene, aus data/heilmittelkatalog.json. Diese Liste ist nur für eigene Ergänzungen und hat Vorrang.",
-    "kostentraeger": "Namen kommen aus data/kostentraeger.json (Kostenträgerdatei nach § 302, gkvliste, bgliste, Heilfürsorge). Ein Eintrag hier überstimmt den Namen aus dem Verzeichnis, Adresse und Annahmestelle bleiben erhalten.",
-    "_offen": [
-      "verordnungsart, verordnungsbesonderheiten: in Anlage 3 zu TP 5 auf den Seiten 27/28",
-      "  (Abschnitte 8.1.11 / 8.1.12) definiert — noch nicht erfasst.",
-      "genehmigungsart: Anlage 3 zu TP 5, Seiten 35/36 — noch nicht erfasst.",
-      "heilmittelbereich (ZHE, 16. Feld) und therapiefrequenz (17. Feld) stehen NICHT in",
-      "  Anlage 3. Quelle ist die Technische Anlage 1 bzw. die Heilmittel-Richtlinie.",
-      "  Auch der Wertebereich ist noch unbestätigt — die Schlüssel 1-5 bzw. 0-9 unten sind",
-      "  nur Platzhalter zum Eintragen, kein belegter Wertebereich."
-    ]
-  },
-
-  "zuzahlungskennzeichen": {
-    "0": "Keine gesetzliche Zuzahlung",
-    "1": "Zuzahlungsbefreit",
-    "2": "Keine Zuzahlung trotz schriftlicher Zahlungsaufforderung",
-    "3": "Zuzahlungspflichtig",
-    "4": "Übergang zuzahlungspflichtig zu zuzahlungsfrei (nach Ausstellung der Verordnung bzw. während der Inanspruchnahme, z. B. Belastungsgrenze erreicht)",
-    "5": "Übergang zuzahlungsfrei zu zuzahlungspflichtig (z. B. Jahreswechsel)"
-  },
-
-  "verordnungsart": {
-    "01": "",
-    "02": "",
-    "03": "",
-    "04": "",
-    "05": "",
-    "06": "",
-    "07": "",
-    "08": "",
-    "09": "",
-    "10": "",
-    "11": "",
-    "12": "",
-    "13": "",
-    "14": "",
-    "15": "",
-    "16": "",
-    "17": "",
-    "18": "",
-    "19": "",
-    "20": "",
-    "99": ""
-  },
-
-  "verordnungsbesonderheiten": {
-    "0": "",
-    "1": "",
-    "2": "",
-    "3": ""
-  },
-
-  "unfallkennzeichen": {
-    "1": "Arbeitsunfall / Wegeunfall / Berufskrankheit",
-    "2": "Sonstige Unfallfolgen",
-    "3": "Sonstiges (BVFG, BEG, HHG, OEG, IfSG, SVG)"
-  },
-
-  "bvg_sonstiges_ser": {
-    "6": "BVG/SER"
-  },
-
-  "therapiebericht": {
-    "0": "Kein Therapiebericht verordnet",
-    "1": "Therapiebericht verordnet"
-  },
-
-  "hausbesuch": {
-    "0": "Kein Hausbesuch verordnet",
-    "1": "Hausbesuch verordnet"
-  },
-
-  "dringlicher_behandlungsbedarf": {
-    "0": "Kein dringlicher Behandlungsbedarf",
-    "1": "Dringlicher Behandlungsbedarf (Behandlungsbeginn binnen 14 Tagen)"
-  },
-
-  "heilmittelbereich": {
-    "1": "",
-    "2": "",
-    "3": "",
-    "4": "",
-    "5": ""
-  },
-
-  "therapiefrequenz": {
-    "0": "",
-    "1": "",
-    "2": "",
-    "3": "",
-    "4": "",
-    "5": "",
-    "6": "",
-    "7": "",
-    "8": "",
-    "9": ""
-  },
-
-  "diagnosegruppe": {
-  },
-
-  "_abweichungen_diagnosegruppe": {
-    "_hinweis": [
-      "NUR DOKUMENTATION — wird beim Nachschlagen nicht verwendet.",
-      "Maßgeblich sind die Bezeichnungen der KBV-Heilmittelstammdatei in",
-      "data/diagnosegruppen.json. Hier steht die zuvor im Projekt gepflegte",
-      "Fassung, soweit sie fachlich davon abweicht — als Beleg dafür, was",
-      "ersetzt wurde, und als Anhaltspunkt, falls eine der KBV-Bezeichnungen",
-      "in der Hotline nicht verständlich ist.",
-      "",
-      "Wer eine eigene Formulierung durchsetzen will, trägt sie oben unter",
-      "\"diagnosegruppe\" ein — die hat Vorrang vor der KBV-Stammdatei."
-    ],
-    "AT": "Erkrankungen der Atmungsorgane (z. B. Asthma, COPD)",
-    "CS": "Chronisches Schmerzsyndrom",
-    "EE1": "Seltene Stoffwechselerkrankungen oder Mukoviszidose",
-    "EE2": "Extreme Fehl- und Mangelernährung (z. B. bei schweren chronischen Erkrankungen oder Tumorpatienten)",
-    "EN3": "Schädigungen des peripheren Nervensystems",
-    "GE": "Erkrankungen des Nervensystems im Kindesalter / Entwicklungsstörungen",
-    "NF": "Neurogenes Fußsyndrom (Gefühls- oder Durchblutungsstörungen ohne Diabetes)",
-    "PN": "Erkrankungen des peripheren Nervensystems",
-    "PS1": "Psychische Störungen im Kindes- und Jugendalter",
-    "PS3": "Psychotische und affektive Störungen sowie Abhängigkeitserkrankungen (Erwachsene)",
-    "PS4": "Organische psychische Störungen im Erwachsenenalter",
-    "QF": "Querschnittsyndrom mit Fußschädigungen",
-    "RE1": "Lese-Rechtschreibstörungen bei isolierten Entwicklungsstörungen",
-    "RE2": "Kombinierte Störungen schulischer Fertigkeiten",
-    "SB2": "Rückenmarkserkrankungen / Querschnittsyndrome",
-    "SB3": "Amputationen / Fehlbildungen",
-    "SC": "Schluckstörungen (Dysphagie)",
-    "SF": "Orofaziale Störungen (myofunktionelle Therapie, z. B. Fehlfunktionen der Zunge)",
-    "SO1": "Fehlbildungen / Erkrankungen der Haut (z. B. schwere Verbrennungsnarben)",
-    "SO2": "Erkrankungen des Beckenbodens (z. B. Inkontinenz)",
-    "SO3": "Schwere Erkrankungen der Sinnesorgane (z. B. Tinnitus, Schwindel)",
-    "SO4": "Krebserkrankungen / Stadien nach onkologischer Akuttherapie",
-    "SO5": "Palliativmedizinische Versorgung",
-    "SP1": "Sprachstörungen vor Abschluss der Sprachentwicklung (z. B. Sprachentwicklungsverzögerung)",
-    "SP2": "Sprachstörungen nach Abschluss der Sprachentwicklung (z. B. Aphasie nach Schlaganfall)",
-    "SP3": "Sprechstörungen (z. B. Dysarthrie, Sprechapraxie)",
-    "SP6": "Cochlea-Implantat-Versorgung / hochgradige Schwerhörigkeit",
-    "ST1": "Stimmstörungen (organisch bedingt)",
-    "ST2": "Stimmstörungen (funktionell bedingt)",
-    "ST3": "Stimmstörungen (psychogen bedingt)",
-    "ST4": "Stimmstörungen bei Rhinophonie (Näseln)",
-    "ZN": "Erkrankungen des zentralen Nervensystems (z. B. nach Schlaganfall)"
-  },
-
-  "verarbeitungskennzeichen": {
-    "01": "Abrechnung ohne Besonderheiten",
-    "02": "Nachforderung",
-    "03": "Zuzahlungsforderung",
-    "04": "Korrekturrechnung",
-    "10": "Wiederaufnahme"
-  },
-
-  "rechnungsart": {
-    "0": "Derzeit nicht belegt",
-    "1": "Abrechnung von Leistungserbringer und Zahlung an IK Leistungserbringer",
-    "2": "Abrechnung über Abrechnungsstelle (ohne Inkassovollmacht) und Zahlung an IK Leistungserbringer",
-    "3": "Abrechnung über Abrechnungsstelle (mit Inkassovollmacht) und Zahlung an IK Abrechnungsstelle"
-  },
-
-  "summenstatus": {
-    "00": "Gesamtsumme aller Status",
-    "11": "Mitglieder",
-    "31": "Angehörige",
-    "51": "Rentner",
-    "99": "Nicht zuzuordnende Status"
-  },
-
-  "abrechnungscode": {
-    "21": "Masseur / Medizinischer Badebetrieb",
-    "22": "Krankengymnast / Physiotherapeut",
-    "23": "Logopäde / Atem-, Sprech- und Stimmlehrer / staatlich anerkannter Sprachtherapeut",
-    "24": "Sprachheilpädagoge / Dipl. Pädagoge",
-    "25": "Sonstiger Sprachtherapeut",
-    "26": "Ergotherapeut",
-    "27": "Krankenhaus",
-    "28": "Kurbetrieb",
-    "29": "Sonstige therapeutische Heilperson",
-    "50": "Hebamme / Entbindungspfleger",
-    "60": "Betriebshilfe",
-    "71": "Podologen",
-    "72": "Medizinische Fußpfleger",
-    "73": "Ernährungstherapie bei seltenen angeborenen Stoffwechselerkrankungen",
-    "74": "Ernährungstherapie bei Mukoviszidose",
-    "B1": "Modellvorhaben nach § 64d SGB V"
-  },
-
-  "tarifbereich": {
-    "00": "Bundeseinheitlicher Tarif (gültig für Ost und West)",
-    "50": "Bundesvertrag",
-    "90": "Sonstiger länderübergreifender Tarif",
-    "91": "Vertrag auf Kassenebene",
-    "92": "Vertrag auf Kassenebene",
-    "93": "Vertrag auf Kassenebene",
-    "94": "Vertrag auf Kassenebene",
-    "95": "Vertrag auf Kassenebene",
-    "96": "Vertrag auf Kassenebene",
-    "97": "Vertrag auf Kassenebene",
-    "98": "Vertrag auf Kassenebene",
-    "99": "Vertrag auf Kassenebene"
-  },
-
-  "sondertarif": {
-    "000": "Ohne Besonderheiten",
-    "099": "Leistung ohne preisliche Regelung, Abrechnung nach genehmigtem Kostenvoranschlag"
-  },
-
-  "positionsnummern": {
-    "*": {},
-    "26": {}
-  },
-
-  "kostentraeger": {
-  },
-
-  "genehmigungsart": {
-  }
+  "verordnungsbesonderheiten": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.11 Kennzeichen Verordnungsbesonderheiten. Besetzt sind nur 1, 2, 3, 4, 7, 8 und 9 — es gibt keinen Schlüsselwert 0, 5 oder 6.",
+  "verordnungsart": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.12 Kennzeichen Verordnungsart bei Heilmitteln (01-05, 10, 11). Der Wert 99 steht nicht dort, sondern in Anlage 1, Segment ZHE: nur für Fallkonstellationen außerhalb der beiden Heilmittel-Richtlinien.",
+  "genehmigungsart": "Anlage 3 zu TP 5, V21, Abschnitt 8.1.17 Art der Genehmigung. 1. Stelle ist der Leistungserbringer-Sammelgruppenschlüssel, 2. Stelle die Art. Für Heilmittel gilt allein B2; B1 führt die Anlage als nicht belegt.",
+  "mengeneinheiten": "Anlage 3 zu TP 5, V21, Abschnitt 8.6 Mengeneinheiten",
+  "heilmittelbereich": "Technische Anlage 1 zu TP 5, V21, Abschnitt 5.5.3.3, Segment ZHE, Feld Heilmittel-Bereich. In Anlage 3 gibt es dazu keinen Schlüssel.",
+  "laenderkennzeichen": "Anlage 3 zu TP 5, V21, Abschnitt 8.5 verweist auf Anlage 8 zum Gemeinsamen Rundschreiben DEÜV (gkv-datenaustausch.de). Nicht in der Anlage 3 enthalten."
+ },
+ "zuzahlungskennzeichen": {
+  "0": "Keine gesetzliche Zuzahlung",
+  "1": "Zuzahlungsbefreit",
+  "2": "Keine Zuzahlung trotz schriftlicher Zahlungsaufforderung",
+  "3": "Zuzahlungspflichtig",
+  "4": "Übergang zuzahlungspflichtig zu zuzahlungsfrei (nach Ausstellung der Verordnung bzw. während der Inanspruchnahme, z. B. Belastungsgrenze erreicht)",
+  "5": "Übergang zuzahlungsfrei zu zuzahlungspflichtig (z. B. Jahreswechsel)"
+ },
+ "verordnungsart": {
+  "01": "nicht belegt",
+  "02": "nicht belegt",
+  "03": "Verordnung nach § 7 Abs. 1 bis 5 HeilM-RL bzw. § 6 Abs. 1 bis 4 HeilM-RL Zahnärzte (orientierende Behandlungsmenge gemäß Heilmittelkatalog)",
+  "04": "Verordnung nach § 7 Abs. 6 HeilM-RL bzw. § 6 Abs. 5 HeilM-RL Zahnärzte (besonderer Verordnungsbedarf oder langfristiger Heilmittelbedarf bis zu 12 Wochen)",
+  "05": "Verordnung nach § 13a HeilM-RL Ärzte bzw. § 12 HeilM-RL Zahnärzte (Blankoverordnung)",
+  "10": "nicht belegt",
+  "11": "nicht belegt",
+  "99": "Fallkonstellation außerhalb der beiden Heilmittel-Richtlinien"
+ },
+ "verordnungsbesonderheiten": {
+  "1": "Verordnung von einem Zahnarzt/Kieferorthopäden",
+  "2": "Verordnung im Zusammenhang mit der Schwangerschaft oder der Entbindung",
+  "3": "zur Zeit nicht belegt",
+  "4": "Verordnung im Rahmen des Entlassmanagements",
+  "7": "Verordnung im Rahmen der Terminservicestellen",
+  "8": "Empfehlung nach § 40 Abs. 6 SGB XI (nur Hilfsmittel)",
+  "9": "Verordnung im Rahmen eines Modellvorhabens nach § 64d SGB V"
+ },
+ "unfallkennzeichen": {
+  "1": "Arbeitsunfall / Wegeunfall / Berufskrankheit",
+  "2": "Sonstige Unfallfolgen",
+  "3": "Sonstiges (BVFG, BEG, HHG, OEG, IfSG, SVG)"
+ },
+ "bvg_sonstiges_ser": {
+  "6": "BVG/SER"
+ },
+ "therapiebericht": {
+  "0": "Kein Therapiebericht verordnet",
+  "1": "Therapiebericht verordnet"
+ },
+ "hausbesuch": {
+  "0": "Kein Hausbesuch verordnet",
+  "1": "Hausbesuch verordnet"
+ },
+ "dringlicher_behandlungsbedarf": {
+  "0": "Kein dringlicher Behandlungsbedarf",
+  "1": "Dringlicher Behandlungsbedarf (Behandlungsbeginn binnen 14 Tagen)"
+ },
+ "heilmittelbereich": {
+  "1": "Physiotherapie",
+  "2": "Podologische Therapie",
+  "3": "Stimm-, Sprech-, Sprach- und Schlucktherapie",
+  "4": "Ergotherapie",
+  "5": "Ernährungstherapie"
+ },
+ "therapiefrequenz": {
+  "0": "",
+  "1": "",
+  "2": "",
+  "3": "",
+  "4": "",
+  "5": "",
+  "6": "",
+  "7": "",
+  "8": "",
+  "9": ""
+ },
+ "diagnosegruppe": {},
+ "_abweichungen_diagnosegruppe": {
+  "_hinweis": [
+   "NUR DOKUMENTATION — wird beim Nachschlagen nicht verwendet.",
+   "Maßgeblich sind die Bezeichnungen der KBV-Heilmittelstammdatei in",
+   "data/diagnosegruppen.json. Hier steht die zuvor im Projekt gepflegte",
+   "Fassung, soweit sie fachlich davon abweicht — als Beleg dafür, was",
+   "ersetzt wurde, und als Anhaltspunkt, falls eine der KBV-Bezeichnungen",
+   "in der Hotline nicht verständlich ist.",
+   "",
+   "Wer eine eigene Formulierung durchsetzen will, trägt sie oben unter",
+   "\"diagnosegruppe\" ein — die hat Vorrang vor der KBV-Stammdatei."
+  ],
+  "AT": "Erkrankungen der Atmungsorgane (z. B. Asthma, COPD)",
+  "CS": "Chronisches Schmerzsyndrom",
+  "EE1": "Seltene Stoffwechselerkrankungen oder Mukoviszidose",
+  "EE2": "Extreme Fehl- und Mangelernährung (z. B. bei schweren chronischen Erkrankungen oder Tumorpatienten)",
+  "EN3": "Schädigungen des peripheren Nervensystems",
+  "GE": "Erkrankungen des Nervensystems im Kindesalter / Entwicklungsstörungen",
+  "NF": "Neurogenes Fußsyndrom (Gefühls- oder Durchblutungsstörungen ohne Diabetes)",
+  "PN": "Erkrankungen des peripheren Nervensystems",
+  "PS1": "Psychische Störungen im Kindes- und Jugendalter",
+  "PS3": "Psychotische und affektive Störungen sowie Abhängigkeitserkrankungen (Erwachsene)",
+  "PS4": "Organische psychische Störungen im Erwachsenenalter",
+  "QF": "Querschnittsyndrom mit Fußschädigungen",
+  "RE1": "Lese-Rechtschreibstörungen bei isolierten Entwicklungsstörungen",
+  "RE2": "Kombinierte Störungen schulischer Fertigkeiten",
+  "SB2": "Rückenmarkserkrankungen / Querschnittsyndrome",
+  "SB3": "Amputationen / Fehlbildungen",
+  "SC": "Schluckstörungen (Dysphagie)",
+  "SF": "Orofaziale Störungen (myofunktionelle Therapie, z. B. Fehlfunktionen der Zunge)",
+  "SO1": "Fehlbildungen / Erkrankungen der Haut (z. B. schwere Verbrennungsnarben)",
+  "SO2": "Erkrankungen des Beckenbodens (z. B. Inkontinenz)",
+  "SO3": "Schwere Erkrankungen der Sinnesorgane (z. B. Tinnitus, Schwindel)",
+  "SO4": "Krebserkrankungen / Stadien nach onkologischer Akuttherapie",
+  "SO5": "Palliativmedizinische Versorgung",
+  "SP1": "Sprachstörungen vor Abschluss der Sprachentwicklung (z. B. Sprachentwicklungsverzögerung)",
+  "SP2": "Sprachstörungen nach Abschluss der Sprachentwicklung (z. B. Aphasie nach Schlaganfall)",
+  "SP3": "Sprechstörungen (z. B. Dysarthrie, Sprechapraxie)",
+  "SP6": "Cochlea-Implantat-Versorgung / hochgradige Schwerhörigkeit",
+  "ST1": "Stimmstörungen (organisch bedingt)",
+  "ST2": "Stimmstörungen (funktionell bedingt)",
+  "ST3": "Stimmstörungen (psychogen bedingt)",
+  "ST4": "Stimmstörungen bei Rhinophonie (Näseln)",
+  "ZN": "Erkrankungen des zentralen Nervensystems (z. B. nach Schlaganfall)"
+ },
+ "verarbeitungskennzeichen": {
+  "01": "Abrechnung ohne Besonderheiten",
+  "02": "Nachforderung",
+  "03": "Zuzahlungsforderung",
+  "04": "Korrekturrechnung",
+  "10": "Wiederaufnahme"
+ },
+ "rechnungsart": {
+  "0": "Derzeit nicht belegt",
+  "1": "Abrechnung von Leistungserbringer und Zahlung an IK Leistungserbringer",
+  "2": "Abrechnung über Abrechnungsstelle (ohne Inkassovollmacht) und Zahlung an IK Leistungserbringer",
+  "3": "Abrechnung über Abrechnungsstelle (mit Inkassovollmacht) und Zahlung an IK Abrechnungsstelle"
+ },
+ "summenstatus": {
+  "00": "Gesamtsumme aller Status",
+  "11": "Mitglieder",
+  "31": "Angehörige",
+  "51": "Rentner",
+  "99": "Nicht zuzuordnende Status"
+ },
+ "abrechnungscode": {
+  "11": "Apotheke (mit gesonderter Zulassung nach § 126 SGB V)",
+  "12": "Augenoptiker",
+  "13": "Augenarzt",
+  "14": "Hörgeräteakustiker",
+  "15": "Orthopädiemechaniker, Bandagist, Sanitätshaus",
+  "16": "Orthopädieschuhmacher",
+  "17": "Orthopäde",
+  "18": "Sanitätshaus (zum 31.12.2005 aufgehoben; bei neuen Verträgen bzw. Vertragsanpassungen ist auf Abrechnungscode 15 umzuschlüsseln)",
+  "19": "sonstiger Hilfsmittellieferant",
+  "21": "Masseur/Medizinischer Badebetrieb",
+  "22": "Krankengymnast/Physiotherapeut",
+  "23": "Logopäde, Atem-, Sprech- und Stimmlehrer, staatl. anerkannter Sprachtherapeut",
+  "24": "Sprachheilpädagoge, Dipl. Pädagoge",
+  "25": "Sonstiger Sprachtherapeut",
+  "26": "Ergotherapeut",
+  "27": "Krankenhaus",
+  "28": "Kurbetrieb",
+  "29": "Sonstige therapeutische Heilperson",
+  "31": "freigemeinnützige Anbieter (Sozialstation)",
+  "32": "privatgewerbliche Anbieter",
+  "33": "öffentliche Anbieter",
+  "34": "Sonstige Pflegedienste",
+  "41": "Öffentlicher Anbieter von qualifizierten Krankentransportleistungen (z.B. Feuerwehr)",
+  "42": "Deutsches Rotes Kreuz (DRK)",
+  "43": "Arbeiter-Samariter-Bund (ASB)",
+  "44": "Johanniter-Unfall-Hilfe (JUH)",
+  "45": "Malteser-Hilfsdienst (MHD)",
+  "46": "Sonstiger Leistungserbringer von nichtqualifizierten Krankentransportleistungen (z.B. Taxi/Mietwagen)",
+  "47": "Leistungserbringer von Flugrettungs- und Transportleistungen",
+  "48": "Sonstiger nichtöffentlicher Anbieter von qualifizierten Krankentransport- bzw. Rettungsdienstleistungen",
+  "49": "Sonstiger Anbieter von Krankentransportleistungen (z.B. Bergwacht, Wasserwacht)",
+  "50": "Hebamme/Entbindungspfleger",
+  "55": "Sonstiger Leistungserbringer von nichtärztlichen Dialysesachleistungen",
+  "56": "Kuratorium für Heimdialyse (KfH)",
+  "57": "Patienten-Heimversorgung (PHV)",
+  "60": "Betriebshilfe",
+  "61": "Leistungserbringer von Rehabilitationssport",
+  "62": "Leistungserbringer von Funktionstraining",
+  "63": "Leistungserbringer für ergänzende Rehabilitationsmaßnahmen",
+  "64": "nicht besetzt",
+  "65": "Sonstiger Leistungserbringer",
+  "66": "Leistungserbringer von Präventions- und Gesundheitsförderungsmaßnahmen im Rahmen von ambulanten Vorsorgeleistungen",
+  "67": "Mobile Rehabilitationseinrichtung",
+  "68": "Sozialpädiatrische Zentren/Frühförderstellen",
+  "69": "Soziotherapeutischer Leistungserbringer",
+  "75": "Spezialisierte ambulante Palliativversorgung (SAPV)",
+  "76": "Leistungserbringer nach § 132g SGB V",
+  "71": "Podologen",
+  "72": "Med. Fußpfleger (gemäß § 10 Abs. 4 bis 6 PodG)",
+  "73": "Leistungserbringer von Ernährungstherapie für seltene angeborene Stoffwechselerkrankungen",
+  "74": "Leistungserbringer von Ernährungstherapie für Mukoviszidose",
+  "A1": "Außerklinische Intensivpflege, ambulant: freigemeinnütziger Anbieter",
+  "A2": "Außerklinische Intensivpflege, ambulant: privatgewerbliche Anbieter",
+  "A3": "Außerklinische Intensivpflege, ambulant: öffentlicher Anbieter",
+  "A4": "Außerklinische Intensivpflege, ambulant: sonstiger Anbieter",
+  "A5": "Außerklinische Intensivpflege, stationär: freigemeinnütziger Anbieter",
+  "A6": "Außerklinische Intensivpflege, stationär: privatgewerbliche Anbieter",
+  "A7": "Außerklinische Intensivpflege, stationär: öffentlicher Anbieter",
+  "A8": "Außerklinische Intensivpflege, stationär: sonstiger Anbieter",
+  "91": "Kurzzeitpflege: privat gewerblicher Anbieter",
+  "92": "Kurzzeitpflege: frei gemeinnütziger Anbieter (gemeinnützige private Anbieter)",
+  "93": "Kurzzeitpflege: öffentlicher Anbieter",
+  "94": "Kurzzeitpflege: sonstige Pflegeeinrichtung",
+  "B1": "Leistungserbringer von Modellvorhaben nach § 64d SGB V"
+ },
+ "tarifbereich": {
+  "00": "Bundeseinheitlicher Tarif (gültig für Ost und West)",
+  "01": "Baden-Württemberg",
+  "02": "Bayern",
+  "03": "Berlin Ost",
+  "04": "Bremen",
+  "05": "Hamburg",
+  "06": "Hessen",
+  "07": "Niedersachsen",
+  "08": "Nordrhein-Westfalen",
+  "09": "Rheinland-Pfalz",
+  "10": "Saarland",
+  "11": "Schleswig-Holstein",
+  "12": "Brandenburg",
+  "13": "Sachsen",
+  "14": "Sachsen-Anhalt",
+  "15": "Mecklenburg-Vorpommern",
+  "16": "Thüringen",
+  "17": "Stuttgart und Karlsruhe",
+  "18": "Freiburg und Tübingen",
+  "19": "Berlin West",
+  "20": "Nordrhein",
+  "21": "Westfalen-Lippe",
+  "22": "Lippe",
+  "23": "Berlin (gesamt)",
+  "24": "Bundeseinheitlicher Tarif (West)",
+  "25": "Bundeseinheitlicher Tarif (Ost)",
+  "50": "Bundesvertrag",
+  "51": "Baden-Württemberg (Vertrag auf Landesebene)",
+  "52": "Bayern (Vertrag auf Landesebene)",
+  "53": "Berlin Ost (Vertrag auf Landesebene)",
+  "54": "Bremen (Vertrag auf Landesebene)",
+  "55": "Hamburg (Vertrag auf Landesebene)",
+  "56": "Hessen (Vertrag auf Landesebene)",
+  "57": "Niedersachsen (Vertrag auf Landesebene)",
+  "58": "Nordrhein-Westfalen (Vertrag auf Landesebene)",
+  "59": "Rheinland-Pfalz (Vertrag auf Landesebene)",
+  "60": "Saarland (Vertrag auf Landesebene)",
+  "61": "Schleswig-Holstein (Vertrag auf Landesebene)",
+  "62": "Brandenburg (Vertrag auf Landesebene)",
+  "63": "Sachsen (Vertrag auf Landesebene)",
+  "64": "Sachsen-Anhalt (Vertrag auf Landesebene)",
+  "65": "Mecklenburg-Vorpommern (Vertrag auf Landesebene)",
+  "66": "Thüringen (Vertrag auf Landesebene)",
+  "67": "Stuttgart und Karlsruhe (Vertrag auf Landesebene)",
+  "68": "Freiburg und Tübingen (Vertrag auf Landesebene)",
+  "69": "Berlin West (Vertrag auf Landesebene)",
+  "70": "Nordrhein (Vertrag auf Landesebene)",
+  "71": "Westfalen-Lippe (Vertrag auf Landesebene)",
+  "72": "Lippe (Vertrag auf Landesebene)",
+  "73": "Berlin (gesamt) (Vertrag auf Landesebene)",
+  "74": "Bundeseinheitlicher Tarif (West) (Vertrag auf Landesebene)",
+  "75": "Bundeseinheitlicher Tarif (Ost) (Vertrag auf Landesebene)",
+  "90": "sonstiger länderübergreifender Tarif",
+  "91": "Vertrag auf Kassenebene",
+  "92": "Vertrag auf Kassenebene",
+  "93": "Vertrag auf Kassenebene",
+  "94": "Vertrag auf Kassenebene",
+  "95": "Vertrag auf Kassenebene",
+  "96": "Vertrag auf Kassenebene",
+  "97": "Vertrag auf Kassenebene",
+  "98": "Vertrag auf Kassenebene",
+  "99": "Vertrag auf Kassenebene"
+ },
+ "sondertarif": {},
+ "positionsnummern": {
+  "*": {},
+  "26": {}
+ },
+ "kostentraeger": {},
+ "genehmigungsart": {
+  "A1": "Hilfsmittel: Genehmigung im Einzelfall",
+  "A2": "Hilfsmittel: Langfristige Genehmigung",
+  "B1": "Heilmittel: nicht belegt",
+  "B2": "Heilmittel: Genehmigung gem. § 8 Abs. 3 Heilmittel-Richtlinie Ärzte bzw. § 7 Abs. 1 Heilmittel-Richtlinie Zahnärzte (Genehmigung eines langfristigen Heilmittelbedarfs)",
+  "C1": "Häusliche Krankenpflege: Genehmigung im Einzelfall",
+  "C2": "Häusliche Krankenpflege: Leistungserbringung im Rahmen der vorläufigen Kostenzusage nach § 6 Abs. 6 der Richtlinie des G-BA nach § 92 Abs. 1 Satz 2 Nr. 6 i.V.m. Abs. 7 SGB V",
+  "D1": "Haushaltshilfe: Genehmigung im Einzelfall",
+  "E1": "Krankentransportleistungen: Genehmigung im Einzelfall",
+  "E2": "Krankentransportleistungen: Langfristige Genehmigung",
+  "F1": "Hebammen: Genehmigung im Einzelfall",
+  "G1": "Sonstige: Genehmigung im Einzelfall",
+  "H1": "Sonstige: Genehmigung im Einzelfall",
+  "I1": "Sonstige: Genehmigung im Einzelfall",
+  "J1": "Sonstige: Genehmigung im Einzelfall",
+  "K1": "Sonstige: Genehmigung im Einzelfall",
+  "L1": "Sonstige: Genehmigung im Einzelfall",
+  "M1": "Sonstige: Genehmigung im Einzelfall",
+  "N1": "Sonstige: Genehmigung im Einzelfall",
+  "O1": "SAPV: Genehmigung im Einzelfall",
+  "Q1": "Kurzzeitpflege: Genehmigung im Einzelfall",
+  "R1": "Außerklinische Intensivpflege: Genehmigung im Einzelfall",
+  "R2": "Außerklinische Intensivpflege: Leistungserbringung im Rahmen der vorläufigen Kostenzusage nach § 11 Abs. 3 der Außerklinische Intensivpflege-Richtlinie des G-BA"
+ },
+ "mengeneinheiten": {
+  "01": "CM — Zentimeter",
+  "02": "ENS — Einsätze",
+  "03": "G — Gramm",
+  "04": "KG — Kilogramm",
+  "05": "KWH — Kilowattstunde",
+  "06": "L — Liter",
+  "07": "M — Meter",
+  "08": "MIN — Minute",
+  "09": "MON — Monate",
+  "10": "PAA — Paar",
+  "11": "PAK — Pack",
+  "12": "ST — Stück",
+  "13": "STD — Stunde",
+  "14": "TAG — Tage"
+ }
 }

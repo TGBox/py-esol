@@ -178,6 +178,32 @@ class ContentHelper:
                 return ContentHelper.get_field(seg, 0)
         return None
 
+    # Schlüssel Summenstatus, Anlage 3 Abschnitt 8.1.6:
+    #   00 = Gesamtsumme aller Status
+    #   11 = Mitglieder        (Versichertenstatus beginnt mit "1")
+    #   31 = Angehörige        (Versichertenstatus beginnt mit "3")
+    #   51 = Rentner           (Versichertenstatus beginnt mit "5")
+    #   99 = nicht zuzuordnende Status
+    SUMMENSTATUS = {"1": "11", "3": "31", "5": "51"}
+
+    @staticmethod
+    def summenstatus(versichertenstatus: Optional[str]) -> str:
+        """
+        Der Summenstatus zu einem Versichertenstatus, nach Anlage 3, 8.1.6.
+
+        Es zählt allein die erste Ziffer: "Die zweite bis fünfte Ziffer im Feld
+        Versichertenstatus wird bei der Kennzeichnung der Summenstatus nicht
+        berücksichtigt." Eine Unterscheidung nach Rechtskreisen entfällt.
+
+        Wer stattdessen die ersten zwei Stellen nimmt, landet bei "10", "30",
+        "50" — Werte, die der Schlüssel nicht kennt. Alles, was sich nicht
+        zuordnen lässt, geht nach "99".
+        """
+        st = (versichertenstatus or "").strip()
+        if not st:
+            return "99"
+        return ContentHelper.SUMMENSTATUS.get(st[0], "99")
+
     @staticmethod
     def get_file_leistungsbereich(parsed_segments: List[Dict[str, Any]]) -> Optional[str]:
         for seg in parsed_segments:

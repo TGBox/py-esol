@@ -256,9 +256,14 @@ def test_codelisten_datei_ist_lesbar():
 
 
 def test_codelisten_describe_ohne_klartext():
-    # Verordnungsarten sind absichtlich ohne Bezeichnung vorbelegt
-    text = codelisten.describe("verordnungsart", "03")
-    assert text.startswith("03")
+    """
+    Ein Code, den das Schlüsselverzeichnis nicht kennt, darf keinen erfundenen
+    Text bekommen. Früher stand hier die Verordnungsart "03" — die ist seit
+    dem Abgleich mit Anlage 3, Abschnitt 8.1.12 belegt; die Zusicherung selbst
+    gilt weiter und braucht nur einen Code, den es wirklich nicht gibt.
+    """
+    text = codelisten.describe("verordnungsart", "77")
+    assert text.startswith("77")
     assert codelisten.KEIN_KLARTEXT in text
 
 
@@ -413,11 +418,22 @@ def test_summenstatus_und_rechnungsart():
 
 
 def test_abrechnungscode_heilmittelbereich():
-    assert codelisten.lookup("abrechnungscode", "22") == "Krankengymnast / Physiotherapeut"
+    """
+    Die Bezeichnungen stehen jetzt wortgleich so da wie in Anlage 3, Abschnitt
+    8.1.5.1 — also "Krankengymnast/Physiotherapeut" ohne Leerzeichen um den
+    Schrägstrich.
+    """
+    assert codelisten.lookup("abrechnungscode", "22") == "Krankengymnast/Physiotherapeut"
     assert codelisten.lookup("abrechnungscode", "26") == "Ergotherapeut"
     assert codelisten.lookup("abrechnungscode", "71") == "Podologen"
-    # Hilfsmittel-Codes sind in dieser Fassung bewusst nicht hinterlegt
-    assert codelisten.lookup("abrechnungscode", "11") == ""
+    # Der Schlüssel ist vollständig erfasst, auch die Codes anderer Bereiche
+    assert codelisten.lookup("abrechnungscode", "11").startswith("Apotheke")
+    assert codelisten.lookup("abrechnungscode", "B1").startswith("Leistungserbringer von Modellvorhaben")
+    # 64 führt die Anlage selbst als nicht besetzt — das ist eine Aussage der
+    # Quelle und kein geratener Text.
+    assert codelisten.lookup("abrechnungscode", "64") == "nicht besetzt"
+    # Was der Schlüssel nicht kennt, bleibt ohne Text
+    assert codelisten.lookup("abrechnungscode", "99") == ""
 
 
 def test_diagnosegruppen_aller_fuenf_bereiche():
@@ -446,23 +462,40 @@ def test_diagnosegruppen_aller_fuenf_bereiche():
 
 def test_offene_listen_bleiben_leer():
     """
-    Verordnungsart, Verordnungsbesonderheiten, Heilmittelbereich,
-    Therapiefrequenz und Genehmigungsart sind noch nicht belegt. Der Test hält
-    fest, dass dort NICHTS geraten wurde — er schlägt an, sobald jemand die
-    Listen füllt, und ist dann bewusst zu streichen.
+    Verordnungsart, Verordnungsbesonderheiten, Heilmittelbereich und
+    Genehmigungsart sind mit dem Abgleich gegen Anlage 3 belegt. Offen bleibt
+    allein die Therapiefrequenz: Anlage 3 hat dazu keinen Schlüssel, und
+    Anlage 1 sagt nur, wie der Wert zu bilden ist ("bei einer Frequenzspanne
+    den höchsten Wert", "0" bei Podologie und Ernährungstherapie), nicht was
+    1 bis 9 im Klartext bedeuten. Dort wird weiter nichts geraten.
     """
     daten = codelisten.load()
-    for liste in ("verordnungsart", "verordnungsbesonderheiten",
-                  "heilmittelbereich", "therapiefrequenz"):
-        werte = [v for v in daten.get(liste, {}).values() if str(v).strip()]
-        assert werte == [], f"{liste} enthält jetzt Klartexte — Test anpassen"
-    assert daten.get("genehmigungsart") == {}
+    werte = [v for v in daten.get("therapiefrequenz", {}).values() if str(v).strip()]
+    assert werte == [], "therapiefrequenz enthält jetzt Klartexte — Test anpassen"
 
 
 def test_unbekannter_code_zeigt_kein_klartext():
     # Der Kern der Absprache: nie raten.
-    assert codelisten.describe("verordnungsart", "04") == f"04 ({codelisten.KEIN_KLARTEXT})"
+    assert codelisten.describe("verordnungsart", "77") == f"77 ({codelisten.KEIN_KLARTEXT})"
     assert codelisten.describe("diagnosegruppe", "XX9") == f"XX9 ({codelisten.KEIN_KLARTEXT})"
+    assert codelisten.describe("therapiefrequenz", "3") == f"3 ({codelisten.KEIN_KLARTEXT})"
+
+
+def test_belegte_listen_aus_anlage_3():
+    """Die Listen, die der Abgleich mit Anlage 3 gefüllt hat."""
+    assert codelisten.lookup("verordnungsart", "05").startswith(
+        "Verordnung nach § 13a HeilM-RL"
+    )
+    assert codelisten.lookup("verordnungsart", "01") == "nicht belegt"
+    assert codelisten.lookup("verordnungsbesonderheiten", "4") == \
+        "Verordnung im Rahmen des Entlassmanagements"
+    # Es gibt keinen Schlüsselwert 0 — der stand vorher als Platzhalter drin
+    assert codelisten.lookup("verordnungsbesonderheiten", "0") == ""
+    assert codelisten.lookup("genehmigungsart", "B2").startswith("Heilmittel:")
+    assert codelisten.lookup("genehmigungsart", "B1") == "Heilmittel: nicht belegt"
+    assert codelisten.lookup("heilmittelbereich", "1") == "Physiotherapie"
+    assert codelisten.lookup("tarifbereich", "08") == "Nordrhein-Westfalen"
+    assert codelisten.lookup("mengeneinheiten", "12") == "ST — Stück"
 
 
 # ------------------------------------------------- Leistungserbringergruppe
@@ -474,8 +507,11 @@ def test_leistungserbringergruppe_zerlegt_7_stellen():
     assert leg["tarifbereich"] == "00"
     assert leg["tarifbereich_text"].startswith("Bundeseinheitlicher Tarif")
     assert leg["sondertarif"] == "501"
-    # 501 ist in der erfassten Fassung der Anlage nicht benannt -> nichts raten
-    assert leg["sondertarif_text"] == ""
+    # 501 fällt in Anlage 3, Abschnitt 8.1.5.2 unter "alle übrigen Zahlen-/
+    # Buchstabenkombinationen": Sondertarifvereinbarung. Das ist der Text der
+    # Anlage, nicht geraten — vorher stand hier nichts.
+    assert leg["sondertarif_text"] == \
+        "Sondertarifvereinbarung zwischen Leistungserbringern und Kostenträgern"
     assert "Ergotherapeut" in leg["text"]
     assert "Sondertarif 501" in leg["text"]
 
@@ -487,7 +523,8 @@ def test_leistungserbringergruppe_kostenvoranschlag():
 
 
 def test_leistungserbringergruppe_unbekannter_abrechnungscode():
-    leg = vo.leistungserbringergruppe("11", "00000")
+    # "99" kommt im Schlüssel Abrechnungscode nicht vor
+    leg = vo.leistungserbringergruppe("99", "00000")
     assert leg["abr_text"] == ""
     assert codelisten.KEIN_KLARTEXT in leg["text"]
 

@@ -10,6 +10,9 @@ from validation_error import ValidationError
 class GesContentRule(RuleInterface):
     """Rule 1.3.13 — GES segment content validation (SLGA Rechnungssummen)."""
 
+    # Schlüssel Summenstatus, Anlage 3 Abschnitt 8.1.6
+    VALID_SUMMENSTATUS = {"00", "11", "31", "51", "99"}
+
     def get_stufe(self) -> int:
         return 3
 
@@ -53,6 +56,22 @@ class GesContentRule(RuleInterface):
                         ges_segments[0]["index"],
                     )
                 )
+
+            for ges_item in ges_segments:
+                status = (ContentHelper.get_field(ges_item["seg"], 0) or "").strip()
+                if status and status not in self.VALID_SUMMENSTATUS:
+                    errors.append(
+                        ValidationError.error(
+                            3,
+                            "1.3.13.8",
+                            f'GES: Summenstatus "{status}" ist kein Schlüsselwert nach '
+                            f"Anlage 3 Abschnitt 8.1.6. Zulässig: "
+                            + ", ".join(sorted(self.VALID_SUMMENSTATUS))
+                            + ".",
+                            "GES",
+                            ges_item["index"],
+                        )
+                    )
 
             first_status = ContentHelper.get_field(ges_segments[0]["seg"], 0)
             if first_status != "00":
@@ -236,12 +255,13 @@ class GesContentRule(RuleInterface):
             inv_blocks = ContentHelper.extract_inv_blocks(slla_msg)
 
             for block in inv_blocks:
+                # Summenstatus nach Anlage 3, 8.1.6: es zählt allein die erste
+                # Ziffer des Versichertenstatus. Vorher standen hier die ersten
+                # zwei Stellen — daraus wurde "10", "30", "50", also Werte, die
+                # der Schlüssel nicht kennt. Kein GES-Status stimmte damit je
+                # überein, und der Abgleich je Status lief ins Leere.
                 vers_status = ContentHelper.get_field(block[0], 1)
-                status_key = (
-                    vers_status[:2]
-                    if vers_status and len(vers_status) >= 2
-                    else "00"
-                )
+                status_key = ContentHelper.summenstatus(vers_status)
 
                 for seg in block:
                     if seg.get("tag") == "BES":
@@ -313,3 +333,70 @@ class GesContentRule(RuleInterface):
                             ges00["index"],
                         )
                     )
+
+        self._pruefe_je_status(ges_data, brutto_by_status, vk, errors)
+
+    def _pruefe_je_status(
+        self,
+        ges_data: List[Dict[str, Any]],
+        brutto_by_status: Dict[str, float],
+        vk: Optional[str],
+        errors: List[Any],
+    ) -> None:
+        """
+        Regel 1.3.13.7 — jede GES-Statuszeile gegen die Belege dieses Status.
+
+        Anlage 1, Abschnitt 5.5.2 zum GES-Segment: "Die Betragssumme des
+        Versichertenstatus (SLGA) entspricht den Summen der Abrechnungsfälle
+        (SLLA), die diesen Status beinhalten." Welcher Summenstatus zu einem
+        Versichertenstatus gehört, sagt Anlage 3, 8.1.6.
+
+        Bisher wurde nur die Zeile mit Summenstatus 00 gegen die Gesamtsumme
+        gestellt. Damit fiel eine Datei nicht auf, in der die Beträge in der
+        Summe stimmen, aber in der falschen Statuszeile stehen — genau der
+        Fehler, den das Erzeugen einer Korrekturrechnung produziert hat.
+
+        Bei Verarbeitungskennzeichen 03 wird nicht geprüft: dort ist der
+        Bruttobetrag laut Anlage mit 0,00 zu übermitteln, ein Abgleich gegen
+        die Belegsummen wäre sinnlos.
+        """
+        if vk == "03":
+            return
+
+        for ges in ges_data:
+            status = ges["status"]
+            if status == "00":
+                continue
+            erwartet = ContentHelper.round_commercial(
+                brutto_by_status.get(status, 0.0)
+            )
+            ist = ContentHelper.round_commercial(ges["brutto"])
+            if abs(ist - erwartet) > 0.01:
+                errors.append(
+                    ValidationError.error(
+                        3,
+                        "1.3.13.7",
+                        f"GES (Status {status}): Gesamtbruttobetrag "
+                        f"{ContentHelper.format_decimal(ist)} stimmt nicht mit der "
+                        f"Summe der Abrechnungsfälle dieses Versichertenstatus "
+                        f"{ContentHelper.format_decimal(erwartet)} überein.",
+                        "GES",
+                        ges["index"],
+                    )
+                )
+
+        # Ein Status, für den es Belege gibt, aber keine GES-Zeile
+        vorhanden = {g["status"] for g in ges_data}
+        for status, betrag in sorted(brutto_by_status.items()):
+            if status not in vorhanden and ContentHelper.round_commercial(betrag) != 0.0:
+                errors.append(
+                    ValidationError.error(
+                        3,
+                        "1.3.13.7",
+                        f"GES: Für den Summenstatus {status} fehlt eine Statuszeile, "
+                        f"obwohl Abrechnungsfälle dieses Versichertenstatus über "
+                        f"{ContentHelper.format_decimal(betrag)} vorliegen.",
+                        "GES",
+                        ges_data[0]["index"] if ges_data else None,
+                    )
+                )

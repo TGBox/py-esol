@@ -24,6 +24,7 @@ from rules.level3.inv_content_rule import InvContentRule
 from rules.level3.nad_content_rule import NadContentRule
 from rules.level3.nam_content_rule import NamContentRule
 from rules.level3.rec_content_rule import RecContentRule
+from rules.level3.skz_content_rule import SkzContentRule
 from rules.level3.unb_content_rule import UnbContentRule
 from rules.level3.uri_content_rule import UriContentRule
 from rules.level3.zhe_content_rule import ZheContentRule
@@ -222,6 +223,7 @@ class EsolValidator:
         self.register_rule(DiaContentRule())
         self.register_rule(BesContentRule())
         self.register_rule(GzfContentRule())
+        self.register_rule(SkzContentRule())
         self.register_rule(GesContentRule())
         self.register_rule(NamContentRule())
         self.register_rule(UntContentRule())

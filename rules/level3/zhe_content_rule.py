@@ -11,42 +11,28 @@ from validation_error import ValidationError
 class ZheContentRule(RuleInterface):
     """Rule 1.3.9 — ZHE segment content validation (Zusatzinfo Verordnung Heilmittel)."""
 
-    VALID_ZUZAHLUNGSKZ = [
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-    ]
+    # Schlüssel Zuzahlung, Anlage 3 Abschnitt 8.1.3 — besetzt sind nur 0 bis 5.
+    # Vorher stand hier 0 bis 9; 6, 7, 8 und 9 gibt es in dem Schlüssel nicht.
+    VALID_ZUZAHLUNGSKZ = ["0", "1", "2", "3", "4", "5"]
 
-    VALID_VERORDNUNGSART = [
-        "01",
-        "02",
-        "03",
-        "04",
-        "05",
-        "06",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "20",
-        "99",
-    ]
+    # Schlüssel Kennzeichen Verordnungsart bei Heilmitteln, Anlage 3 Abschnitt
+    # 8.1.12: 01 bis 05, 10 und 11. Die 99 kommt aus Anlage 1 (Segment ZHE):
+    # "nur zu verwenden für Fallkonstellationen außerhalb der beiden
+    # Heilmittel-Richtlinien".
+    #
+    # Vorher stand hier 01 bis 20 und 99. Die Werte 06 bis 09 und 12 bis 20
+    # kommen im Schlüsselverzeichnis nicht vor — und die Liste wurde ohnehin
+    # nie benutzt, geprüft wurde nur "zwei Stellen, numerisch".
+    VALID_VERORDNUNGSART = ["01", "02", "03", "04", "05", "10", "11", "99"]
+
+    # Schlüssel Kennzeichen Verordnungsbesonderheiten, Anlage 3 Abschnitt 8.1.11
+    VALID_VERORDNUNGSBESONDERHEIT = ["1", "2", "3", "4", "7", "8", "9"]
+
+    # Schlüssel Unfall/Sonstiges, Anlage 3 Abschnitt 8.1.2
+    VALID_UNFALLKENNZEICHEN = ["1", "2", "3"]
+
+    # Schlüssel BVG/SER, Anlage 3 Abschnitt 8.1.2.1 — nur die 6 ist besetzt
+    VALID_BVG_SER = ["6"]
 
     def get_stufe(self) -> int:
         return 3
@@ -166,6 +152,84 @@ class ZheContentRule(RuleInterface):
                     3,
                     "1.3.9.6",
                     f'ZHE (Block {block_idx}): Verordnungsart "{verordnungsart}" muss 2-stellig numerisch sein.',
+                    "ZHE",
+                    seg_index,
+                )
+            )
+        elif verordnungsart and verordnungsart not in self.VALID_VERORDNUNGSART:
+            errors.append(
+                ValidationError.error(
+                    3,
+                    "1.3.9.6",
+                    f'ZHE (Block {block_idx}): Verordnungsart "{verordnungsart}" ist '
+                    f"kein Schlüsselwert nach Anlage 3 Abschnitt 8.1.12. Zulässig: "
+                    + ", ".join(self.VALID_VERORDNUNGSART)
+                    + ".",
+                    "ZHE",
+                    seg_index,
+                )
+            )
+
+        # 1.3.9.12: Verordnungsbesonderheiten (Schlüssel 8.1.11)
+        besonderheit = ContentHelper.get_field(seg, 6)
+        if besonderheit and besonderheit not in self.VALID_VERORDNUNGSBESONDERHEIT:
+            errors.append(
+                ValidationError.error(
+                    3,
+                    "1.3.9.12",
+                    f'ZHE (Block {block_idx}): Kennzeichen Verordnungsbesonderheiten '
+                    f'"{besonderheit}" ist kein Schlüsselwert nach Anlage 3 Abschnitt '
+                    f"8.1.11. Zulässig: "
+                    + ", ".join(self.VALID_VERORDNUNGSBESONDERHEIT)
+                    + ".",
+                    "ZHE",
+                    seg_index,
+                )
+            )
+
+        # 1.3.9.13: Unfallkennzeichen (Schlüssel 8.1.2)
+        unfall = ContentHelper.get_field(seg, 7)
+        if unfall and unfall not in self.VALID_UNFALLKENNZEICHEN:
+            errors.append(
+                ValidationError.error(
+                    3,
+                    "1.3.9.13",
+                    f'ZHE (Block {block_idx}): Unfallkennzeichen "{unfall}" ist kein '
+                    f"Schlüsselwert nach Anlage 3 Abschnitt 8.1.2. Zulässig: "
+                    + ", ".join(self.VALID_UNFALLKENNZEICHEN)
+                    + ".",
+                    "ZHE",
+                    seg_index,
+                )
+            )
+
+        # 1.3.9.14: Kennzeichen BVG/Sonstiges/SER (Schlüssel 8.1.2.1)
+        bvg = ContentHelper.get_field(seg, 8)
+        if bvg and bvg not in self.VALID_BVG_SER:
+            errors.append(
+                ValidationError.error(
+                    3,
+                    "1.3.9.14",
+                    f'ZHE (Block {block_idx}): Kennzeichen BVG/Sonstiges/SER "{bvg}" '
+                    f"ist kein Schlüsselwert nach Anlage 3 Abschnitt 8.1.2.1. Zulässig "
+                    f"ist allein die 6.",
+                    "ZHE",
+                    seg_index,
+                )
+            )
+
+        # 1.3.9.15: Behandlungsbeginn ist stillgelegt
+        # Anlage 1, Segment ZHE: "Dieses Feld wird nicht mehr gefüllt. Das Feld
+        # wird als Leerfeld übermittelt."
+        behandlungsbeginn = ContentHelper.get_field(seg, 9)
+        if behandlungsbeginn:
+            errors.append(
+                ValidationError.warning(
+                    3,
+                    "1.3.9.15",
+                    f'ZHE (Block {block_idx}): Das Feld Behandlungsbeginn ist mit '
+                    f'"{behandlungsbeginn}" gefüllt. Laut Anlage 1 wird es nicht mehr '
+                    f"gefüllt und als Leerfeld übermittelt.",
                     "ZHE",
                     seg_index,
                 )

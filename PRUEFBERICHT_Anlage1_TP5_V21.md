@@ -16,8 +16,8 @@ gegen `schema/schema.py` gestellt. Der Grund ist Verlässlichkeit — bei
 57 Segmenten mit je bis zu 18 Feldern übersieht ein Mensch beim Vergleichen
 zuverlässig etwas, eine Tabellenspalte nicht.
 
-Die Auswertung liegt in `werkzeuge/anlage1/` (siehe Abschnitt 6) und ist
-wiederholbar, wenn Version 22 erscheint.
+Die Auswertungsskripte liegen noch außerhalb des Projekts (siehe Abschnitt 6);
+der Abgleich ist damit wiederholbar, wenn Version 22 erscheint.
 
 **Abdeckung:**
 
@@ -326,3 +326,224 @@ noch außerhalb des Projekts. Sie wären in `werkzeuge/anlage1/` gut aufgehoben 
 beim nächsten Versionswechsel der Technischen Anlage ist der Abgleich damit
 eine Sache von Minuten statt eines Tages. Sagen Sie Bescheid, dann lege ich sie
 mit ab.
+
+---
+
+# Teil 2: Abgleich mit Anlage 3 (Schlüsselverzeichnisse)
+
+Grundlage: *Schlüsselverzeichnisse — Anlage 3 zu den Richtlinien nach § 302
+SGB V*, GKV-Spitzenverband, Version 21, Stand 19.09.2025, anzuwenden ab
+01.10.2025, 58 Seiten.
+
+Anlage 1 verweist für jede Schlüsselausprägung auf Anlage 3. Der erste Teil
+dieses Berichts konnte diese Verweise deshalb nur feststellen, nicht prüfen.
+Das ist hiermit nachgeholt.
+
+## 1. Vorgehen und Abdeckung
+
+Aus Anlage 1 wurde zunächst maschinell erhoben, welche Felder der von py-esol
+verarbeiteten Segmente auf welchen Abschnitt der Anlage 3 verweisen. Genau
+diese Abschnitte wurden gelesen und mit den Codelisten und den Prüfregeln
+verglichen.
+
+| Abschnitt | Schlüssel | Verwendung | Ergebnis |
+|---|---|---|---|
+| 8.1.2 | Unfall/Sonstiges | ZHE.Unfallkennzeichen | Liste richtig, Prüfung fehlte — ergänzt |
+| 8.1.2.1 | BVG/SER | ZHE.Kennzeichen BVG/Sonstiges/SER | Liste richtig, Prüfung fehlte — ergänzt |
+| 8.1.3 | Zuzahlung | ZHE.Zuzahlungskennzeichen | Liste richtig, **Prüfung zu weit** — korrigiert |
+| 8.1.4 | Rechnungsart | REC.Rechnungsart | in Ordnung |
+| 8.1.5.1 | Abrechnungscode | EHE.Abrechnungscode | Liste unvollständig — ergänzt; neue Prüfung gegen 8.1.14 |
+| 8.1.5.2 | Tarifkennzeichen | EHE.Tarifkennzeichen | Liste unvollständig — ergänzt; neue Prüfung des Tarifbereichs |
+| 8.1.6 | Summenstatus | GES.Status | **Zuordnungsregel falsch umgesetzt** — korrigiert |
+| 8.1.7 | Verarbeitungskennzeichen | FKT.Verarbeitungskennzeichen | in Ordnung |
+| 8.1.11 | Verordnungsbesonderheiten | ZHE | **Liste falsch belegt** — korrigiert, Prüfung ergänzt |
+| 8.1.12 | Verordnungsart bei Heilmitteln | ZHE | **Liste und Prüfung falsch** — korrigiert |
+| 8.1.14 | Sammelgruppenschlüssel | UNB.Leistungsbereich | in Ordnung; jetzt auch Grundlage der EHE-Prüfung |
+| 8.1.17 | Art der Genehmigung | SKZ | Liste war leer, keine Prüfung — beides ergänzt |
+| 8.1.18 | Beleginformation | INV.Beleginformation | Liste richtig, **Prüfung zu weit** — korrigiert |
+| 8.2.1 | Abrechnungspositionsnummer Heilmittel | EHE | **Prüfung zu weit** — korrigiert |
+| 8.5 | Länderkennzeichen | NAD | verweist auf ein Dokument außerhalb der Anlage |
+| 8.6 | Mengeneinheiten | (andere Leistungsbereiche) | Liste ergänzt |
+
+Nicht bearbeitet, weil sie andere Leistungsbereiche betreffen: 8.1.10
+(Hilfsmittel), 8.1.13 (Zuzahlungsart, Hilfsmittel), 8.1.15 (Anwendungsort,
+Hilfsmittel), 8.1.16 (Geburtsdatum des Kindes, Hebammen), 8.1.19
+(Ersatz-Beschäftigtennummer, Intensivpflege), 8.2.2 bis 8.2.14, 8.3 und 8.4.
+Ebenfalls nicht bearbeitet: 8.1.1 (Versichertenstatus KVK, wird seit
+01.10.2014 nicht mehr verwendet) und 8.1.8 (entfällt ab TA 3 Version 16).
+
+## 2. Befunde
+
+### 2.1 Vier Prüfungen waren zu weit gefasst
+
+Vier Regeln akzeptierten Werte, die es in den Schlüsselverzeichnissen nicht
+gibt. Alle vier folgen demselben Muster: die Regel prüfte "eine Stelle,
+numerisch" statt gegen die Schlüsselwerte.
+
+| Feld | Schlüssel | erlaubt laut Anlage | Regel akzeptierte |
+|---|---|---|---|
+| ZHE.Zuzahlungskennzeichen | 8.1.3 | 0–5 | 0–9 |
+| ZHE.Kennzeichen Verordnungsart | 8.1.12 (+99 aus Anlage 1) | 01–05, 10, 11, 99 | 01–20, 99 |
+| INV.Beleginformation | 8.1.18 | 0, 1, 2 | 0–9 |
+| EHE.Abrechnungspositionsnummer | 8.2.1 | genau 5 Stellen | bis 5 Stellen |
+
+Bei der Verordnungsart lag der Fall doppelt: die Liste `VALID_VERORDNUNGSART`
+stand im Regelcode, wurde aber **nie benutzt** — geprüft wurde nur
+"zweistellig numerisch". Alle vier sind jetzt gegen die Schlüsselwerte geprüft.
+
+### 2.2 Der Summenstatus wurde falsch abgeleitet
+
+Anlage 3, Abschnitt 8.1.6 ist eindeutig: es zählt allein die **erste** Ziffer
+des Versichertenstatus — 1 → 11 (Mitglieder), 3 → 31 (Angehörige), 5 → 51
+(Rentner). "Die zweite bis fünfte Ziffer im Feld Versichertenstatus wird bei
+der Kennzeichnung der Summenstatus nicht berücksichtigt."
+
+An zwei Stellen wurden die ersten **zwei** Stellen genommen:
+
+* `ges_content_rule` bildete daraus "10", "30", "50" — Werte, die der
+  Schlüssel nicht kennt. Kein GES-Status stimmte damit je überein. Der
+  Abgleich je Status lief ins Leere; er wurde berechnet und nie ausgewertet.
+* `generate_correction` nahm ebenfalls die zwei Stellen, verglich sie mit den
+  GES-Zeilen der Ursprungsdatei und griff bei Nichttreffen auf den ersten
+  passenden oder gar den ersten überhaupt vorhandenen Status zurück.
+
+Die zweite Stelle war ein echter Fehler beim Erzeugen. Nachgestellt: eine
+Datei mit einem Angehörigen (Status 30000) und einem Rentner (50000), deren
+SLGA nur GES+00 und GES+31 enthält. Erzeugt wurde daraus
+
+```
+GES+00+180,00+200,00+20,00'
+GES+31+180,00+200,00+20,00'      <- beide Belege unter "Angehörige"
+```
+
+statt richtig
+
+```
+GES+00+180,00+200,00+20,00'
+GES+31+90,00+100,00+10,00'
+GES+51+90,00+100,00+10,00'
+```
+
+Die Gesamtsumme stimmte, die Aufteilung nach Versichertenstatus nicht — und
+keine Regel hat es gemerkt. Behoben durch `ContentHelper.summenstatus()`, die
+8.1.6 direkt umsetzt und von beiden Stellen benutzt wird.
+
+Dazu die fehlende Prüfung, neue Regel **1.3.13.7**: jede GES-Statuszeile wird
+jetzt gegen die Belege dieses Versichertenstatus gestellt (Anlage 1 zum
+GES-Segment: "Die Betragssumme des Versichertenstatus (SLGA) entspricht den
+Summen der Abrechnungsfälle (SLLA), die diesen Status beinhalten"), und ein
+Status mit Belegen aber ohne Statuszeile fällt auf. Alle 53 Echtdateien
+bestehen die Prüfung.
+
+### 2.3 Zwei Codelisten waren falsch belegt
+
+* **Verordnungsbesonderheiten (8.1.11)** stand mit den Codes 0, 1, 2, 3 in der
+  Liste. Der Schlüssel besetzt **1, 2, 3, 4, 7, 8 und 9** — es gibt keine 0,
+  und 4, 7, 8, 9 fehlten. Ein Beleg mit "4" (Entlassmanagement) wäre in der
+  Anzeige als unbekannt erschienen.
+* **Verordnungsart (8.1.12)** stand mit 01 bis 20 und 99 in der Liste. Der
+  Schlüssel besetzt **01 bis 05, 10 und 11**; 06–09 und 12–20 gibt es nicht.
+
+Beide sind jetzt wortgleich aus der Anlage übernommen, einschließlich der
+Werte, die die Anlage selbst als "nicht belegt" führt — das ist eine Aussage
+der Quelle und kein fehlender Klartext.
+
+### 2.4 Die offenen Listen sind gefüllt
+
+Die Lücken aus dem vorigen Durchgang sind geschlossen:
+
+| Liste | vorher | jetzt | Quelle |
+|---|---|---|---|
+| verordnungsart | 21 Codes ohne Text | 8 Codes mit Text | 8.1.12 + Anlage 1 |
+| verordnungsbesonderheiten | 4 Codes ohne Text | 7 Codes mit Text | 8.1.11 |
+| genehmigungsart | leer | 22 Codes | 8.1.17 |
+| abrechnungscode | 16 Codes | 64 Codes (vollständig) | 8.1.5.1 |
+| tarifbereich | 12 Codes | 62 Codes (alle vergebenen) | 8.1.5.2 |
+| heilmittelbereich | 5 Codes ohne Text | 5 Codes mit Text | Anlage 1, ZHE |
+| mengeneinheiten | — | 14 Codes | 8.6 |
+| sondertarif | 2 Codes | über Bereiche aufgelöst | 8.1.5.2 |
+
+Zum Sondertarif: Anlage 3 definiert die 3. bis 5. Stelle des
+Tarifkennzeichens nicht als Einzelschlüssel, sondern in Bereichen. Eine
+Codetabelle kann das nicht abbilden, deshalb löst
+`codelisten.sondertarif_bereich()` die Bereiche auf. Damit bekommt das in
+Ihren Dateien durchgehend verwendete **"501"** erstmals einen Text
+("Sondertarifvereinbarung zwischen Leistungserbringern und Kostenträgern") —
+vorher stand dort nichts. Ein Eintrag in `codelisten.json` hat weiterhin
+Vorrang, dort können hauseigene Sondertarife benannt werden.
+
+### 2.5 Vier Prüfungen fehlten ganz
+
+Neu, alle unmittelbar aus den Schlüsselverzeichnissen:
+
+* **1.3.9.12 bis 1.3.9.14** — ZHE.Verordnungsbesonderheiten gegen 8.1.11,
+  ZHE.Unfallkennzeichen gegen 8.1.2, ZHE.Kennzeichen BVG/Sonstiges/SER gegen
+  8.1.2.1.
+* **1.3.9.15** (Warnung) — ZHE.Behandlungsbeginn ist laut Anlage 1
+  stillgelegt: "Dieses Feld wird nicht mehr gefüllt." Ein gefülltes Feld macht
+  die Datei nicht ungültig, wird aber jetzt angemahnt. Das schließt den offenen
+  Punkt 4.5 aus Teil 1.
+* **1.3.8.7** — der Abrechnungscode muss zum Leistungsbereich des UNB-Segments
+  passen. Anlage 3, Abschnitt 8.1.14 ordnet die Codes den
+  Sammelgruppenschlüsseln zu; im Leistungsbereich B sind 21–29 und 71–74
+  zulässig. Eine Datei mit "B" im UNB und einem Hilfsmittelcode im EHE ist in
+  sich widersprüchlich und lief vorher durch.
+* **1.3.8.8** — der Tarifbereich (1. und 2. Stelle des Tarifkennzeichens) muss
+  vergeben sein. 26–49 und 76–89 führt die Anlage als "noch zu vergeben".
+* **1.3.13.8** — GES.Status muss ein Schlüsselwert nach 8.1.6 sein.
+* **1.3.14.1 bis 1.3.14.4** — das SKZ-Segment (Kostenzusage/Genehmigung) hatte
+  gar keine Inhaltsprüfung. Neu in `rules/level3/skz_content_rule.py`:
+  Genehmigungskennzeichen, Datum der Genehmigung, und die Art der Genehmigung
+  gegen 8.1.17 — samt der Prüfung, dass deren erste Stelle zum Leistungsbereich
+  passt. Für Heilmittel ist allein **B2** besetzt; B1 führt die Anlage als
+  nicht belegt. In Ihren 53 Dateien kommt kein SKZ vor, die Regel greift also
+  erst, wenn eine Kostenzusage übermittelt wird — dann aber genau dort, wo
+  sonst niemand hinschaut.
+
+## 3. Offen
+
+* **Therapiefrequenz (ZHE, 17. Feld).** Anlage 3 hat dazu keinen Schlüssel.
+  Anlage 1 sagt nur, wie der Wert zu bilden ist: bei einer Frequenzspanne der
+  höchste Wert ("1-3 = 3"), und "0" bei Podologie, Ernährungstherapie oder
+  Verordnungen ohne Frequenzangabe. Was 1 bis 9 im Klartext bedeuten, steht
+  dort nicht — die Liste bleibt daher leer und zeigt "kein Klartext
+  hinterlegt". Wenn Sie die Bedeutung nennen, trage ich sie nach.
+* **Länderkennzeichen (8.5).** Die Anlage verweist auf *Anlage 8 zum
+  Gemeinsamen Rundschreiben DEÜV* auf gkv-datenaustausch.de. Damit ist jetzt
+  klar, wo die früher gesuchten Länderdateien herkommen.
+* **Verarbeitungskennzeichen je Leistungsbereich (Punkt 4.3 aus Teil 1).**
+  Anlage 3, Abschnitt 8.1.7 verweist ausdrücklich zurück: "Die Anwendbarkeit
+  der Schlüsselwerte (außer '01') ergeben sich aus der Tabelle in Anlage 1,
+  Abschnitt 7.1." Eine Beobachtung dazu: in allen 140 ZHE-Segmenten Ihrer
+  Dateien steht im Feld Heilmittel-Bereich die **"1" — Physiotherapie**. Damit
+  ist VKZ 10 für Ihre Dateien zulässig, und eine Prüfung wäre umsetzbar, wenn
+  wir uns auf das Verhalten bei leerem Feld einigen.
+* **Schlüssel Prüfvermerk (8.1.9).** Betrifft die Antwort der Kasse an den
+  Leistungserbringer (01 = wird bezahlt, 02 = zurückgewiesen, 03 = berichtigt,
+  04 = gekürzt, 05 = wird geprüft), nicht die Abrechnungsdatei. Als Codeliste
+  wäre er für die Hotline nützlich, wenn dort Kassenantworten gelesen werden —
+  sagen Sie Bescheid.
+
+## 4. Geänderte Dateien (Teil 2)
+
+| Datei | Änderung |
+|---|---|
+| `data/codelisten.json` | sieben Listen gefüllt oder berichtigt, Quellenangaben je Liste |
+| `codelisten.py` | `sondertarif_bereich()` — Bereiche der 3.-5. Stelle nach 8.1.5.2 |
+| `verordnung.py` | Sondertarif-Text kommt jetzt aus den Bereichen |
+| `rules/level3/content_helper.py` | `summenstatus()` nach 8.1.6 |
+| `rules/level3/zhe_content_rule.py` | Zuzahlung 0-5, Verordnungsart gegen 8.1.12, drei neue Prüfungen, Warnung zum Behandlungsbeginn |
+| `rules/level3/ehe_content_rule.py` | Positionsnummer genau 5-stellig, Abrechnungscode gegen 8.1.14, Tarifbereich gegen 8.1.5.2 |
+| `rules/level3/inv_content_rule.py` | Beleginformation 0-2 |
+| `rules/level3/ges_content_rule.py` | Summenstatus nach 8.1.6, Abgleich je Statuszeile (1.3.13.7), Schlüsselprüfung (1.3.13.8) |
+| `rules/level3/skz_content_rule.py` | **neu** — Inhaltsprüfung des SKZ-Segmentes |
+| `esol_validator.py` | SKZ-Regel registriert |
+| `tools/generate_correction.py` | Summenstatus aus dem Versichertenstatus statt aus den GES-Zeilen des Originals |
+| `tests/test_anlage3_schluessel.py` | **neu** — 19 Tests gegen die Schlüsselverzeichnisse |
+| `tests/test_verordnung.py` | Tests an die gefüllten Listen angepasst |
+
+Testlauf: **316 erfolgreich, 0 Fehler** (6 übersprungen — parametrisierte
+Tests, die der lokale Läufer nicht aufklappt). Alle 53 Dateien in
+`testdata/in/` melden weiterhin genau dieselben 7 Fehler wie vor dem Abgleich
+(1.2.3.1 in ESOL0167, ESOL0305, ESOL0325) — keine der neuen Prüfungen erzeugt
+einen Fehlalarm auf echten Daten.
