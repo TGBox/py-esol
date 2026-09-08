@@ -417,14 +417,15 @@ def test_custom_zuzahlungskennzeichen(tmp_path: Path):
     assert "+1+EN1+04+" in content, f"Expected ZHE Zuzahlungskennzeichen '1', got:\n{content}"
 
 
-def test_vk03_lehnt_globale_befreiung_ab(tmp_path: Path):
+def test_vk03_lehnt_fehlende_gesetzliche_zuzahlung_ab(tmp_path: Path):
     """
     Dieselbe Datei wie oben, aber als Zuzahlungsforderung: der Beleg trägt
-    20,57 € Zuzahlung, das global gesetzte Kennzeichen sagt "befreit".
+    20,57 € Zuzahlung, das global gesetzte Kennzeichen sagt "keine gesetzliche
+    Zuzahlung" (0). Dann wurde nie eine Zuzahlung abgesetzt und es gibt nichts
+    nachzufordern — die Datei darf nicht entstehen.
 
-    Früher entstand daraus eine Datei mit "+1+" im ZHE und einer Forderung über
-    20,57 € im GZF — ein Widerspruch, den keine Prüfregel fand. Jetzt wird
-    stattdessen abgelehnt, weil es nichts zu fordern gibt.
+    Mit Kennzeichen "1" (Zuzahlungsbefreit) wäre die Forderung dagegen
+    zulässig: Anlage 1 Abschnitt 7.4.2.2 führt genau diesen Fall auf.
     """
     import pytest
 
@@ -454,7 +455,7 @@ def test_vk03_lehnt_globale_befreiung_ab(tmp_path: Path):
 
     with pytest.raises(ValueError, match="kein Beleg für eine Zuzahlungsforderung"):
         generate_correction_file(
-            orig_file, target_vk="03", new_rec_nr="99", zuzahlungskennzeichen="1"
+            orig_file, target_vk="03", new_rec_nr="99", zuzahlungskennzeichen="0"
         )
 
 

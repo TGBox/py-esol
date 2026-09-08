@@ -20,7 +20,7 @@ def test_vk02_granular_position_and_price_edit(tmp_path: Path):
         "REC+51:0+20260122+1'",
         "INV+A123456789+31000+1+00001'",
         "NAD+Muster+Max+19900101'",
-        "ZHE+110178400+906716934+20250528+3+EN1+04+++++1++1110++0+1+2+00501'",
+        "ZHE+110178400+906716934+20250528+3+EN1+04+++++1++1110++0+1+2'",
         "EHE+26:00501+59702+1,00+100,00+20260115+10,00'",
         "DIA+F98.9'",
         "BES+100,00+20,00+10,00+10,00'",
@@ -99,7 +99,7 @@ def test_vk02_add_and_delete_positions(tmp_path: Path):
         "REC+51:0+20260122+1'",
         "INV+A123456789+31000+1+00001'",
         "NAD+Muster+Max+19900101'",
-        "ZHE+110178400+906716934+20250528+3+EN1+04+++++1++1110++0+1+2+00501'",
+        "ZHE+110178400+906716934+20250528+3+EN1+04+++++1++1110++0+1+2'",
         "EHE+26:00501+59702+1,00+50,00+20260115+5,00'",
         "DIA+F98.9'",
         "BES+50,00+15,00+5,00+10,00'",
@@ -110,7 +110,12 @@ def test_vk02_add_and_delete_positions(tmp_path: Path):
     orig_file = tmp_path / "orig_esol_add_del.txt"
     orig_file.write_text(orig_esol, encoding="iso-8859-15")
 
-    # Add a second position (ENF / Hausbesuch) and update first position
+    # Zweite Position hinzufuegen. Sie muss ein EHE sein: die Datei ist im
+    # Leistungsbereich B (Heilmittel, UNB-Feld "Leistungsbereich"), und dort
+    # laesst die Segmentzusammenstellung der Anlage 1 nur EHE als
+    # Positionssegment zu. Frueher stand hier ein ENF (Leistungsbereich G-N);
+    # das war unzulaessig, fiel aber niemandem auf, weil die Meldungen der
+    # Pruefstufe 2 verloren gingen (siehe validation_context).
     beleg_mods = {
         "00001": {
             "positions": [
@@ -124,7 +129,7 @@ def test_vk02_add_and_delete_positions(tmp_path: Path):
                     "zuzahlung": 5.00,
                 },
                 {
-                    "tag": "ENF",
+                    "tag": "EHE",
                     "code": "29901",
                     "tarif_kz": "00501",
                     "datum": "20260115",
@@ -147,7 +152,7 @@ def test_vk02_add_and_delete_positions(tmp_path: Path):
 
     # Verify both positions exist
     assert "EHE+26:00501+59702+" in content
-    assert "ENF+01+26:00501+29901+" in content
+    assert "EHE+26:00501+29901+" in content
 
     # Total Brutto: 50 + 30 = 80.00. Total Zuzahlung: 5 + 3 + 10 = 18.00. Proz Zuz: 8.00. Pausch Zuz: 10.00
     assert "BES+80,00+18,00+8,00+10,00'" in content
@@ -161,7 +166,7 @@ def test_vk02_add_and_delete_positions(tmp_path: Path):
 
 def test_vk02_segment_order_and_deleted_positions(tmp_path: Path):
     orig_esol = "\n".join([
-        "UNB+UNOC:3+480512931+107436557+20260819:1330+00400+B+SL05'",
+        "UNB+UNOC:3+480512931+107436557+20260819:1330+00400+B+SL05+2'",
         "UNH+00001+SLGA:21:0:0'",
         "FKT+02++480512931+103724272+103724272+480512931'",
         "REC+400:0+20260819+1'",
@@ -179,7 +184,7 @@ def test_vk02_segment_order_and_deleted_positions(tmp_path: Path):
         "EHE+26:00502+54145+6,00+18,98+20251218+1,90'",
         "EHE+26:00502+59741+1,00+1,20+20251113+0,00'",
         "EHE+26:00502+54503+1,00+47,69+20251204+4,77'",
-        "ZHE+243203100+512378658+20251113+2+PS3+05+++++1++1000++0+'",
+        "ZHE+243203100+512378658+20251113+2+PS3+05+++++1++1000++0+1+3'",
         "DIA+F33.1'",
         "BES+276,64+28,57+18,57+10,00'",
         "UNT+000014+00002'",
@@ -253,7 +258,7 @@ def test_vk02_segment_order_and_deleted_positions(tmp_path: Path):
 
 def test_vk02_copayment_pauschale_toggle(tmp_path: Path):
     orig_esol = "\n".join([
-        "UNB+UNOC:3+480512931+107436557+20260819:1330+00400+B+SL05'",
+        "UNB+UNOC:3+480512931+107436557+20260819:1330+00400+B+SL05+2'",
         "UNH+00001+SLGA:21:0:0'",
         "FKT+02++480512931+103724272+103724272+480512931'",
         "REC+400:0+20260819+1'",
@@ -268,7 +273,7 @@ def test_vk02_copayment_pauschale_toggle(tmp_path: Path):
         "URI+480512931+105:122+20260505+122'",
         "NAD+Schneider+Britta+19690930'",
         "EHE+26:00502+59741+1,00+100,00+20251204+0,00'",
-        "ZHE+243203100+512378658+20251113+2+PS3+05+++++1++1000++0+'",
+        "ZHE+243203100+512378658+20251113+2+PS3+05+++++1++1000++0+1+3'",
         "DIA+F33.1'",
         "BES+100,00+10,00+0,00+10,00'",
         "UNT+000011+00002'",
@@ -343,7 +348,7 @@ def test_dialog_rec_nr_and_german_date_moved_to_second_dialog(tmp_path: Path):
         "REC+51:0+20260122+1'",
         "INV+A123456789+31000+1+00001'",
         "NAD+Muster+Max+19900101'",
-        "ZHE+110178400+906716934+20250528+3+EN1+04+++++1++1110++0+1+2+00501'",
+        "ZHE+110178400+906716934+20250528+3+EN1+04+++++1++1110++0+1+2'",
         "EHE+26:00501+59702+1,00+100,00+20260115+10,00'",
         "BES+100,00+20,00+10,00+10,00'",
         "UNT+000009+00002'",
@@ -621,26 +626,38 @@ def test_vk03_beleg_ohne_zuzahlung_wird_ausgeschlossen():
     assert "0,00" in grund
 
 
-def test_vk03_global_gesetzte_befreiung_schliesst_alle_aus():
+def test_vk03_befreiung_schliesst_belege_nicht_aus():
     """
-    Der Defekt: das global gesetzte Kennzeichen landete im ZHE, wurde bei der
-    Pauschale aber übergangen. Ergebnis war eine Forderung über den vollen
-    Betrag mit "Zuzahlungsbefreit" im selben Beleg.
+    Ein global gesetztes Kennzeichen "1" (Zuzahlungsbefreit) darf keinen Beleg
+    aussortieren: Anlage 1 Abschnitt 7.4.2.2 führt diesen Fall als zulässige
+    Zuzahlungsforderung. Ausgeschlossen bleibt allein der Beleg ohne Betrag.
     """
     from tools.generate_correction import vk03_ausgeschlossene_belege
 
     ausgeschlossen = vk03_ausgeschlossene_belege(
         _vk03_mehrere_belege(), zuzahlungskennzeichen="1"
     )
+    assert {e["belegnr"] for e in ausgeschlossen} == {"00003"}
+    assert "0,00" in ausgeschlossen[0]["grund"]
+
+
+def test_vk03_ohne_gesetzliche_zuzahlung_schliesst_alle_aus():
+    """
+    Kennzeichen "0" heißt: es gab nie eine gesetzliche Zuzahlung. Dann bleibt
+    kein forderungsfähiger Beleg übrig und es darf keine Datei entstehen.
+    """
+    from tools.generate_correction import vk03_ausgeschlossene_belege
+
+    ausgeschlossen = vk03_ausgeschlossene_belege(
+        _vk03_mehrere_belege(), zuzahlungskennzeichen="0"
+    )
     assert {e["belegnr"] for e in ausgeschlossen} == {"00001", "00002", "00003"}
-    for eintrag in ausgeschlossen:
-        assert "Zuzahlungsbefreit" in eintrag["grund"]
 
 
 def test_vk03_ohne_forderungsfaehigen_beleg_keine_datei():
     with pytest.raises(ValueError, match="kein Beleg für eine Zuzahlungsforderung"):
         generate_correction_esol(
-            _vk03_mehrere_belege(), target_vk="03", zuzahlungskennzeichen="1"
+            _vk03_mehrere_belege(), target_vk="03", zuzahlungskennzeichen="0"
         )
 
 
@@ -755,11 +772,35 @@ def _regeln(text: str) -> set:
     return {str(e).split("]")[0].split("[")[-1] for e in ergebnis.get_errors()}
 
 
-def test_regel_forderung_trotz_befreiung():
-    """1.3.12.3 — GZF fordert Geld, das Verordnungssegment sagt 'befreit'."""
-    for zkz in ("0", "1"):
-        regeln = _regeln(_vk03_handgebaut(zkz, "10,00", "10,00+10,00+0,00"))
-        assert "1.3.12.3" in regeln, f"zkz {zkz}: {regeln}"
+def test_regel_forderung_ohne_gesetzliche_zuzahlung():
+    """
+    1.3.12.3 — GZF fordert Geld, das Verordnungssegment sagt "keine
+    gesetzliche Zuzahlung" (Kennzeichen 0). Dann wurde nie eine Zuzahlung
+    abgesetzt, es gibt also nichts nachzufordern.
+    """
+    regeln = _regeln(_vk03_handgebaut("0", "10,00", "10,00+10,00+0,00"))
+    assert "1.3.12.3" in regeln, regeln
+
+
+def test_befreiung_ist_ein_zulaessiger_vk03_fall():
+    """
+    Kennzeichen 1 (Zuzahlungsbefreit) neben einer Forderung ist KEIN Fehler:
+    Anlage 1 Abschnitt 7.4.2.2 beschreibt genau diesen Fall — die ursprüngliche
+    Rechnung war um die Zuzahlung gemindert, der Versicherte zahlt wegen
+    erreichter Belastungsgrenze nicht, der Leistungserbringer fordert sie beim
+    Kostenträger mit Kennzeichen "1".
+
+    Die Regel hat das früher als Widerspruch gemeldet. Der Test hält die
+    Auslegung der Anlage fest, damit sie nicht zurückfällt.
+    """
+    regeln = _regeln(_vk03_handgebaut("1", "10,00", "10,00+10,00+0,00"))
+    assert "1.3.12.3" not in regeln, regeln
+
+
+def test_jahresuebergreifender_statuswechsel_ist_zulaessig():
+    """Kennzeichen 5, Anlage 1 Abschnitt 7.4.2.3 — ebenfalls zulässig."""
+    regeln = _regeln(_vk03_handgebaut("5", "10,00", "10,00+10,00+0,00"))
+    assert "1.3.12.3" not in regeln, regeln
 
 
 def test_regel_forderung_ueber_null():
@@ -778,8 +819,19 @@ def test_regel_1_3_12_3_greift_auch_bei_anderen_leistungsbereichen():
     """
     Das Zuzahlungskennzeichen steht in allen Verordnungssegmenten an derselben
     Stelle — die Regel darf nicht auf ZHE beschränkt sein.
+
+    Hier läuft absichtlich nur die eine Regel der Stufe 3. Ein ZHI in einer
+    Datei des Leistungsbereichs B ist seit der Reparatur der Stufe 2 ein Fehler
+    (Regel 1.2.1.3), die Prüfung bricht dort ab und käme nie bis zur Stufe 3.
+    Die Datei den Leistungsbereich wechseln zu lassen würde die ganze
+    Segmentfolge mitziehen; für diese Frage genügt die Einzelprüfung.
     """
-    text = _vk03_handgebaut("1", "10,00", "10,00+10,00+0,00").replace(
+    from rules.level3.gzf_content_rule import GzfContentRule
+
+    text = _vk03_handgebaut("0", "10,00", "10,00+10,00+0,00").replace(
         "ZHE+110178400", "ZHI+110178400"
     )
-    assert "1.3.12.3" in _regeln(text)
+    validator = EsolValidator()
+    validator.register_rule(GzfContentRule())
+    ergebnis = validator.validate_string(text)
+    assert "1.3.12.3" in {e.code for e in ergebnis.get_errors()}

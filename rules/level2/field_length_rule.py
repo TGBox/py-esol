@@ -94,6 +94,20 @@ class FieldLengthRule(RuleInterface):
 
             eff_len = self._effective_length(value, field_def.get("type", "AN"))
 
+            min_len = field_def.get("minLen")
+            if min_len is not None and eff_len < min_len:
+                errors.append(
+                    context.create_validation_error(
+                        2,
+                        "1.2.2.6",
+                        f'{tag}-Segment an Position {seg_index}: '
+                        f'Feld "{field_def.get("name")}" (Feld {i}) unterschreitet '
+                        f'Mindestlänge {min_len} (tatsächlich: {eff_len}, Wert: "{value}").',
+                        tag,
+                        seg_index,
+                    )
+                )
+
             if eff_len > max_len:
                 errors.append(
                     context.create_validation_error(

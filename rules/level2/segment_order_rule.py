@@ -16,7 +16,35 @@ class SegmentOrderRule(RuleInterface):
     1.2.1.3: SLLA INV block order across all Sammelgruppenschlüssel A-S
     1.2.1.4: SLGA before SLLA for each group
     1.2.1.5: No mixed VK in file
+    1.2.1.6: Vorkommen der Segmente je INV-Block — Muss-Segmente vorhanden,
+             Höchstzahl eingehalten (Segmentzusammenstellung der Technischen
+             Anlage 1, Abschnitte 5.5.3.1 und 5.5.3.x)
     """
+
+    # Segmente, die laut Segmentzusammenstellung je INV-Block genau einmal
+    # vorkommen müssen, und ihre Höchstzahl. Quelle: Anlage 1, 5.5.3.1
+    # (Basis-Segmente) und 5.5.3.3 (Leistungsbereich B).
+    #
+    # NAD stand vorher in keiner Prüfung: eine Datei ohne Namen und Adresse des
+    # Versicherten lief fehlerfrei durch, obwohl das Segment Muss ist. Dasselbe
+    # galt für ZHE.
+    _BASIS_MAX = {"INV": 1, "URI": 1, "NAD": 1, "IMG": 1, "EVO": 1}
+    _BASIS_PFLICHT = ("NAD",)
+
+    # Je Sammelgruppenschlüssel: Muss-Segmente im INV-Block und Höchstzahlen,
+    # soweit die Anlage sie je Block festlegt. TXT und MWS sind mit "0-1 je
+    # EHE" angegeben, ihre Höchstzahl richtet sich also nach der Zahl der
+    # Positionssegmente und steht deshalb nicht in dieser Tabelle.
+    _BLOCK_VORKOMMEN = {
+        "A": {"pflicht": ("MEH", "ZHI", "BES"), "max": {"ZHI": 1, "MEH": 1, "SKZ": 1, "BES": 1}},
+        "B": {"pflicht": ("ZHE",), "max": {"ZHE": 1, "SKZ": 1, "BES": 1, "GZF": 1}},
+        "C": {"pflicht": ("BES",), "max": {"BES": 1}},
+        "F": {"pflicht": ("ZHB", "BES"), "max": {"ZHB": 1, "SKZ": 1, "BES": 1}},
+        "G-N": {"pflicht": ("BES",), "max": {"SUT": 1, "ZUV": 1, "SKZ": 1, "BES": 1}},
+        "Q": {"pflicht": ("BES",), "max": {"BES": 1}},
+        "R": {"pflicht": ("BES",), "max": {"BES": 1}},
+        "S": {"pflicht": ("BES",), "max": {"BES": 1}},
+    }
 
     def __init__(self, schema: Optional[Any] = None):
         if schema is None:
@@ -57,6 +85,33 @@ class SegmentOrderRule(RuleInterface):
             {"tag": "GES", "optional": False, "repeatable": True},
             {"tag": "NAM", "optional": False, "repeatable": False},
         ]
+
+        # 1.2.1.6 — Vorkommen der Segmente in der SLGA-Nachricht.
+        # Die Schleife unten prüft nur die Position der vorhandenen Segmente.
+        # Ein am Ende fehlendes NAM oder ein ganz fehlendes GES fiel dabei
+        # niemandem auf, obwohl beide Muss-Segmente sind
+        # (Segmentzusammenstellung SLGA, Anlage 1 Abschnitt 5.5.2).
+        anzahl_slga: Dict[str, int] = {}
+        for t in inner_tags:
+            anzahl_slga[t] = anzahl_slga.get(t, 0) + 1
+        for t, mindest, hoechst in (
+            ("FKT", 1, 1), ("REC", 1, 1), ("UST", 0, 1),
+            ("SKO", 0, 9), ("GES", 2, 9), ("NAM", 1, 1),
+        ):
+            ist = anzahl_slga.get(t, 0)
+            if ist < mindest or ist > hoechst:
+                grenze = (f"genau {mindest}-mal" if mindest == hoechst
+                          else f"{mindest}- bis {hoechst}-mal")
+                errors.append(
+                    context.create_validation_error(
+                        2,
+                        "1.2.1.6",
+                        f"SLGA-Nachricht {msg.get('refNr')}: Segment {t} kommt "
+                        f"{ist}-mal vor, laut Segmentzusammenstellung {grenze}.",
+                        t,
+                        msg["start"],
+                    )
+                )
 
         pos = 0
         seen_count: Dict[int, int] = {}
@@ -335,6 +390,11 @@ class SegmentOrderRule(RuleInterface):
                 )
             )
 
+        errors.extend(
+            self._check_block_vorkommen(tags, global_start, msg_ref_nr, block_num,
+                                        lb, lb_group, context)
+        )
+
         # Check terminator segment presence
         if tags[-1] not in ("BES", "GZF"):
             errors.append(
@@ -343,6 +403,81 @@ class SegmentOrderRule(RuleInterface):
                     "1.2.1.3",
                     f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: Abschließendes BES- oder GZF-Segment fehlt (gefunden: {tags[-1]}).",
                     "BES",
+                    global_start,
+                )
+            )
+
+        return errors
+
+    def _check_block_vorkommen(
+        self,
+        tags: List[str],
+        global_start: int,
+        msg_ref_nr: str,
+        block_num: int,
+        lb: str,
+        lb_group: str,
+        context: Any,
+    ) -> List:
+        """
+        Regel 1.2.1.6 — Vorkommen der Segmente je INV-Block.
+
+        Geprüft wird gegen die Segmentzusammenstellung der Anlage: welche
+        Segmente Muss sind und wie oft sie höchstens vorkommen dürfen. Für die
+        Leistungsbereiche D, E, O und P liegt hier keine Tabelle vor; dort
+        greifen nur die Basis-Segmente.
+        """
+        errors = []
+        anzahl: Dict[str, int] = {}
+        for t in tags:
+            anzahl[t] = anzahl.get(t, 0) + 1
+
+        vorkommen = self._BLOCK_VORKOMMEN.get(lb_group, {})
+        pflicht = tuple(self._BASIS_PFLICHT) + tuple(vorkommen.get("pflicht", ()))
+        grenzen = dict(self._BASIS_MAX)
+        grenzen.update(vorkommen.get("max", {}))
+
+        for tag in pflicht:
+            if anzahl.get(tag, 0) == 0:
+                errors.append(
+                    context.create_validation_error(
+                        2,
+                        "1.2.1.6",
+                        f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: "
+                        f"Muss-Segment {tag} fehlt (Leistungsbereich '{lb}').",
+                        tag,
+                        global_start,
+                    )
+                )
+
+        for tag, grenze in sorted(grenzen.items()):
+            ist = anzahl.get(tag, 0)
+            if ist > grenze:
+                errors.append(
+                    context.create_validation_error(
+                        2,
+                        "1.2.1.6",
+                        f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: "
+                        f"Segment {tag} kommt {ist}-mal vor, höchstens {grenze}-mal "
+                        f"zulässig (Leistungsbereich '{lb}').",
+                        tag,
+                        global_start,
+                    )
+                )
+
+        # BES und GZF schließen sich aus: die Regelabrechnung und die
+        # Nachforderung schließen mit BES, die Zuzahlungsforderung mit GZF.
+        # Beide nebeneinander lassen die Zuzahlung doppelt zählen.
+        if anzahl.get("BES", 0) and anzahl.get("GZF", 0):
+            errors.append(
+                context.create_validation_error(
+                    2,
+                    "1.2.1.6",
+                    f"SLLA-Nachricht {msg_ref_nr}, INV-Block #{block_num}: "
+                    f"BES und GZF stehen beide im Block. Der Abrechnungsfall "
+                    f"schließt entweder mit BES (Verarbeitungskennzeichen 01, 02, "
+                    f"04, 10) oder mit GZF (03).",
+                    "GZF",
                     global_start,
                 )
             )

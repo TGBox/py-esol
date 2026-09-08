@@ -8,10 +8,17 @@ from validation_error import ValidationError
 
 class FieldPresenceRule(RuleInterface):
     """
-    Rule 1.2.2.3 — Muss-Feld (mandatory field) presence validation.
+    Regeln 1.2.2.3 und 1.2.2.8 — Vorkommen der Felder eines Segmentes.
 
-    All fields marked M (Muss) must be present and non-empty.
-    Trailing optional (Kann) fields at the segment end may be omitted.
+    1.2.2.3: Jedes Muss-Feld (M) muss vorhanden und gefüllt sein. Kann-Felder
+             am Segmentende dürfen fehlen.
+    1.2.2.8: Ein Segment darf nicht mehr Felder enthalten, als die Technische
+             Anlage 1 für dieses Segment vorsieht. Kapitel 6.2 der Anlage
+             verlangt die Syntaxprüfung "innerhalb eines Segmentes ... in Bezug
+             auf Typ, Länge und Vorkommen" — ein überzähliges Feld ist eine
+             Verletzung des Vorkommens und führt zur Abweisung der Datei.
+             Praktisch ist es der Fall, in dem ein '+' zu viel geschrieben oder
+             ein Feld aus einem anderen Leistungsbereich mitgeschleppt wurde.
     """
 
     def __init__(self, schema: Optional[Any] = None):
@@ -61,6 +68,23 @@ class FieldPresenceRule(RuleInterface):
         errors = []
         tag = seg.get("tag", "")
         fields = seg.get("fields", [])
+
+        # 1.2.2.8 — überzählige Felder
+        erwartet = definition.field_count()
+        if len(fields) > erwartet:
+            zusatz = [f for f in fields[erwartet:]]
+            errors.append(
+                context.create_validation_error(
+                    2,
+                    "1.2.2.8",
+                    f"{tag}-Segment an Position {seg_index}: {len(fields)} Felder, "
+                    f"die Technische Anlage 1 sieht {erwartet} vor. Überzählig: "
+                    + ", ".join(f'"{f}"' for f in zusatz)
+                    + ".",
+                    tag,
+                    seg_index,
+                )
+            )
 
         for i in range(definition.field_count()):
             field_def = definition.get_field(i)

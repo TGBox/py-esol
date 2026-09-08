@@ -366,7 +366,24 @@ def parse_esol_belege_summary(raw_content: str) -> List[Dict[str, Any]]:
 #   0 = Keine gesetzliche Zuzahlung
 #   1 = Zuzahlungsbefreit
 # Bei diesen Werten existiert keine Zuzahlung, die sich nachfordern ließe.
-ZKZ_OHNE_ZUZAHLUNG = ("0", "1")
+# Zuzahlungskennzeichen, bei denen keine Zuzahlung nachzufordern ist
+# (Anlage 3 zu TP 5, Abschnitt 8.1.3).
+#
+# Nur die "0". Die "1" (Zuzahlungsbefreit) stand hier zunächst mit drin und
+# schloss den Beleg aus der VK-03-Datei aus — das war falsch: Anlage 1
+# Abschnitt 7.4.2.2 führt genau diesen Fall als zulässige Zuzahlungsforderung
+# auf (Versicherter zahlt wegen erreichter Belastungsgrenze nicht,
+# Kennzeichen "1"). Wer solche Belege aussortiert, verliert berechtigte
+# Forderungen.
+ZKZ_OHNE_ZUZAHLUNG = ("0",)
+
+# Zuzahlungskennzeichen, die Anlage 1 Abschnitt 7.4.2 einem bestimmten Fall der
+# Zuzahlungsforderung zuordnet. Sie dürfen beim Erzeugen nicht durch den
+# Vorgabewert "2" ersetzt werden, sonst behauptet die Datei einen anderen
+# Sachverhalt als den tatsächlichen:
+#   1 = Befreiung wegen Belastungsgrenze          (7.4.2.2)
+#   5 = Übergang zuzahlungsfrei -> pflichtig      (7.4.2.3)
+ZKZ_EIGENER_VK03_FALL = ("1", "5")
 
 _ZKZ_TEXT = {
     "0": "Keine gesetzliche Zuzahlung",
@@ -386,10 +403,17 @@ def effektives_zuzahlungskennzeichen(
     Vorrang, von stark nach schwach:
       1. Einstellung am einzelnen Beleg (beleg_modifications)
       2. global gesetztes Kennzeichen (Parameter zuzahlungskennzeichen)
-      3. bei VKZ 03 der Vorgabewert "2" (keine Zuzahlung trotz schriftlicher
-         Zahlungsaufforderung) — genau der Fall, für den es die
-         Zuzahlungsforderung gibt
-      4. sonst der Wert aus dem ZHE des Originalbelegs
+      3. bei VKZ 03 das Kennzeichen des Originalbelegs, wenn es "1" oder "5"
+         ist — Anlage 1 Abschnitt 7.4.2.2 und 7.4.2.3 ordnen diese beiden
+         Werte je einem eigenen Fall der Zuzahlungsforderung zu, "2" wäre
+         dort die falsche Begründung
+      4. bei VKZ 03 sonst "2" (keine Zuzahlung trotz schriftlicher
+         Zahlungsaufforderung, Abschnitt 7.4.2.1 und 7.4.2.4)
+      5. sonst der Wert aus dem ZHE des Originalbelegs
+
+    Nicht abgedeckt bleibt das Kennzeichen "4" (Übergang zuzahlungspflichtig
+    zu zuzahlungsfrei): Abschnitt 7.4.2 nennt es nicht, es wird deshalb wie
+    bisher zu "2".
 
     Diese Reihenfolge muss mit der im Schreib-Durchlauf übereinstimmen, sonst
     trägt die Datei ein anderes Kennzeichen als die Beträge hergeben.
@@ -399,9 +423,12 @@ def effektives_zuzahlungskennzeichen(
         return str(b_mod["zuzahlungskennzeichen"])
     if global_zkz is not None:
         return str(global_zkz)
+    original = str(beleg.get("zuzahlungskennzeichen", "") or "").strip()
     if target_vk == "03":
+        if original in ZKZ_EIGENER_VK03_FALL:
+            return original
         return "2"
-    return str(beleg.get("zuzahlungskennzeichen", ""))
+    return original
 
 
 def _beleg_zuzahlung(beleg: Dict[str, Any], mods: Optional[Dict[str, Any]] = None) -> float:
@@ -762,6 +789,7 @@ def generate_correction_esol(
     current_inv_belegnr = ""
     current_inv_zuz_proz = 0.0
     current_inv_zuz_pausch = 0.0
+    current_inv_zhe_zkz = ""   # Kennzeichen aus dem ZHE des Originalbelegs
     current_inv_brutto = 0.0
     inv_block_segments: List[Tuple[str, List[Any]]] = []
     written_ges_statuses = set()
@@ -918,6 +946,7 @@ def generate_correction_esol(
             current_inv_zuz_proz = 0.0
             current_inv_zuz_pausch = 0.0
             current_inv_brutto = 0.0
+            current_inv_zhe_zkz = ""
             positions_inserted = False
 
         elif in_inv_block:
@@ -953,11 +982,20 @@ def generate_correction_esol(
                     positions_inserted = True
 
             if tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
-                zkz_val = (
-                    b_mod.get("zuzahlungskennzeichen")
-                    if (b_mod and "zuzahlungskennzeichen" in b_mod)
-                    else (zuzahlungskennzeichen if zuzahlungskennzeichen is not None else ("2" if target_vk == "03" else None))
-                )
+                # Dieselbe Vorrangregel wie in effektives_zuzahlungskennzeichen.
+                # Weichen die beiden voneinander ab, trägt die Datei ein anderes
+                # Kennzeichen als die Beträge hergeben.
+                zhe_original = str(fields[3]).strip() if len(fields) > 3 else ""
+                current_inv_zhe_zkz = zhe_original
+                if b_mod and "zuzahlungskennzeichen" in b_mod:
+                    zkz_val = b_mod.get("zuzahlungskennzeichen")
+                elif zuzahlungskennzeichen is not None:
+                    zkz_val = zuzahlungskennzeichen
+                elif target_vk == "03":
+                    zkz_val = (zhe_original
+                               if zhe_original in ZKZ_EIGENER_VK03_FALL else "2")
+                else:
+                    zkz_val = None
                 if zkz_val is not None and len(fields) > 3:
                     fields[3] = zkz_val
                 inv_block_segments.append((tag, fields))
@@ -1037,12 +1075,15 @@ def generate_correction_esol(
                 # b_mod: ein global gesetztes "befreit" kam im ZHE an, wurde bei der
                 # Pauschale aber übergangen — die Datei forderte dann Geld von
                 # jemandem, den sie selbst als befreit auswies.
-                zkz = str(
-                    b_mod["zuzahlungskennzeichen"]
-                    if (b_mod and "zuzahlungskennzeichen" in b_mod)
-                    else (zuzahlungskennzeichen if zuzahlungskennzeichen is not None
-                          else ("2" if target_vk == "03" else ""))
-                )
+                if b_mod and "zuzahlungskennzeichen" in b_mod:
+                    zkz = str(b_mod["zuzahlungskennzeichen"])
+                elif zuzahlungskennzeichen is not None:
+                    zkz = str(zuzahlungskennzeichen)
+                elif target_vk == "03":
+                    zkz = (current_inv_zhe_zkz
+                           if current_inv_zhe_zkz in ZKZ_EIGENER_VK03_FALL else "2")
+                else:
+                    zkz = ""
                 if zkz in ZKZ_OHNE_ZUZAHLUNG:
                     current_inv_zuz_pausch = 0.0
                 elif b_mod and "zuzahlung_pausch" in b_mod:

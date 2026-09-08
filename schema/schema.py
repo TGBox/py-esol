@@ -409,8 +409,14 @@ class SchemaFactory:
 
     @classmethod
     def _register_EVO(cls, r: SchemaRegistry) -> None:
+        # Anlage 1, 5.5.3.1: die Laengenangabe lautet "22..256", nicht "..256".
+        # Die eVO-ID hat also eine Mindestlaenge - "Mindestens anzugeben ist die
+        # 22-stellige eID aus der eVerordnung". minLen ist im ganzen Schema das
+        # einzige Vorkommen; alle anderen Felder der Anlage nennen nur eine
+        # Obergrenze.
         r.register(SegmentDefinition('EVO', [
-            {'name': 'eVO-ID', 'type': 'AN', 'art': 'M', 'maxLen': 256, 'decimals': None, 'composite': None},
+            {'name': 'eVO-ID', 'type': 'AN', 'art': 'M', 'maxLen': 256, 'minLen': 22,
+             'decimals': None, 'composite': None},
         ]))
 
     # ========================================================================

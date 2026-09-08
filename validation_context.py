@@ -125,11 +125,24 @@ class ValidationContext:
         stufe: int,
         code: str,
         message: str,
-        severity: str = "error",
         segment: Optional[str] = None,
         segment_index: Optional[int] = None,
+        severity: str = "error",
     ) -> ValidationError:
-        """Helper method to create a ValidationError instance."""
+        """
+        Baut eine ValidationError.
+
+        ACHTUNG bei der Parameterreihenfolge: 'severity' steht bewusst hinten.
+        Vorher stand es an vierter Stelle, alle 43 Aufrufstellen in rules/
+        uebergeben dort aber das Segmentkuerzel positional. Damit landete "UNB",
+        "FKT", "REC" ... in 'severity'; get_errors() filtert auf
+        severity == "error", und has_stufe_errors() sah keine Fehler. Folge:
+        saemtliche Meldungen der Pruefstufen 1 und 2 (1.1.3 bis 1.1.13 und
+        1.2.1.1 bis 1.2.2.9) verschwanden lautlos, und die Pruefung lief in
+        Stufe 3 weiter, obwohl sie laut Anlage 1 Kapitel 6 dort haette abbrechen
+        muessen. Wer die Reihenfolge zurueckdreht, schaltet die beiden Stufen
+        wieder ab. Eine abweichende Severity wird per Schluesselwort uebergeben.
+        """
         return ValidationError(
             stufe=stufe,
             code=code,

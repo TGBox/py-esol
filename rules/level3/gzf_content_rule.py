@@ -12,13 +12,21 @@ from validation_error import ValidationError
 _VERORDNUNGS_SEGMENTE = ("ZHE", "ZHI", "ZHK", "ZHH", "ZKT", "ZHB", "ZSP")
 _ZKZ_FELD = 3
 
-# Zuzahlungskennzeichen, die eine Zuzahlung ausschließen
-# (Anlage 3 zu TP 5, Abschnitt 8.1.3):
-#   0 = Keine gesetzliche Zuzahlung
-#   1 = Zuzahlungsbefreit
+# Zuzahlungskennzeichen, bei denen es keine Zuzahlung gibt, die man
+# nachfordern könnte (Anlage 3 zu TP 5, Abschnitt 8.1.3).
+#
+# Hier steht nur die "0". Die "1" (Zuzahlungsbefreit) gehörte zunächst auch
+# dazu — falsch: Anlage 1 Abschnitt 7.4.2.2 beschreibt genau diesen Fall als
+# zulässige Zuzahlungsforderung. Die ursprüngliche Rechnung war um die
+# Zuzahlung gemindert, der Versicherte zahlt wegen erreichter Belastungsgrenze
+# nicht, der Leistungserbringer fordert sie beim Kostenträger — mit
+# Zuzahlungskennzeichen "1". Eine Forderung neben der "1" ist also der
+# Regelfall und kein Fehler.
+#
+# Bei "0" (keine gesetzliche Zuzahlung) wurde nie eine Zuzahlung abgesetzt.
+# Dann gibt es auch keinen Betrag, den § 43c SGB V zurückholen könnte.
 _ZKZ_OHNE_ZUZAHLUNG = {
     "0": "Keine gesetzliche Zuzahlung",
-    "1": "Zuzahlungsbefreit",
 }
 
 
