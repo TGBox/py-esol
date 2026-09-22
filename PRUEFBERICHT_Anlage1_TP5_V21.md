@@ -203,31 +203,24 @@ Prüfung in `rules/level2/field_length_rule.py` (Regel 1.2.2.6).
 
 ## 4. Offene Befunde — hier brauche ich eine Entscheidung
 
-### 4.1 `brutto_nullen=False` erzeugt eine nicht konforme Datei
+### 4.1 Bruttobetrag bei VKZ 03 — entschieden (22.09.2026): erledigt
 
-Beim letzten Durchgang habe ich das Nullen des Bruttobetrags bei einer
-Zuzahlungsforderung auf Knopfdruck umgestellt. Der Schalter sitzt am
-**GES-Feld „Gesamtbruttobetrag"** — und genau dieses Feld legt die Anlage fest
-(Kapitel 5.5.2, GES):
+Der Punkt drehte sich um das **GES-Feld „Gesamtbruttobetrag"** bei einer
+Zuzahlungsforderung und um Regel 1.3.13.5, die dort 0,00 verlangte.
 
-> „Bei Verarbeitungskennzeichen ‚03': Ist der Gesamtbruttobetrag mit 0,00 zu
-> übermitteln."
+**Entscheidung: Regel 1.3.13.5 trifft nicht zu und ist entfallen.** Der
+Bruttobetrag bleibt bei VKZ 03 stehen. Umgesetzt wurde:
 
-Mit `brutto_nullen=False` entsteht also eine Datei, die die eigene Regel
-1.3.13.5 verletzt — was im Code auch so dokumentiert ist. Die Vorgabe bleibt
-`True`, der Korrektur-Editor setzt `False`.
+* die Prüfung 1.3.13.5 ist aus `rules/level3/ges_content_rule.py` entfernt
+* der Schalter „Bruttobetrag nullen" samt Warnhinweisen und Rückfrage ist aus
+  dem Korrektur-Editor entfernt
+* `brutto_nullen` ist als Parameter von `generate_correction_esol` /
+  `generate_correction_file` entfallen — auch die Kommandozeile schreibt den
+  echten Bruttobetrag
 
 Wichtig für die Einordnung: **die Beträge der einzelnen Leistungspositionen
-werden bei VKZ 03 ohnehin nie genullt**, sie werden unverändert übernommen. Was
-Sie im Editor als „genullt" gesehen haben, war dieses GES-Feld.
-
-Ich sehe drei Wege und würde den ersten nehmen:
-
-1. Schalter entfernen, GES-Bruttobetrag immer 0,00 (konform, Verhalten wie vor
-   meiner Änderung)
-2. Schalter behalten, aber im Editor deutlich als „erzeugt eine Datei, die die
-   Kasse abweisen wird" beschriften
-3. so lassen
+wurden bei VKZ 03 ohnehin nie genullt**, sie werden unverändert übernommen. Was
+im Editor als „genullt" zu sehen war, war dieses GES-Feld.
 
 ### 4.2 Die Reihenfolge innerhalb des INV-Blocks wird nicht geprüft
 

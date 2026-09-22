@@ -110,17 +110,11 @@ class GesContentRule(RuleInterface):
                 seg_index = ges["index"]
 
                 if vk == "03":
-                    if abs(ges["brutto"]) > 0.005:
-                        errors.append(
-                            ValidationError.error(
-                                3,
-                                "1.3.13.5",
-                                f"GES (Status {ges['status']}): Bei VK 03 muss Gesamtbruttobetrag 0,00 sein, gefunden: {ContentHelper.format_decimal(ges['brutto'])}.",
-                                "GES",
-                                seg_index,
-                            )
-                        )
-
+                    # Regel 1.3.13.5 ("Bei VK 03 muss der Gesamtbruttobetrag
+                    # 0,00 sein") ist entfallen — die Vorgabe hat sich als
+                    # nicht zutreffend erwiesen. Der Bruttobetrag darf bei
+                    # einer Zuzahlungsforderung stehen bleiben und wird hier
+                    # nicht mehr geprüft.
                     if ges["zuzahlung"] is not None:
                         expected_rechnung = ContentHelper.round_commercial(
                             ges["zuzahlung"]
@@ -302,6 +296,9 @@ class GesContentRule(RuleInterface):
         if ges_data and ges_data[0]["status"] == "00":
             ges00 = ges_data[0]
 
+            # Bei VK 03 tragen die Belege GZF statt BES. Es gibt dort also
+            # keine Belegbruttosummen, gegen die sich der Gesamtbruttobetrag
+            # abgleichen ließe.
             if vk != "03":
                 rounded_total_brutto = ContentHelper.round_commercial(
                     total_brutto
@@ -356,9 +353,9 @@ class GesContentRule(RuleInterface):
         Summe stimmen, aber in der falschen Statuszeile stehen — genau der
         Fehler, den das Erzeugen einer Korrekturrechnung produziert hat.
 
-        Bei Verarbeitungskennzeichen 03 wird nicht geprüft: dort ist der
-        Bruttobetrag laut Anlage mit 0,00 zu übermitteln, ein Abgleich gegen
-        die Belegsummen wäre sinnlos.
+        Bei Verarbeitungskennzeichen 03 wird nicht geprüft: dort tragen die
+        Belege GZF statt BES, es gibt also keine Belegbruttosummen, gegen die
+        sich abgleichen ließe.
         """
         if vk == "03":
             return
