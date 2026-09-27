@@ -40,15 +40,10 @@ class EsolDocumentBuilder:
 
     def add_segment(self, tag: str, elements: List[Union[str, int, float, list, None]]) -> 'EsolDocumentBuilder':
         """Fügt ein Segment hinzu (z. B. UNB, UNH, FKT, EHE)."""
-        # Check if tag and definition exist.
-        if self.registry.is_known_tag(tag):
-            segment_def = self.registry.get(tag)
-            if segment_def is not None:
-                self.validate_segment_data(definition=segment_def, elements=elements)
-            else:
-                raise ValueError(f"Fehler! Es konnte keine Definition für ein Segment mit dem Bezeichner \"{tag}\" gefunden werden!")
-        else:
+        segment_def = self.registry.get(tag)
+        if not segment_def:
             raise ValueError(f"Fehler! Der Bezeichner \"{tag}\" konnte nicht gefunden werden!")
+        self.validate_segment_data(definition=segment_def, elements=elements)
         
         segment = EsolSegment(tag, elements)
         self.segments.append(segment)

@@ -14,34 +14,6 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from esol_validator import EsolValidator
-from rules.level1.encoding_rule import EncodingRule
-from rules.level1.msg_count_rule import MessageCountRule
-from rules.level1.reference_number_rule import ReferenceNumberRule
-from rules.level1.single_invoice_kind_rule import SingleRechnungsartRule
-from rules.level1.structure_rule import StructureRule
-from rules.level1.version_rule import VersionRule
-from rules.level2.decimal_format_rule import DecimalFormatRule
-from rules.level2.escape_sequence_rule import EscapeSequenceRule
-from rules.level2.field_length_rule import FieldLengthRule
-from rules.level2.field_presence_rule import FieldPresenceRule
-from rules.level2.field_type_rule import FieldTypeRule
-from rules.level2.segment_order_rule import SegmentOrderRule
-from rules.level3.bes_content_rule import BesContentRule
-from rules.level3.cross_message_rule import CrossMessageRule
-from rules.level3.dia_content_rule import DiaContentRule
-from rules.level3.ehe_content_rule import EheContentRule
-from rules.level3.fkt_content_rule import FktContentRule
-from rules.level3.ges_content_rule import GesContentRule
-from rules.level3.gzf_content_rule import GzfContentRule
-from rules.level3.inv_content_rule import InvContentRule
-from rules.level3.nad_content_rule import NadContentRule
-from rules.level3.nam_content_rule import NamContentRule
-from rules.level3.rec_content_rule import RecContentRule
-from rules.level3.unb_content_rule import UnbContentRule
-from rules.level3.unt_content_rule import UntContentRule
-from rules.level3.uri_content_rule import UriContentRule
-from rules.level3.zhe_content_rule import ZheContentRule
-from rules.level4.unique_ehe_date_service_rule import UniqueEheDateServiceRule
 
 def create_sample_files(output_dir: Path):
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -166,34 +138,7 @@ def create_sample_files(output_dir: Path):
 
     # Validierung prüfen
     validator = EsolValidator(_max_stufe=4, _include_warnings=True)
-    validator.register_rule(EncodingRule())
-    validator.register_rule(StructureRule())
-    validator.register_rule(VersionRule())
-    validator.register_rule(SingleRechnungsartRule())
-    validator.register_rule(ReferenceNumberRule())
-    validator.register_rule(MessageCountRule())
-    validator.register_rule(SegmentOrderRule())
-    validator.register_rule(FieldPresenceRule())
-    validator.register_rule(FieldLengthRule())
-    validator.register_rule(FieldTypeRule())
-    validator.register_rule(DecimalFormatRule())
-    validator.register_rule(EscapeSequenceRule())
-    validator.register_rule(UnbContentRule())
-    validator.register_rule(FktContentRule())
-    validator.register_rule(RecContentRule())
-    validator.register_rule(GesContentRule())
-    validator.register_rule(NamContentRule())
-    validator.register_rule(InvContentRule())
-    validator.register_rule(NadContentRule())
-    validator.register_rule(ZheContentRule())
-    validator.register_rule(DiaContentRule())
-    validator.register_rule(EheContentRule())
-    validator.register_rule(BesContentRule())
-    validator.register_rule(UntContentRule())
-    validator.register_rule(GzfContentRule())
-    validator.register_rule(UriContentRule())
-    validator.register_rule(CrossMessageRule())
-    validator.register_rule(UniqueEheDateServiceRule())
+    validator.register_default_rules()
 
     for p in output_dir.glob("*.esol"):
         res = validator.validate(str(p))

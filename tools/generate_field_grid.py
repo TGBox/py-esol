@@ -77,9 +77,5 @@ def generate_numbered_calibration_image():
     out_asset = os.path.join(project_root, "assets", "muster13_feld_nummerierung.jpg")
     img.save(out_asset)
 
-    artifact_dir = r"C:\Users\DaniBani\.gemini\antigravity-ide\brain\d5b333fd-e7e2-488d-bfa9-ccff44aba9e9"
-    if os.path.exists(artifact_dir):
-        img.save(os.path.join(artifact_dir, "muster13_feld_nummerierung.jpg"))
-
 if __name__ == "__main__":
     generate_numbered_calibration_image()

@@ -52,30 +52,13 @@ def convert_file(
 
         # Intelligente Dekodierung mit Fehlererkennung
         content = None
-
-        # 1. Versuche Quell-Encoding (standardmäßig UTF-8) strikt zu dekodieren
-        try:
-            content = raw_bytes.decode(source_encoding)
-        except UnicodeDecodeError:
-            pass
-
-        # 2. Falls Fehlschlag, versuche Ziel-Encoding (z. B. ISO-8859-15) strikt zu dekodieren
-        if content is None and target_encoding.lower() != source_encoding.lower():
+        for enc in (source_encoding, target_encoding, "iso-8859-1", "cp1252"):
             try:
-                content = raw_bytes.decode(target_encoding)
-            except UnicodeDecodeError:
+                content = raw_bytes.decode(enc)
+                break
+            except (UnicodeDecodeError, LookupError):
                 pass
 
-        # 3. Falls weiterhin Fehlschlag, versuche kompatible Encodings (ISO-8859-1, CP1252)
-        if content is None:
-            for fallback in ("iso-8859-1", "cp1252"):
-                try:
-                    content = raw_bytes.decode(fallback)
-                    break
-                except UnicodeDecodeError:
-                    pass
-
-        # 4. Letzter Ausweg: Quell-Encoding mit Replace-Strategie
         if content is None:
             content = raw_bytes.decode(source_encoding, errors="replace")
 
@@ -152,13 +135,7 @@ def main() -> None:
         default=None,
         help="Zielverzeichnis für konvertierte Dateien",
     )
-    parser.add_argument(
-        "--inplace",
-        "-i",
-        action="store_true",
-        help="Ohne Wirkung — das Ersetzen am Originalort ist das Standardverhalten. "
-             "Nur aus Kompatibilitätsgründen erhalten.",
-    )
+
     parser.add_argument(
         "--encoding",
         "-e",

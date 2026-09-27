@@ -14,90 +14,51 @@ class ValidationContext:
     """
 
     def __init__(self) -> None:
-        self._raw_content: str | bytes = ""
-        self._file_path: str = ""
-        self._raw_segments: List[str] = []
-        self._parsed_segments: List[Dict[str, Any]] = []
-        self._messages: List[Dict[str, Any]] = []
+        self.raw_content: str | bytes = ""
+        self.file_path: str = ""
+        self.raw_segments: List[str] = []
+        self.parsed_segments: List[Dict[str, Any]] = []
+        self.messages: List[Dict[str, Any]] = []
 
-    def set_raw_content(self, content: str | bytes) -> None:
-        self._raw_content = content
-
-    def get_raw_content(self) -> str | bytes:
-        return self._raw_content
-
-    def set_file_path(self, path: str) -> None:
-        self._file_path = path
-
-    def get_file_path(self) -> str:
-        return self._file_path
-
-    def set_raw_segments(self, segments: List[str]) -> None:
-        self._raw_segments = segments
-
-    def get_raw_segments(self) -> List[str]:
-        return self._raw_segments
-
-    def set_parsed_segments(self, segments: List[Dict[str, Any]]) -> None:
-        self._parsed_segments = segments
-
-    def get_parsed_segments(self) -> List[Dict[str, Any]]:
-        return self._parsed_segments
+    # Accessor aliases for compatibility
+    def set_raw_content(self, c: str | bytes) -> None: self.raw_content = c
+    def get_raw_content(self) -> str | bytes: return self.raw_content
+    def set_file_path(self, p: str) -> None: self.file_path = p
+    def get_file_path(self) -> str: return self.file_path
+    def set_raw_segments(self, s: List[str]) -> None: self.raw_segments = s
+    def get_raw_segments(self) -> List[str]: return self.raw_segments
+    def set_parsed_segments(self, s: List[Dict[str, Any]]) -> None: self.parsed_segments = s
+    def get_parsed_segments(self) -> List[Dict[str, Any]]: return self.parsed_segments
+    def set_messages(self, m: List[Dict[str, Any]]) -> None: self.messages = m
+    def get_messages(self) -> List[Dict[str, Any]]: return self.messages
 
     def get_segment(self, index: int) -> Optional[Dict[str, Any]]:
         """Get a parsed segment by index."""
-        if 0 <= index < len(self._parsed_segments):
-            return self._parsed_segments[index]
-        return None
+        return self.parsed_segments[index] if 0 <= index < len(self.parsed_segments) else None
 
     def get_segment_count(self) -> int:
         """Count of parsed segments."""
-        return len(self._parsed_segments)
-
-    def set_messages(self, messages: List[Dict[str, Any]]) -> None:
-        """Set identified messages (UNH..UNT blocks)."""
-        self._messages = messages
-
-    def get_messages(self) -> List[Dict[str, Any]]:
-        return self._messages
+        return len(self.parsed_segments)
 
     def find_first_segment(self, tag: str) -> Optional[Dict[str, Any]]:
         """Get the first parsed segment with a given tag."""
-        for seg in self._parsed_segments:
-            if seg.get("tag") == tag:
-                return seg
-        return None
+        return next((s for s in self.parsed_segments if s.get("tag") == tag), None)
 
     def find_last_segment(self, tag: str) -> Optional[Dict[str, Any]]:
         """Get the last parsed segment with a given tag."""
-        result = None
-        for seg in self._parsed_segments:
-            if seg.get("tag") == tag:
-                result = seg
-        return result
+        return next((s for s in reversed(self.parsed_segments) if s.get("tag") == tag), None)
 
     def find_all_segments(self, tag: str) -> Dict[int, Dict[str, Any]]:
         """Get all parsed segments with a given tag mapped by index."""
-        result = {}
-        for index, seg in enumerate(self._parsed_segments):
-            if seg.get("tag") == tag:
-                result[index] = seg
-        return result
+        return {idx: s for idx, s in enumerate(self.parsed_segments) if s.get("tag") == tag}
 
     def find_first_segment_index(self, tag: str) -> Optional[int]:
         """Get the index of the first segment with a given tag."""
-        for index, seg in enumerate(self._parsed_segments):
-            if seg.get("tag") == tag:
-                return index
-        return None
+        return next((i for i, s in enumerate(self.parsed_segments) if s.get("tag") == tag), None)
 
     def find_last_segment_index(self, tag: str) -> Optional[int]:
         """Get the index of the last segment with a given tag."""
-        result = None
-        for index, seg in enumerate(self._parsed_segments):
-            if seg.get("tag") == tag:
-                result = index
-        return result
+        return next((i for i in range(len(self.parsed_segments) - 1, -1, -1) if self.parsed_segments[i].get("tag") == tag), None)
 
     @staticmethod
     def get_field_value(

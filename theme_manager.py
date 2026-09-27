@@ -57,22 +57,17 @@ LIGHT_COLORS: Dict[str, str] = {
 
 def load_config() -> Dict[str, Any]:
     """Loads configuration from user's home directory config file."""
-    if CONFIG_FILE.exists():
-        try:
-            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            return {}
-    return {}
+    try:
+        return json.loads(CONFIG_FILE.read_text(encoding="utf-8")) if CONFIG_FILE.is_file() else {}
+    except Exception:
+        return {}
 
 
 def save_config(config: Dict[str, Any]) -> None:
     """Saves configuration to user's home directory config file."""
     try:
-        data = load_config()
-        data.update(config)
-        with open(CONFIG_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+        data = {**load_config(), **config}
+        CONFIG_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     except Exception as e:
         print(f"Warning: Could not save config to {CONFIG_FILE}: {e}", file=sys.stderr)
 

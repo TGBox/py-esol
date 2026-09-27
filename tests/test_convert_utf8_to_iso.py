@@ -143,15 +143,6 @@ def test_cli_ordner_ersetzt_alle_dateien_ohne_endung(tmp_path: Path, monkeypatch
         assert (quelle / name).read_bytes() == inhalt
 
 
-def test_inplace_flag_bleibt_akzeptiert(tmp_path: Path, monkeypatch):
-    """--inplace ist wirkungslos, darf aber weiter übergeben werden."""
-    src = tmp_path / "ESOL0253"
-    erwartet = _esol_utf8(src)
-
-    _run_cli(monkeypatch, [src, "--inplace"])
-
-    assert src.read_bytes() == erwartet
-    assert [p.name for p in tmp_path.iterdir()] == ["ESOL0253"]
 
 
 def test_keine_temporaere_datei_bleibt_liegen(tmp_path: Path, monkeypatch):

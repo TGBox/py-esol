@@ -1,3 +1,4 @@
+import re
 from typing import Any, Dict, List, Union
 
 
@@ -128,16 +129,4 @@ class SegmentTokenizer:
 
         ?+ -> +, ?' -> ', ?: -> :, ?, -> ,, ?? -> ?
         """
-        result: List[str] = []
-        length = len(value)
-        i = 0
-
-        while i < length:
-            if value[i] == self.ESCAPE_CHAR and i + 1 < length:
-                result.append(value[i + 1])
-                i += 2
-            else:
-                result.append(value[i])
-                i += 1
-
-        return "".join(result)
+        return re.sub(r"\?(.)", r"\1", value)

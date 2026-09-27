@@ -48,45 +48,14 @@ def create_auftragsdatei(
     empfaenger_padded = str(empfaenger_ik).strip().ljust(15)
     logischer_name_str = str(logischer_name).strip()
 
-    buf = []
-    buf.append("500000")                             # Identifikator (6)
-    buf.append("01")                                 # Version (2)
-    buf.append("00000348")                           # Länge der Auftragsdatei (8)
-    buf.append("000")                                # Sequenznummer (3)
-    buf.append(kurzel)                               # Verfahrenskennung / Dateiname
-    buf.append("     ")                              # Spezifikation (5 Leerzeichen)
-    buf.append(absender_padded)                      # Absender IK Eigner (15)
-    buf.append(absender_padded)                      # Absender IK Physikalisch (15)
-    buf.append(empfaenger_padded)                    # Empfänger IK (15)
-    buf.append(empfaenger_padded)                    # Empfänger IK (15)
-    buf.append("000000")                             # Fehler-Nummer (6)
-    buf.append("000000")                             # Fehler-Maßnahme (6)
-    buf.append(logischer_name_str)                   # Logischer Dateiname
-    buf.append(clean_timestamp)                      # Datum/Zeit Erstellung JHJJMMTThhmmss (14)
-    buf.append(clean_timestamp)                      # Datum/Zeit Gesendet JHJJMMTThhmmss (14)
-    buf.append("00000000000000")                     # Datum/Zeit Empfangen 1 (14)
-    buf.append("00000000000000")                     # Datum/Zeit Empfangen 2 (14)
-    buf.append("000000")                             # Version (6)
-    buf.append("0")                                  # Korrektur (1)
-    buf.append(f"{size:012d}")                       # Dateigröße Nutzdaten (12)
-    buf.append(f"{size:012d}")                       # Dateigröße komprimiert (12)
-    buf.append(encoding_code.ljust(2)[:2])          # Zeichensatz I5=ISO-8859-15, U8=UTF-8 (2)
-    buf.append("00")                                 # Komprimierung (2)
-    buf.append("00")                                 # Verschlüsselung (2)
-    buf.append("00")                                 # Elektronische Unterschrift (2)
-    buf.append("   ")                                # Satzformat (3)
-    buf.append("00000")                              # Satzlänge (5)
-    buf.append("00000000")                           # Blocklänge (8)
-    buf.append("0")                                  # Flag (1)
-    buf.append("00")                                 # Wiederholung (2)
-    buf.append("5")                                  # Übertragungsweg (1)
-    buf.append("0000000000")                         # Verzögerter Versand (10)
-    buf.append("000000")                             # Status (6)
-    buf.append(" " * 28)                             # Infofeld 1 (28)
-    buf.append(" " * 44)                             # Infofeld 2 (44)
-    buf.append(" " * 30)                             # Infofeld 3 (30)
-
-    return "".join(buf)
+    enc = encoding_code.ljust(2)[:2]
+    return (
+        f"5000000100000348000{kurzel}     {absender_padded}{absender_padded}"
+        f"{empfaenger_padded}{empfaenger_padded}000000000000{logischer_name_str}"
+        f"{clean_timestamp}{clean_timestamp}{'0' * 28}0000000"
+        f"{size:012d}{size:012d}{enc}000000   000000000000000050000000000000000"
+        f"{' ' * 102}"
+    )
 
 
 def parse_esol_file(file_path: Path) -> Tuple[str, str, str, str, str, int]:

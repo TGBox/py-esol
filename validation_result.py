@@ -12,8 +12,7 @@ class ValidationResult:
         self._findings.append(error)
 
     def add_errors(self, errors: List[ValidationError]) -> None:
-        for error in errors:
-            self._findings.append(error)
+        self._findings.extend(errors)
 
     def is_valid(self) -> bool:
         """File is valid if there are no error-severity findings."""

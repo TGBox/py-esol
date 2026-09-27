@@ -13,7 +13,6 @@ from typing import Any, Dict, List, Optional
 from PIL import Image, ImageDraw, ImageFont, ImageTk
 
 import codelisten
-import kostentraeger
 import theme_manager
 from support_helper import translate_error
 from tools.generate_correction import format_date_german
@@ -570,7 +569,8 @@ class Muster13PreviewFrame(ttk.Frame):
                 return val
 
         ik = str(beleg.get("krankenkasse_ik") or beleg.get("kostentraeger_ik") or beleg.get("ik") or "").strip()
-        return kostentraeger.get_name_or_fallback(ik)
+        name = codelisten.ik_name(ik)
+        return name if name else (f"Krankenkasse (IK {ik})" if ik else "Krankenkasse")
 
     def _load_calibrated_coords(self) -> Dict[str, tuple]:
         """Lädt benutzerdefinierte Kalibrierungskoordinaten (abs_x, abs_y, abs_w, abs_h) aus assets/muster13_coords.json."""

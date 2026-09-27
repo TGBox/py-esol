@@ -100,7 +100,6 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(
         description="ESOL Validator — Prüfung von ESOL-Dateien gemäß Technische Anlage 1 TP5 V21",
-        add_help=False,
     )
     parser.add_argument("file", nargs="?", help="Pfad zur ESOL-Datei")
     parser.add_argument(
@@ -132,18 +131,12 @@ def main() -> None:
         action="store_true",
         help="Nur Fehleranzahl und Exit-Code ausgeben.",
     )
-    parser.add_argument(
-        "-h",
-        "--help",
-        action="store_true",
-        help="Diese Hilfe anzeigen.",
-    )
 
     args = parser.parse_args()
 
-    if args.help or not args.file:
+    if not args.file:
         parser.print_help()
-        sys.exit(0 if args.help else 2)
+        sys.exit(2)
 
     file_path = Path(args.file)
     if not file_path.is_file():
