@@ -105,4 +105,8 @@ def echte_dateien() -> List[Path]:
     """Die vorhandenen Echtdateien, oder eine leere Liste."""
     if not ECHTE_DATEIEN.is_dir():
         return []
-    return sorted(p for p in ECHTE_DATEIEN.iterdir() if p.is_file())
+    # Nur ESOL-Nutzdaten (ohne Endung) — .auf-Auftragsdateien und Reports
+    # sind kein EDIFACT und würden sonst 1.1.x-Strukturfehler melden.
+    return sorted(
+        p for p in ECHTE_DATEIEN.iterdir() if p.is_file() and p.suffix == ""
+    )

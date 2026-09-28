@@ -129,4 +129,4 @@ class SegmentTokenizer:
 
         ?+ -> +, ?' -> ', ?: -> :, ?, -> ,, ?? -> ?
         """
-        return re.sub(r"\?(.)", r"\1", value)
+        return re.sub(r"\?(.)", r"\1", value, flags=re.DOTALL)

@@ -92,7 +92,20 @@ def main() -> None:
             flush=True,
         )
 
-        res = validator.validate(str(file_path))
+        try:
+            res = validator.validate(str(file_path))
+        except Exception as exc:  # eine defekte Datei darf den Lauf nicht abbrechen
+            print("PRÜF-FEHLER")
+            report.extend(
+                [
+                    f"Datei: {relative_path}",
+                    f"  Status: PRÜF-FEHLER - Validierung abgebrochen: {type(exc).__name__}: {exc}",
+                    "",
+                ]
+            )
+            invalid_count += 1
+            continue
+
         file_errors = res.error_count()
         file_warnings = res.warning_count()
         is_valid = res.is_valid()
