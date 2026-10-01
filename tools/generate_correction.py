@@ -6,6 +6,7 @@ Zuzahlungsnachforderungen (VKZ 03) oder Nachforderungen (VKZ 02) aus einer beste
 Nutzung:
   python tools/generate_correction.py <input-file> --type=03 [options]
   python tools/generate_correction.py <input-file> --type=04 [options]
+  python tools/generate_correction.py <input-file> --type=02 --mengendifferenz=1 [options]
 """
 
 import argparse
@@ -522,6 +523,178 @@ def _get_beleg_mod(belegnr: str, mods: Optional[Dict[str, Any]]) -> Optional[Dic
         if k.lstrip("0") == clean_nr:
             return v
     return None
+
+
+# ---------------------------------------------------------------------------
+# VKZ 02 — Nachforderung einer Mengendifferenz
+# ---------------------------------------------------------------------------
+#
+# Anlage 1 (TP 5, V21), Abschnitt 7.4.1: "Inhaltlich dürfen nur die
+# Abrechnungspositionen, Mengen- und/oder Preisdifferenzen aufgeführt werden,
+# die bei der Erstrechnung […] nicht abgerechnet wurden."
+#
+# Eine Nachforderung, die den Beleg einfach übernimmt, fordert also alles
+# bereits Bezahlte noch einmal. Das fällt keiner Prüfregel auf — die Datei ist
+# formal gültig. Deshalb gibt es hier zweierlei:
+#
+#   * mengendifferenz_modifikationen() baut die Änderungen für den Fall
+#     "je Termin fehlt eine Menge X": nur Zeitintervall-Positionen, Menge = X,
+#     keine erneute 10-€-Zuzahlung je Verordnung.
+#   * vk02_unveraenderte_belege() nennt vor dem Speichern die Belege, die
+#     unverändert aus der Erstrechnung übernommen würden.
+
+# Positionsarten, deren Menge sich als Differenz nachfordern lässt.
+_MENGEN_TAGS = ("EHE",)
+
+
+def _zeitintervall_codes() -> Dict[str, str]:
+    try:
+        import codelisten
+        return codelisten.zeitintervall_positionen()
+    except Exception:
+        return {}
+
+
+def mengendifferenz_modifikationen(
+    raw_content: str,
+    selected_belegnr_list: Optional[List[str]] = None,
+    differenz: float = 1.0,
+    zeitintervall_codes: Optional[Any] = None,
+) -> Tuple[Dict[str, Dict[str, Any]], List[Dict[str, Any]]]:
+    """
+    Baut die beleg_modifications für eine VKZ-02-Nachforderung, in der je
+    Termin nur die fehlende Menge nachgefordert wird.
+
+    Je Beleg:
+      * jede Position, deren Positionsnummer in zeitintervall_codes steht,
+        wird mit Menge = differenz übernommen — Positionsnummer, Tarif,
+        Datum, Einzelpreis und Zuzahlung je Einheit bleiben wie im Original
+      * alle übrigen Positionen entfallen (Bedarfsanalyse, Pauschale je
+        Verordnung, Hausbesuch, Bericht …) — sie sind mit der Erstrechnung
+        vollständig abgerechnet
+      * die pauschale Zuzahlung (10 € je Verordnungsblatt) wird nicht noch
+        einmal abgezogen; sie ist bereits in der Erstrechnung abgesetzt
+      * das Zuzahlungskennzeichen bleibt wie im Original
+
+    zeitintervall_codes: Positionsnummern (Iterable oder Dict). Fehlt der
+    Parameter, gilt data/zeitintervall_positionen.json.
+
+    Rückgabe: (modifications, bericht). bericht enthält je ausgewähltem Beleg
+    belegnr, name, positionen (übernommen), entfernt (Liste der entfallenen
+    Positionsnummern), freitext (bool: der Beleg hat TXT/MWS-Segmente) und
+    ausgelassen (bool: keine Zeitintervall-Position — der Beleg gehört nicht
+    in die Nachforderung und steht nicht in modifications).
+    """
+    if differenz <= 0:
+        raise ValueError("Die nachgeforderte Menge muss größer als 0 sein.")
+
+    if zeitintervall_codes is None:
+        zeitintervall_codes = _zeitintervall_codes()
+    codes = {str(c).strip() for c in zeitintervall_codes}
+    if not codes:
+        raise ValueError(
+            "Keine Zeitintervall-Positionen bekannt — data/zeitintervall_positionen.json "
+            "fehlt oder ist leer. Ohne diese Liste lässt sich nicht entscheiden, "
+            "welche Positionen eine Mengendifferenz bekommen."
+        )
+
+    auswahl = set(selected_belegnr_list) if selected_belegnr_list else None
+    mods: Dict[str, Dict[str, Any]] = {}
+    bericht: List[Dict[str, Any]] = []
+
+    for beleg in parse_esol_belege_summary(raw_content):
+        b_nr = str(beleg.get("belegnr", ""))
+        if auswahl is not None and b_nr not in auswahl:
+            continue
+
+        neue: List[Dict[str, Any]] = []
+        entfernt: List[str] = []
+        for pos in beleg.get("positions", []):
+            code = str(pos.get("code", "")).strip()
+            if pos.get("tag") in _MENGEN_TAGS and code in codes:
+                einzel = float(pos.get("einzelbetrag", 0.0))
+                zuz = float(pos.get("zuzahlung", 0.0))
+                neue.append({
+                    "id": len(neue),
+                    "tag": pos.get("tag", "EHE"),
+                    "code": code,
+                    "abr_code": pos.get("abr_code", ""),
+                    "tarif_kz": pos.get("tarif_kz", ""),
+                    "datum": pos.get("datum", ""),
+                    "anzahl": float(differenz),
+                    "einzelbetrag": einzel,
+                    "gesamtbetrag": round(differenz * einzel, 2),
+                    "zuzahlung": zuz,
+                    "zuzahlung_gesamt": round(differenz * zuz, 2),
+                })
+            else:
+                entfernt.append(code or pos.get("tag", "?"))
+
+        freitext = any(t in ("TXT", "MWS") for t, _ in beleg.get("raw_segments", []))
+        name = f"{beleg.get('nachname', '')}, {beleg.get('vorname', '')}".strip(", ")
+        bericht.append({
+            "belegnr": b_nr,
+            "name": name,
+            "positionen": len(neue),
+            "entfernt": entfernt,
+            "freitext": freitext,
+            "ausgelassen": not neue,
+        })
+        if neue:
+            mods[b_nr] = {"positions": neue, "zuzahlung_pausch": 0.0}
+
+    return mods, bericht
+
+
+def _positions_schluessel(positions: List[Dict[str, Any]]) -> List[Tuple[Any, ...]]:
+    return sorted(
+        (
+            str(p.get("tag", "")),
+            str(p.get("code", "")),
+            str(p.get("datum", "")),
+            round(float(p.get("anzahl", 0.0)), 2),
+            round(float(p.get("einzelbetrag", 0.0)), 2),
+        )
+        for p in positions
+    )
+
+
+def vk02_unveraenderte_belege(
+    raw_content: str,
+    selected_belegnr_list: Optional[List[str]] = None,
+    beleg_modifications: Optional[Dict[str, Any]] = None,
+) -> List[Dict[str, str]]:
+    """
+    Belege, deren Positionen in einer Nachforderung (VKZ 02) genau so stünden
+    wie in der Erstrechnung.
+
+    Nach Anlage 1, 7.4.1 darf eine Nachforderung nur Positionen, Mengen- oder
+    Preisdifferenzen enthalten. Ein unveränderter Beleg fordert dagegen alles
+    bereits Abgerechnete noch einmal — formal gültig, fachlich eine doppelte
+    Abrechnung.
+
+    Rückgabe je Beleg: belegnr, name, grund (Klartext).
+    """
+    mods = beleg_modifications or {}
+    auswahl = set(selected_belegnr_list) if selected_belegnr_list else None
+    treffer: List[Dict[str, str]] = []
+
+    for beleg in parse_esol_belege_summary(raw_content):
+        b_nr = str(beleg.get("belegnr", ""))
+        if auswahl is not None and b_nr not in auswahl:
+            continue
+        b_mod = _get_beleg_mod(b_nr, mods)
+        original = beleg.get("positions", [])
+        if b_mod and "positions" in b_mod:
+            if _positions_schluessel(b_mod["positions"]) != _positions_schluessel(original):
+                continue
+            grund = "Positionen bearbeitet, aber wieder identisch mit der Erstrechnung"
+        else:
+            grund = "Positionen unverändert aus der Erstrechnung übernommen"
+        name = f"{beleg.get('nachname', '')}, {beleg.get('vorname', '')}".strip(", ")
+        treffer.append({"belegnr": b_nr, "name": name, "grund": grund})
+
+    return treffer
 
 
 def generate_correction_esol(
@@ -1293,11 +1466,52 @@ def main() -> None:
         default=None,
         help="Ausgewählte Belegnummern, die übernommen werden sollen",
     )
+    parser.add_argument(
+        "--mengendifferenz",
+        type=float,
+        default=None,
+        metavar="MENGE",
+        help="Nur mit --type=02: je Termin MENGE Zeitintervalle nachfordern "
+             "(z. B. 1). Andere Positionen und die 10-€-Zuzahlung entfallen "
+             "(Anlage 1, 7.4.1). Positionsliste: data/zeitintervall_positionen.json",
+    )
 
     args = parser.parse_args()
     input_path = Path(args.input_file)
 
+    if args.mengendifferenz is not None and args.type != "02":
+        parser.error("--mengendifferenz gibt es nur bei --type=02 (Nachforderung)")
+
+    beleg_modifications = None
+    belege = args.belege
+
     try:
+        if args.type == "02" and input_path.is_file():
+            raw = read_esol_file_text(input_path)
+            if args.mengendifferenz is not None:
+                beleg_modifications, bericht = mengendifferenz_modifikationen(
+                    raw, selected_belegnr_list=args.belege, differenz=args.mengendifferenz,
+                )
+                ausgelassen = [b for b in bericht if b["ausgelassen"]]
+                belege = [b["belegnr"] for b in bericht if not b["ausgelassen"]]
+                print(f"Mengendifferenz {args.mengendifferenz:g} je Termin für "
+                      f"{len(belege)} Beleg(e).")
+                for b in ausgelassen:
+                    print(f"  Beleg {b['belegnr']}: keine Zeitintervall-Position — nicht in der Datei")
+                for b in bericht:
+                    if b["freitext"] and not b["ausgelassen"]:
+                        print(f"  Beleg {b['belegnr']}: enthält TXT/MWS — bitte von Hand prüfen")
+                print()
+                if not belege:
+                    raise ValueError("Kein Beleg mit Zeitintervall-Positionen — es wird keine Datei erzeugt.")
+            else:
+                unveraendert = vk02_unveraenderte_belege(raw, selected_belegnr_list=args.belege)
+                if unveraendert:
+                    print(f"WARNUNG: {len(unveraendert)} Beleg(e) werden unverändert übernommen und "
+                          f"fordern damit bereits Abgerechnetes erneut an (Anlage 1, 7.4.1). "
+                          f"Für fehlende Mengen --mengendifferenz verwenden.")
+                    print()
+
         # Bei einer Zuzahlungsforderung erst benennen, welche Belege herausfallen
         # und warum — sonst fehlen sie später in der Datei, ohne dass es jemand
         # gemerkt hat.
@@ -1318,11 +1532,12 @@ def main() -> None:
             input_path=input_path,
             output_path=Path(args.output_file) if args.output_file else None,
             target_vk=args.type,
-            selected_belegnr_list=args.belege,
+            selected_belegnr_list=belege,
             new_rec_nr=args.new_rec_nr,
             new_rec_date=args.new_rec_date,
             zuzahlungskennzeichen=args.zuzahlungskennzeichen,
             out_dir=Path(args.out_dir) if args.out_dir else None,
+            beleg_modifications=beleg_modifications,
         )
         print(f"Korrekturdatei (VKZ {args.type}) erfolgreich erstellt: {res_path}")
     except Exception as e:

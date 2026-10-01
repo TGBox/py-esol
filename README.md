@@ -14,7 +14,7 @@ Es unterstützt Leistungserbringer im Heilmittelbereich (Physiotherapie, Ergothe
   * **Stufe 3 (Inhalt & Semantik)**: IK-Prüfziffern (Modulo 10), Datumsformate, Komma-Dezimalwerte, Diagnose-Codes (`DIA`), Abgleich von `GES`-Summen mit `BES`-Einzelsummen.
   * **Stufe 4 (Sammelgruppen-Regeln)**: Heilmittelspezifische Regeln für die Sammelgruppen 1 bis 6 (Physio, Ergo, Logo, Podologie, etc.).
 * **💰 Korrektur- & Nachforderungs-Generator (VKZ 02, 03, 04, 10)**:
-  * **VKZ 02 (Nachforderung)**: Erstellung von Teilnachforderungen nach Absetzungen.
+  * **VKZ 02 (Nachforderung)**: Nachträgliche Abrechnung von Positionen, Mengen- oder Preisdifferenzen, die in der Erstrechnung fehlten (Anlage 1, 7.4.1). Modus **Mengendifferenz je Termin**: fordert je Termin die fehlende Zahl an Zeitintervallen nach — nur Positionen aus `data/zeitintervall_positionen.json`, ohne einmalige Positionen und ohne erneute 10-€-Zuzahlung. Vor dem Speichern warnt der Editor vor Belegen, die unverändert übernommen würden.
   * **VKZ 03 (Zuzahlungsforderung § 43c SGB V)**: Generierung von Zuzahlungsforderungen bei Verweigerung/Nichtzahlung durch Patienten (`GZF`-Segment).
   * **VKZ 04 (Korrekturrechnung)**: Neuberechnung/Korrektur abgesetzter Rechnungsbelege.
   * **VKZ 10 (Wiederaufnahme Blankoverordnung § 125a SGB V)**: Abrechnung nach Unterbrechung bei Blankoverordnungen.
@@ -100,6 +100,9 @@ python tools/generate_correction.py path/to/ESOL_FILE -t 03
 
 # VK 02 (Nachforderung) mit gefilterten Belegen
 python tools/generate_correction.py path/to/ESOL_FILE -t 02 --belege A123456789 A987654321
+
+# VK 02 (Nachforderung) mit einer fehlenden Einheit je Termin
+python tools/generate_correction.py path/to/ESOL_FILE -t 02 --mengendifferenz 1
 
 # VK 10 (Wiederaufnahme Blankoverordnung § 125a SGB V)
 python tools/generate_correction.py path/to/ESOL_FILE -t 10

@@ -20,6 +20,8 @@ from tools.generate_correction import (
     generate_correction_esol,
     generate_correction_file,
     vk03_ausgeschlossene_belege,
+    vk02_unveraenderte_belege,
+    mengendifferenz_modifikationen,
     pruefe_iso_8859_15,
     read_esol_file_text,
     format_date_german,
@@ -384,6 +386,158 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             f"Die Datei enthält damit {verbleibend} Beleg(e). Fortfahren?",
         ))
 
+    def _bestaetige_unveraenderte_belege(self, ist_handarbeit: bool) -> bool:
+        """
+        VKZ 02: warnt vor Belegen, die unverändert aus der Erstrechnung
+        übernommen würden.
+
+        Anlage 1, Abschnitt 7.4.1: In eine Nachforderung dürfen nur Positionen,
+        Mengen- oder Preisdifferenzen, die in der Erstrechnung fehlten. Ein
+        unveränderter Beleg fordert alles bereits Bezahlte noch einmal — die
+        Datei ist trotzdem formal gültig, keine Prüfregel schlägt an.
+
+        Rückgabe False bedeutet: nicht speichern.
+        """
+        if self.target_vk != "02" or ist_handarbeit:
+            return True
+        try:
+            treffer = vk02_unveraenderte_belege(
+                self.raw_content,
+                selected_belegnr_list=self.selected_belegnr_list,
+                beleg_modifications=self.modifications,
+            )
+        except Exception:
+            return True  # Auskunft ist Beiwerk; sie darf das Speichern nicht verhindern
+        if not treffer:
+            return True
+
+        zeilen = "\n".join(
+            f"  • Beleg {t['belegnr']} ({t['name']}): {t['grund']}" for t in treffer[:12]
+        )
+        if len(treffer) > 12:
+            zeilen += f"\n  • … und {len(treffer) - 12} weitere"
+        return bool(messagebox.askyesno(
+            "Nachforderung enthält bereits Abgerechnetes",
+            f"{len(treffer)} von {len(self.selected_belegnr_list)} Belegen stehen in der "
+            f"Nachforderung genau so wie in der Erstrechnung:\n\n{zeilen}\n\n"
+            "Eine Nachforderung (VKZ 02) darf nach Anlage 1, Abschnitt 7.4.1 nur "
+            "Positionen, Mengen- oder Preisdifferenzen enthalten, die in der "
+            "Erstrechnung fehlten. So gespeichert, fordert die Datei diese Belege "
+            "ein zweites Mal an.\n\n"
+            "Fehlt je Termin eine Menge, hilft der Button \u201eMengendifferenz je "
+            "Termin\u201c.\n\nTrotzdem speichern?",
+            default="no",
+        ))
+
+    def _apply_mengendifferenz(self, differenz: Optional[float] = None, nachfragen: bool = True):
+        """
+        VKZ 02: setzt in ALLEN Belegen die Nachforderung einer Mengendifferenz.
+
+        Je Beleg bleiben nur die Zeitintervall-Positionen (data/
+        zeitintervall_positionen.json), jede mit Menge = differenz; alle
+        anderen Positionen entfallen, die 10-€-Zuzahlung je Verordnung wird
+        nicht erneut abgezogen. Belege ohne Zeitintervall-Position kommen aus
+        der Auswahl — unverändert würden sie doppelt abgerechnet.
+
+        differenz/nachfragen sind für Tests: ohne Rückfragen und Meldungen.
+        """
+        if differenz is None:
+            differenz = simpledialog.askfloat(
+                "Mengendifferenz je Termin",
+                "Wie viele Zeitintervalle (je 15 Minuten) fehlen je Termin?\n\n"
+                "Jede Zeitintervall-Position jedes Belegs wird mit dieser Menge "
+                "nachgefordert. Alle anderen Positionen (Bedarfsanalyse, Pauschale "
+                "je Verordnung, Hausbesuch, Bericht …) entfallen, ebenso die "
+                "10-€-Zuzahlung je Verordnung — beides ist mit der Erstrechnung "
+                "schon abgerechnet (Anlage 1, 7.4.1).",
+                parent=self,
+                initialvalue=1,
+                minvalue=0.01,
+            )
+            if differenz is None:
+                return
+
+        try:
+            mods, bericht = mengendifferenz_modifikationen(
+                self.raw_content,
+                selected_belegnr_list=self.selected_belegnr_list,
+                differenz=float(differenz),
+            )
+        except ValueError as e:
+            if nachfragen:
+                messagebox.showerror("Mengendifferenz nicht möglich", str(e), parent=self)
+            return
+
+        if not mods:
+            if nachfragen:
+                messagebox.showerror(
+                    "Keine Zeitintervall-Positionen",
+                    "Keiner der gewählten Belege enthält eine Position aus "
+                    "data/zeitintervall_positionen.json. Es wurde nichts geändert.",
+                    parent=self,
+                )
+            return
+
+        if nachfragen and self.modifications:
+            if not messagebox.askyesno(
+                "Bisherige Änderungen überschreiben?",
+                f"{len(self.modifications)} Beleg(e) wurden bereits bearbeitet. "
+                "Die Mengendifferenz ersetzt deren Positionen. Fortfahren?",
+                parent=self,
+            ):
+                return
+
+        # Belege ohne Zeitintervall-Position aus der Auswahl nehmen
+        ausgelassen = [b for b in bericht if b["ausgelassen"]]
+        raus = {b["belegnr"] for b in ausgelassen}
+        if raus:
+            self.selected_belegnr_list = [n for n in self.selected_belegnr_list if n not in raus]
+            self.belege = [b for b in self.belege if b["belegnr"] not in raus]
+            for b_nr in raus:
+                self.belege_map.pop(b_nr, None)
+                self.modifications.pop(b_nr, None)
+                if self.beleg_tree.exists(b_nr):
+                    self.beleg_tree.delete(b_nr)
+
+        for b_nr, mod in mods.items():
+            b = self.belege_map.get(b_nr)
+            if not b:
+                continue
+            b["positions"] = copy.deepcopy(mod["positions"])
+            b["zuzahlung_pausch"] = 0.0
+            self.modifications[b_nr] = {
+                "positions": b["positions"],
+                "zuzahlung_pausch": 0.0,
+            }
+            if self.beleg_tree.exists(b_nr):
+                name = f"{b.get('nachname', '')}, {b.get('vorname', '')}".strip(", ")
+                self.beleg_tree.item(b_nr, values=(b_nr, name, f"+{differenz:g} je Termin"))
+
+        # Eine Handbearbeitung der Vorschau passt jetzt nicht mehr
+        self.manual_content = None
+
+        if self.active_belegnr not in self.belege_map:
+            self.active_belegnr = self.belege[0]["belegnr"] if self.belege else None
+        if self.active_belegnr:
+            self._select_beleg(self.active_belegnr)
+
+        if not nachfragen:
+            return
+
+        anz_pos = sum(b["positionen"] for b in bericht if not b["ausgelassen"])
+        text = (f"Mengendifferenz {differenz:g} je Termin gesetzt: "
+                f"{len(mods)} Beleg(e), {anz_pos} Position(en).")
+        if ausgelassen:
+            text += ("\n\nOhne Zeitintervall-Position, daher aus der Auswahl genommen:\n"
+                     + "\n".join(f"  • Beleg {b['belegnr']} ({b['name']})" for b in ausgelassen[:12]))
+        mit_text = [b for b in bericht if b["freitext"] and not b["ausgelassen"]]
+        if mit_text:
+            text += ("\n\nAchtung — diese Belege enthalten Freitexte (TXT/MWS) zu einzelnen "
+                     "Positionen. Bitte in der Vorschau prüfen, ob sie noch zur richtigen "
+                     "Position gehören:\n"
+                     + "\n".join(f"  • Beleg {b['belegnr']}" for b in mit_text[:12]))
+        messagebox.showinfo("Mengendifferenz", text, parent=self)
+
     def _on_tab_changed(self, event):
         selected_tab = self.notebook.select()
         if selected_tab == str(self.tab_diff):
@@ -489,6 +643,12 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         )
         ttk.Button(bar, text=btn_prices_label, command=self._zero_prices).pack(side="left", padx=2)
         ttk.Button(bar, text="Zuzahlungen nullen (Preise behalten)", command=self._zero_zuzahlungen).pack(side="left", padx=2)
+        if self.target_vk == "02":
+            ttk.Button(
+                bar,
+                text="Mengendifferenz je Termin (alle Belege) …",
+                command=self._apply_mengendifferenz,
+            ).pack(side="left", padx=2)
         ttk.Button(bar, text="🔄 Original wiederherstellen", command=self._restore_original_beleg).pack(
             side="right", padx=2
         )
@@ -1197,6 +1357,9 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             return
 
         if not self._bestaetige_ausgeschlossene_belege(bool(content_override)):
+            return
+
+        if not self._bestaetige_unveraenderte_belege(bool(content_override)):
             return
 
         try:

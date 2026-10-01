@@ -41,6 +41,9 @@ a = Analysis(
         # KBV-Stammdateien (tools/import_kbv_stammdaten.py)
         ('data/diagnosegruppen.json', 'data'),
         ('data/verordnungsbedarf.json', 'data'),
+        # Positionen, die je 15-Minuten-Zeitintervall abgerechnet werden —
+        # von Hand gepflegt, gelesen vom VKZ-02-Modus 'Mengendifferenz'
+        ('data/zeitintervall_positionen.json', 'data'),
 
         # Vorlagen des virtuellen Verordnungsblatts. OHNE DIESE DREI DATEIEN
         # zeigt das Muster-13-Fenster in der EXE eine leere Seite: der Renderer

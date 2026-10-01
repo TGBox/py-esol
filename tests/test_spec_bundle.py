@@ -30,6 +30,7 @@ LAUFZEIT_DATEIEN = [
     "data/kostentraeger.json",
     "data/diagnosegruppen.json",
     "data/verordnungsbedarf.json",
+    "data/zeitintervall_positionen.json",
     "assets/Muster13_1280x1280.jpg",
     "assets/muster13_coords.json",
 ]

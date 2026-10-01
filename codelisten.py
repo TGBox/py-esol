@@ -50,6 +50,7 @@ _KATALOG_FILENAME = "heilmittelkatalog.json"
 _KOSTENTRAEGER_FILENAME = "kostentraeger.json"
 _DIAGNOSEGRUPPEN_FILENAME = "diagnosegruppen.json"
 _VERORDNUNGSBEDARF_FILENAME = "verordnungsbedarf.json"
+_ZEITINTERVALL_FILENAME = "zeitintervall_positionen.json"
 
 # Umgebungsvariablen zum Erzwingen eines Pfades (praktisch für Tests)
 _ENV_CODELISTEN = "PY_ESOL_CODELISTEN"
@@ -58,6 +59,7 @@ _ENV_KATALOG = "PY_ESOL_HEILMITTELKATALOG"
 _ENV_KOSTENTRAEGER = "PY_ESOL_KOSTENTRAEGER"
 _ENV_DIAGNOSEGRUPPEN = "PY_ESOL_DIAGNOSEGRUPPEN"
 _ENV_VERORDNUNGSBEDARF = "PY_ESOL_VERORDNUNGSBEDARF"
+_ENV_ZEITINTERVALL = "PY_ESOL_ZEITINTERVALL"
 
 # Kurzform der Kapitelbezeichnung des Heilmittelkatalogs für die Anzeige.
 # Ein schlichtes Abschneiden von "Maßnahmen der " liefert beim zweiten Kapitel
@@ -166,10 +168,25 @@ _katalog = _Quelle(_KATALOG_FILENAME, _ENV_KATALOG)
 _kostentraeger = _Quelle(_KOSTENTRAEGER_FILENAME, _ENV_KOSTENTRAEGER)
 _diagnosegruppen = _Quelle(_DIAGNOSEGRUPPEN_FILENAME, _ENV_DIAGNOSEGRUPPEN)
 _verordnungsbedarf = _Quelle(_VERORDNUNGSBEDARF_FILENAME, _ENV_VERORDNUNGSBEDARF)
+_zeitintervall = _Quelle(_ZEITINTERVALL_FILENAME, _ENV_ZEITINTERVALL)
 
 _ALLE_QUELLEN = (
     _codelisten, _hmp, _katalog, _kostentraeger, _diagnosegruppen, _verordnungsbedarf,
+    _zeitintervall,
 )
+
+
+def zeitintervall_positionen() -> Dict[str, str]:
+    """
+    Positionsnummern, die je Zeitintervall (15 Minuten) abgerechnet werden,
+    mit Bezeichnung — aus data/zeitintervall_positionen.json (von Hand
+    gepflegt). Leeres Dict, wenn die Datei fehlt oder defekt ist; der Aufrufer
+    muss das als "nichts bekannt" behandeln und darf nicht raten.
+    """
+    daten = _zeitintervall.load().get("positionen", {})
+    if not isinstance(daten, dict):
+        return {}
+    return {str(k).strip(): str(v) for k, v in daten.items() if str(k).strip()}
 
 
 # ---------------------------------------------------------------------------

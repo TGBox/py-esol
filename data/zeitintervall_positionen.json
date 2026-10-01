@@ -1,0 +1,28 @@
+{
+  "_hinweis": [
+    "Positionen, die je Zeitintervall (15 Minuten) abgerechnet werden.",
+    "Wird vom VKZ-02-Modus 'Mengendifferenz' gelesen: nur diese Positionen erhalten je Termin die nachgeforderte Menge; alle anderen Positionen eines Belegs (Bedarfsanalyse, Pauschale je Verordnung, Hausbesuch, Bericht ...) fallen aus der Nachforderung heraus, weil sie mit der Erstrechnung schon vollständig abgerechnet sind.",
+    "Von Hand gepflegt. Eine Position aufnehmen oder entfernen genügt; die EXE liest eine Fassung neben sich (data/zeitintervall_positionen.json) vorrangig."
+  ],
+  "_quelle": "quellen/blanko_leistungen_ergo_20250801.xml — alle Positionen mit der Bemerkung '1 Zeitintervall = 15 Minuten' (Ergotherapie, Vertrag nach § 125a SGB V, gültig ab 01.08.2025)",
+  "positionen": {
+    "54142": "Motorisch-funktionelle Behandlung: Einzelbehandlung",
+    "54162": "Motorisch-funktionelle Behandlung: Einzelbehandlung als telemedizinische Leistung",
+    "54144": "Ergoth. Hirnleistungstraining: Einzelbehandlung",
+    "54164": "Ergoth. Hirnleistungstraining: Einzelbehandlung als telemedizinische Leistung",
+    "54145": "Psychisch-funktionelle Behandlung: Einzelbehandlung",
+    "54165": "Psychisch-funktionelle Behandlung: Einzelbehandlung als telemedizinische Leistung",
+    "54245": "Motorisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten",
+    "54265": "Motorisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung",
+    "54247": "Ergoth. Hirnleistungstraining: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten",
+    "54267": "Ergoth. Hirnleistungstraining: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung",
+    "54248": "Psychisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten",
+    "54268": "Psychisch-funktionelle Behandlung: Parallelbehandlung bei gleichzeitiger Anwesenheit von zwei Patienten als telemedizinische Leistung",
+    "54249": "Motorisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)",
+    "54269": "Motorisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung",
+    "54251": "Ergoth. Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten)",
+    "54271": "Ergoth. Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung",
+    "54252": "Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)",
+    "54272": "Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung"
+  }
+}
