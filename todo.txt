@@ -259,3 +259,17 @@ OFFEN dazu:
 * Original bleibt immer unveraendert: Kopie in den Ausgabeordner bzw. nach
   <Quellordner>/bereinigt/, in ISO-8859-1. Danach automatische Nachvalidierung.
 * 7 neue Tests in tests/test_ehe_zusammenfassen.py.
+
+
+**13. Korrektur zu Erstabrechnung in TA-Version 20** [ERLEDIGT]
+
+* Anlass: ESOL0037 (UNB 24.11.2025, SLGA/SLLA:20:0:0). Die Erstabrechnung ist
+  gueltig, die Nachforderung bekam das heutige UNB-Datum (02.10.2026) und fiel
+  damit aus der Uebergangszeit fuer Version 20 (Stichtag 01.10.2026): 1.1.12/1.1.13.
+* Loesung: generate_correction_esol schreibt jede Korrektur in der aktuellen
+  TA-Version. Hochgestuft wird nur der bekannte Schritt 20 -> 21, und dabei nur
+  die Nachrichtenkennung im UNH (SLGA/SLLA:20:0:0 -> :21:0:0). Ob der uebrige
+  Inhalt den V21-Regeln genuegt, prueft der Validator vor dem Speichern.
+* Aeltere Versionen als 20 werden nicht angefasst - dafuer ist der Schritt nicht
+  bekannt; der Validator meldet sie wie bisher.
+* 3 Tests in tests/test_version20_korrektur.py.

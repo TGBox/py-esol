@@ -1318,7 +1318,7 @@ def generate_correction_esol(
         if tag == "UNH":
             unh_seg_index = len(final_segments)
             seg_counter = 1
-            final_segments.append(seg_str)
+            final_segments.append(_unh_auf_aktuelle_version(seg_str))
         elif tag == "UNT":
             seg_counter += 1
             if len(fields) > 0:
@@ -1331,6 +1331,30 @@ def generate_correction_esol(
             final_segments.append(seg_str)
 
     return "\n".join(final_segments) + "\n"
+
+
+# Die Korrektur ist eine neue Lieferung und wird in der aktuellen TA-Version
+# geschrieben, auch wenn die Erstabrechnung noch in der Vorversion war.
+# Hochgestuft wird nur der eine bekannte Schritt 20 -> 21: dabei ändert sich
+# nur die Nachrichtenkennung im UNH. Ob der übrige Inhalt den Regeln der
+# Version 21 genügt, prüft der Validator vor dem Speichern (Editor) bzw. die
+# Validierung im Hauptfenster.
+AKTUELLE_TA_VERSION = "21"
+_VORVERSION = "20"
+
+
+def _unh_auf_aktuelle_version(seg_str: str) -> str:
+    """UNH+00001+SLGA:20:0:0 -> UNH+00001+SLGA:21:0:0 (nur SLGA/SLLA, nur 20 -> 21)."""
+    tag, fields = parse_segment_fields(seg_str)
+    if len(fields) < 2:
+        return seg_str
+    kennung = fields[1]
+    teile = list(kennung) if isinstance(kennung, list) else str(kennung).split(":")
+    if len(teile) >= 2 and teile[0] in ("SLGA", "SLLA") and str(teile[1]) == _VORVERSION:
+        teile[1] = AKTUELLE_TA_VERSION
+        fields[1] = teile if isinstance(kennung, list) else ":".join(teile)
+        return build_segment_string(tag, fields)
+    return seg_str
 
 
 def generate_correction_file(
