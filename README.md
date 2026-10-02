@@ -9,7 +9,7 @@ Es unterstützt Leistungserbringer im Heilmittelbereich (Physiotherapie, Ergothe
 ## 🌟 Hauptfunktionen
 
 * **🔍 4-Stufige Validierungs-Engine**:
-  * **Stufe 1 (Struktur & Hülle)**: EDIFACT-Umschläge (`UNB`, `UNH`, `UNT`, `UNZ`), Zeichensatz (ISO-8859-15), Segment-Trennzeichen (`'`) und Element-Trennzeichen (`+`, `:`).
+  * **Stufe 1 (Struktur & Hülle)**: EDIFACT-Umschläge (`UNB`, `UNH`, `UNT`, `UNZ`), Zeichensatz (ISO-8859-1), Segment-Trennzeichen (`'`) und Element-Trennzeichen (`+`, `:`).
   * **Stufe 2 (Syntax & Segmentfolge)**: Reihenfolgeprüfungen für Nachrichten (`SLGA`, `SLLA`) und `INV`-Blöcke.
   * **Stufe 3 (Inhalt & Semantik)**: IK-Prüfziffern (Modulo 10), Datumsformate, Komma-Dezimalwerte, Diagnose-Codes (`DIA`), Abgleich von `GES`-Summen mit `BES`-Einzelsummen.
   * **Stufe 4 (Sammelgruppen-Regeln)**: Heilmittelspezifische Regeln für die Sammelgruppen 1 bis 6 (Physio, Ergo, Logo, Podologie, etc.).
@@ -21,8 +21,8 @@ Es unterstützt Leistungserbringer im Heilmittelbereich (Physiotherapie, Ergothe
   * **Interaktive Belegauswahl**: Gezielte Auswahl einzelner Belege per Checkbox-Dialog in der GUI mit automatischer Neuberechnung aller `GES`-Gesamtsummen.
 * **📄 Auftragsdatei-Generator (`.auf`)**:
   * Automatische Erstellung von EDIFACT-Begleitdateien (`50000001...`) für die physikalische Datenübertragung.
-* **🔄 UTF-8 ➔ ISO-8859-15 Konverter**:
-  * Stapelkonvertierung fehlerhaft kodierter Dateien in den geforderten ISO-8859-15 EDIFACT-Standard.
+* **🔄 UTF-8 ➔ ISO-8859-1 Konverter**:
+  * Stapelkonvertierung fehlerhaft kodierter Dateien in den geforderten ISO-8859-1 EDIFACT-Standard.
 * **🖥️ Grafische Benutzeroberfläche (Tkinter GUI)**:
   * Moderne Desktop-Oberfläche zur einfachen Bedienung ohne Kommandozeilenkenntnisse.
 
@@ -67,7 +67,7 @@ Oder Verwenden der vorkompilierten Binärdatei `dist/pyesol.exe`.
 
 * **Dateiauswahl**: Einzelne Datei, mehrere Dateien oder Ordner auswählen.
 * **`▶ Validieren`**: Führt die 4-stufige Prüfung durch und gibt detaillierte Fehlermeldungen aus.
-* **`🔄 UTF-8 ➔ ISO`**: Konvertiert ausgewählte Dateien zu ISO-8859-15.
+* **`🔄 UTF-8 ➔ ISO`**: Konvertiert ausgewählte Dateien zu ISO-8859-1.
 * **`📄 .auf erstellen`**: Erstellt passende `.auf`-Auftragsdateien.
 * **`🛠️ Korrektur / Zuzahlung`**: Öffnet den interaktiven Konfigurator zur Belegauswahl und VKZ-Generierung (02, 03, 04, 10).
 
@@ -114,7 +114,7 @@ python tools/generate_correction.py path/to/ESOL_FILE -t 10
 python tools/generate_auf.py path/to/ESOL_FILE
 ```
 
-#### E. UTF-8 zu ISO-8859-15 konvertieren
+#### E. UTF-8 zu ISO-8859-1 konvertieren
 
 ```bash
 python tools/convert_utf8_to_iso.py path/to/ESOL_FILE
@@ -204,7 +204,7 @@ py-esol/
 │   ├── level3/                   # Semantik, IK-Prüfziffern, GES-Summen
 │   └── level4/                   # Sammelgruppen 1-6 (Physio, Ergo, Logo, Podologie)
 ├── tools/
-│   ├── convert_utf8_to_iso.py    # UTF-8 -> ISO-8859-15 Konverter
+│   ├── convert_utf8_to_iso.py    # UTF-8 -> ISO-8859-1 Konverter
 │   ├── generate_auf.py           # Generierung von .auf Auftragsdateien
 │   └── generate_correction.py    # Generator für VKZ 02, 03, 04, 10
 └── tests/                        # Pytest Test-Suite (44 Tests)

@@ -66,8 +66,8 @@ class EsolDocumentBuilder:
         """Erzeugt den gesamten Datei-Inhalt als String."""
         return "\n".join(seg.serialize() for seg in self.segments)
 
-    def save_to_file(self, filepath: str, encoding: str = "iso-8859-15") -> None:
-        """Speichert den String in einer Datei (typischerweise ISO-8859-15 / Latin-9 für Abrechnungsdaten)."""
+    def save_to_file(self, filepath: str, encoding: str = "iso-8859-1") -> None:
+        """Speichert den String in einer Datei (ISO-8859-1 / Latin-1, Vorgabe für ESOL-Abrechnungsdaten)."""
         content = self.render()
         with open(filepath, "w", encoding=encoding, newline="\r\n") as f:
             f.write(content)

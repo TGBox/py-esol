@@ -28,20 +28,16 @@ import verordnung as verordnung_mod
 
 def read_esol_file_text(file_path: Path) -> str:
     """
-    Reads an ESOL text file, automatically detecting whether it is encoded in UTF-8
-    or ISO-8859-15 / ISO-8859-1 / CP1252 so German umlauts (ä, ö, ü, ß) are always
-    displayed and parsed correctly.
+    Liest eine ESOL-Datei. Vorgabe ist ISO-8859-1; manche Praxisprogramme
+    schreiben aber UTF-8. Deshalb zuerst UTF-8 versuchen (ein echter
+    ISO-8859-1-Text mit Umlauten ist so gut wie nie gültiges UTF-8),
+    sonst ISO-8859-1 — das kann jedes Byte lesen.
     """
     raw_bytes = file_path.read_bytes()
     try:
         return raw_bytes.decode("utf-8")
     except UnicodeDecodeError:
-        pass
-    try:
-        return raw_bytes.decode("iso-8859-15")
-    except UnicodeDecodeError:
-        pass
-    return raw_bytes.decode("latin-1", errors="replace")
+        return raw_bytes.decode("iso-8859-1")
 
 
 def parse_segment_fields(raw_segment: str) -> Tuple[str, List[Any]]:
@@ -1391,24 +1387,24 @@ def generate_correction_file(
             zuzahlungskennzeichen=zuzahlungskennzeichen,
             beleg_modifications=beleg_modifications,
         )
-    output_path.write_text(new_content, encoding="iso-8859-15")
+    output_path.write_text(new_content, encoding="iso-8859-1")
     return output_path
 
 
-def pruefe_iso_8859_15(text: str) -> List[Tuple[int, int, str]]:
+def pruefe_iso_8859_1(text: str) -> List[Tuple[int, int, str]]:
     """
-    Findet Zeichen, die sich nicht in ISO-8859-15 schreiben lassen.
+    Findet Zeichen, die sich nicht in ISO-8859-1 schreiben lassen.
     Rückgabe: Liste aus (Zeile, Spalte, Zeichen) — jeweils 1-basiert.
 
     Wird gebraucht, bevor eine von Hand bearbeitete Fassung gespeichert wird:
     Text aus Word oder Outlook bringt oft typografische Anführungszeichen oder
-    Gedankenstriche mit, die ISO-8859-15 nicht kennt.
+    Gedankenstriche mit, die ISO-8859-1 nicht kennt.
     """
     treffer: List[Tuple[int, int, str]] = []
     for zeilen_nr, zeile in enumerate(text.splitlines(), start=1):
         for spalte, zeichen in enumerate(zeile, start=1):
             try:
-                zeichen.encode("iso-8859-15")
+                zeichen.encode("iso-8859-1")
             except UnicodeEncodeError:
                 treffer.append((zeilen_nr, spalte, zeichen))
     return treffer

@@ -81,8 +81,8 @@ class EsolValidator:
             return result
 
         try:
-            # ISO-8859-15 (oder cp1252/iso-8859-1) liest ESOL-Nutzdaten gemäß TA1/TP5 V21 ein
-            with open(file_path, "r", encoding="iso-8859-15", errors="replace") as f:
+            # ESOL-Nutzdaten sind ISO-8859-1 (Latin-1); das liest jedes Byte
+            with open(file_path, "r", encoding="iso-8859-1", errors="replace") as f:
                 content = f.read()
         except Exception as e:
             result.add_error(

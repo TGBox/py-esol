@@ -14,7 +14,7 @@ import pytest
 
 from tools.generate_correction import (
     generate_correction_file,
-    pruefe_iso_8859_15,
+    pruefe_iso_8859_1,
     read_esol_file_text,
 )
 
@@ -27,7 +27,7 @@ FIXTURE = Path(__file__).parent / "fixtures" / "valid_esol_smoke"
 
 def test_iso_pruefung_erkennt_typografische_zeichen():
     text = 'NAD+Praxis „Neu"+Max+19900101\''
-    treffer = pruefe_iso_8859_15(text)
+    treffer = pruefe_iso_8859_1(text)
     zeichen = {t[2] for t in treffer}
     assert "„" in zeichen or "“" in zeichen
     # Zeile und Spalte müssen 1-basiert und plausibel sein
@@ -37,13 +37,19 @@ def test_iso_pruefung_erkennt_typografische_zeichen():
 
 
 def test_iso_pruefung_laesst_erlaubte_zeichen_durch():
-    # Umlaute, ß und das Eurozeichen sind in ISO-8859-15 enthalten
-    assert pruefe_iso_8859_15("NAD+Müster+Märta+Groß'\nTXT+100,00 €'") == []
+    # Umlaute, ß und der Akut (D´Andrea, 0xB4) sind in ISO-8859-1 enthalten
+    assert pruefe_iso_8859_1("NAD+Müster+Märta+Groß'\nNAD+D´Andrea+Heide'") == []
+
+
+def test_iso_pruefung_erkennt_eurozeichen():
+    # Das Eurozeichen gibt es nur in ISO-8859-15, nicht in ISO-8859-1
+    treffer = pruefe_iso_8859_1("TXT+100,00 €'")
+    assert [t[2] for t in treffer] == ["€"]
 
 
 def test_iso_pruefung_zaehlt_zeilen_richtig():
     text = "UNB+UNOC:3'\nNAD+ok'\nNAD+—'"
-    treffer = pruefe_iso_8859_15(text)
+    treffer = pruefe_iso_8859_1(text)
     assert len(treffer) == 1
     assert treffer[0][0] == 3
 
@@ -62,7 +68,7 @@ def test_content_override_wird_unveraendert_geschrieben(tmp_path: Path):
         content_override=eigener_text,
     )
 
-    assert ziel.read_text(encoding="iso-8859-15") == eigener_text
+    assert ziel.read_text(encoding="iso-8859-1") == eigener_text
 
 
 def test_ohne_content_override_wird_generiert(tmp_path: Path):
@@ -77,7 +83,7 @@ def test_ohne_content_override_wird_generiert(tmp_path: Path):
         out_dir=tmp_path / "out",
     )
 
-    inhalt = ziel.read_text(encoding="iso-8859-15")
+    inhalt = ziel.read_text(encoding="iso-8859-1")
     assert "FKT+03+" in inhalt
     assert "HANDARBEIT" not in inhalt
 
@@ -224,7 +230,7 @@ def test_generieren_schreibt_die_handfassung(editor, tmp_path: Path):
     erzeugt = list(out_dir.iterdir())
     assert len(erzeugt) == 1, [p.name for p in erzeugt]
 
-    inhalt = erzeugt[0].read_text(encoding="iso-8859-15")
+    inhalt = erzeugt[0].read_text(encoding="iso-8859-1")
     assert "Praxis Neu" in inhalt
     # Und die Datei muss weiterhin gültig sein
     from esol_validator import EsolValidator

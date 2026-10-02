@@ -42,7 +42,7 @@ def create_sample_files(output_dir: Path):
         "UNZ+000002+00118'",
     ]) + "\n"
 
-    (output_dir / "muster13_physio_lumbago.esol").write_text(physio_esol, encoding="iso-8859-15")
+    (output_dir / "muster13_physio_lumbago.esol").write_text(physio_esol, encoding="iso-8859-1")
 
     # 2. Ergotherapie (Zuzahlungsbefreit - Erstverordnung EN1)
     ergo_esol = "\n".join([
@@ -67,7 +67,7 @@ def create_sample_files(output_dir: Path):
         "UNZ+000002+00220'",
     ]) + "\n"
 
-    (output_dir / "muster13_ergo_befreit.esol").write_text(ergo_esol, encoding="iso-8859-15")
+    (output_dir / "muster13_ergo_befreit.esol").write_text(ergo_esol, encoding="iso-8859-1")
 
     # 3. Logopädie (Folgeverordnung SP1 - Zuzahlungspflichtig)
     logo_esol = "\n".join([
@@ -92,7 +92,7 @@ def create_sample_files(output_dir: Path):
         "UNZ+000002+00305'",
     ]) + "\n"
 
-    (output_dir / "muster13_logopaedie.esol").write_text(logo_esol, encoding="iso-8859-15")
+    (output_dir / "muster13_logopaedie.esol").write_text(logo_esol, encoding="iso-8859-1")
 
     # 4. Mehrere Belege in einer Datei (Sammeldatei)
     sammel_esol = "\n".join([
@@ -132,7 +132,7 @@ def create_sample_files(output_dir: Path):
         "UNZ+000003+00400'",
     ]) + "\n"
 
-    (output_dir / "muster13_sammeldatei_mehrere_belege.esol").write_text(sammel_esol, encoding="iso-8859-15")
+    (output_dir / "muster13_sammeldatei_mehrere_belege.esol").write_text(sammel_esol, encoding="iso-8859-1")
 
     print(f"ESOL Testdateien erfolgreich in '{output_dir}' erstellt!")
 

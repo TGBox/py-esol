@@ -44,7 +44,7 @@ def test_generate_auf_from_file(tmp_path: Path):
     assert auf_file.exists()
     assert auf_file.name == "SL030179S03.auf"
 
-    content = auf_file.read_text(encoding="iso-8859-15")
+    content = auf_file.read_text(encoding="iso-8859-1")
     assert "5000000100000348" in content
     assert "123456789      " in content
     assert "661430035      " in content

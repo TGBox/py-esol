@@ -27,12 +27,12 @@ def test_generate_vk03_zuzahlungsforderung(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_esol.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="05100", new_rec_date="20260325")
 
     assert res_file.exists()
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
 
     # Check FKT changed to VK 03
     assert "FKT+03+" in content
@@ -81,12 +81,12 @@ def test_generate_vk04_korrekturrechnung(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_esol_vk04.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     res_file = generate_correction_file(orig_file, target_vk="04", new_rec_nr="05100", new_rec_date="20260325")
 
     assert res_file.exists()
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
 
     # Check FKT changed to VK 04
     assert "FKT+04+" in content
@@ -126,12 +126,12 @@ def test_generate_vk10_wiederaufnahme_blankoverordnung(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_esol_vk10.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     res_file = generate_correction_file(orig_file, target_vk="10", new_rec_nr="05100", new_rec_date="20260325")
 
     assert res_file.exists()
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
 
     # Check FKT changed to VK 10
     assert "FKT+10+" in content
@@ -185,7 +185,7 @@ def test_parse_belege_summary_and_selective_filtering(tmp_path: Path):
 
     # Test filtering: generate VK 03 only for Beleg 00002
     orig_file = tmp_path / "multi_beleg.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     res_file = generate_correction_file(
         orig_file,
@@ -194,7 +194,7 @@ def test_parse_belege_summary_and_selective_filtering(tmp_path: Path):
         new_rec_nr="05100",
     )
 
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
     assert "00002" in content
     assert "NAD+Muster" not in content
     assert "URI+123456789+51:2+20260122+00002'" in content
@@ -211,7 +211,7 @@ def test_parse_belege_summary_and_selective_filtering(tmp_path: Path):
         selected_belegnr_list=["00002"],
         new_rec_nr="05100",
     )
-    content_vk02 = res_file_vk02.read_text(encoding="iso-8859-15")
+    content_vk02 = res_file_vk02.read_text(encoding="iso-8859-1")
     res_vk02 = validator.validate_string(content_vk02)
     assert res_vk02.is_valid(), f"Expected valid VK02 filtered file, got errors: {res_vk02.get_errors()}"
 
@@ -228,12 +228,12 @@ def test_unb_header_month_update(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_unb_month.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     # Pass August 2026 date: 20260813
     res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="08130", new_rec_date="20260813")
 
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
     first_line = content.splitlines()[0]
 
     # Verify UNB logical filename month suffix is updated from S06 to S08
@@ -269,11 +269,11 @@ def test_generate_vk03_composite_rec_300_0(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_rec_300.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     # Generate VK 03 with new_rec_nr="300"
     res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="300", new_rec_date="20260813")
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
 
     # Verify REC+300:0+20260813+1' appears twice in the generated file
     assert content.count("REC+300:0+20260813+1'") == 2, f"Expected REC+300:0+20260813+1' to appear twice, got:\n{content}"
@@ -319,10 +319,10 @@ def test_ges_segments_omit_empty_statuses(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_ges_test.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="300", new_rec_date="20260813")
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
 
     # GES+00 and GES+51 must be present
     assert "GES+00+" in content
@@ -362,10 +362,10 @@ def test_uri_user_example_99_128(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_99_128.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="99", new_rec_date="20260813")
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
 
     # Verify URI line is URI+441481776+99:128+20260614+00128'
     assert "URI+441481776+99:128+20260614+00128'" in content, f"URI segment mismatch, got:\n{content}"
@@ -401,7 +401,7 @@ def test_custom_zuzahlungskennzeichen(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_zkz.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     # Geprüft wird, dass das global gesetzte Kennzeichen im ZHE landet.
     # Dafür VKZ 02: bei einer Zuzahlungsforderung (VKZ 03) ist dieselbe
@@ -411,7 +411,7 @@ def test_custom_zuzahlungskennzeichen(tmp_path: Path):
     res_file = generate_correction_file(
         orig_file, target_vk="02", new_rec_nr="99", new_rec_date="20260813", zuzahlungskennzeichen="1"
     )
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
 
     # Verify ZHE field 3 is set to '1'
     assert "+1+EN1+04+" in content, f"Expected ZHE Zuzahlungskennzeichen '1', got:\n{content}"
@@ -451,7 +451,7 @@ def test_vk03_lehnt_fehlende_gesetzliche_zuzahlung_ab(tmp_path: Path):
         "UNZ+000002+00099'",
     ])
     orig_file = tmp_path / "orig_zkz_vk03.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     with pytest.raises(ValueError, match="kein Beleg für eine Zuzahlungsforderung"):
         generate_correction_file(
@@ -462,7 +462,7 @@ def test_vk03_lehnt_fehlende_gesetzliche_zuzahlung_ab(tmp_path: Path):
 def test_output_filename_formatting(tmp_path: Path):
     orig_esol = "UNB+UNOC:3+123+456+20260101:1000+00001+B+SL123456S01+2'\nUNH+1+SLGA:21:0:0'\nUNT+2+1'\nUNZ+1+00001'\n"
     orig_file = tmp_path / "original.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     # Pass new_rec_nr="300"
     res_file = generate_correction_file(orig_file, target_vk="03", new_rec_nr="300")
@@ -482,9 +482,9 @@ def test_read_esol_file_text_umlauts(tmp_path: Path):
 
     text_with_umlauts = "NAD+Böckmann+Joris+20211207'\nNAD+Faßbender+Finjas+20230218'\nNAD+Tömmers+Hailey+20190903'"
 
-    # 1. Test ISO-8859-15 encoding
+    # 1. Test ISO-8859-1 encoding
     iso_file = tmp_path / "iso.txt"
-    iso_file.write_text(text_with_umlauts, encoding="iso-8859-15")
+    iso_file.write_text(text_with_umlauts, encoding="iso-8859-1")
     iso_read = read_esol_file_text(iso_file)
     assert "Böckmann" in iso_read
     assert "Faßbender" in iso_read
@@ -499,6 +499,16 @@ def test_read_esol_file_text_umlauts(tmp_path: Path):
     assert "Tömmers" in utf8_read
 
 
+
+def test_read_esol_file_text_akut_aus_iso_8859_1(tmp_path: Path):
+    """D´Andrea: Byte 0xB4 ist in ISO-8859-1 der Akut (in ISO-8859-15 wäre es Ž)."""
+    from tools.generate_correction import read_esol_file_text
+
+    datei = tmp_path / "ESOL0156"
+    datei.write_bytes(b"NAD+D\xb4Andrea+Heide+19500101'")
+    assert "D\u00b4Andrea" in read_esol_file_text(datei)
+
+
 def test_generate_correction_file_with_out_dir(tmp_path: Path):
     orig_esol = (
         "UNB+UNOC:3+441481776+107299005+20260813:1526+00300+B+SL148177S08+2'\n"
@@ -510,7 +520,7 @@ def test_generate_correction_file_with_out_dir(tmp_path: Path):
         "UNZ+000001+00300'\n"
     )
     orig_file = tmp_path / "ESOL0300"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     custom_out_dir = tmp_path / "custom_out"
     res_file = generate_correction_file(orig_file, target_vk="03", out_dir=custom_out_dir)

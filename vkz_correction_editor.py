@@ -22,7 +22,7 @@ from tools.generate_correction import (
     vk03_ausgeschlossene_belege,
     vk02_unveraenderte_belege,
     mengendifferenz_modifikationen,
-    pruefe_iso_8859_15,
+    pruefe_iso_8859_1,
     read_esol_file_text,
     format_date_german,
     parse_date_to_iso,
@@ -445,11 +445,14 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             differenz = simpledialog.askfloat(
                 "Mengendifferenz je Termin",
                 "Wie viele Zeitintervalle (je 15 Minuten) fehlen je Termin?\n\n"
-                "Jede Zeitintervall-Position jedes Belegs wird mit dieser Menge "
-                "nachgefordert. Alle anderen Positionen (Bedarfsanalyse, Pauschale "
-                "je Verordnung, Hausbesuch, Bericht …) entfallen, ebenso die "
-                "10-€-Zuzahlung je Verordnung — beides ist mit der Erstrechnung "
-                "schon abgerechnet (Anlage 1, 7.4.1).",
+                # simpledialog bricht nicht um: Zeilen von Hand umbrechen,
+                # sonst wird der Dialog so breit wie der ganze Absatz.
+                "Jede Zeitintervall-Position jedes Belegs wird mit\n"
+                "dieser Menge nachgefordert.\n\n"
+                "Alle anderen Positionen (Bedarfsanalyse, Pauschale je\n"
+                "Verordnung, Hausbesuch, Bericht …) entfallen, ebenso\n"
+                "die 10-€-Zuzahlung je Verordnung — beides ist mit der\n"
+                "Erstrechnung schon abgerechnet (Anlage 1, 7.4.1).",
                 parent=self,
                 initialvalue=1,
                 minvalue=0.01,
@@ -1224,10 +1227,10 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         Rückgabe: (Fehler, Warnungen, Encoding-Probleme) — jeweils als Klartext.
         """
         encoding_probleme: List[str] = []
-        for zeile, spalte, zeichen in pruefe_iso_8859_15(text)[:10]:
+        for zeile, spalte, zeichen in pruefe_iso_8859_1(text)[:10]:
             encoding_probleme.append(
                 f"Zeile {zeile}, Spalte {spalte}: '{zeichen}' (U+{ord(zeichen):04X}) "
-                f"lässt sich nicht in ISO-8859-15 speichern"
+                f"lässt sich nicht in ISO-8859-1 speichern"
             )
 
         fehler: List[str] = []
@@ -1255,7 +1258,7 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         if enc:
             messagebox.showerror(
                 "Zeichen nicht speicherbar",
-                "Die Fassung enthält Zeichen, die ISO-8859-15 nicht kennt:\n\n"
+                "Die Fassung enthält Zeichen, die ISO-8859-1 nicht kennt:\n\n"
                 + "\n".join(enc)
                 + "\n\nTypische Ursache: Text aus Word oder Outlook eingefügt "
                   "(typografische Anführungszeichen, Gedankenstriche).",
@@ -1302,7 +1305,7 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         if enc:
             messagebox.showerror(
                 "Zeichen nicht speicherbar",
-                "Die bearbeitete Fassung enthält Zeichen, die ISO-8859-15 nicht kennt "
+                "Die bearbeitete Fassung enthält Zeichen, die ISO-8859-1 nicht kennt "
                 "und die deshalb nicht gespeichert werden können:\n\n"
                 + "\n".join(enc)
                 + "\n\nTypische Ursache: Text aus Word oder Outlook eingefügt.",

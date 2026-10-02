@@ -163,7 +163,7 @@ def test_bearbeitet_aber_identisch_zaehlt_als_unveraendert():
 
 def test_kommandozeile(tmp_path: Path):
     src = tmp_path / "ESOL0200"
-    src.write_text(QUELLE, encoding="iso-8859-15")
+    src.write_text(QUELLE, encoding="iso-8859-1")
     out = tmp_path / "out"
     r = subprocess.run(
         [sys.executable, str(PROJEKT / "tools" / "generate_correction.py"), str(src),
@@ -172,13 +172,13 @@ def test_kommandozeile(tmp_path: Path):
     )
     assert r.returncode == 0, r.stderr
     assert "Beleg 00002: keine Zeitintervall-Position" in r.stdout
-    text = (out / "ESOL0201").read_text(encoding="iso-8859-15")
+    text = (out / "ESOL0201").read_text(encoding="iso-8859-1")
     assert _segmente(text, "BES") == ["BES+39,34+3,94+3,94+0,00'"]
 
 
 def test_kommandozeile_warnt_ohne_mengendifferenz(tmp_path: Path):
     src = tmp_path / "ESOL0200"
-    src.write_text(QUELLE, encoding="iso-8859-15")
+    src.write_text(QUELLE, encoding="iso-8859-1")
     r = subprocess.run(
         [sys.executable, str(PROJEKT / "tools" / "generate_correction.py"), str(src),
          "-t", "02", "-o", str(tmp_path / "out")],
@@ -190,7 +190,7 @@ def test_kommandozeile_warnt_ohne_mengendifferenz(tmp_path: Path):
 
 def test_mengendifferenz_nur_bei_vkz_02(tmp_path: Path):
     src = tmp_path / "ESOL0200"
-    src.write_text(QUELLE, encoding="iso-8859-15")
+    src.write_text(QUELLE, encoding="iso-8859-1")
     r = subprocess.run(
         [sys.executable, str(PROJEKT / "tools" / "generate_correction.py"), str(src),
          "-t", "04", "--mengendifferenz", "1"],
@@ -210,7 +210,7 @@ def editor(tmp_path: Path):
         from vkz_correction_editor import VKZCorrectionEditorDialog
 
         src = tmp_path / "ESOL0200"
-        src.write_text(QUELLE, encoding="iso-8859-15")
+        src.write_text(QUELLE, encoding="iso-8859-1")
         root = tk.Tk()
         root.withdraw()
         dlg = VKZCorrectionEditorDialog(

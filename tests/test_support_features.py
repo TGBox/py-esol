@@ -246,7 +246,7 @@ def test_main_gui_support_notebook_integration(tmp_path: Path, dialog_protokoll)
             "UNZ+000001+00118'",
         ])
         test_file = tmp_path / "test_main_support.esol"
-        test_file.write_text(orig_esol, encoding="iso-8859-15")
+        test_file.write_text(orig_esol, encoding="iso-8859-1")
 
         app._populate_support_tabs(str(test_file), ["R_IK_01 in Beleg 00001"])
 

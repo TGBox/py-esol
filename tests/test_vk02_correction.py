@@ -29,7 +29,7 @@ def test_vk02_granular_position_and_price_edit(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_esol_vk02.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     # Modify position: change price from 100,00 to 120,00 and quantity to 2
     beleg_mods = {
@@ -60,7 +60,7 @@ def test_vk02_granular_position_and_price_edit(tmp_path: Path):
     )
 
     assert res_file.exists()
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
 
     # Check FKT changed to VK 02
     assert "FKT+02+" in content
@@ -108,7 +108,7 @@ def test_vk02_add_and_delete_positions(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_esol_add_del.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     # Zweite Position hinzufuegen. Sie muss ein EHE sein: die Datei ist im
     # Leistungsbereich B (Heilmittel, UNB-Feld "Leistungsbereich"), und dort
@@ -148,7 +148,7 @@ def test_vk02_add_and_delete_positions(tmp_path: Path):
         beleg_modifications=beleg_mods,
     )
 
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
 
     # Verify both positions exist
     assert "EHE+26:00501+59702+" in content
@@ -192,7 +192,7 @@ def test_vk02_segment_order_and_deleted_positions(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_esol_order.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     # Keep only 2 positions (59741 and 54503 modified to 98.59)
     beleg_mods = {
@@ -229,7 +229,7 @@ def test_vk02_segment_order_and_deleted_positions(tmp_path: Path):
         beleg_modifications=beleg_mods,
     )
 
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
     lines = [line.strip() for line in content.splitlines() if line.strip()]
 
     # Verify original deleted 54145 position is NOT in output
@@ -281,7 +281,7 @@ def test_vk02_copayment_pauschale_toggle(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "orig_esol_pausch.txt"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     # Set zuzahlung_pausch to 0.0 (patient already paid 10 € pauschale)
     beleg_mods = {
@@ -310,7 +310,7 @@ def test_vk02_copayment_pauschale_toggle(tmp_path: Path):
         beleg_modifications=beleg_mods,
     )
 
-    content = res_file.read_text(encoding="iso-8859-15")
+    content = res_file.read_text(encoding="iso-8859-1")
 
     # When 10 € pauschale is 0.0, total co-payment is 0.00, Netto is 100.00
     assert "BES+100,00+0,00+0,00+0,00'" in content
@@ -356,7 +356,7 @@ def test_dialog_rec_nr_and_german_date_moved_to_second_dialog(tmp_path: Path):
     ])
 
     orig_file = tmp_path / "test_dialog_move.esol"
-    orig_file.write_text(orig_esol, encoding="iso-8859-15")
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
 
     try:
         # 1. Verify First Dialog no longer has rec_nr_entry and rec_date_entry
@@ -511,11 +511,11 @@ def test_vk03_segmentzaehler_stimmt(tmp_path: Path):
 
 def test_vk03_ueber_generate_correction_file(tmp_path: Path):
     quelle = tmp_path / "ESOL_VK03"
-    quelle.write_text(_vk03_quelle(), encoding="iso-8859-15")
+    quelle.write_text(_vk03_quelle(), encoding="iso-8859-1")
 
     erzeugt = generate_correction_file(
         input_path=quelle, output_path=tmp_path / "out", target_vk="03"
-    ).read_text(encoding="iso-8859-15")
+    ).read_text(encoding="iso-8859-1")
 
     assert {s.rstrip("'").split("+")[3] for s in _segmente(erzeugt, "GES")} == {"950,10"}
 

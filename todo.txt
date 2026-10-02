@@ -218,3 +218,22 @@ OFFEN dazu:
   sondern in der Technischen Anlage 1 bzw. der Heilmittel-Richtlinie.
 * Die HMP-XML selbst liegt nicht im Repo. Falls Nachvollziehbarkeit gewuenscht ist,
   koennte sie unter data/quellen/ mitgecheckt werden.
+
+
+**11. ESOL-Zeichensatz auf ISO-8859-1 korrigiert** [ERLEDIGT]
+
+* ESOL-Dateien muessen ISO-8859-1 (Latin-1) sein, nicht ISO-8859-15 wie anfangs
+  implementiert. Lesen, Schreiben, Pruefen und Konverter sind umgestellt
+  (generate_correction, Korrektur-Editor, Validator, Anonymisierung, AUF,
+  Beispieldateien, UTF-8-Konverter).
+* Ausloeser: Patientin "D´Andrea". Der Akut (U+00B4, Byte 0xB4) existiert nur in
+  ISO-8859-1; ISO-8859-15 belegt 0xB4 mit "Ž". Der Editor lehnte das Speichern ab.
+* pruefe_iso_8859_15 heisst jetzt pruefe_iso_8859_1. Das Eurozeichen wird damit
+  korrekt als nicht speicherbar gemeldet.
+* read_esol_file_text: erst UTF-8, sonst ISO-8859-1.
+* Mengendifferenz-Dialog: Hinweistext von Hand umgebrochen (simpledialog bricht
+  nicht um, der Dialog war bildschirmbreit).
+
+OFFEN dazu:
+* AUF-Datei: Zeichensatz-Kennzeichen steht weiter auf "I5" - pruefen, welcher Code
+  laut Anlage fuer ISO-8859-1 gilt.

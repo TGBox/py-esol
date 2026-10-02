@@ -478,7 +478,7 @@ class EsolValidatorGUI(tk.Tk):
                 self._append_log("Keine Dateien zur Konvertierung gefunden.\n", tag="ERROR")
                 return
 
-            self._append_log(f"Starte Konvertierung von {len(files_to_convert)} Datei(en) nach ISO-8859-15...\n\n", tag="HEADER")
+            self._append_log(f"Starte Konvertierung von {len(files_to_convert)} Datei(en) nach ISO-8859-1...\n\n", tag="HEADER")
 
             out_dir = self.out_dir_entry.get().strip()
 
@@ -715,7 +715,7 @@ class EsolValidatorGUI(tk.Tk):
         validator = EsolValidator()
         validator.register_default_rules()
         vorher = validator.validate_string(read_esol_file_text(quelle))
-        nachher = validator.validate_string(ziel.read_text(encoding="iso-8859-15"))
+        nachher = validator.validate_string(ziel.read_text(encoding="iso-8859-1"))
         neue = {str(e) for e in nachher.get_errors()} - {str(e) for e in vorher.get_errors()}
 
         text = f"Anonyme Kopie erzeugt:\n\n{ziel}\n\n" + "\n".join(anon.bericht())

@@ -32,10 +32,10 @@ def test_fixture_existiert():
     )
 
 
-def test_fixture_ist_iso_8859_15_mit_crlf():
+def test_fixture_ist_iso_8859_1_mit_crlf():
     roh = FIXTURE.read_bytes()
-    # Muss sich strikt als ISO-8859-15 lesen lassen (echte ESOL-Vorgabe)
-    roh.decode("iso-8859-15")
+    # Muss sich strikt als ISO-8859-1 lesen lassen (echte ESOL-Vorgabe)
+    roh.decode("iso-8859-1")
     assert b"\r\n" in roh, "ESOL-Dateien verwenden CRLF"
 
 

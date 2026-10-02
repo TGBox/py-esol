@@ -70,7 +70,7 @@ def create_auftragsdatei(
     buf.append("0")                                  # Korrektur (1)
     buf.append(f"{size:012d}")                       # Dateigröße Nutzdaten (12)
     buf.append(f"{size:012d}")                       # Dateigröße komprimiert (12)
-    buf.append(encoding_code.ljust(2)[:2])          # Zeichensatz I5=ISO-8859-15, U8=UTF-8 (2)
+    buf.append(encoding_code.ljust(2)[:2])          # Zeichensatz I5=ISO-8859-1, U8=UTF-8 (2)
     buf.append("00")                                 # Komprimierung (2)
     buf.append("00")                                 # Verschlüsselung (2)
     buf.append("00")                                 # Elektronische Unterschrift (2)
@@ -149,7 +149,7 @@ def generate_auf(
         size=size,
     )
 
-    output_path.write_text(auf_content, encoding="iso-8859-15")
+    output_path.write_text(auf_content, encoding="iso-8859-1")
     return output_path
 
 

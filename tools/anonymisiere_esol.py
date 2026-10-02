@@ -57,7 +57,7 @@ def anonymisiere_datei(
     neu = anon.esol(inhalt)
 
     ziel.parent.mkdir(parents=True, exist_ok=True)
-    ziel.write_text(neu, encoding="iso-8859-15")
+    ziel.write_text(neu, encoding="iso-8859-1")
 
     if begleitdatei:
         ziel.with_suffix(ziel.suffix + ".anonym.txt").write_text(
@@ -112,7 +112,7 @@ def main() -> None:
     ziel, anon = anonymisiere_datei(
         quelle, ziel, gruppen, begleitdatei=not args.ohne_begleitdatei
     )
-    nachher = _pruefe(ziel.read_text(encoding="iso-8859-15"))
+    nachher = _pruefe(ziel.read_text(encoding="iso-8859-1"))
 
     print(f"Anonymisierte Kopie: {ziel}")
     for zeile in anon.bericht():

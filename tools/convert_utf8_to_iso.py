@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ESOL File Encoding Converter — Konvertiert ESOL-Dateien von UTF-8 zu ISO-8859-15 (oder ISO-8859-1).
+ESOL File Encoding Converter — Konvertiert ESOL-Dateien von UTF-8 zu ISO-8859-1.
 
 Der Dateiname bleibt dabei immer unverändert — ESOL-Dateien tragen bewusst keine
 Endung und der Name ist Teil der Einreichung. Ohne --out-dir (oder wenn das
@@ -31,11 +31,11 @@ def convert_file(
     src_path: Path,
     dst_path: Path,
     source_encoding: str = "utf-8",
-    target_encoding: str = "iso-8859-15",
+    target_encoding: str = "iso-8859-1",
     errors_strategy: str = "replace",
 ) -> Tuple[bool, str]:
     """
-    Konvertiert eine einzelne Datei von Quell-Kodierung (UTF-8) zu Ziel-Kodierung (ISO-8859-15).
+    Konvertiert eine einzelne Datei von Quell-Kodierung (UTF-8) zu Ziel-Kodierung (ISO-8859-1).
     Verwendet eine intelligente Dekodierungs-Logik, um bereits im Ziel-Encoding vorliegende
     oder UTF-8-kodierte Dateien ohne Zeichenverlust oder Formatierungsänderungen zu verarbeiten.
 
@@ -52,7 +52,7 @@ def convert_file(
 
         # Intelligente Dekodierung mit Fehlererkennung
         content = None
-        for enc in (source_encoding, target_encoding, "iso-8859-1", "cp1252"):
+        for enc in dict.fromkeys((source_encoding, target_encoding, "iso-8859-1")):
             try:
                 content = raw_bytes.decode(enc)
                 break
@@ -116,7 +116,7 @@ def main() -> None:
         sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
     parser = argparse.ArgumentParser(
-        description="ESOL Encoding Converter — Konvertiert ESOL-Dateien von UTF-8 zu ISO-8859-15 / ISO-8859-1"
+        description="ESOL Encoding Converter — Konvertiert ESOL-Dateien von UTF-8 zu ISO-8859-1"
     )
     parser.add_argument(
         "paths",
@@ -139,9 +139,9 @@ def main() -> None:
     parser.add_argument(
         "--encoding",
         "-e",
-        default="iso-8859-15",
-        choices=["iso-8859-15", "iso-8859-1", "cp1252"],
-        help="Ziel-Kodierung (Standard: iso-8859-15)",
+        default="iso-8859-1",
+        choices=["iso-8859-1", "cp1252"],
+        help="Ziel-Kodierung (Standard: iso-8859-1)",
     )
     parser.add_argument(
         "--source-encoding",

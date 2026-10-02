@@ -4,7 +4,7 @@ from pathlib import Path
 from tools.convert_utf8_to_iso import collect_files, convert_file, main
 
 
-def test_convert_file_utf8_to_iso8859_15(tmp_path: Path):
+def test_convert_file_utf8_to_iso8859_1(tmp_path: Path):
     utf8_file = tmp_path / "sample_utf8.txt"
     # Write German umlauts encoded in UTF-8
     original_text = "UNB+UNOC:3'NAD+Müster+Märta'\n"
@@ -12,14 +12,14 @@ def test_convert_file_utf8_to_iso8859_15(tmp_path: Path):
 
     iso_file = tmp_path / "sample_iso.txt"
 
-    success, msg = convert_file(utf8_file, iso_file, target_encoding="iso-8859-15")
+    success, msg = convert_file(utf8_file, iso_file, target_encoding="iso-8859-1")
     assert success is True
 
-    # Verify content read in ISO-8859-15
-    read_text = iso_file.read_text(encoding="iso-8859-15")
+    # Verify content read in ISO-8859-1
+    read_text = iso_file.read_text(encoding="iso-8859-1")
     assert read_text == original_text
 
-    # Verify raw bytes: UTF-8 'ü' is 0xc3 0xbc (2 bytes), ISO-8859-15 'ü' is 0xfc (1 byte)
+    # Verify raw bytes: UTF-8 'ü' is 0xc3 0xbc (2 bytes), ISO-8859-1 'ü' is 0xfc (1 byte)
     raw_bytes = iso_file.read_bytes()
     assert b"\xfc" in raw_bytes
 
@@ -37,19 +37,19 @@ def test_collect_files(tmp_path: Path):
     assert f2 in files
 
 
-def test_convert_file_already_iso8859_15(tmp_path: Path):
+def test_convert_file_already_iso8859_1(tmp_path: Path):
     iso_file = tmp_path / "sample_already_iso.txt"
     original_text = "UNB+UNOC:3'\r\nNAD+Müster+Märta+Groß'\r\n"
-    # Write directly as ISO-8859-15
-    iso_file.write_bytes(original_text.encode("iso-8859-15"))
+    # Write directly as ISO-8859-1
+    iso_file.write_bytes(original_text.encode("iso-8859-1"))
 
     out_file = tmp_path / "output_iso.txt"
-    success, msg = convert_file(iso_file, out_file, target_encoding="iso-8859-15")
+    success, msg = convert_file(iso_file, out_file, target_encoding="iso-8859-1")
     assert success is True
 
     # Raw bytes must match original exactly (no corruption into '?' or altered line endings)
     assert out_file.read_bytes() == iso_file.read_bytes()
-    with open(out_file, "r", encoding="iso-8859-15", newline="") as f:
+    with open(out_file, "r", encoding="iso-8859-1", newline="") as f:
         assert f.read() == original_text
 
 
@@ -60,7 +60,7 @@ def test_convert_file_line_endings_preserved(tmp_path: Path):
     crlf_file.write_bytes(crlf_bytes)
 
     out_crlf = tmp_path / "out_crlf.txt"
-    convert_file(crlf_file, out_crlf, target_encoding="iso-8859-15")
+    convert_file(crlf_file, out_crlf, target_encoding="iso-8859-1")
     assert out_crlf.read_bytes() == b"UNB+UNOC:3'\r\nNAD+M\xfcster'\r\n"
 
     # LF test
@@ -69,7 +69,7 @@ def test_convert_file_line_endings_preserved(tmp_path: Path):
     lf_file.write_bytes(lf_bytes)
 
     out_lf = tmp_path / "out_lf.txt"
-    convert_file(lf_file, out_lf, target_encoding="iso-8859-15")
+    convert_file(lf_file, out_lf, target_encoding="iso-8859-1")
     assert out_lf.read_bytes() == b"UNB+UNOC:3'\nNAD+M\xfcster'\n"
 
 
@@ -89,7 +89,7 @@ def _esol_utf8(pfad: Path) -> bytes:
     """Legt eine UTF-8-kodierte ESOL-Datei ohne Dateiendung an."""
     roh = "UNB+UNOC:3+123456789+661430035+20260408:1200+00151+B+SL051293S04+2'\r\nNAD+Müster+Märta+19900101'\r\n"
     pfad.write_bytes(roh.encode("utf-8"))
-    return roh.encode("iso-8859-15")
+    return roh.encode("iso-8859-1")
 
 
 def test_cli_ohne_out_dir_ersetzt_original_ohne_endung(tmp_path: Path, monkeypatch):
@@ -184,8 +184,8 @@ def test_original_bleibt_bei_schreibfehler_unversehrt(tmp_path: Path, monkeypatc
 
 
 def test_collect_files_ignoriert_temporaere_dateien(tmp_path: Path):
-    (tmp_path / "ESOL0253").write_text("a", encoding="iso-8859-15")
-    (tmp_path / "ESOL0253.convert-tmp-4711").write_text("b", encoding="iso-8859-15")
+    (tmp_path / "ESOL0253").write_text("a", encoding="iso-8859-1")
+    (tmp_path / "ESOL0253.convert-tmp-4711").write_text("b", encoding="iso-8859-1")
 
     gefunden = [p.name for p in collect_files(tmp_path)]
     assert gefunden == ["ESOL0253"]
