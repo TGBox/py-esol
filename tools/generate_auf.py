@@ -7,11 +7,12 @@ Nutzung:
   python generate_auf.py <input-file> [output-file]
 
 Beispiel:
-  python generate_auf.py SL030179S03
-  # Erzeugt: SL030179S03.auf
+  python generate_auf.py ESOL0179
+  # Erzeugt: ESOL0179.auf
 """
 
 import argparse
+import re
 import os
 import sys
 from pathlib import Path
@@ -34,19 +35,34 @@ def create_auftragsdatei(
     logischer_name: str,
     timestamp: str,
     size: int,
-    encoding_code: str = "I5",
+    encoding_code: str = "I1",
 ) -> str:
     """
     Erstellt den 348-Byte String einer GKV-Auftragsdatei (Version 01).
     """
+    # Stellen 20-27: Verfahrenskennung (5, z. B. "ESOL0") + Transfer-Nummer (3).
+    # Beides zusammen ist der Dateiname, er muss also genau 8 Zeichen haben -
+    # sonst verrutschen alle folgenden Felder (auch der Zeichensatz in 203-204).
     kurzel = file_path.name
+    if not re.fullmatch(r"[A-Z]{4}[0-9]{4}", kurzel):
+        raise ValueError(
+            f"Dateiname '{kurzel}' passt nicht zum Auftragssatz: erwartet werden "
+            f"genau 8 Zeichen aus Verfahrenskennung und Transfer-Nummer, "
+            f"z. B. ESOL0156. Bitte die Datei entsprechend benennen."
+        )
     clean_timestamp = str(timestamp).replace(":", "").strip()
     if len(clean_timestamp) == 12:
         clean_timestamp += "00"
 
     absender_padded = str(absender_ik).strip().ljust(15)
     empfaenger_padded = str(empfaenger_ik).strip().ljust(15)
+    # Stellen 105-115: logischer Dateiname, 11 Zeichen
     logischer_name_str = str(logischer_name).strip()
+    if len(logischer_name_str) > 11:
+        raise ValueError(
+            f"Logischer Dateiname '{logischer_name_str}' ist länger als 11 Zeichen."
+        )
+    logischer_name_str = logischer_name_str.ljust(11)
 
     buf = []
     buf.append("500000")                             # Identifikator (6)
@@ -70,7 +86,7 @@ def create_auftragsdatei(
     buf.append("0")                                  # Korrektur (1)
     buf.append(f"{size:012d}")                       # Dateigröße Nutzdaten (12)
     buf.append(f"{size:012d}")                       # Dateigröße komprimiert (12)
-    buf.append(encoding_code.ljust(2)[:2])          # Zeichensatz I5=ISO-8859-1, U8=UTF-8 (2)
+    buf.append(encoding_code.ljust(2)[:2])          # Zeichensatz (Stellen 203-204): I1=ISO-8859-1, I5=ISO-8859-15
     buf.append("00")                                 # Komprimierung (2)
     buf.append("00")                                 # Verschlüsselung (2)
     buf.append("00")                                 # Elektronische Unterschrift (2)
@@ -86,7 +102,10 @@ def create_auftragsdatei(
     buf.append(" " * 44)                             # Infofeld 2 (44)
     buf.append(" " * 30)                             # Infofeld 3 (30)
 
-    return "".join(buf)
+    satz = "".join(buf)
+    if len(satz) != 348:
+        raise ValueError(f"Auftragssatz hat {len(satz)} statt 348 Zeichen.")
+    return satz
 
 
 def parse_esol_file(file_path: Path) -> Tuple[str, str, str, str, str, int]:

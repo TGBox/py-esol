@@ -234,6 +234,12 @@ OFFEN dazu:
 * Mengendifferenz-Dialog: Hinweistext von Hand umgebrochen (simpledialog bricht
   nicht um, der Dialog war bildschirmbreit).
 
-OFFEN dazu:
-* AUF-Datei: Zeichensatz-Kennzeichen steht weiter auf "I5" - pruefen, welcher Code
-  laut Anlage fuer ISO-8859-1 gilt.
+* AUF-Datei: Zeichensatz-Kennzeichen (Stellen 203-204) von "I5" (ISO-8859-15) auf
+  "I1" (ISO/IEC 8859-1) umgestellt - laut "Richtlinien fuer den Datenaustausch im
+  Gesundheits- und Sozialwesen", Auftragssatz.
+* AUF-Datei: Der Dateiname bildet Verfahrenskennung + Transfer-Nummer (Stellen
+  20-27) und muss genau 8 Zeichen haben (z. B. ESOL0156). Vorher wurde jeder Name
+  ungeprueft eingesetzt - bei "SL030179S03" wurde der Satz 351 Zeichen lang und
+  alle Felder ab Stelle 28 verrutschten. Jetzt bricht die Erstellung mit einer
+  klaren Meldung ab; der logische Dateiname wird auf 11 Zeichen aufgefuellt und
+  die Satzlaenge 348 wird zum Schluss geprueft.
