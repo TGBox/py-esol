@@ -3,6 +3,7 @@ import subprocess
 import sys
 import multiprocessing
 import threading
+import time
 import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
@@ -36,6 +37,7 @@ class EsolValidatorGUI(tk.Tk):
         self.convert_script = os.path.join(self.base_dir, "tools", "convert_utf8_to_iso.py")
         self.generate_auf_script = os.path.join(self.base_dir, "tools", "generate_auf.py")
         self.correction_script = os.path.join(self.base_dir, "tools", "generate_correction.py")
+        self.ehe_script = os.path.join(self.base_dir, "tools", "ehe_zusammenfassen.py")
 
         self.user_selected_out_dir: bool = False
         self.last_belege_summary: List[Dict[str, Any]] = []
@@ -129,6 +131,11 @@ class EsolValidatorGUI(tk.Tk):
             btn_frame, text="📄 .auf erstellen", command=self._start_generate_auf
         )
         self.btn_auf.pack(side="left", fill="x", expand=True, padx=2)
+
+        self.btn_ehe = ttk.Button(
+            btn_frame, text="🧩 EHE zusammenfassen", command=self._start_ehe_zusammenfassen
+        )
+        self.btn_ehe.pack(side="left", fill="x", expand=True, padx=2)
 
         self.btn_correction = ttk.Button(
             btn_frame, text="🛠️ Korrektur / Zuzahlung", command=self._start_correction_dialog
@@ -298,6 +305,7 @@ class EsolValidatorGUI(tk.Tk):
         self.btn_run.config(state=state)
         self.btn_convert.config(state=state)
         self.btn_auf.config(state=state)
+        self.btn_ehe.config(state=state)
         self.btn_correction.config(state=state)
         self.btn_begleitzettel.config(state=state)
 
@@ -343,6 +351,74 @@ class EsolValidatorGUI(tk.Tk):
         self._clear_log()
 
         threading.Thread(target=self._run_generate_auf_process, args=(raw_path,), daemon=True).start()
+
+    def _start_ehe_zusammenfassen(self):
+        raw_path = self.path_entry.get().strip()
+
+        if not raw_path:
+            messagebox.showwarning("Fehler", "Bitte wählen Sie eine Datei oder einen Ordner aus!")
+            return
+
+        self._set_buttons_state("disabled")
+        self.progress.grid(row=3, column=0, columnspan=5, sticky="ew", pady=2)
+        self.progress.start(10)
+        self._clear_log()
+
+        threading.Thread(target=self._run_ehe_process, args=(raw_path,), daemon=True).start()
+
+    def _run_ehe_process(self, path_input: str):
+        """
+        Fasst gleiche EHE-Positionen am gleichen Tag zusammen (Regel 1.4.1) und
+        validiert jede bereinigte Datei gleich danach. Das Original bleibt immer
+        unverändert; die Kopie landet im Ausgabeordner bzw. unter "bereinigt".
+        """
+        from tools.ehe_zusammenfassen import zielpfad
+
+        try:
+            paths = [p.strip() for p in path_input.split(";") if p.strip()]
+            files: list[str] = []
+            for path in paths:
+                if os.path.isdir(path):
+                    for root, dirs, names in os.walk(path):
+                        # bereits bereinigte Kopien nicht erneut verarbeiten
+                        dirs[:] = [d for d in dirs if d != "bereinigt"]
+                        for name in names:
+                            if not name.endswith((".txt", ".auf")) and not name.startswith("."):
+                                files.append(os.path.join(root, name))
+                elif os.path.isfile(path) and not path.endswith((".txt", ".auf")):
+                    files.append(path)
+
+            if not files:
+                self._append_log("Keine ESOL-Dateien gefunden.\n", tag="ERROR")
+                return
+
+            self._append_log(
+                f"Fasse gleiche EHE-Positionen in {len(files)} Datei(en) zusammen...\n\n", tag="HEADER"
+            )
+            out_dir = self.out_dir_entry.get().strip()
+
+            for file_path in files:
+                cmd = [sys.executable, self.ehe_script, file_path]
+                if out_dir:
+                    cmd.extend(["--out-dir", out_dir])
+
+                self._append_log(f"=== EHE zusammenfassen: {os.path.basename(file_path)} ===\n", tag="HEADER")
+                start = time.time()
+                self._execute_cmd(cmd)
+
+                # Nur nachvalidieren, wenn in diesem Lauf wirklich geschrieben wurde -
+                # nicht eine ältere Kopie aus einem früheren Lauf.
+                ziel = zielpfad(Path(file_path), Path(out_dir) if out_dir else None)
+                if ziel.is_file() and ziel.stat().st_mtime >= start - 1:
+                    self._append_log("\nNachvalidierung der bereinigten Datei:\n", tag="HEADER")
+                    cmd = [sys.executable, self.validate_script, str(ziel), f"--stufe={self.stufe_var.get()}"]
+                    if self.warnings_var.get():
+                        cmd.append("--warnings")
+                    self._execute_cmd(cmd)
+                self._append_log("\n" + "-" * 60 + "\n\n")
+
+        finally:
+            self.after(0, self._finish_process)
 
     def _start_correction_dialog(self):
         self._open_correction_dialog(default_vk="02")
@@ -870,6 +946,9 @@ if __name__ == "__main__":
         elif "generate_auf" in target_script:
             from tools import generate_auf
             generate_auf.main()
+        elif "ehe_zusammenfassen" in target_script:
+            from tools import ehe_zusammenfassen
+            ehe_zusammenfassen.main()
         elif "generate_correction" in target_script:
             from tools import generate_correction
             generate_correction.main()

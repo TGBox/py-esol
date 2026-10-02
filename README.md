@@ -69,6 +69,7 @@ Oder Verwenden der vorkompilierten Binärdatei `dist/pyesol.exe`.
 * **`▶ Validieren`**: Führt die 4-stufige Prüfung durch und gibt detaillierte Fehlermeldungen aus.
 * **`🔄 UTF-8 ➔ ISO`**: Konvertiert ausgewählte Dateien zu ISO-8859-1.
 * **`📄 .auf erstellen`**: Erstellt passende `.auf`-Auftragsdateien.
+* **`🧩 EHE zusammenfassen`**: Fasst gleiche Leistungen am gleichen Tag (Fehler 1.4.1) über die Anzahl zusammen. Das Original bleibt unverändert; die Kopie landet im Ausgabeordner bzw. im Unterordner `bereinigt` und wird gleich nachvalidiert.
 * **`🛠️ Korrektur / Zuzahlung`**: Öffnet den interaktiven Konfigurator zur Belegauswahl und VKZ-Generierung (02, 03, 04, 10).
 
 ---

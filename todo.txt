@@ -243,3 +243,19 @@ OFFEN dazu:
   alle Felder ab Stelle 28 verrutschten. Jetzt bricht die Erstellung mit einer
   klaren Meldung ab; der logische Dateiname wird auf 11 Zeichen aufgefuellt und
   die Satzlaenge 348 wird zum Schluss geprueft.
+
+
+**12. Button "EHE zusammenfassen"** [ERLEDIGT]
+
+* Anlass: ESOL0083 (Ergo, Blanko-Verordnung) - das Praxisprogramm schrieb jedes
+  Zeitintervall als eigenes EHE mit Anzahl 1. Ergebnis: 23 Fehler 1.4.1 und 11
+  Warnungen 1.3.8.7.
+* Neues Werkzeug tools/ehe_zusammenfassen.py: fasst je Beleg (INV-Block) EHE-
+  Segmente zusammen, die in allen Feldern ausser der Anzahl gleich sind. Das erste
+  Segment behaelt seinen Platz und bekommt die Summe der Anzahlen; der UNT-Zaehler
+  wird angepasst, BES bleibt unveraendert.
+* Gleiche Position am gleichen Tag mit abweichendem Preis/Zuzahlung wird nicht
+  angefasst, sondern im Log gemeldet.
+* Original bleibt immer unveraendert: Kopie in den Ausgabeordner bzw. nach
+  <Quellordner>/bereinigt/, in ISO-8859-1. Danach automatische Nachvalidierung.
+* 7 neue Tests in tests/test_ehe_zusammenfassen.py.
