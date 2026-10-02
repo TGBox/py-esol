@@ -4,7 +4,7 @@
     "Wird vom VKZ-02-Modus 'Mengendifferenz' gelesen: nur diese Positionen erhalten je Termin die nachgeforderte Menge; alle anderen Positionen eines Belegs (Bedarfsanalyse, Pauschale je Verordnung, Hausbesuch, Bericht ...) fallen aus der Nachforderung heraus, weil sie mit der Erstrechnung schon vollständig abgerechnet sind.",
     "Von Hand gepflegt. Eine Position aufnehmen oder entfernen genügt; die EXE liest eine Fassung neben sich (data/zeitintervall_positionen.json) vorrangig."
   ],
-  "_quelle": "quellen/blanko_leistungen_ergo_20250801.xml — alle Positionen mit der Bemerkung '1 Zeitintervall = 15 Minuten' (Ergotherapie, Vertrag nach § 125a SGB V, gültig ab 01.08.2025)",
+  "_quelle": "quellen/blanko_leistungen_ergo_20250801.xml — alle Positionen mit der Bemerkung '1 Zeitintervall = 15 Minuten' (Ergotherapie, Vertrag nach § 125a SGB V, gültig ab 01.08.2025), dazu die Einzelbehandlungen 'bei Beratung zur Integration in das häusliche und soziale Umfeld' (54147, 54149, 54152 und die telemedizinischen 54167, 54169, 54172). Deren Bemerkung nennt kein Zeitintervall, sie haben aber denselben Preis je Einheit und werden mit Anzahl > 1 abgerechnet (Fall ESOL0065, 54149 mit Anzahl 4).",
   "positionen": {
     "54142": "Motorisch-funktionelle Behandlung: Einzelbehandlung",
     "54162": "Motorisch-funktionelle Behandlung: Einzelbehandlung als telemedizinische Leistung",
@@ -23,6 +23,12 @@
     "54251": "Ergoth. Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten)",
     "54271": "Ergoth. Hirnleistungstraining: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung",
     "54252": "Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten)",
-    "54272": "Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung"
+    "54272": "Psychisch-funktionelle Behandlung: Gruppenbehandlung (3 - 6 Patienten) als telemedizinische Leistung",
+    "54147": "Motorisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+    "54167": "Motorisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung",
+    "54149": "Psychisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+    "54169": "Psychisch-funktionelle Behandlung: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung",
+    "54152": "Ergoth. Hirnleistungstraining: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld",
+    "54172": "Ergoth. Hirnleistungstraining: Einzelbehandlung bei Beratung zur Integration in das häusliche und soziale Umfeld als telemedizinische Leistung"
   }
 }

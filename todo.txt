@@ -273,3 +273,16 @@ OFFEN dazu:
 * Aeltere Versionen als 20 werden nicht angefasst - dafuer ist der Schritt nicht
   bekannt; der Validator meldet sie wie bisher.
 * 3 Tests in tests/test_version20_korrektur.py.
+
+
+**14. Mengendifferenz: Beratung zur Integration als Zeitintervall** [ERLEDIGT]
+
+* Anlass: ESOL0065 - 54149 (Psychisch-funktionelle Behandlung bei Beratung zur
+  Integration in das haeusliche und soziale Umfeld, Anzahl 4) wurde bei der
+  Mengendifferenz weggelassen, nur 54145 am 25.07. blieb uebrig.
+* Ursache: data/zeitintervall_positionen.json enthielt nur Positionen mit der
+  GKV-Bemerkung "1 Zeitintervall = 15 Minuten". Die Beratungspositionen tragen
+  stattdessen "kann zweimal pro Blankoverordnung erbracht werden", werden aber
+  ebenfalls je Zeitintervall abgerechnet (gleicher Preis je Einheit).
+* Aufgenommen: 54147, 54149, 54152 und tele 54167, 54169, 54172.
+* Tests in tests/test_vk02_mengendifferenz.py.

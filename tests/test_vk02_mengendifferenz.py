@@ -256,3 +256,34 @@ def test_editor_warnt_vor_unveraenderten_belegen(editor, monkeypatch):
     editor._apply_mengendifferenz(differenz=1, nachfragen=False)
     assert editor._bestaetige_unveraenderte_belege(ist_handarbeit=False) is True
     assert not gefragt
+
+
+def test_beratung_zur_integration_zaehlt_als_zeitintervall():
+    """
+    Fall ESOL0065: 54149 (Psychisch-funktionelle Behandlung bei Beratung zur
+    Integration) wird je Zeitintervall abgerechnet, obwohl die GKV-Bemerkung
+    das nicht sagt - der Termin am 18.07. muss mit nachgefordert werden.
+    Der Hausbesuch 59973 und die Pauschale 54503 entfallen.
+    """
+    quelle = QUELLE.replace(
+        "EHE+26:00502+54142+3,00+19,67+20260105+1,97'\n",
+        "EHE+26:00502+59973+1,00+28,56+20260105+2,86'\n"
+        "EHE+26:00502+54149+4,00+19,67+20260105+1,97'\n",
+    )
+    mods, bericht = mengendifferenz_modifikationen(quelle, differenz=1)
+
+    pos = mods["00001"]["positions"]
+    assert [(p["code"], p["datum"]) for p in pos] == [
+        ("54149", "20260105"),
+        ("54142", "20260112"),
+    ]
+    b1 = next(b for b in bericht if b["belegnr"] == "00001")
+    assert "59973" in b1["entfernt"]
+
+
+@pytest.mark.parametrize("code", ["54147", "54149", "54152", "54167", "54169", "54172"])
+def test_alle_beratungspositionen_sind_zeitintervalle(code):
+    import json
+
+    daten = json.loads((PROJEKT / "data" / "zeitintervall_positionen.json").read_text(encoding="utf-8"))
+    assert code in daten["positionen"]
