@@ -602,6 +602,90 @@ def lookup_position(code: Any, abrechnungscode: Any = None, default: str = "") -
     return bezeichnung or default
 
 
+def alle_positionen(filter_text: str = "") -> List[Dict[str, str]]:
+    """
+    Liefert alle bekannten Abrechnungspositionen aus den geladenen Codelisten
+    (eigene Pflege, GKV-Heilmittelpreise und Heilmittelkatalog).
+    Rückgabe: Liste von Dictionaries mit 'code', 'bezeichnung', 'bereich' und 'quelle'.
+    Optional gefiltert nach Code oder Bezeichnung (case-insensitive).
+    """
+    gesehen: set[str] = set()
+    ergebnis: List[Dict[str, str]] = []
+    suchbegriff = str(filter_text or "").strip().lower()
+
+    # 1. Eigene Pflege (codelisten.json)
+    pos_eigene = load().get("positionsnummern")
+    if isinstance(pos_eigene, dict):
+        for k, v in pos_eigene.items():
+            if isinstance(v, dict):
+                for sub_k, sub_v in v.items():
+                    sub_code = str(sub_k).strip()
+                    sub_bez = str(sub_v).strip()
+                    if sub_code and sub_code not in gesehen:
+                        gesehen.add(sub_code)
+                        ergebnis.append({
+                            "code": sub_code,
+                            "bezeichnung": sub_bez,
+                            "bereich": "",
+                            "quelle": "codelisten",
+                        })
+            elif isinstance(v, str):
+                code = str(k).strip()
+                bez = v.strip()
+                if code and code not in gesehen:
+                    gesehen.add(code)
+                    ergebnis.append({
+                        "code": code,
+                        "bezeichnung": bez,
+                        "bereich": "",
+                        "quelle": "codelisten",
+                    })
+
+    # 2. GKV-Heilmittelpreisstammdatei (HMP)
+    hmp_daten = load_hmp().get("positionen")
+    if isinstance(hmp_daten, dict):
+        for code, eintrag in hmp_daten.items():
+            c_str = str(code).strip()
+            if c_str and c_str not in gesehen and isinstance(eintrag, dict):
+                gesehen.add(c_str)
+                ergebnis.append({
+                    "code": c_str,
+                    "bezeichnung": str(eintrag.get("bezeichnung", "")).strip(),
+                    "bereich": str(eintrag.get("bereich", "")).strip(),
+                    "quelle": "hmp",
+                })
+
+    # 3. Heilmittelkatalog / BG
+    kat_daten = load_katalog().get("positionen")
+    if isinstance(kat_daten, dict):
+        for code, eintrag in kat_daten.items():
+            c_str = str(code).strip()
+            if c_str and c_str not in gesehen and isinstance(eintrag, dict):
+                gesehen.add(c_str)
+                ergebnis.append({
+                    "code": c_str,
+                    "bezeichnung": str(eintrag.get("bezeichnung", "")).strip(),
+                    "bereich": str(eintrag.get("bereich", "")).strip(),
+                    "quelle": "katalog",
+                })
+
+    # Sortierung: nach Code (numerisch oder alphabetisch)
+    ergebnis.sort(key=lambda x: (0 if x["code"].isdigit() else 1, x["code"]))
+
+    if suchbegriff:
+        # Also allow matching X-masked codes (e.g. searching '54103' finds 'X4103')
+        such_alt = ("x" + suchbegriff[1:]) if (len(suchbegriff) > 1 and suchbegriff[0].isdigit()) else ""
+        ergebnis = [
+            p for p in ergebnis
+            if suchbegriff in p["code"].lower()
+            or (such_alt and such_alt in p["code"].lower())
+            or suchbegriff in p["bezeichnung"].lower()
+            or suchbegriff in p["bereich"].lower()
+        ]
+
+    return ergebnis
+
+
 # ---------------------------------------------------------------------------
 # Institutionskennzeichen
 # ---------------------------------------------------------------------------

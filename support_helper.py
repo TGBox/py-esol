@@ -456,6 +456,24 @@ def _segment_summary(tag: str, fields: List[Any], msg_type: str = "") -> str:
     if tag in ("UNH", "UNT", "UNZ"):
         return " | ".join(x for x in (g(0), g(1)) if x)
 
+    if tag in vo.POSITIONS_SEGMENTE:
+        p_info = _position_from_fields(tag, fields)
+        code = p_info.get("code", "")
+        abr = p_info.get("abr_code", "")
+        tarif = p_info.get("tarif_kz", "")
+        bez = codelisten.lookup_position(code, abr or tarif)
+        text_code = f"Pos. {code} — {bez}" if bez else f"Pos. {code}"
+        parts = [text_code]
+        if p_info.get("datum"):
+            parts.append(f"am {format_date_german(p_info['datum'])}")
+        if p_info.get("anzahl"):
+            parts.append(f"Menge: {vo.fmt_menge(p_info['anzahl'])}")
+        if p_info.get("einzelbetrag"):
+            parts.append(f"Einzel: {vo.fmt_betrag(p_info['einzelbetrag'])}")
+        if p_info.get("gesamtbetrag"):
+            parts.append(f"Gesamt: {vo.fmt_betrag(p_info['gesamtbetrag'])}")
+        return " | ".join(parts)
+
     # Rückfall: alle belegten Felder benannt aneinanderreihen
     rows = vo.segment_field_rows(tag, fields, message_type=msg_type or None)
     return " | ".join(f"{r['name']}: {r['value']}" for r in rows[:4])
@@ -825,6 +843,22 @@ def _zusatz_children(ids: _IdGen, tag: str, fields: List[Any]) -> List[Dict[str,
             for zeile in zeilen[1:]:
                 knoten["children"].append(_node(ids, tag, zeile, "", "", prefix="ik"))
             kinder.append(knoten)
+        return kinder
+
+    if tag in vo.POSITIONS_SEGMENTE:
+        p_info = _position_from_fields(tag, fields)
+        code = p_info.get("code", "")
+        abr = p_info.get("abr_code", "")
+        if code:
+            info = codelisten.position_info(code, abr)
+            if info.get("bezeichnung"):
+                knoten = _node(ids, tag, "Leistungsbezeichnung", info["bezeichnung"], "", prefix="pos")
+                if info.get("bereich"):
+                    knoten["children"].append(_node(ids, tag, "Bereich / Gruppe", info["bereich"], "", prefix="pos"))
+                if info.get("grundlage"):
+                    grundlage_txt = "Blankoverordnung (§ 125a)" if info["grundlage"] == "125a" else "Regelversorgung (§ 125)"
+                    knoten["children"].append(_node(ids, tag, "Versorgungsart", grundlage_txt, "", prefix="pos"))
+                kinder.append(knoten)
         return kinder
 
     return kinder

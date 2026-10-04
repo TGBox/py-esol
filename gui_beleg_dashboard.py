@@ -7,6 +7,7 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Any, Callable, Dict, List, Optional
 
+import codelisten
 import theme_manager
 from support_helper import translate_error
 
@@ -125,7 +126,7 @@ class BelegDashboardFrame(ttk.Frame):
         self.beleg_tree.bind("<<TreeviewSelect>>", self._on_beleg_selected)
 
         # Right Pane: Hotline-Handlungsanweisung & Detail-Fokus
-        right_frame = ttk.LabelFrame(paned, text=" Support-Handlungsanweisung & Details ", padding=10)
+        right_frame = ttk.LabelFrame(paned, text=" Support-Handlungsanweisung & Details ", padding=8)
         paned.add(right_frame, weight=2)
 
         self.lbl_selected_title = ttk.Label(
@@ -133,13 +134,45 @@ class BelegDashboardFrame(ttk.Frame):
         )
         self.lbl_selected_title.pack(anchor="w", pady=(0, 5))
 
-        # Fehler- & Erklärungsbox
-        self.info_box = tk.Text(right_frame, wrap="word", font=("Segoe UI", 9), height=14, state="disabled")
-        self.info_box.pack(fill="both", expand=True, pady=5)
+        # Detail-Notebook mit zwei Tabs: Support/Fehler und Leistungen
+        self.detail_notebook = ttk.Notebook(right_frame)
+        self.detail_notebook.pack(fill="both", expand=True, pady=3)
+
+        # Tab 1: Hotline-Anweisung & Fehler
+        self.tab_info = ttk.Frame(self.detail_notebook, padding=2)
+        self.detail_notebook.add(self.tab_info, text=" ⚠️ Hotline-Anweisung & Analyse ")
+
+        self.info_box = tk.Text(self.tab_info, wrap="word", font=("Segoe UI", 9), height=11, state="disabled")
+        self.info_box.pack(fill="both", expand=True)
+
+        # Tab 2: Verordnete Leistungen & Positionen
+        self.tab_positions = ttk.Frame(self.detail_notebook, padding=2)
+        self.detail_notebook.add(self.tab_positions, text=" 💶 Verordnete Leistungen ")
+
+        pos_cols = ("tag", "code", "bezeichnung", "menge", "einzel", "gesamt")
+        self.beleg_pos_tree = ttk.Treeview(self.tab_positions, columns=pos_cols, show="headings", selectmode="browse")
+        self.beleg_pos_tree.heading("tag", text="Tag")
+        self.beleg_pos_tree.heading("code", text="Code")
+        self.beleg_pos_tree.heading("bezeichnung", text="Bezeichnung (Klartext)")
+        self.beleg_pos_tree.heading("menge", text="Menge")
+        self.beleg_pos_tree.heading("einzel", text="Einzel €")
+        self.beleg_pos_tree.heading("gesamt", text="Gesamt €")
+
+        self.beleg_pos_tree.column("tag", width=45, minwidth=35, anchor="center")
+        self.beleg_pos_tree.column("code", width=70, minwidth=55, anchor="w")
+        self.beleg_pos_tree.column("bezeichnung", width=180, minwidth=110, anchor="w")
+        self.beleg_pos_tree.column("menge", width=55, minwidth=40, anchor="e")
+        self.beleg_pos_tree.column("einzel", width=65, minwidth=50, anchor="e")
+        self.beleg_pos_tree.column("gesamt", width=70, minwidth=55, anchor="e")
+
+        sb_pos_y = ttk.Scrollbar(self.tab_positions, orient="vertical", command=self.beleg_pos_tree.yview)
+        self.beleg_pos_tree.configure(yscrollcommand=sb_pos_y.set)
+        self.beleg_pos_tree.pack(side="left", fill="both", expand=True)
+        sb_pos_y.pack(side="right", fill="y")
 
         # Action Buttons below detail box
         btn_bar = ttk.Frame(right_frame)
-        btn_bar.pack(fill="x", pady=(10, 0))
+        btn_bar.pack(fill="x", pady=(8, 0))
 
         self.btn_preview = ttk.Button(
             btn_bar, text="📜 Im Verordnungsblatt anzeigen", command=self._trigger_preview
@@ -160,6 +193,7 @@ class BelegDashboardFrame(ttk.Frame):
         )
         self.info_box.tag_config("ERROR", foreground=colors["log_error"])
         self.info_box.tag_config("OK", foreground=colors["log_ok"])
+        self.info_box.tag_config("HEADER", foreground=colors.get("log_header", "#0066cc"))
 
     def load_data(self, belege_summary: List[Dict[str, Any]], validation_errors: List[str]):
         """
@@ -253,6 +287,34 @@ class BelegDashboardFrame(ttk.Frame):
         name = f"{b.get('nachname', '')}, {b.get('vorname', '')}".strip(", ")
         self.lbl_selected_title.config(text=f"Beleg-Nr. {b_nr} — {name}")
 
+        # Update positions tree and info text
+        for item in self.beleg_pos_tree.get_children():
+            self.beleg_pos_tree.delete(item)
+
+        positions = b.get("positions", [])
+        tarif_kz = str(b.get("tarifkennzeichen", ""))
+
+        for idx, pos in enumerate(positions):
+            p_tag = str(pos.get("tag", "EHE"))
+            p_code = str(pos.get("code", ""))
+            p_bez = (
+                pos.get("code_klartext")
+                or pos.get("bezeichnung")
+                or codelisten.lookup_position(p_code, tarif_kz)
+                or "—"
+            )
+            p_menge = f"{pos.get('anzahl', 0.0):g}"
+            p_einzel = f"{pos.get('einzelbetrag', 0.0):.2f}".replace(".", ",")
+            p_ges = f"{pos.get('gesamtbetrag', 0.0):.2f}".replace(".", ",")
+            self.beleg_pos_tree.insert(
+                "",
+                "end",
+                iid=str(idx),
+                values=(p_tag, p_code, p_bez, p_menge, p_einzel, p_ges),
+            )
+
+        self.detail_notebook.tab(self.tab_positions, text=f" 💶 Verordnete Leistungen ({len(positions)}) ")
+
         # Erstelle Hotline-Anweisungstext
         self.info_box.config(state="normal")
         self.info_box.delete("1.0", tk.END)
@@ -260,6 +322,22 @@ class BelegDashboardFrame(ttk.Frame):
         self.info_box.insert(tk.END, f"PATIENT: {name}\n")
         self.info_box.insert(tk.END, f"Versichertennummer: {b.get('versichertennummer', '-')}\n")
         self.info_box.insert(tk.END, f"Tarif-KZ: {b.get('tarifkennzeichen', '-')}\n\n")
+
+        if positions:
+            self.info_box.insert(tk.END, "VERORDNETE LEISTUNGEN & POSITIONEN:\n", "HEADER")
+            for pos in positions:
+                p_code = str(pos.get("code", ""))
+                p_bez = (
+                    pos.get("code_klartext")
+                    or pos.get("bezeichnung")
+                    or codelisten.lookup_position(p_code, tarif_kz)
+                    or "Kein Klartext hinterlegt"
+                )
+                p_menge = f"{pos.get('anzahl', 0.0):g}"
+                p_einzel = f"{pos.get('einzelbetrag', 0.0):.2f}".replace(".", ",")
+                p_ges = f"{pos.get('gesamtbetrag', 0.0):.2f}".replace(".", ",")
+                self.info_box.insert(tk.END, f"• {p_code}: {p_bez}\n   Menge: {p_menge} × {p_einzel} € = {p_ges} €\n")
+            self.info_box.insert(tk.END, "\n")
 
         matching_errors = [err for err in self.validation_errors if b_nr in err]
         if matching_errors:
@@ -270,6 +348,8 @@ class BelegDashboardFrame(ttk.Frame):
                 self.info_box.insert(tk.END, f"  Log: {err}\n")
                 self.info_box.insert(tk.END, f"  Ursache: {trans['explanation']}\n")
                 self.info_box.insert(tk.END, f"  👉 HANDLUNG: {trans['action']}\n\n")
+            # If errors exist, make the error tab active
+            self.detail_notebook.select(self.tab_info)
         elif self.validation_errors:
             self.info_box.insert(tk.END, "✅ Dieser Beleg ist fehlerfrei.\n")
             self.info_box.insert(tk.END, "Es liegen jedoch allgemeine Datei-/Header-Fehler vor:\n")

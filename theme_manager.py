@@ -135,6 +135,24 @@ def apply_theme(root: tk.Tk | tk.Toplevel, mode: Optional[str] = None) -> str:
         foreground=[("disabled", colors["fg_subdued"])],
     )
 
+    # Primary / Accent Button (e.g. Validieren)
+    accent_bg = "#2563eb" if mode == "dark" else "#1d4ed8"
+    accent_active = "#1d4ed8" if mode == "dark" else "#1e40af"
+    style.configure(
+        "Accent.TButton",
+        background=accent_bg,
+        foreground="#ffffff",
+        bordercolor=accent_bg,
+        focusthickness=0,
+        padding=4,
+        font=("Segoe UI", 9, "bold"),
+    )
+    style.map(
+        "Accent.TButton",
+        background=[("active", accent_active), ("disabled", colors["bg"])],
+        foreground=[("disabled", colors["fg_subdued"])],
+    )
+
     # Checkbuttons & Radiobuttons
     style.configure(
         "TCheckbutton",

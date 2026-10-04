@@ -44,6 +44,13 @@ class EsolValidatorGUI(tk.Tk):
         self.last_validation_errors: List[str] = []
         self.last_processed_file: Optional[str] = None
 
+        self.is_fullscreen: bool = False
+        self._saved_geometry: str = "1100x820"
+
+        # Keyboard shortcuts for fullscreen mode (User rule: fullscreen as well as windowed mode)
+        self.bind("<F11>", lambda e: self._toggle_fullscreen())
+        self.bind("<Escape>", lambda e: self._exit_fullscreen())
+
         self._setup_ui()
         self._apply_theme()
 
@@ -88,7 +95,7 @@ class EsolValidatorGUI(tk.Tk):
         )
         btn_out_dir.grid(row=1, column=3, columnspan=2, sticky="ew", padx=2, pady=5)
 
-        # 3. Zeile: Optionen & Theme-Toggle
+        # 3. Zeile: Optionen & Ansichtssteuerung (Vollbild / Theme)
         ttk.Label(top_frame, text="Max. Prüfstufe:").grid(
             row=2, column=0, sticky="w", pady=5
         )
@@ -105,23 +112,36 @@ class EsolValidatorGUI(tk.Tk):
         )
         chk_warnings.grid(row=2, column=2, sticky="w", padx=5, pady=5)
 
-        self.btn_theme = ttk.Button(
-            top_frame, text="🌙 Dark Mode", command=self._toggle_theme
+        view_btn_box = ttk.Frame(top_frame)
+        view_btn_box.grid(row=2, column=3, columnspan=2, sticky="e", padx=2, pady=5)
+
+        self.btn_fullscreen = ttk.Button(
+            view_btn_box, text="⛶ Vollbild (F11)", command=self._toggle_fullscreen
         )
-        self.btn_theme.grid(row=2, column=3, columnspan=2, sticky="e", padx=2, pady=5)
+        self.btn_fullscreen.pack(side="left", padx=2)
+
+        self.btn_theme = ttk.Button(
+            view_btn_box, text="🌙 Dark Mode", command=self._toggle_theme
+        )
+        self.btn_theme.pack(side="left", padx=2)
 
         # Grid-Weight für Anpassung bei Fenstergrößenänderung
         top_frame.columnconfigure(1, weight=1)
 
-        # 4. Zeile: Aktions-Buttons
+        # 4. Zeile: Strukturierte Aktions-Buttons
         btn_frame = ttk.Frame(top_frame)
         btn_frame.grid(row=3, column=0, columnspan=5, sticky="ew", pady=10)
 
+        # Gruppe 1: Validierung (Primary Action)
         self.btn_run = ttk.Button(
-            btn_frame, text="▶ Validieren", command=self._start_validation
+            btn_frame, text="▶ Validieren", style="Accent.TButton", command=self._start_validation
         )
         self.btn_run.pack(side="left", fill="x", expand=True, padx=2)
 
+        sep1 = ttk.Separator(btn_frame, orient="vertical")
+        sep1.pack(side="left", fill="y", padx=6, pady=2)
+
+        # Gruppe 2: Dateikonvertierung & Bereinigung
         self.btn_convert = ttk.Button(
             btn_frame, text="🔄 UTF-8 ➔ ISO", command=self._start_conversion
         )
@@ -137,6 +157,10 @@ class EsolValidatorGUI(tk.Tk):
         )
         self.btn_ehe.pack(side="left", fill="x", expand=True, padx=2)
 
+        sep2 = ttk.Separator(btn_frame, orient="vertical")
+        sep2.pack(side="left", fill="y", padx=6, pady=2)
+
+        # Gruppe 3: Korrekturabrechnung & Belege
         self.btn_correction = ttk.Button(
             btn_frame, text="🛠️ Korrektur / Zuzahlung", command=self._start_correction_dialog
         )
@@ -215,6 +239,25 @@ class EsolValidatorGUI(tk.Tk):
             footer_frame, text="Löschen", command=self._clear_log
         )
         btn_clear.pack(side="right", padx=3)
+
+    def _toggle_fullscreen(self):
+        """Toggles between fullscreen and windowed mode (User rule requirement)."""
+        self.is_fullscreen = not self.is_fullscreen
+        if self.is_fullscreen:
+            self._saved_geometry = self.geometry()
+            self.attributes("-fullscreen", True)
+            if hasattr(self, "btn_fullscreen"):
+                self.btn_fullscreen.config(text="🗗 Fenstermodus (F11)")
+        else:
+            self.attributes("-fullscreen", False)
+            self.geometry(self._saved_geometry)
+            if hasattr(self, "btn_fullscreen"):
+                self.btn_fullscreen.config(text="⛶ Vollbild (F11)")
+
+    def _exit_fullscreen(self):
+        """Exits fullscreen mode when pressing Escape."""
+        if self.is_fullscreen:
+            self._toggle_fullscreen()
 
     def _toggle_theme(self):
         current = theme_manager.get_current_theme()

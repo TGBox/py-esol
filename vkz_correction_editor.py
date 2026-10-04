@@ -7,6 +7,7 @@ from pathlib import Path
 from tkinter import messagebox, ttk, simpledialog
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+import codelisten
 import theme_manager
 
 # Ensure project root is in sys.path
@@ -37,16 +38,117 @@ _VKZ_LABELS: Dict[str, str] = {
 }
 
 
+class PositionSearchDialog(tk.Toplevel):
+    """
+    Such- und Auswahldialog für amtliche Leistungsschlüssel.
+    Erlaubt Volltextsuche nach Code, Bezeichnung und Fachbereich.
+    """
+
+    def __init__(self, parent: tk.Widget, initial_search: str = ""):
+        super().__init__(parent)
+        self.title("Leistungsposition suchen & auswählen")
+        self.geometry("780x520")
+        self.minsize(620, 400)
+        self.transient(parent)
+        self.grab_set()
+
+        theme_manager.apply_theme(self)
+
+        self.selected_code: Optional[str] = None
+        self.selected_bez: Optional[str] = None
+        self._all_positions = codelisten.alle_positionen()
+
+        self._setup_ui(initial_search)
+
+    def _setup_ui(self, initial_search: str):
+        top_frame = ttk.Frame(self, padding=10)
+        top_frame.pack(fill="x")
+
+        ttk.Label(top_frame, text="🔍 Suchen:").pack(side="left", padx=5)
+        self.search_entry = ttk.Entry(top_frame, width=35)
+        self.search_entry.pack(side="left", padx=5, fill="x", expand=True)
+        self.search_entry.insert(0, initial_search)
+        self.search_entry.bind("<KeyRelease>", lambda e: self._filter())
+
+        self.lbl_count = ttk.Label(top_frame, text="", font=("Segoe UI", 9))
+        self.lbl_count.pack(side="right", padx=5)
+
+        table_frame = ttk.Frame(self, padding=(10, 0, 10, 10))
+        table_frame.pack(fill="both", expand=True)
+
+        cols = ("code", "bezeichnung", "bereich", "quelle")
+        self.tree = ttk.Treeview(table_frame, columns=cols, show="headings", selectmode="browse")
+        self.tree.heading("code", text="Code")
+        self.tree.heading("bezeichnung", text="Bezeichnung (Klartext)")
+        self.tree.heading("bereich", text="Bereich / Gruppe")
+        self.tree.heading("quelle", text="Quelle")
+
+        self.tree.column("code", width=100, minwidth=80, anchor="w")
+        self.tree.column("bezeichnung", width=400, minwidth=220, anchor="w")
+        self.tree.column("bereich", width=170, minwidth=100, anchor="w")
+        self.tree.column("quelle", width=80, minwidth=60, anchor="center")
+
+        sb_y = ttk.Scrollbar(table_frame, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=sb_y.set)
+
+        self.tree.pack(side="left", fill="both", expand=True)
+        sb_y.pack(side="right", fill="y")
+
+        self.tree.bind("<Double-1>", lambda e: self._select())
+        self.tree.bind("<Return>", lambda e: self._select())
+
+        btn_frame = ttk.Frame(self, padding=10)
+        btn_frame.pack(fill="x", side="bottom")
+
+        ttk.Button(btn_frame, text="Abbrechen", command=self.destroy).pack(side="right", padx=5)
+        ttk.Button(btn_frame, text="✓ Auswählen", command=self._select).pack(side="right", padx=5)
+
+        self._filter()
+        self.search_entry.focus_set()
+
+    def _filter(self):
+        term = self.search_entry.get().strip().lower()
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        matches = codelisten.alle_positionen(term)
+
+        for p in matches[:350]:
+            self.tree.insert("", "end", values=(p["code"], p["bezeichnung"], p["bereich"] or "—", p["quelle"]))
+
+        total = len(self._all_positions)
+        visible = len(matches)
+        if term:
+            self.lbl_count.config(text=f"{visible} von {total} Positionen")
+        else:
+            self.lbl_count.config(text=f"{total} Positionen")
+
+        children = self.tree.get_children()
+        if children:
+            self.tree.selection_set(children[0])
+
+    def _select(self):
+        sel = self.tree.selection()
+        if not sel:
+            return
+        vals = self.tree.item(sel[0], "values")
+        if vals:
+            self.selected_code = vals[0]
+            self.selected_bez = vals[1]
+        self.destroy()
+
+
 class PositionEditDialog(tk.Toplevel):
     """
     Sub-dialog to add or edit an individual billing position (EHE, ENF, EHI, EHK, etc.).
+    Includes live clear-text description and official code catalog search.
     """
 
     def __init__(self, parent: tk.Widget, position_data: Optional[Dict[str, Any]] = None, default_tarif_kz: str = ""):
         super().__init__(parent)
         self.title("Leistungsposition bearbeiten" if position_data else "Neue Leistungsposition hinzufügen")
-        self.geometry("500x520")
-        self.minsize(450, 420)
+        self.geometry("540x560")
+        self.minsize(480, 450)
         self.resizable(True, True)
         self.transient(parent)
         self.grab_set()
@@ -60,7 +162,7 @@ class PositionEditDialog(tk.Toplevel):
         self._setup_ui()
 
     def _setup_ui(self):
-        pad = {"padx": 10, "pady": 6}
+        pad = {"padx": 10, "pady": 5}
 
         frame = ttk.Frame(self, padding=15)
         frame.pack(fill="both", expand=True)
@@ -73,53 +175,91 @@ class PositionEditDialog(tk.Toplevel):
         self.tag_combo.set(self.position_data.get("tag", "EHE"))
         self.tag_combo.grid(row=0, column=1, sticky="w", **pad)
 
-        # Leistungsschlüssel / Code
+        # Leistungsschlüssel / Code + Suchbutton
         ttk.Label(frame, text="Leistungsschlüssel (Code):").grid(row=1, column=0, sticky="w", **pad)
-        self.code_entry = ttk.Entry(frame, width=25)
+        code_box = ttk.Frame(frame)
+        code_box.grid(row=1, column=1, sticky="w", **pad)
+
+        self.code_entry = ttk.Entry(code_box, width=16)
         self.code_entry.insert(0, str(self.position_data.get("code", "")))
-        self.code_entry.grid(row=1, column=1, sticky="w", **pad)
+        self.code_entry.pack(side="left")
+        self.code_entry.bind("<KeyRelease>", self._on_code_changed)
+
+        btn_search = ttk.Button(code_box, text="🔍 Suchen...", command=self._open_code_search)
+        btn_search.pack(side="left", padx=(6, 0))
+
+        # Dynamische Klartext-Vorschau
+        self.lbl_code_desc = ttk.Label(
+            frame, text="", font=("Segoe UI", 9, "italic"), wraplength=360, justify="left"
+        )
+        self.lbl_code_desc.grid(row=2, column=1, sticky="w", padx=10, pady=(0, 6))
 
         # Tarifkennzeichen
-        ttk.Label(frame, text="Tarifkennzeichen (10-stellig):").grid(row=2, column=0, sticky="w", **pad)
+        ttk.Label(frame, text="Tarifkennzeichen (10-stellig):").grid(row=3, column=0, sticky="w", **pad)
         self.tarif_entry = ttk.Entry(frame, width=25)
         tkz = self.position_data.get("tarif_kz") or self.default_tarif_kz
         self.tarif_entry.insert(0, str(tkz))
-        self.tarif_entry.grid(row=2, column=1, sticky="w", **pad)
+        self.tarif_entry.grid(row=3, column=1, sticky="w", **pad)
 
         # Behandlungsdatum (TT.MM.JJJJ)
-        ttk.Label(frame, text="Behandlungsdatum (TT.MM.JJJJ):").grid(row=3, column=0, sticky="w", **pad)
+        ttk.Label(frame, text="Behandlungsdatum (TT.MM.JJJJ):").grid(row=4, column=0, sticky="w", **pad)
         self.datum_entry = ttk.Entry(frame, width=20)
         raw_datum = str(self.position_data.get("datum", datetime.datetime.now().strftime("%Y%m%d")))
         fmt_datum = format_date_german(raw_datum) if raw_datum else ""
         self.datum_entry.insert(0, fmt_datum)
-        self.datum_entry.grid(row=3, column=1, sticky="w", **pad)
+        self.datum_entry.grid(row=4, column=1, sticky="w", **pad)
 
         # Anzahl
-        ttk.Label(frame, text="Anzahl (Menge):").grid(row=4, column=0, sticky="w", **pad)
+        ttk.Label(frame, text="Anzahl (Menge):").grid(row=5, column=0, sticky="w", **pad)
         self.anzahl_entry = ttk.Entry(frame, width=15)
         self.anzahl_entry.insert(0, f"{self.position_data.get('anzahl', 1.0):g}")
-        self.anzahl_entry.grid(row=4, column=1, sticky="w", **pad)
+        self.anzahl_entry.grid(row=5, column=1, sticky="w", **pad)
 
         # Einzelpreis (€)
-        ttk.Label(frame, text="Einzelpreis (€):").grid(row=5, column=0, sticky="w", **pad)
+        ttk.Label(frame, text="Einzelpreis (€):").grid(row=6, column=0, sticky="w", **pad)
         self.einzel_entry = ttk.Entry(frame, width=15)
         einzel_val = self.position_data.get("einzelbetrag", 0.0)
         self.einzel_entry.insert(0, f"{einzel_val:.2f}".replace(".", ","))
-        self.einzel_entry.grid(row=5, column=1, sticky="w", **pad)
+        self.einzel_entry.grid(row=6, column=1, sticky="w", **pad)
 
         # Zuzahlung pro Einheit (€)
-        ttk.Label(frame, text="Zuzahlung pro Einheit (€):").grid(row=6, column=0, sticky="w", **pad)
+        ttk.Label(frame, text="Zuzahlung pro Einheit (€):").grid(row=7, column=0, sticky="w", **pad)
         self.zuz_entry = ttk.Entry(frame, width=15)
         zuz_val = self.position_data.get("zuzahlung", 0.0)
         self.zuz_entry.insert(0, f"{zuz_val:.2f}".replace(".", ","))
-        self.zuz_entry.grid(row=6, column=1, sticky="w", **pad)
+        self.zuz_entry.grid(row=7, column=1, sticky="w", **pad)
 
         # Buttons
         btn_frame = ttk.Frame(frame)
-        btn_frame.grid(row=7, column=0, columnspan=2, pady=20, sticky="e")
+        btn_frame.grid(row=8, column=0, columnspan=2, pady=18, sticky="e")
 
         ttk.Button(btn_frame, text="Abbrechen", command=self.destroy).pack(side="right", padx=5)
         ttk.Button(btn_frame, text="Speichern", command=self._save).pack(side="right", padx=5)
+
+        self._on_code_changed()
+
+    def _on_code_changed(self, event=None):
+        code = self.code_entry.get().strip()
+        tarif_kz = self.tarif_entry.get().strip() if hasattr(self, "tarif_entry") else ""
+        if not code:
+            self.lbl_code_desc.config(text="", foreground="")
+            return
+        info = codelisten.position_info(code, tarif_kz)
+        bez = info.get("bezeichnung", "")
+        if bez:
+            bereich = f" ({info['bereich']})" if info.get("bereich") else ""
+            self.lbl_code_desc.config(text=f"✓ {bez}{bereich}", foreground="#2e7d32")
+        else:
+            self.lbl_code_desc.config(text="ℹ️ Kein Klartext in Codeliste hinterlegt", foreground="#888888")
+
+    def _open_code_search(self):
+        current_code = self.code_entry.get().strip()
+        dlg = PositionSearchDialog(self, initial_search=current_code)
+        self.wait_window(dlg)
+        if dlg.selected_code:
+            self.code_entry.delete(0, tk.END)
+            self.code_entry.insert(0, dlg.selected_code)
+            self._on_code_changed()
 
     def _save(self):
         try:
@@ -151,6 +291,7 @@ class PositionEditDialog(tk.Toplevel):
             self.result = {
                 "tag": tag,
                 "code": code,
+                "code_klartext": codelisten.lookup_position(code, tarif_kz),
                 "tarif_kz": tarif_kz,
                 "datum": datum_iso,
                 "anzahl": anzahl,
@@ -657,11 +798,12 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         )
 
         # Positions Treeview Table
-        cols = ("tag", "code", "tarif_kz", "datum", "anzahl", "einzel", "gesamt", "zuz", "zuz_gesamt")
+        cols = ("tag", "code", "bezeichnung", "tarif_kz", "datum", "anzahl", "einzel", "gesamt", "zuz", "zuz_gesamt")
         self.pos_tree = ttk.Treeview(self.tab_pos, columns=cols, show="headings", selectmode="extended")
 
         self.pos_tree.heading("tag", text="Tag")
         self.pos_tree.heading("code", text="Code")
+        self.pos_tree.heading("bezeichnung", text="Bezeichnung (Klartext)")
         self.pos_tree.heading("tarif_kz", text="Tarif-KZ")
         self.pos_tree.heading("datum", text="Datum")
         self.pos_tree.heading("anzahl", text="Anzahl")
@@ -670,15 +812,16 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         self.pos_tree.heading("zuz", text="Zuz. €")
         self.pos_tree.heading("zuz_gesamt", text="Zuz. Ges €")
 
-        self.pos_tree.column("tag", width=60, minwidth=50, anchor="center")
-        self.pos_tree.column("code", width=110, minwidth=80, anchor="w")
-        self.pos_tree.column("tarif_kz", width=100, minwidth=80, anchor="center")
-        self.pos_tree.column("datum", width=100, minwidth=80, anchor="center")
-        self.pos_tree.column("anzahl", width=70, minwidth=50, anchor="e")
-        self.pos_tree.column("einzel", width=90, minwidth=70, anchor="e")
-        self.pos_tree.column("gesamt", width=100, minwidth=80, anchor="e")
-        self.pos_tree.column("zuz", width=80, minwidth=60, anchor="e")
-        self.pos_tree.column("zuz_gesamt", width=95, minwidth=75, anchor="e")
+        self.pos_tree.column("tag", width=55, minwidth=45, anchor="center")
+        self.pos_tree.column("code", width=85, minwidth=70, anchor="w")
+        self.pos_tree.column("bezeichnung", width=240, minwidth=150, anchor="w")
+        self.pos_tree.column("tarif_kz", width=95, minwidth=75, anchor="center")
+        self.pos_tree.column("datum", width=95, minwidth=75, anchor="center")
+        self.pos_tree.column("anzahl", width=65, minwidth=45, anchor="e")
+        self.pos_tree.column("einzel", width=85, minwidth=65, anchor="e")
+        self.pos_tree.column("gesamt", width=95, minwidth=75, anchor="e")
+        self.pos_tree.column("zuz", width=75, minwidth=55, anchor="e")
+        self.pos_tree.column("zuz_gesamt", width=90, minwidth=70, anchor="e")
 
         p_scroll_y = ttk.Scrollbar(self.tab_pos, orient="vertical", command=self.pos_tree.yview)
         p_scroll_x = ttk.Scrollbar(self.tab_pos, orient="horizontal", command=self.pos_tree.xview)
@@ -829,11 +972,18 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             zuz = f"{pos.get('zuzahlung', 0.0):.2f}".replace(".", ",")
             zuz_ges = f"{pos.get('zuzahlung_gesamt', 0.0):.2f}".replace(".", ",")
 
+            bezeichnung = (
+                pos.get("code_klartext")
+                or pos.get("bezeichnung")
+                or codelisten.lookup_position(code, tarif_kz)
+                or "—"
+            )
+
             self.pos_tree.insert(
                 "",
                 "end",
                 iid=p_id,
-                values=(tag, code, tarif_kz, datum, anzahl, einzel, gesamt, zuz, zuz_ges),
+                values=(tag, code, bezeichnung, tarif_kz, datum, anzahl, einzel, gesamt, zuz, zuz_ges),
             )
 
     def _update_sums_display(self):
