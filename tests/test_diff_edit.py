@@ -240,13 +240,13 @@ def test_generieren_schreibt_die_handfassung(editor, tmp_path: Path):
     assert validator.validate_string(inhalt).is_valid()
 
 
-# ----------------------------------- VKZ 03: Bruttobetrag stehen lassen
+# ----------------------------------- VKZ 03: Gesamtbruttobetrag 0,00 (1.3.13.5)
 
-def test_editor_oeffnet_ohne_genullte_bruttobetraege(editor):
+def test_editor_zeigt_genullten_gesamtbruttobetrag(editor):
     """
-    Der Bruttobetrag bleibt stehen. Die Beträge der Leistungspositionen sollen
-    nicht aus den Summen verschwinden — das Nullen nach der früheren Regel
-    1.3.13.5 gibt es nicht mehr.
+    Bei VKZ 03 steht im GES als Gesamtbruttobetrag 0,00 (Regel 1.3.13.5). Die
+    Kasse hat eine Datei mit stehengebliebenem Bruttobetrag abgewiesen
+    (Fehlercode 30209, Datei 2209 vom 22.09.2026).
     """
     assert editor.target_vk == "03"
 
@@ -254,13 +254,29 @@ def test_editor_oeffnet_ohne_genullte_bruttobetraege(editor):
     ges = [z for z in vorschau.split("\n") if z.startswith("GES+")]
     assert ges
     for zeile in ges:
-        assert zeile.rstrip("'").split("+")[3] != "0,00", zeile
+        assert zeile.rstrip("'").split("+")[3] == "0,00", zeile
 
 
-def test_erhaltener_bruttobetrag_ist_kein_fehler(editor):
+def test_handfassung_mit_bruttobetrag_wird_beanstandet(editor):
     """
-    Die erzeugte Fassung muss die Prüfung ohne Beanstandung bestehen — es gibt
-    keine Regel mehr, die den Bruttobetrag bei VKZ 03 auf 0,00 verlangt.
+    Trägt jemand in der Handbearbeitung den Bruttobetrag wieder ein, muss die
+    Prüfung das vor dem Speichern melden.
+    """
+    original = editor.txt_mod.get("1.0", "end-1c")
+    zeile = next(z for z in original.split("\n") if z.startswith("GES+00+"))
+    felder = zeile.rstrip("'").split("+")
+    felder[3] = "100,00"
+    _tippe(editor, original.replace(zeile, "+".join(felder) + "'"))
+
+    fehler, _, _ = editor._pruefe_manuelle_fassung(editor.manual_content)
+
+    assert any("1.3.13.5" in str(f) for f in fehler), fehler
+
+
+def test_erzeugte_fassung_ist_fehlerfrei(editor):
+    """
+    Die erzeugte Fassung (Bruttobetrag 0,00) muss die Prüfung ohne
+    Beanstandung bestehen.
     """
     original = editor.txt_mod.get("1.0", "end-1c")
     _tippe(editor, original.replace("Physio Praxis", "Praxis Neu"))
@@ -273,7 +289,8 @@ def test_erhaltener_bruttobetrag_ist_kein_fehler(editor):
 
 def test_kein_warnhinweis_zum_bruttobetrag_vor_dem_speichern(editor, dialog_protokoll):
     """
-    Der frühere Rückfrage-Dialog zu Regel 1.3.13.5 ist entfallen.
+    Kein Rückfrage-Dialog zu Regel 1.3.13.5: der Generator nullt den
+    Bruttobetrag bei VKZ 03 immer, es gibt nichts zu entscheiden.
     """
     editor._generate_correction()
 
