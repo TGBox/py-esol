@@ -12,6 +12,7 @@ Nutzung:
 import argparse
 import datetime
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
@@ -1355,6 +1356,26 @@ def _unh_auf_aktuelle_version(seg_str: str) -> str:
         fields[1] = teile if isinstance(kennung, list) else ":".join(teile)
         return build_segment_string(tag, fields)
     return seg_str
+
+
+def naechste_freie_esol_nummer(*ordner: Optional[Path]) -> str:
+    """
+    Nächste freie Rechnungsnummer: höchste ESOL-Nummer in den Ordnern + 1.
+
+    Gezählt wird jede Datei, deren Name mit "ESOL" + Ziffern beginnt (also auch
+    ESOL0253_VK02). Ergebnis ohne führende Nullen ("326"), so wie es im
+    REC-Segment steht; der Dateiname wird beim Schreiben auf ESOL0326 aufgefüllt.
+    Nicht vorhandene Ordner werden übergangen.
+    """
+    hoechste = 0
+    for o in ordner:
+        if not o or not Path(o).is_dir():
+            continue
+        for f in Path(o).iterdir():
+            m = re.match(r"ESOL(\d+)", f.name, re.IGNORECASE)
+            if m:
+                hoechste = max(hoechste, int(m.group(1)))
+    return str(hoechste + 1)
 
 
 def generate_correction_file(

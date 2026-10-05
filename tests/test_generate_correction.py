@@ -585,3 +585,37 @@ def test_format_date_german():
 
 
 
+
+
+def test_naechste_freie_esol_nummer(tmp_path: Path):
+    from tools.generate_correction import naechste_freie_esol_nummer
+
+    quelle = tmp_path / "in"
+    ziel = tmp_path / "out"
+    quelle.mkdir()
+    ziel.mkdir()
+    for name in ("ESOL0253", "ESOL0255_VK03", "ESOL0255.auf", "validation_report.txt"):
+        (quelle / name).write_text("x")
+    (ziel / "ESOL0300").write_text("x")
+
+    assert naechste_freie_esol_nummer(quelle) == "256"
+    assert naechste_freie_esol_nummer(quelle, ziel) == "301"
+    assert naechste_freie_esol_nummer(quelle, None, tmp_path / "fehlt") == "256"
+    assert naechste_freie_esol_nummer(tmp_path / "fehlt") == "1"
+
+    # Dateiname wird beim Schreiben aufgefüllt, REC bleibt ohne Nullen
+    orig = tmp_path / "ESOL0255"
+    orig.write_text(
+        "UNB+UNOC:3+441481776+107299005+20260813:1526+00255+B+SL148177S08+2'\n"
+        "UNH+00001+SLGA:21:0:0'\n"
+        "FKT+01++441481776+107299005+107299005+441481776'\n"
+        "REC+255:0+20260813+1'\n"
+        "GES+00+205,72+0,00+205,72'\n"
+        "UNT+000005+00001'\n"
+        "UNZ+000001+00255'\n",
+        encoding="iso-8859-1",
+    )
+    res = generate_correction_file(orig, target_vk="03",
+                                   new_rec_nr=naechste_freie_esol_nummer(quelle, ziel), out_dir=ziel)
+    assert res.name == "ESOL0301"
+    assert "REC+301:0+" in res.read_text(encoding="iso-8859-1")

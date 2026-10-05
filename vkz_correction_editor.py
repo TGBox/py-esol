@@ -27,6 +27,7 @@ from tools.generate_correction import (
     read_esol_file_text,
     format_date_german,
     parse_date_to_iso,
+    naechste_freie_esol_nummer,
 )
 
 # Human-readable labels for each supported VKZ
@@ -700,8 +701,10 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         self.entry_rec_nr = ttk.Entry(rec_frame, width=25)
         self.entry_rec_nr.grid(row=0, column=1, sticky="w", **pad)
 
-        suffix = "Z" if self.target_vk == "03" else ("K" if self.target_vk == "04" else ("W" if self.target_vk == "10" else "N"))
-        default_rec_nr = self.new_rec_nr or f"RE{datetime.datetime.now().strftime('%d%m')}{suffix}"
+        # Vorgabe: nächste freie ESOL-Nummer aus Quell- und Ausgabeordner
+        default_rec_nr = self.new_rec_nr or naechste_freie_esol_nummer(
+            self.file_path.parent, Path(self.output_dir) if self.output_dir else None
+        )
         self.entry_rec_nr.insert(0, default_rec_nr)
         self.entry_rec_nr.bind("<FocusOut>", lambda e: self._on_meta_changed())
 
