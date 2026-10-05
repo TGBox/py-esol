@@ -400,7 +400,7 @@ def test_dialog_rec_nr_and_german_date_moved_to_second_dialog(tmp_path: Path):
 
 
 
-# ------------------------------------------- VKZ 03: Bruttobetrag als Schalter
+# ------------------------------------------- VKZ 03: Gesamtbruttobetrag 0,00
 
 def _vk03_quelle() -> str:
     """Ein Beleg mit echter Zuzahlung — sonst ist am Brutto nichts zu sehen."""
@@ -432,18 +432,18 @@ def _segmente(text: str, tag: str) -> list:
     return [s for s in text.replace("\r\n", "\n").split("\n") if s.startswith(tag + "+")]
 
 
-def test_vk03_behaelt_den_bruttobetrag(tmp_path: Path):
+def test_vk03_nullt_den_gesamtbruttobetrag(tmp_path: Path):
     """
-    Der Gesamtbruttobetrag bleibt bei einer Zuzahlungsforderung stehen. Früher
-    wurde er auf 0,00 gesetzt (Regel 1.3.13.5) — die Regel ist entfallen, die
-    Summe der Leistungspositionen bleibt damit sichtbar. Am Rechnungsbetrag und
-    an GZF ändert das nichts.
+    Der Gesamtbruttobetrag ist bei einer Zuzahlungsforderung 0,00 (Regel
+    1.3.13.5). Am 22.09.2026 war das versuchsweise entfallen — die Kasse hat die
+    Datei daraufhin mit Fehlercode 30209 abgewiesen. Am Rechnungsbetrag und an
+    GZF ändert das nichts.
     """
     neu = generate_correction_esol(_vk03_quelle(), target_vk="03")
 
     for ges in _segmente(neu, "GES"):
         felder = ges.rstrip("'").split("+")
-        assert felder[3] == "950,10", f"Gesamtbruttobetrag fehlt: {ges}"
+        assert felder[3] == "0,00", f"Gesamtbruttobetrag nicht genullt: {ges}"
         # Rechnungsbetrag bleibt die Zuzahlung
         assert felder[2] == "104,90"
 
@@ -467,8 +467,7 @@ def test_vk03_bes_wird_immer_durch_gzf_ersetzt(tmp_path: Path):
 
 def test_vk03_verletzt_keine_regel(tmp_path: Path):
     """
-    Mit dem erhaltenen Bruttobetrag muss die Datei die vollständige Prüfung
-    bestehen — insbesondere müssen die Zuzahlungssummen aufgehen (1.3.13.6).
+    Die Datei muss die vollständige Prüfung bestehen (auch 1.3.13.5) — insbesondere müssen die Zuzahlungssummen aufgehen (1.3.13.6).
     """
     neu = generate_correction_esol(_vk03_quelle(), target_vk="03")
 
@@ -517,7 +516,7 @@ def test_vk03_ueber_generate_correction_file(tmp_path: Path):
         input_path=quelle, output_path=tmp_path / "out", target_vk="03"
     ).read_text(encoding="iso-8859-1")
 
-    assert {s.rstrip("'").split("+")[3] for s in _segmente(erzeugt, "GES")} == {"950,10"}
+    assert {s.rstrip("'").split("+")[3] for s in _segmente(erzeugt, "GES")} == {"0,00"}
 
 
 def test_andere_vkz_ohne_gzf_umbau(tmp_path: Path):

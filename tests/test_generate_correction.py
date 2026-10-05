@@ -619,3 +619,60 @@ def test_naechste_freie_esol_nummer(tmp_path: Path):
                                    new_rec_nr=naechste_freie_esol_nummer(quelle, ziel), out_dir=ziel)
     assert res.name == "ESOL0301"
     assert "REC+301:0+" in res.read_text(encoding="iso-8859-1")
+
+
+def _vk03_orig(tmp_path: Path) -> Path:
+    orig_esol = "\n".join([
+        "UNB+UNOC:3+123456789+661430035+20260323:1040+00118+B+SL030179S03+2'",
+        "UNH+00001+SLGA:21:0:0'",
+        "FKT+01++123456789+101777502+101777502+123456789'",
+        "REC+51:0+20260122+1'",
+        "GES+00+100,00+100,00+0,00'",
+        "GES+31+100,00+100,00+0,00'",
+        "NAM+Physio Praxis+++info@physio.de'",
+        "UNT+000007+00001'",
+        "UNH+00002+SLLA:21:0:0'",
+        "FKT+01++123456789+101777502+101777502'",
+        "REC+51:0+20260122+1'",
+        "INV+A123456789+30000+1+00001'",
+        "NAD+Muster+Max+19900101'",
+        "EHE+26:00501+59702+1,00+100,00+20260115+10,00'",
+        "ZHE+110178400+906716934+20250528+0+EN1+04+++++1++1110++0+1+2'",
+        "DIA+F98.9'",
+        "BES+100,00+10,00+0,00+10,00'",
+        "UNT+000010+00002'",
+        "UNZ+000002+00118'",
+    ])
+    orig_file = tmp_path / "orig_esol.txt"
+    orig_file.write_text(orig_esol, encoding="iso-8859-1")
+    return orig_file
+
+
+def test_vk03_gesamtbruttobetrag_ist_null(tmp_path: Path):
+    """Regel 1.3.13.5 / Kassen-Fehlercode 30209: bei VKZ 03 steht im GES als
+    Gesamtbruttobetrag 0,00 — in der 00-Zeile UND in jeder Statuszeile.
+    Abweisung vom 05.10.2026 (Datei 2209), weil der Bruttobetrag stehen blieb."""
+    res_file = generate_correction_file(_vk03_orig(tmp_path), target_vk="03",
+                                        new_rec_nr="05100", new_rec_date="20260325")
+    content = res_file.read_text(encoding="iso-8859-1")
+
+    ges = [s for s in content.replace("\n", "").split("'") if s.startswith("GES+")]
+    assert ges == ["GES+00+20,00+0,00+20,00", "GES+31+20,00+0,00+20,00"]
+    # Die Positionen behalten ihre echten Preise
+    assert "EHE+26:00501+59702+1,00+100,00+20260115+10,00'" in content
+
+
+def test_validator_meldet_bruttobetrag_bei_vk03(tmp_path: Path):
+    """Der Validator muss einen stehengebliebenen Bruttobetrag bei VKZ 03
+    finden, bevor die Kasse es tut."""
+    res_file = generate_correction_file(_vk03_orig(tmp_path), target_vk="03",
+                                        new_rec_nr="05100", new_rec_date="20260325")
+    content = res_file.read_text(encoding="iso-8859-1")
+    kaputt = content.replace("GES+00+20,00+0,00+20,00'", "GES+00+20,00+100,00+20,00'")
+    assert kaputt != content
+
+    validator = EsolValidator()
+    validator.register_default_rules()
+    res = validator.validate_string(kaputt)
+    codes = [getattr(e, "rule_id", None) or getattr(e, "code", None) or str(e) for e in res.get_errors()]
+    assert any("1.3.13.5" in str(c) for c in codes), codes

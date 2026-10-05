@@ -707,10 +707,11 @@ def generate_correction_esol(
     Generates a new ESOL content string with target VKZ (02, 03, 04) from original raw ESOL content.
     Optionally filters output to include only specified Belegnummern and applies beleg_modifications.
 
-    Bei VKZ 03 bleibt der Gesamtbruttobetrag (2. GES-Feld) stehen. Früher wurde
-    er auf 0,00 gesetzt, mit Verweis auf Regel 1.3.13.5 — diese Regel hat sich
-    als nicht zutreffend erwiesen und ist entfallen, samt dem Schalter im
-    Korrektur-Editor.
+    Bei VKZ 03 wird der Gesamtbruttobetrag (2. GES-Feld) immer auf 0,00 gesetzt
+    (Regel 1.3.13.5). Die Kassen prüfen das: eine Zuzahlungsforderung mit
+    stehengebliebenem Bruttobetrag wurde am 05.10.2026 mit Fehlercode 30209
+    („Gesamtbruttobetrag muss 0,00 sein bei FKT-Verarbeitungskennzeichen 03")
+    abgewiesen. Die Bruttobeträge der Positionen bleiben unverändert.
 
     BES wird bei VKZ 03 immer durch GZF ersetzt. Beide naheliegenden Varianten
     zerstören die Zahlen: BES neben GZF lässt die Zuzahlung doppelt zählen
@@ -945,10 +946,10 @@ def generate_correction_esol(
         st_rechn = round(st_b - st_z, 2)
         if target_vk == "03":
             # Rechnungsbetrag ist bei einer Zuzahlungsforderung die Zuzahlung.
-            # Das 2. Feld ist der Gesamtbruttobetrag und bleibt stehen, damit
-            # die abgerechneten Leistungen in der Forderung sichtbar bleiben.
+            # Der Gesamtbruttobetrag MUSS 0,00 sein (Regel 1.3.13.5, bei den
+            # Kassen Fehlercode 30209 → Abweisung der ganzen Lieferung).
             f1 = ContentHelper.format_decimal(st_z)
-            f2 = ContentHelper.format_decimal(st_b)
+            f2 = ContentHelper.format_decimal(0.0)
             f3 = ContentHelper.format_decimal(st_z)
         else:
             f1 = ContentHelper.format_decimal(st_rechn)
@@ -1021,7 +1022,8 @@ def generate_correction_esol(
 
         if tag != "GES" and "00" in written_ges_statuses:
             active_statuses = set(
-                [code for code, val in brutto_by_status.items() if val > 0]
+                ([] if target_vk == "03"
+                 else [code for code, val in brutto_by_status.items() if val > 0])
                 + [code for code, val in zuzahlung_by_status.items() if val > 0]
             )
             for st_code in sorted(active_statuses):
@@ -1079,7 +1081,9 @@ def generate_correction_esol(
             else:
                 st_brutto = round(brutto_by_status.get(status_code, 0.0), 2)
                 st_zuz = round(zuzahlung_by_status.get(status_code, 0.0), 2)
-                if st_brutto > 0 or st_zuz > 0:
+                # Bei VK 03 trägt eine Statuszeile nur die Zuzahlung (Brutto ist
+                # 0,00) — eine Zeile ohne Zuzahlung wäre leer und entfällt.
+                if st_zuz > 0 or (target_vk != "03" and st_brutto > 0):
                     new_raw_segments.append(make_ges_segment(status_code, st_brutto, st_zuz))
                     written_ges_statuses.add(status_code)
 
@@ -1260,9 +1264,9 @@ def generate_correction_esol(
                     # nebeneinander zu schreiben wäre naheliegend, führt aber
                     # dazu, dass die Zuzahlung doppelt gezählt wird (Regel
                     # 1.3.13.6 meldet dann die doppelte Summe); BES ohne GZF
-                    # verstößt gegen 1.3.12.1, das GZF bei VK 03 verlangt. Der
-                    # Bruttobetrag bleibt deshalb allein über das GES-Segment
-                    # sichtbar — siehe make_ges_segment.
+                    # verstößt gegen 1.3.12.1, das GZF bei VK 03 verlangt. Im
+                    # GES steht der Bruttobetrag bei VK 03 als 0,00 — siehe
+                    # make_ges_segment.
                     new_raw_segments.append(build_segment_string("GZF", gzf_fields))
                     in_inv_block = False
                     inv_block_segments = []

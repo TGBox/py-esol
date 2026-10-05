@@ -203,24 +203,32 @@ Prüfung in `rules/level2/field_length_rule.py` (Regel 1.2.2.6).
 
 ## 4. Offene Befunde — hier brauche ich eine Entscheidung
 
-### 4.1 Bruttobetrag bei VKZ 03 — entschieden (22.09.2026): erledigt
+### 4.1 Bruttobetrag bei VKZ 03 — korrigiert (05.10.2026): Regel 1.3.13.5 gilt wieder
 
-Der Punkt drehte sich um das **GES-Feld „Gesamtbruttobetrag"** bei einer
-Zuzahlungsforderung und um Regel 1.3.13.5, die dort 0,00 verlangte.
+Der Punkt dreht sich um das **GES-Feld „Gesamtbruttobetrag"** bei einer
+Zuzahlungsforderung und um Regel 1.3.13.5, die dort 0,00 verlangt.
 
-**Entscheidung: Regel 1.3.13.5 trifft nicht zu und ist entfallen.** Der
-Bruttobetrag bleibt bei VKZ 03 stehen. Umgesetzt wurde:
+Am 22.09.2026 war entschieden worden, die Regel treffe nicht zu; der
+Bruttobetrag blieb stehen. **Die Kasse (IK 104212505) hat die damit erzeugte
+Datei 2209 vom 22.09.2026 abgewiesen**: Fehlercode 30209, „Gesamtbruttobetrag
+muss 0,00 sein bei FKT-Verarbeitungskennzeichen 03", GES-Segmente 5 und 6
+(Status 00 und Statuszeile), Feldposition 4:1.
 
-* die Prüfung 1.3.13.5 ist aus `rules/level3/ges_content_rule.py` entfernt
-* der Schalter „Bruttobetrag nullen" samt Warnhinweisen und Rückfrage ist aus
-  dem Korrektur-Editor entfernt
-* `brutto_nullen` ist als Parameter von `generate_correction_esol` /
-  `generate_correction_file` entfallen — auch die Kommandozeile schreibt den
-  echten Bruttobetrag
+Umgesetzt am 05.10.2026:
 
-Wichtig für die Einordnung: **die Beträge der einzelnen Leistungspositionen
-wurden bei VKZ 03 ohnehin nie genullt**, sie werden unverändert übernommen. Was
-im Editor als „genullt" zu sehen war, war dieses GES-Feld.
+* `make_ges_segment` in `tools/generate_correction.py` schreibt bei VKZ 03
+  immer `GES+<Status>+<Zuzahlung>+0,00+<Zuzahlung>` — kein Schalter, auch an
+  der Kommandozeile
+* GES-Statuszeilen entstehen bei VKZ 03 nur noch, wenn sie eine Zuzahlung
+  tragen
+* die Prüfung 1.3.13.5 ist in `rules/level3/ges_content_rule.py` wieder drin
+  und nennt den Kassen-Fehlercode 30209
+* Tests: `test_vk03_gesamtbruttobetrag_ist_null`,
+  `test_validator_meldet_bruttobetrag_bei_vk03`,
+  `test_vk03_nullt_den_gesamtbruttobetrag`
+
+Die Beträge der einzelnen Leistungspositionen (EHE) bleiben bei VKZ 03
+unverändert; genullt wird nur das GES-Feld.
 
 ### 4.2 Die Reihenfolge innerhalb des INV-Blocks wird nicht geprüft
 

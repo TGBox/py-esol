@@ -110,11 +110,21 @@ class GesContentRule(RuleInterface):
                 seg_index = ges["index"]
 
                 if vk == "03":
-                    # Regel 1.3.13.5 ("Bei VK 03 muss der Gesamtbruttobetrag
-                    # 0,00 sein") ist entfallen — die Vorgabe hat sich als
-                    # nicht zutreffend erwiesen. Der Bruttobetrag darf bei
-                    # einer Zuzahlungsforderung stehen bleiben und wird hier
-                    # nicht mehr geprüft.
+                    # Regel 1.3.13.5: Bei VK 03 muss der Gesamtbruttobetrag
+                    # 0,00 sein. Die Kassen weisen sonst die ganze Lieferung
+                    # ab (Fehlercode 30209, so geschehen am 05.10.2026).
+                    if abs(ges["brutto"]) > 0.005:
+                        errors.append(
+                            ValidationError.error(
+                                3,
+                                "1.3.13.5",
+                                f"GES (Status {ges['status']}): Gesamtbruttobetrag muss 0,00 sein bei "
+                                f"FKT-Verarbeitungskennzeichen 03 (ist "
+                                f"{ContentHelper.format_decimal(ges['brutto'])}; Kassen-Fehlercode 30209).",
+                                "GES",
+                                seg_index,
+                            )
+                        )
                     if ges["zuzahlung"] is not None:
                         expected_rechnung = ContentHelper.round_commercial(
                             ges["zuzahlung"]
