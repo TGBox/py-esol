@@ -292,7 +292,9 @@ class BelegDashboardFrame(ttk.Frame):
             self.beleg_pos_tree.delete(item)
 
         positions = b.get("positions", [])
-        tarif_kz = str(b.get("tarifkennzeichen", ""))
+        # Die eigene Pflege in codelisten.json ist nach Abrechnungscode gestaffelt,
+        # nicht nach Tarifkennzeichen.
+        beleg_abr = str(b.get("abrechnungscode", "") or "")
 
         for idx, pos in enumerate(positions):
             p_tag = str(pos.get("tag", "EHE"))
@@ -300,7 +302,7 @@ class BelegDashboardFrame(ttk.Frame):
             p_bez = (
                 pos.get("code_klartext")
                 or pos.get("bezeichnung")
-                or codelisten.lookup_position(p_code, tarif_kz)
+                or codelisten.lookup_position(p_code, pos.get("abr_code") or beleg_abr)
                 or "—"
             )
             p_menge = f"{pos.get('anzahl', 0.0):g}"
@@ -330,7 +332,7 @@ class BelegDashboardFrame(ttk.Frame):
                 p_bez = (
                     pos.get("code_klartext")
                     or pos.get("bezeichnung")
-                    or codelisten.lookup_position(p_code, tarif_kz)
+                    or codelisten.lookup_position(p_code, pos.get("abr_code") or beleg_abr)
                     or "Kein Klartext hinterlegt"
                 )
                 p_menge = f"{pos.get('anzahl', 0.0):g}"

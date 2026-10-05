@@ -144,7 +144,8 @@ class PositionEditDialog(tk.Toplevel):
     Includes live clear-text description and official code catalog search.
     """
 
-    def __init__(self, parent: tk.Widget, position_data: Optional[Dict[str, Any]] = None, default_tarif_kz: str = ""):
+    def __init__(self, parent: tk.Widget, position_data: Optional[Dict[str, Any]] = None, default_tarif_kz: str = "",
+                 default_abr_code: str = ""):
         super().__init__(parent)
         self.title("Leistungsposition bearbeiten" if position_data else "Neue Leistungsposition hinzufügen")
         self.geometry("540x560")
@@ -158,6 +159,8 @@ class PositionEditDialog(tk.Toplevel):
         self.result: Optional[Dict[str, Any]] = None
         self.position_data = position_data or {}
         self.default_tarif_kz = default_tarif_kz
+        # Abrechnungscode für den Klartext-Lookup (codelisten.json ist danach gestaffelt)
+        self.abr_code = str(self.position_data.get("abr_code") or default_abr_code or "")
 
         self._setup_ui()
 
@@ -240,11 +243,10 @@ class PositionEditDialog(tk.Toplevel):
 
     def _on_code_changed(self, event=None):
         code = self.code_entry.get().strip()
-        tarif_kz = self.tarif_entry.get().strip() if hasattr(self, "tarif_entry") else ""
         if not code:
             self.lbl_code_desc.config(text="", foreground="")
             return
-        info = codelisten.position_info(code, tarif_kz)
+        info = codelisten.position_info(code, self.abr_code)
         bez = info.get("bezeichnung", "")
         if bez:
             bereich = f" ({info['bereich']})" if info.get("bereich") else ""
@@ -291,7 +293,7 @@ class PositionEditDialog(tk.Toplevel):
             self.result = {
                 "tag": tag,
                 "code": code,
-                "code_klartext": codelisten.lookup_position(code, tarif_kz),
+                "code_klartext": codelisten.lookup_position(code, self.abr_code),
                 "tarif_kz": tarif_kz,
                 "datum": datum_iso,
                 "anzahl": anzahl,
@@ -975,7 +977,7 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             bezeichnung = (
                 pos.get("code_klartext")
                 or pos.get("bezeichnung")
-                or codelisten.lookup_position(code, tarif_kz)
+                or codelisten.lookup_position(code, pos.get("abr_code") or b.get("abrechnungscode", ""))
                 or "—"
             )
 
@@ -1062,7 +1064,10 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         b = self.belege_map[self.active_belegnr]
         def_tk = b.get("tarifkennzeichen", "")
 
-        dlg = PositionEditDialog(self, position_data=None, default_tarif_kz=def_tk)
+        dlg = PositionEditDialog(
+            self, position_data=None, default_tarif_kz=def_tk,
+            default_abr_code=b.get("abrechnungscode", ""),
+        )
         self.wait_window(dlg)
 
         if dlg.result:
@@ -1094,7 +1099,10 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
 
         target_pos = positions[p_idx]
         def_tk = b.get("tarifkennzeichen", "")
-        dlg = PositionEditDialog(self, position_data=target_pos, default_tarif_kz=def_tk)
+        dlg = PositionEditDialog(
+            self, position_data=target_pos, default_tarif_kz=def_tk,
+            default_abr_code=b.get("abrechnungscode", ""),
+        )
         self.wait_window(dlg)
 
         if dlg.result:
