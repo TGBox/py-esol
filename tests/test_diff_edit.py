@@ -92,7 +92,7 @@ def test_ohne_content_override_wird_generiert(tmp_path: Path):
 # Dialogverhalten — braucht Tk
 # ---------------------------------------------------------------------------
 
-def _dialog(tmp_path: Path):
+def _dialog(tmp_path: Path, target_vk: str = "03"):
     """Baut den Korrektur-Editor auf einer Kopie der Fixture auf."""
     import tkinter as tk
 
@@ -107,7 +107,7 @@ def _dialog(tmp_path: Path):
         parent=root,
         file_path=str(src),
         selected_belegnr_list=["00001"],
-        target_vk="03",
+        target_vk=target_vk,
         output_dir=str(tmp_path / "out"),
     )
     dlg._update_diff_preview()
@@ -148,6 +148,86 @@ def test_standardansicht_ist_die_ganze_datei_und_bearbeitbar(editor):
     assert "UNB+UNOC:3" in rechts
     assert "FKT+03+" in rechts
     assert rechts.rstrip().endswith("'")
+
+
+def test_programmatisch_gefuellte_vorschau_gilt_nicht_als_handarbeit(editor):
+    """
+    Tk liefert <<Modified>> erst aus der Ereignisschleife — also NACHDEM die
+    Vorschau gefüllt und der Schutz _filling_preview schon wieder aufgehoben
+    ist. Wurde das als Handarbeit gewertet, fror die Vorschau ein: gelöschte
+    oder geänderte Positionen landeten nicht mehr in der erzeugten Datei.
+    """
+    editor.update()
+    assert editor.manual_content is None
+
+    editor._update_diff_preview()
+    editor.update()
+    assert editor.manual_content is None
+
+
+def test_geloeschte_position_landet_in_der_vorschau(tmp_path: Path):
+    """VK 04, weil die Fixture ZKZ 0 trägt und VK 03 dafür nichts erzeugt."""
+    try:
+        root, editor = _dialog(tmp_path, target_vk="04")
+    except Exception as e:
+        pytest.skip(f"Tkinter environment not available: {e}")
+    try:
+        _pruefe_loeschen(editor)
+    finally:
+        editor.destroy()
+        root.destroy()
+
+
+def test_geaenderte_rechnungsnummer_landet_in_rec_und_dateiname(tmp_path: Path):
+    """
+    Die Nummer im Feld "Neue Rechnungsnummer / Dateiname" bestimmt beides:
+    den Dateinamen und das REC-Segment. Früher blieb im REC der erste
+    Vorschlag stehen, weil die Vorschau fälschlich als Handarbeit galt.
+    """
+    try:
+        root, editor = _dialog(tmp_path, target_vk="04")
+    except Exception as e:
+        pytest.skip(f"Tkinter environment not available: {e}")
+    try:
+        editor.update()
+        editor.entry_rec_nr.delete(0, "end")
+        editor.entry_rec_nr.insert(0, "400")
+        editor.entry_rec_nr.event_generate("<FocusOut>")
+        editor.update()
+        assert editor.manual_content is None
+
+        editor._generate_correction()
+
+        datei = tmp_path / "out" / "ESOL0400"
+        assert datei.is_file()
+        inhalt = datei.read_text(encoding="iso-8859-1")
+        assert "REC+400:0+" in inhalt
+        assert "+00400+" in inhalt.split("'")[0]  # Datenaustauschreferenz im UNB
+    finally:
+        try:
+            editor.destroy()
+        except Exception:
+            pass
+        root.destroy()
+
+
+def _pruefe_loeschen(editor):
+    beleg = editor.belege_map[editor.active_belegnr]
+    beleg["positions"].append(dict(beleg["positions"][0], datum="20260116"))
+    editor._refresh_positions_table()
+    editor._update_sums_display()
+    editor._mark_active_beleg_modified()
+    editor._update_diff_preview()
+    editor.update()
+    assert editor.txt_mod.get("1.0", "end-1c").count("EHE+") == 2
+
+    editor.pos_tree.selection_set(editor.pos_tree.get_children()[0])
+    editor._delete_position()
+    editor.update()
+
+    assert editor.manual_content is None
+    assert editor.txt_mod.get("1.0", "end-1c").count("EHE+") == 1
+    assert len(editor.modifications[editor.active_belegnr]["positions"]) == 1
 
 
 def test_belegansicht_ist_nur_lesbar(editor):

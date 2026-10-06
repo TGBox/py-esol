@@ -378,6 +378,11 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         # Schutz gegen Selbstauslösung: während die Vorschau programmatisch
         # gefüllt wird, darf das <<Modified>>-Ereignis nichts als Handarbeit werten.
         self._filling_preview: bool = False
+        # Zuletzt programmatisch eingesetzter Vorschautext. Tk liefert
+        # <<Modified>> erst aus der Ereignisschleife, also wenn _filling_preview
+        # schon wieder False ist — deshalb zählt nur eine Abweichung von diesem
+        # Text als Handarbeit.
+        self._letzte_vorschau: Optional[str] = None
 
         self.active_belegnr: Optional[str] = self.belege[0]["belegnr"] if self.belege else None
 
@@ -1299,6 +1304,7 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             self.txt_mod.delete("1.0", "end")
             self.txt_mod.insert("1.0", text)
             self.txt_mod.edit_modified(False)
+            self._letzte_vorschau = self.txt_mod.get("1.0", "end-1c")
         finally:
             self._filling_preview = False
 
@@ -1377,6 +1383,9 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
             return
 
         neu = self.txt_mod.get("1.0", "end-1c")
+        if neu == self._letzte_vorschau:
+            # Nachzügler-Ereignis vom programmatischen Füllen, keine Handarbeit
+            return
         war_handarbeit = self.manual_content is not None
         self.manual_content = neu
         if not war_handarbeit:
