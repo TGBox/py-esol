@@ -14,3 +14,8 @@ dependencies = [
     # Muster-13-Fenster beim Import weg.
     "pillow>=10.0.0",
 ]
+
+[tool.pytest.ini_options]
+# Nur tests/ einsammeln. Sonst findet pytest Kopien in "Claude outputs/",
+# build/ usw. und bricht bei gleichen Dateinamen mit "import file mismatch" ab.
+testpaths = ["tests"]

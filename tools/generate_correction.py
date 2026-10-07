@@ -429,6 +429,58 @@ def effektives_zuzahlungskennzeichen(
     return original
 
 
+def zkz_ohne_pauschale(target_vk: str) -> Tuple[str, ...]:
+    """
+    Zuzahlungskennzeichen, bei denen die Pauschale (10 € je Verordnung) auf
+    0,00 geht.
+
+    Bei VKZ 03 nur "0": ein "1" ist dort der Fall 7.4.2.2 (Befreiung wegen
+    Belastungsgrenze) — die Kasse hat die Zuzahlung samt Pauschale abgezogen,
+    die neue Rechnung fordert sie zurück. Bei allen anderen VKZ heißt "1"
+    weiterhin "befreit, keine Pauschale".
+    """
+    return ZKZ_OHNE_ZUZAHLUNG if target_vk == "03" else ("0", "1")
+
+
+def _zkz_im_beleg(
+    b_mod: Optional[Dict[str, Any]],
+    global_zkz: Optional[str],
+    target_vk: str,
+    zhe_original: str,
+) -> str:
+    """
+    Das Kennzeichen, mit dem die Pauschale eines Belegs berechnet wird —
+    dieselbe Vorrangregel wie in effektives_zuzahlungskennzeichen. Beide
+    Durchläufe von generate_correction_esol (GES-Summen und BES/GZF) MÜSSEN
+    diese Funktion benutzen, sonst stimmen GES und Belege nicht überein
+    (Regel 1.3.13.6, Re. 149 am 07.10.2026: 10,00 € Differenz bei ZKZ 1).
+    Leerer String = keine Vorgabe, es zählt der Betrag aus dem Original-BES.
+    """
+    if b_mod and "zuzahlungskennzeichen" in b_mod:
+        return str(b_mod["zuzahlungskennzeichen"])
+    if global_zkz is not None:
+        return str(global_zkz)
+    if target_vk == "03":
+        return zhe_original if zhe_original in ZKZ_EIGENER_VK03_FALL else "2"
+    return ""
+
+
+def _pauschale_fuer_beleg(
+    zkz: str,
+    b_mod: Optional[Dict[str, Any]],
+    bes_fields: List[Any],
+    target_vk: str,
+) -> float:
+    """Pauschale Zuzahlung eines Belegs — für beide Durchläufe gleich."""
+    if zkz in zkz_ohne_pauschale(target_vk):
+        return 0.0
+    if b_mod and "zuzahlung_pausch" in b_mod:
+        return float(b_mod["zuzahlung_pausch"])
+    if len(bes_fields) > 3 and bes_fields[3]:
+        return float(str(bes_fields[3]).replace(",", "."))
+    return 10.0
+
+
 def _beleg_zuzahlung(beleg: Dict[str, Any], mods: Optional[Dict[str, Any]] = None) -> float:
     """
     Die Zuzahlung, die für diesen Beleg gefordert würde — nach Anwendung der
@@ -774,6 +826,7 @@ def generate_correction_esol(
     current_inv_zuz_pausch_p1 = 0.0
     current_inv_brutto_p1 = 0.0
     current_belegnr_p1 = ""
+    current_zhe_zkz_p1 = ""
 
     orig_sammel_nr = ""
     orig_einzel_nr = ""
@@ -825,24 +878,20 @@ def generate_correction_esol(
             current_inv_zuz_proz_p1 = 0.0
             current_inv_zuz_pausch_p1 = 0.0
             current_inv_brutto_p1 = 0.0
+            current_zhe_zkz_p1 = ""
 
         elif in_inv_block_p1:
             b_mod = _get_beleg_mod(current_belegnr_p1, mods)
+            if tag in ["ZHE", "ZHI", "ZHK", "ZKT", "ZHB", "ZSP"]:
+                current_zhe_zkz_p1 = str(fields[3]).strip() if len(fields) > 3 else ""
             if keep_block_p1 and b_mod and "positions" in b_mod:
                 # Calculate totals from modified positions
                 if tag == "BES":
                     mod_positions = b_mod["positions"]
                     mod_brutto = sum(round(p.get("anzahl", 0.0) * p.get("einzelbetrag", 0.0), 2) for p in mod_positions)
                     mod_zuz_proz = sum(round(p.get("anzahl", 0.0) * p.get("zuzahlung", 0.0), 2) for p in mod_positions)
-                    zkz = str(b_mod.get("zuzahlungskennzeichen", "2"))
-                    if zkz in ["0", "1"]:
-                        mod_zuz_pausch = 0.0
-                    elif "zuzahlung_pausch" in b_mod:
-                        mod_zuz_pausch = float(b_mod["zuzahlung_pausch"])
-                    elif len(fields) > 3 and fields[3]:
-                        mod_zuz_pausch = float(str(fields[3]).replace(",", "."))
-                    else:
-                        mod_zuz_pausch = b_mod.get("zuzahlung_pausch", 10.0)
+                    zkz = _zkz_im_beleg(b_mod, zuzahlungskennzeichen, target_vk, current_zhe_zkz_p1)
+                    mod_zuz_pausch = _pauschale_fuer_beleg(zkz, b_mod, fields, target_vk)
 
                     brutto_by_status[current_ges_code_p1] = round(
                         brutto_by_status.get(current_ges_code_p1, 0.0) + mod_brutto, 2
@@ -884,18 +933,9 @@ def generate_correction_esol(
                         brutto_by_status.get(current_ges_code_p1, 0.0) + brutto_val, 2
                     )
 
-                    if target_vk == "03":
-                        if len(fields) > 3 and fields[3]:
-                            current_inv_zuz_pausch_p1 = float(str(fields[3]).replace(",", "."))
-                        else:
-                            current_inv_zuz_pausch_p1 = 10.0
-                        inv_zuz = round(current_inv_zuz_proz_p1 + current_inv_zuz_pausch_p1, 2)
-                    else:
-                        if len(fields) > 3 and fields[3]:
-                            current_inv_zuz_pausch_p1 = float(str(fields[3]).replace(",", "."))
-                        else:
-                            current_inv_zuz_pausch_p1 = 10.0
-                        inv_zuz = round(current_inv_zuz_proz_p1 + current_inv_zuz_pausch_p1, 2)
+                    zkz = _zkz_im_beleg(b_mod, zuzahlungskennzeichen, target_vk, current_zhe_zkz_p1)
+                    current_inv_zuz_pausch_p1 = _pauschale_fuer_beleg(zkz, b_mod, fields, target_vk)
+                    inv_zuz = round(current_inv_zuz_proz_p1 + current_inv_zuz_pausch_p1, 2)
 
                     zuzahlung_by_status[current_ges_code_p1] = round(
                         zuzahlung_by_status.get(current_ges_code_p1, 0.0) + inv_zuz, 2
@@ -1224,23 +1264,8 @@ def generate_correction_esol(
                 # b_mod: ein global gesetztes "befreit" kam im ZHE an, wurde bei der
                 # Pauschale aber übergangen — die Datei forderte dann Geld von
                 # jemandem, den sie selbst als befreit auswies.
-                if b_mod and "zuzahlungskennzeichen" in b_mod:
-                    zkz = str(b_mod["zuzahlungskennzeichen"])
-                elif zuzahlungskennzeichen is not None:
-                    zkz = str(zuzahlungskennzeichen)
-                elif target_vk == "03":
-                    zkz = (current_inv_zhe_zkz
-                           if current_inv_zhe_zkz in ZKZ_EIGENER_VK03_FALL else "2")
-                else:
-                    zkz = ""
-                if zkz in ZKZ_OHNE_ZUZAHLUNG:
-                    current_inv_zuz_pausch = 0.0
-                elif b_mod and "zuzahlung_pausch" in b_mod:
-                    current_inv_zuz_pausch = float(b_mod["zuzahlung_pausch"])
-                elif len(fields) > 3 and fields[3]:
-                    current_inv_zuz_pausch = float(str(fields[3]).replace(",", "."))
-                else:
-                    current_inv_zuz_pausch = 10.0
+                zkz = _zkz_im_beleg(b_mod, zuzahlungskennzeichen, target_vk, current_inv_zhe_zkz)
+                current_inv_zuz_pausch = _pauschale_fuer_beleg(zkz, b_mod, fields, target_vk)
 
                 if len(fields) > 0:
                     fields[0] = ContentHelper.format_decimal(current_inv_brutto)

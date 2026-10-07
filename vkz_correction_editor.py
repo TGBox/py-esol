@@ -22,6 +22,7 @@ from tools.generate_correction import (
     generate_correction_file,
     vk03_ausgeschlossene_belege,
     vk02_unveraenderte_belege,
+    zkz_ohne_pauschale,
     mengendifferenz_modifikationen,
     pruefe_iso_8859_1,
     read_esol_file_text,
@@ -1006,7 +1007,9 @@ class VKZCorrectionEditorDialog(tk.Toplevel):
         brutto = sum(round(p.get("anzahl", 0.0) * p.get("einzelbetrag", 0.0), 2) for p in positions)
         zuz_proz = sum(round(p.get("anzahl", 0.0) * p.get("zuzahlung", 0.0), 2) for p in positions)
 
-        if zkz in ["0", "1"]:
+        # Gleiche Regel wie der Generator: bei VKZ 03 ist "1" der Fall 7.4.2.2,
+        # dort zaehlt die Pauschale laut Checkbox.
+        if zkz in zkz_ohne_pauschale(self.target_vk):
             zuz_pausch = 0.0
         elif "zuzahlung_pausch" in b:
             zuz_pausch = float(b["zuzahlung_pausch"])

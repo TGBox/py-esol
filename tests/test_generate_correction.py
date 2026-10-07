@@ -676,3 +676,72 @@ def test_validator_meldet_bruttobetrag_bei_vk03(tmp_path: Path):
     res = validator.validate_string(kaputt)
     codes = [getattr(e, "rule_id", None) or getattr(e, "code", None) or str(e) for e in res.get_errors()]
     assert any("1.3.13.5" in str(c) for c in codes), codes
+
+
+def _ges_und_gzf(content: str):
+    segs = [s.strip() for s in content.replace("\n", "").split("'") if s.strip()]
+    return ([s for s in segs if s.startswith("GES+")],
+            [s for s in segs if s.startswith("GZF+")])
+
+
+def _mods_zkz1(orig_file: Path, pausch: float):
+    beleg = parse_esol_belege_summary(orig_file.read_text(encoding="iso-8859-1"))[0]
+    return {beleg["belegnr"]: {
+        "tarifkennzeichen": "",
+        "zuzahlungskennzeichen": "1",
+        "zuzahlung_pausch": pausch,
+        "positions": beleg["positions"],
+    }}
+
+
+def test_vk03_zkz1_pauschale_in_ges_und_gzf_gleich(tmp_path: Path):
+    """Patient irrtümlich als zuzahlungspflichtig abgerechnet, im Editor auf
+    ZKZ 1 (befreit, Anlage 1 7.4.2.2) gestellt, Pauschale angehakt. Die
+    10 € gehören dann in die Forderung — und zwar im GZF UND im GES.
+    Vorher nullte die GES-Summe die Pauschale bei "1", das GZF nicht:
+    Regel 1.3.13.6 meldete 10,00 € Differenz (Re. 149, 07.10.2026)."""
+    orig = _vk03_orig(tmp_path)
+    res_file = generate_correction_file(
+        orig, target_vk="03", new_rec_nr="05100", new_rec_date="20260325",
+        beleg_modifications=_mods_zkz1(orig, 10.0),
+    )
+    content = res_file.read_text(encoding="iso-8859-1")
+    ges, gzf = _ges_und_gzf(content)
+    assert gzf == ["GZF+20,00+10,00+10,00"]
+    assert ges == ["GES+00+20,00+0,00+20,00", "GES+31+20,00+0,00+20,00"]
+    assert "+1+EN1+04+" in content
+
+    validator = EsolValidator()
+    validator.register_default_rules()
+    res = validator.validate_string(content)
+    assert res.is_valid(), res.get_errors()
+
+
+def test_vk03_zkz1_ohne_pauschale(tmp_path: Path):
+    """Pauschale abgewählt (Patient behält die bezahlten 10 € nicht, sie
+    werden nicht gefordert): nur der prozentuale Teil, GES und GZF gleich."""
+    orig = _vk03_orig(tmp_path)
+    res_file = generate_correction_file(
+        orig, target_vk="03", new_rec_nr="05100", new_rec_date="20260325",
+        beleg_modifications=_mods_zkz1(orig, 0.0),
+    )
+    content = res_file.read_text(encoding="iso-8859-1")
+    ges, gzf = _ges_und_gzf(content)
+    assert gzf == ["GZF+10,00+10,00+0,00"]
+    assert ges == ["GES+00+10,00+0,00+10,00", "GES+31+10,00+0,00+10,00"]
+
+
+def test_vk04_zkz1_keine_pauschale_in_bes_und_ges(tmp_path: Path):
+    """Bei einer Korrekturrechnung heißt ZKZ 1 weiterhin: befreit, keine
+    Pauschale. BES und GES müssen das gleich sehen — vorher stand im BES die
+    angehakte Pauschale, im GES nicht."""
+    orig = _vk03_orig(tmp_path)
+    res_file = generate_correction_file(
+        orig, target_vk="04", new_rec_nr="05100", new_rec_date="20260325",
+        beleg_modifications=_mods_zkz1(orig, 10.0),
+    )
+    content = res_file.read_text(encoding="iso-8859-1")
+    segs = [s.strip() for s in content.replace("\n", "").split("'") if s.strip()]
+    bes = [s for s in segs if s.startswith("BES+")]
+    assert bes == ["BES+100,00+10,00+10,00+0,00"]
+    assert "GES+00+90,00+100,00+10,00" in segs
