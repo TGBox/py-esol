@@ -280,12 +280,9 @@ class BegleitzettelDialog(tk.Toplevel):
             # Open PDF in default viewer
             if sys.platform == "win32":
                 os.startfile(generated_path)
-            elif sys.platform == "darwin":
-                import subprocess
-                subprocess.Popen(["open", generated_path])
             else:
                 import subprocess
-                subprocess.Popen(["xdg-open", generated_path])
+                subprocess.Popen(["open" if sys.platform == "darwin" else "xdg-open", generated_path])
 
             self.destroy()
 

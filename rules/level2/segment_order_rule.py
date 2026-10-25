@@ -1,6 +1,5 @@
 from typing import List, Optional, Dict, Any
 
-from schema.schema import SchemaFactory
 from rules.rule_interface import RuleInterface
 from rules.level3.content_helper import ContentHelper
 from validation_context import ValidationContext
@@ -46,11 +45,8 @@ class SegmentOrderRule(RuleInterface):
         "S": {"pflicht": ("BES",), "max": {"BES": 1}},
     }
 
-    def __init__(self, schema: Optional[Any] = None):
-        if schema is None:
-            self.schema = SchemaFactory.create()
-        else:
-            self.schema = schema
+    def __init__(self, _schema: Optional[Any] = None) -> None:
+        pass
 
     def get_stufe(self) -> int:
         return 2

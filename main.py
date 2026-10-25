@@ -33,7 +33,6 @@ class EsolValidatorGUI(tk.Tk):
         # Pfade zu den Skripten bestimmen
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.validate_script = os.path.join(self.base_dir, "validate.py")
-        self.batch_script = os.path.join(self.base_dir, "batch_validate.py")
         self.convert_script = os.path.join(self.base_dir, "tools", "convert_utf8_to_iso.py")
         self.generate_auf_script = os.path.join(self.base_dir, "tools", "generate_auf.py")
         self.correction_script = os.path.join(self.base_dir, "tools", "generate_correction.py")

@@ -71,39 +71,8 @@ class EncodingRule(RuleInterface):
         return errors
 
     def _looks_like_utf8(self, content: bytes) -> bool:
-        length = len(content)
-        multi_byte_count = 0
-        i = 0
-
-        while i < length:
-            byte = content[i]
-
-            # 2-byte UTF-8 sequence: 110xxxxx 10xxxxxx
-            if 0xC2 <= byte <= 0xDF and i + 1 < length:
-                next_byte = content[i + 1]
-                if 0x80 <= next_byte <= 0xBF:
-                    multi_byte_count += 1
-                    i += 1
-            # 3-byte UTF-8 sequence: 1110xxxx 10xxxxxx 10xxxxxx
-            elif 0xE0 <= byte <= 0xEF and i + 2 < length:
-                next1 = content[i + 1]
-                next2 = content[i + 2]
-                if 0x80 <= next1 <= 0xBF and 0x80 <= next2 <= 0xBF:
-                    multi_byte_count += 1
-                    i += 2
-            # 4-byte UTF-8 sequence: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-            elif 0xF0 <= byte <= 0xF7 and i + 3 < length:
-                next1 = content[i + 1]
-                next2 = content[i + 2]
-                next3 = content[i + 3]
-                if (
-                    0x80 <= next1 <= 0xBF
-                    and 0x80 <= next2 <= 0xBF
-                    and 0x80 <= next3 <= 0xBF
-                ):
-                    multi_byte_count += 1
-                    i += 3
-
-            i += 1
-
-        return multi_byte_count >= 2
+        try:
+            decoded = content.decode("utf-8")
+            return sum(1 for ch in decoded if ord(ch) > 0x7F) >= 2
+        except UnicodeDecodeError:
+            return False

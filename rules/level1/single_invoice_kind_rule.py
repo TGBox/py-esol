@@ -1,10 +1,7 @@
-from collections import defaultdict
 from typing import List
 from rules.rule_interface import RuleInterface
 from validation_context import ValidationContext
 from validation_error import ValidationError
-from validation_error import ValidationError
-from validation_context import ValidationContext
 
 
 class SingleRechnungsartRule(RuleInterface):
