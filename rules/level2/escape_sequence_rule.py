@@ -44,10 +44,3 @@ class EscapeSequenceRule(RuleInterface):
                 )
 
         return errors
-
-    def _extract_tag(self, raw: str) -> str:
-        """Extract the segment tag from a raw segment string."""
-        plus_pos = raw.find("+")
-        if plus_pos != -1:
-            return raw[:plus_pos]
-        return raw[:3]

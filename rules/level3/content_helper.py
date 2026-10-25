@@ -3,6 +3,8 @@ from datetime import datetime
 import re
 from typing import Any, Dict, List, Optional
 
+from validation_context import ValidationContext
+
 
 class ContentHelper:
     """Shared helper methods for Stufe 3 content validation rules."""
@@ -101,10 +103,11 @@ class ContentHelper:
     def is_valid_time(time_str: str) -> bool:
         if not re.match(r"^\d{4}$", time_str):
             return False
-
-        hours = int(time_str[0:2])
-        minutes = int(time_str[2:4])
-        return 0 <= hours <= 23 and 0 <= minutes <= 59
+        try:
+            datetime.strptime(time_str, "%H%M")
+            return True
+        except ValueError:
+            return False
 
     @staticmethod
     def is_valid_rechnungsnummer_part(value: str) -> bool:
@@ -137,21 +140,7 @@ class ContentHelper:
     def get_field(
         segment: Dict[str, Any], index: int, sub_index: Optional[int] = None
     ) -> Optional[str]:
-        fields = segment.get("fields", [])
-        if index >= len(fields):
-            return None
-
-        field = fields[index]
-
-        if sub_index is not None:
-            if isinstance(field, list):
-                return field[sub_index] if sub_index < len(field) else None
-            return field if sub_index == 0 else None
-
-        if isinstance(field, list):
-            return ":".join([str(f) for f in field])
-
-        return str(field) if field is not None else None
+        return ValidationContext.get_field_value(segment, index, sub_index)
 
     @staticmethod
     def get_message_type_for_segment(

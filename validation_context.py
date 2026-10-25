@@ -32,14 +32,6 @@ class ValidationContext:
     def set_messages(self, m: List[Dict[str, Any]]) -> None: self.messages = m
     def get_messages(self) -> List[Dict[str, Any]]: return self.messages
 
-    def get_segment(self, index: int) -> Optional[Dict[str, Any]]:
-        """Get a parsed segment by index."""
-        return self.parsed_segments[index] if 0 <= index < len(self.parsed_segments) else None
-
-    def get_segment_count(self) -> int:
-        """Count of parsed segments."""
-        return len(self.parsed_segments)
-
     def find_first_segment(self, tag: str) -> Optional[Dict[str, Any]]:
         """Get the first parsed segment with a given tag."""
         return next((s for s in self.parsed_segments if s.get("tag") == tag), None)

@@ -46,7 +46,5 @@ class ValidationResult:
     def without_warnings(self) -> "ValidationResult":
         """Return a new ValidationResult containing only errors (no warnings)."""
         filtered = ValidationResult()
-        for finding in self._findings:
-            if finding.is_error():
-                filtered.add_error(finding)
+        filtered._findings = [f for f in self._findings if f.is_error()]
         return filtered

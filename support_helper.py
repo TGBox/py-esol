@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import codelisten
 import verordnung as vo
-from tools.generate_correction import format_date_german, parse_esol_belege_summary, parse_segment_fields, read_esol_file_text
+from tools.generate_correction import format_date_german, parse_esol_belege_summary, read_esol_file_text
 from parser.segment_tokenizer import SegmentTokenizer
 
 

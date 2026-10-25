@@ -80,14 +80,11 @@ def parse_date_to_iso(date_str: str) -> str:
     s = str(date_str).strip()
     if len(s) == 8 and s.isdigit():
         return s
-    if "." in s:
-        parts = s.split(".")
-        if len(parts) == 3:
-            day, month, year = parts[0].zfill(2), parts[1].zfill(2), parts[2].strip()
-            if len(year) == 2:
-                year = "20" + year
-            if len(year) == 4 and day.isdigit() and month.isdigit() and year.isdigit():
-                return f"{year}{month}{day}"
+    for fmt in ("%d.%m.%Y", "%d.%m.%y"):
+        try:
+            return datetime.datetime.strptime(s, fmt).strftime("%Y%m%d")
+        except ValueError:
+            pass
     return s
 
 

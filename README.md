@@ -46,7 +46,7 @@ python -m venv .venv
 # source .venv/bin/activate  # Linux/macOS
 
 # Entwicklungs- & Test-Abhängigkeiten installieren
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ---
@@ -129,7 +129,7 @@ Damit im Verordnungsblatt und im Rezept-Baum Klartext statt nur Codes steht,
 liest das Programm zur Laufzeit sechs Tabellen aus `data/`:
 
 | Datei | Inhalt | Erzeugt von |
-|---|---|---|
+| --- | --- | --- |
 | `codelisten.json` | eigene Pflege, **hat immer Vorrang** | von Hand |
 | `heilmittelpreise.json` | Positionsbezeichnungen nach § 125 / § 125a | `tools/import_hmp.py` |
 | `heilmittelkatalog.json` | X-Codes, Kurort/Bäder, BG/UV, Heilpraktiker | `tools/import_heilmittelkatalog.py` |
