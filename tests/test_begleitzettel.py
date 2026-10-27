@@ -1,9 +1,18 @@
 import os
 import pytest
 from pathlib import Path
+from unittest.mock import patch
+
+import theme_manager
 
 from tools.generate_begleitzettel import generate_begleitzettel_pdf
-from gui_begleitzettel_dialog import extract_begleitzettel_defaults
+from gui_begleitzettel_dialog import (
+    build_fensterzeile,
+    extract_begleitzettel_defaults,
+    load_gemerkte_werte,
+    save_gemerkte_werte,
+    werte_fuer_ik,
+)
 
 
 def test_generate_begleitzettel_pdf(tmp_path):
@@ -14,7 +23,7 @@ def test_generate_begleitzettel_pdf(tmp_path):
         "absender_plz_ort": "12345 Musterstadt",
         "absender_telefon": "01234 56789",
         "absender_email": "praxis@test.de",
-        "absender_fensterzeile": "Praxis Dr. Test Musterstraße 42 . 12345 Musterstadt",
+        "absender_fensterzeile": "Praxis Dr. Test, Musterstraße 42, 12345 Musterstadt",
         "empfaenger_zeile1": "Abrechnungszentrum Nord",
         "empfaenger_zeile2": "Hauptstraße 100",
         "empfaenger_zeile3": "54321 Testort",
@@ -61,3 +70,50 @@ def test_extract_begleitzettel_defaults_sample(tmp_path):
     assert defaults["erste_belegnummer"] == "101"
     assert defaults["letzte_belegnummer"] == "102"
     assert defaults["anzahl_urbelege"] == "2"
+
+
+def test_build_fensterzeile_trennt_mit_komma():
+    assert build_fensterzeile("Praxis Dr. Test", "Musterstraße 42", "12345 Musterstadt") == (
+        "Praxis Dr. Test, Musterstraße 42, 12345 Musterstadt"
+    )
+    # Leere Teile werden ausgelassen, kein doppeltes Komma
+    assert build_fensterzeile("Praxis Dr. Test", "  ", "12345 Musterstadt") == "Praxis Dr. Test, 12345 Musterstadt"
+    assert build_fensterzeile("", "", "") == ""
+
+
+def test_gemerkte_werte_speichern_und_laden(tmp_path):
+    fake_config = tmp_path / "test_config.json"
+    with patch.object(theme_manager, "CONFIG_FILE", fake_config):
+        assert load_gemerkte_werte() == {}
+        theme_manager.set_current_theme("light")
+
+        save_gemerkte_werte({
+            "absender_name": "Praxis Dr. Test",
+            "empfaenger_zeile1": "Abrechnungszentrum Nord",
+            "name_rechnungssteller": "Praxis Dr. Test",
+            "ik_kostentraeger": "109876543",
+            "name_krankenkasse": "AOK Bayern",
+            "rechnungsnummer": "2026-0001",
+        })
+        save_gemerkte_werte({
+            "absender_name": "Praxis Neu",
+            "ik_kostentraeger": "101777502",
+            "name_krankenkasse": "TK",
+            "empfaenger_zeile1": "DAV",
+            "empfaenger_zeile3": "12345 Ort",
+        })
+
+        werte = load_gemerkte_werte()
+        assert werte["absender_name"] == "Praxis Neu"
+        assert werte_fuer_ik(werte, "109876543") == {
+            "name_krankenkasse": "AOK Bayern",
+            "empfaenger_zeile1": "Abrechnungszentrum Nord",
+            "empfaenger_zeile2": "",
+            "empfaenger_zeile3": "",
+        }
+        assert werte_fuer_ik(werte, "101777502")["empfaenger_zeile1"] == "DAV"
+        assert werte_fuer_ik(werte, "999999999") == {}
+        # Abrechnungsspezifisches wird nicht gemerkt
+        assert "rechnungsnummer" not in werte
+        # Andere Einstellungen bleiben erhalten
+        assert theme_manager.get_current_theme() == "light"

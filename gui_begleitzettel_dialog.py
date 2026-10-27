@@ -22,6 +22,71 @@ from parser.segment_tokenizer import SegmentTokenizer
 from tools.generate_begleitzettel import generate_begleitzettel_pdf
 from tools.generate_correction import parse_segment_fields, read_esol_file_text, format_date_german
 
+CONFIG_KEY = "begleitzettel"
+
+# Felder, die sich von Abrechnung zu Abrechnung praktisch nicht ändern und
+# deshalb nach dem Erstellen eines PDFs für das nächste Mal gemerkt werden.
+GEMERKTE_FELDER = (
+    "absender_name",
+    "absender_strasse",
+    "absender_plz_ort",
+    "absender_telefon",
+    "absender_email",
+    "absender_fensterzeile",
+    "empfaenger_zeile1",
+    "empfaenger_zeile2",
+    "empfaenger_zeile3",
+    "name_rechnungssteller",
+)
+
+# Felder, die je Kostenträger (IK) unterschiedlich sind und pro IK gemerkt werden.
+FELDER_JE_IK = (
+    "name_krankenkasse",
+    "empfaenger_zeile1",
+    "empfaenger_zeile2",
+    "empfaenger_zeile3",
+)
+
+
+def build_fensterzeile(*teile: str) -> str:
+    """Baut die Kurzadresse fürs Brieffenster: nicht-leere Teile, mit Komma getrennt."""
+    return ", ".join(t.strip() for t in teile if t and t.strip())
+
+
+def load_gemerkte_werte() -> Dict[str, Any]:
+    """Liest die zuletzt verwendeten Begleitzettel-Werte aus der Benutzerkonfiguration."""
+    gespeichert = theme_manager.load_config().get(CONFIG_KEY, {})
+    return gespeichert if isinstance(gespeichert, dict) else {}
+
+
+def save_gemerkte_werte(data: Dict[str, str]) -> None:
+    """Merkt sich die gleichbleibenden Felder sowie Kassenname und Empfänger je IK Kostenträger."""
+    werte = load_gemerkte_werte()
+    for key in GEMERKTE_FELDER:
+        werte[key] = data.get(key, "")
+
+    ik = data.get("ik_kostentraeger", "").strip()
+    je_ik = {key: data.get(key, "").strip() for key in FELDER_JE_IK}
+    if ik and any(je_ik.values()):
+        kostentraeger = werte.get("kostentraeger")
+        if not isinstance(kostentraeger, dict):
+            kostentraeger = {}
+        kostentraeger[ik] = je_ik
+        werte["kostentraeger"] = kostentraeger
+
+    theme_manager.save_config({CONFIG_KEY: werte})
+
+
+def werte_fuer_ik(gemerkt: Dict[str, Any], ik: str) -> Dict[str, str]:
+    """Liefert Kassenname und Empfängerzeilen, die für dieses IK gemerkt wurden (sonst {})."""
+    kostentraeger = gemerkt.get("kostentraeger", {})
+    if not isinstance(kostentraeger, dict):
+        return {}
+    eintrag = kostentraeger.get(ik.strip(), {})
+    if not isinstance(eintrag, dict) or not eintrag:
+        return {}
+    return {key: str(eintrag.get(key, "")) for key in FELDER_JE_IK}
+
 
 def extract_begleitzettel_defaults(file_path: Path) -> Dict[str, str]:
     """
@@ -220,19 +285,67 @@ class BegleitzettelDialog(tk.Toplevel):
         if self.esol_file_path:
             defaults = extract_begleitzettel_defaults(self.esol_file_path)
 
+        gemerkt = load_gemerkte_werte()
+
+        # Werte aus der ESOL-Datei haben Vorrang; leere Felder werden mit den
+        # zuletzt verwendeten Angaben gefüllt.
+        if not defaults.get("name_rechnungssteller"):
+            defaults["name_rechnungssteller"] = gemerkt.get("name_rechnungssteller", "")
+
         for key, entry in self.entries_daten.items():
             val = defaults.get(key, "")
             entry.delete(0, tk.END)
             entry.insert(0, val)
 
+        self.empfaenger_felder = {
+            "empfaenger_zeile1": self.ent_empf_1,
+            "empfaenger_zeile2": self.ent_empf_2,
+            "empfaenger_zeile3": self.ent_empf_3,
+        }
+        feste_felder = {
+            "absender_name": self.ent_abs_name,
+            "absender_strasse": self.ent_abs_strasse,
+            "absender_plz_ort": self.ent_abs_plz_ort,
+            "absender_telefon": self.ent_abs_telefon,
+            "absender_email": self.ent_abs_email,
+            "absender_fensterzeile": self.ent_fensterzeile,
+            **self.empfaenger_felder,
+        }
+        for key, entry in feste_felder.items():
+            entry.delete(0, tk.END)
+            entry.insert(0, str(gemerkt.get(key, "")))
+
+        # Ist für den Kostenträger schon etwas gemerkt, gilt das statt der zuletzt verwendeten Werte.
+        self._letztes_ik = ""
+        self._uebernehme_werte_fuer_ik()
+        self.entries_daten["ik_kostentraeger"].bind("<FocusOut>", lambda _e: self._uebernehme_werte_fuer_ik())
+
+    def _uebernehme_werte_fuer_ik(self):
+        """Füllt Kassenname und Empfänger, wenn für das (geänderte) IK Werte gemerkt sind."""
+        ik = self.entries_daten["ik_kostentraeger"].get().strip()
+        if not ik or ik == self._letztes_ik:
+            return
+        self._letztes_ik = ik
+
+        werte = werte_fuer_ik(load_gemerkte_werte(), ik)
+        if not werte:
+            return
+
+        ziele = {"name_krankenkasse": self.entries_daten["name_krankenkasse"], **self.empfaenger_felder}
+        for key, entry in ziele.items():
+            if werte.get(key):
+                entry.delete(0, tk.END)
+                entry.insert(0, werte[key])
+
     def _generate_fensterzeile(self):
         """Builds a formatted window sender line from the main sender fields."""
-        name = self.ent_abs_name.get().strip()
-        strasse = self.ent_abs_strasse.get().strip()
-        plz_ort = self.ent_abs_plz_ort.get().strip()
-        parts = [p for p in [name, strasse, plz_ort] if p]
+        zeile = build_fensterzeile(
+            self.ent_abs_name.get(),
+            self.ent_abs_strasse.get(),
+            self.ent_abs_plz_ort.get(),
+        )
         self.ent_fensterzeile.delete(0, tk.END)
-        self.ent_fensterzeile.insert(0, " . ".join(parts))
+        self.ent_fensterzeile.insert(0, zeile)
 
     def _on_generate_pdf(self):
         """Collects form inputs, prompts for output file location, and creates PDF."""
@@ -271,6 +384,7 @@ class BegleitzettelDialog(tk.Toplevel):
 
         try:
             generated_path = generate_begleitzettel_pdf(data, output_file)
+            save_gemerkte_werte(data)
             messagebox.showinfo(
                 "PDF erfolgreich erstellt",
                 f"Der Begleitzettel wurde erfolgreich gespeichert unter:\n{generated_path}",
