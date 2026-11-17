@@ -96,6 +96,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    # Eigenes Icon: Datei ablegen und die nächste Zeile einkommentieren.
-    # icon='assets/py-esol.ico',
+    icon='assets/py-esol.ico',
 )
