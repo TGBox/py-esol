@@ -17,6 +17,7 @@ from gui_beleg_dashboard import BelegDashboardFrame
 from gui_begleitzettel_dialog import BegleitzettelDialog
 from gui_muster13_preview import Muster13PreviewFrame
 from gui_recipe_tree import RecipeTreeFrame
+from auftragssatz import finde_auftragssatz
 from support_helper import generate_html_report, generate_ticket_summary
 from tools.generate_correction import parse_esol_belege_summary, read_esol_file_text
 
@@ -37,6 +38,7 @@ class EsolValidatorGUI(tk.Tk):
         self.generate_auf_script = os.path.join(self.base_dir, "tools", "generate_auf.py")
         self.correction_script = os.path.join(self.base_dir, "tools", "generate_correction.py")
         self.ehe_script = os.path.join(self.base_dir, "tools", "ehe_zusammenfassen.py")
+        self.auftragssatz_script = os.path.join(self.base_dir, "tools", "pruefe_auftragssatz.py")
 
         self.user_selected_out_dir: bool = False
         self.last_belege_summary: List[Dict[str, Any]] = []
@@ -551,7 +553,12 @@ class EsolValidatorGUI(tk.Tk):
                             if not file.endswith(".txt") and not file.endswith(".auf") and not file.startswith("."):
                                 files_to_validate.append(os.path.join(root, file))
                 elif os.path.isfile(path):
-                    if not path.endswith(".txt") and not path.endswith(".auf"):
+                    if path.lower().endswith(".auf"):
+                        # Auftragssatz gewählt: die Nutzdatendatei daneben prüfen
+                        nutzdatei = path[:-4]
+                        if os.path.isfile(nutzdatei) and nutzdatei not in files_to_validate:
+                            files_to_validate.append(nutzdatei)
+                    elif not path.endswith(".txt"):
                         files_to_validate.append(path)
 
             if not files_to_validate:
@@ -572,6 +579,12 @@ class EsolValidatorGUI(tk.Tk):
 
                 self._append_log(f"=== Datei: {os.path.basename(file_path)} ===\n", tag="HEADER")
                 self._execute_cmd(cmd)
+
+                # Liegt der Auftragssatz daneben, gleich mitprüfen: Fehler darin
+                # führen zur Abweisung, bevor der Inhalt angesehen wird.
+                if finde_auftragssatz(Path(file_path)):
+                    self._append_log("\n--- Auftragssatz und Versandweg ---\n", tag="HEADER")
+                    self._execute_cmd([sys.executable, self.auftragssatz_script, file_path])
                 self._append_log("\n" + "-" * 60 + "\n\n")
 
         finally:
@@ -994,6 +1007,9 @@ if __name__ == "__main__":
         elif "generate_correction" in target_script:
             from tools import generate_correction
             generate_correction.main()
+        elif "auftragssatz" in target_script:
+            from tools import pruefe_auftragssatz
+            pruefe_auftragssatz.main()
         else:
             print(f"Unbekanntes CLI-Skript: {target_script}", file=sys.stderr)
             sys.exit(1)
