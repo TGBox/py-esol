@@ -21,6 +21,9 @@ Es unterstützt Leistungserbringer im Heilmittelbereich (Physiotherapie, Ergothe
   * **Interaktive Belegauswahl**: Gezielte Auswahl einzelner Belege per Checkbox-Dialog in der GUI mit automatischer Neuberechnung aller `GES`-Gesamtsummen.
 * **📄 Auftragsdatei-Generator (`.auf`)**:
   * Automatische Erstellung von EDIFACT-Begleitdateien (`50000001...`) für die physikalische Datenübertragung.
+* **📮 Auftragssatz- und Routing-Check**:
+  * Zeigt die Felder einer `.auf`-Datei im Klartext und prüft Länge, Dateiname, Dateigröße, Absender/Empfänger (auch vertauscht) und den Empfänger gegen die Datenannahmestelle laut Kostenträgerdatei.
+  * Gibt aus, an welche Annahmestelle und Mailadresse die Datei gehen müsste.
 * **🔄 UTF-8 ➔ ISO-8859-1 Konverter**:
   * Stapelkonvertierung fehlerhaft kodierter Dateien in den geforderten ISO-8859-1 EDIFACT-Standard.
 * **🖥️ Grafische Benutzeroberfläche (Tkinter GUI)**:
@@ -66,7 +69,7 @@ Oder Verwenden der vorkompilierten Binärdatei `dist/pyesol.exe`.
 **Funktionen in der GUI**:
 
 * **Dateiauswahl**: Einzelne Datei, mehrere Dateien oder Ordner auswählen.
-* **`▶ Validieren`**: Führt die 4-stufige Prüfung durch und gibt detaillierte Fehlermeldungen aus.
+* **`▶ Validieren`**: Führt die 4-stufige Prüfung durch und gibt detaillierte Fehlermeldungen aus. Liegt die `.auf`-Datei neben der Nutzdatendatei, werden Auftragssatz und Versandweg gleich mitgeprüft. Es darf auch direkt die `.auf`-Datei gewählt werden.
 * **`🔄 UTF-8 ➔ ISO`**: Konvertiert ausgewählte Dateien zu ISO-8859-1.
 * **`📄 .auf erstellen`**: Erstellt passende `.auf`-Auftragsdateien.
 * **`🧩 EHE zusammenfassen`**: Fasst gleiche Leistungen am gleichen Tag (Fehler 1.4.1) über die Anzahl zusammen. Das Original bleibt unverändert; die Kopie landet im Ausgabeordner bzw. im Unterordner `bereinigt` und wird gleich nachvalidiert.
@@ -113,6 +116,12 @@ python tools/generate_correction.py path/to/ESOL_FILE -t 10
 
 ```bash
 python tools/generate_auf.py path/to/ESOL_FILE
+```
+
+#### D2. Auftragssatz (.auf) prüfen und Versandweg anzeigen
+
+```bash
+python tools/pruefe_auftragssatz.py path/to/ESOL_FILE   # oder path/to/ESOL_FILE.auf
 ```
 
 #### E. UTF-8 zu ISO-8859-1 konvertieren
@@ -207,6 +216,7 @@ py-esol/
 ├── tools/
 │   ├── convert_utf8_to_iso.py    # UTF-8 -> ISO-8859-1 Konverter
 │   ├── generate_auf.py           # Generierung von .auf Auftragsdateien
+│   ├── pruefe_auftragssatz.py    # Prüfung von .auf-Dateien und Versandweg
 │   └── generate_correction.py    # Generator für VKZ 02, 03, 04, 10
 └── tests/                        # Pytest Test-Suite (44 Tests)
 ```
